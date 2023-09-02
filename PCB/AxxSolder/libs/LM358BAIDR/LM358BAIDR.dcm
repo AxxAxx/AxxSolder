@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LM358BAIDR
+D Operational Amplifiers - Op Amps Industry-standard dual operational amplifier 8-SOIC -40 to 125
+K
+F https://www.ti.com/lit/gpn/LM358BA
+$ENDCMP
+#
+#End Doc Library

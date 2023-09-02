@@ -1,0 +1,8 @@
+../Drivers/WaveShareOLED/OLED/OLED_1in5.c:38:13:OLED_Reset	8	static
+../Drivers/WaveShareOLED/OLED/OLED_1in5.c:52:13:OLED_WriteReg	16	static
+../Drivers/WaveShareOLED/OLED/OLED_1in5.c:64:13:OLED_WriteData	16	static
+../Drivers/WaveShareOLED/OLED/OLED_1in5.c:80:13:OLED_InitReg	8	static
+../Drivers/WaveShareOLED/OLED/OLED_1in5.c:138:6:OLED_1in5_Init	8	static
+../Drivers/WaveShareOLED/OLED/OLED_1in5.c:159:13:OLED_SetWindow	24	static
+../Drivers/WaveShareOLED/OLED/OLED_1in5.c:178:6:OLED_1in5_Clear	16	static
+../Drivers/WaveShareOLED/OLED/OLED_1in5.c:190:6:OLED_1in5_Display	24	static

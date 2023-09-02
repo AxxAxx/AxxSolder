@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;AxxSolder/Core/Src/moving_average&apos;" deleteContents="false" description="Delete resource &apos;AxxSolder/Core/Src/moving_average&apos;" element1="/AxxSolder/Core/Src/moving_average" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1680282800726"/>
+</session>

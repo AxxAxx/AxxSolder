@@ -1,0 +1,28 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model PMEG6020ER,115
+#/805477/300009/2.49/2/2/Schottky Diode
+DEF PMEG6020ER,115 D 0 30 Y Y 1 F N
+F0 "D" 500 350 50 H V L CNN
+F1 "PMEG6020ER,115" 500 250 50 H V L CNN
+F2 "PMEG6020ER115" 500 150 50 H I L CNN
+F3 "https://assets.nexperia.com/documents/data-sheet/PMEG6020ER.pdf" 500 50 50 H I L CNN
+F4 "Nexperia PMEG6020ER,115 SMT Schottky Diode, 60V 2A, 2-Pin SOD-123W" 500 -50 50 H I L CNN "Description"
+F5 "1.1" 500 -150 50 H I L CNN "Height"
+F6 "771-PMEG6020ER-115" 500 -250 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/Nexperia/PMEG6020ER115?qs=5DYmZrWuUErk3dU9e9SSpA%3D%3D" 500 -350 50 H I L CNN "Mouser Price/Stock"
+F8 "Nexperia" 500 -450 50 H I L CNN "Manufacturer_Name"
+F9 "PMEG6020ER,115" 500 -550 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X ~ 1 100 0 100 R 50 50 0 0 P
+X ~ 2 700 0 100 L 50 50 0 0 P
+P 2 0 1 6 300 100 300 -100 N
+P 3 0 1 6 300 100 340 100 340 60 N
+P 3 0 1 6 300 -100 260 -100 260 -60 N
+P 2 0 1 6 200 0 300 0 N
+P 2 0 1 6 500 0 600 0 N
+P 4 0 1 10 300 0 500 100 500 -100 300 0 F
+ENDDRAW
+ENDDEF
+#
+#End Library

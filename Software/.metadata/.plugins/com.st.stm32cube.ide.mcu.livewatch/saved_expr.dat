@@ -1,0 +1,9 @@
+sensorValues
+heaterPower
+custom_temp
+Kp
+Ki
+Kd
+TC_temperature_temp
+powerReductionFactor
+sensorValues.set_temp

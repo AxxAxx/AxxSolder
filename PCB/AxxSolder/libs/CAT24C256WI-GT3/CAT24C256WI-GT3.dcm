@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP CAT24C256WI-GT3
+D EEPROM 2kb I2C Serial CMOS EEPROM
+K
+F http://www.onsemi.com/pub/Collateral/CAT24C256-D.PDF
+$ENDCMP
+#
+#End Doc Library

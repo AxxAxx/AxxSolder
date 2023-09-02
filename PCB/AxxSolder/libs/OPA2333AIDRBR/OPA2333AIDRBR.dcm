@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP OPA2333AIDRBR
+D 1.8V, 17A, 2 channels, microPower, Precision, Zero Drift CMOS Op Amp
+K
+F https://www.ti.com/lit/ds/symlink/opa2333.pdf?ts=1606982025063&ref_url=https%253A%252F%252Fwww.ti.com%252Fstore%252Fti%252Fen%252Fp%252Fproduct%252F%253Fp%253DOPA2333AIDRBR%2526keyMatch%253DOPA2333AIDRBR%2526tisearch%253DSearch-EN-everything%2526usecase%2
+$ENDCMP
+#
+#End Doc Library
