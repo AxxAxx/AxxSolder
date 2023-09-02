@@ -50,7 +50,7 @@ The measured data was recorded and plotted for both the C210 and C245 cartridges
 $Temp_{C210}[deg] =  -6.798e^{-9} * ADC^3 -6.084e^{-6} * ADC^2 + 0.271* ADC + 25.399$  
 $Temp_{C245}[deg] = 2.092e^9 * ADC^3 -1.213e^{-5} * ADC^2 + 0.118* ADC + 25.052$  
 These were used in the software to retrieve correct tip temperatures. 
-![Temp_calibration_data](./photos/Temp_calibration_data.png)  
+![Temp_calibration](./photos/Temp_calibration_data.png)
 ## Temperature measurement
 As the thermocouple and heater element is connected in series inside the JBC cartridges and the thermocouple voltage measures over the same pins as the heating element we have to be careful when to do the measurement. In order to not disturb the thermocouple measurement with heater element switching, the switching is turned of for 10 ms just before the temperature measurement is taken. The 10 ms delay ensures that the switching is turned off and the thermocouple signal is stabilized around a stable voltage.  
 The measured signal over the thermocouple is clamped to 3.3V with a BAT54S Schottky diode in order to protect the opamp OPA2333. The voltage measurement is taken by the internal ADC in DMA mode with a circular buffer. The buffer holds several measurements which are averaged in software.  
