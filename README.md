@@ -23,6 +23,7 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown
 ## AxxSolder Station
 ![AxxSolder_station](./photos/AxxSolder_station.jpg)
 ## AxxSolder Portable
+Many times it is nice to have a portable soldering iron with the same features and power as the station. I therefore created a portable version of the AxxSolder station. As AxxSolder accepts an input of 9-26 V it is compatible with a range of battery options. I usually use a pack consisting of 12 Samsung INR18650 35E in a 3S4P configuration with works very well. The portable version has a aluminium tab connected as a sleep detection input that allows sleep mode when the handle is put aside.   
 ![AxxSolder_portable](./photos/AxxSolder_portable.jpg)
 The connections from the handle to PCB throught the Hirose RPC1-12RB-6P(71) is shown below. The blue wire in the portable version is connected to an aluminum plate with allows the Soldering iron to go to sleep when the cartridge or handle piece is resting against this plate.
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
