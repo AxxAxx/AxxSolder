@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2023 Axel Johansson
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -22,7 +22,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "string.h"
-#include <stdbool.h>
 #include "OLED_1in5.h"
 #include "test.h"
 #include "pid.h"
@@ -32,82 +31,87 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-enum Handles{T210, T245}handle;
+enum handles {
+	T210,
+	T245
+} handle;
 
-uint8_t beep_once = false;
+uint8_t beep_requested = 0;							/* Bool to handle beep signal triggered by interrupt */
 
-// 0.Create a new image cache
-UBYTE *BlackImage;
-UWORD Imagesize = ((OLED_1in5_WIDTH%2==0)? (OLED_1in5_WIDTH/2): (OLED_1in5_WIDTH/2+1)) * OLED_1in5_HEIGHT;
-uint8_t power = 0;
-uint32_t display_previousMillis = 0;
-uint32_t display_Interval = 25;
+/* Create a new image cache */
+UBYTE *black_image;
+UWORD image_size = ((OLED_1in5_WIDTH%2==0)? (OLED_1in5_WIDTH/2): (OLED_1in5_WIDTH/2+1)) * OLED_1in5_HEIGHT;
 
-uint32_t DEBUG_previousMillis = 0;
-uint32_t DEBUG_Interval = 50;
+/* Timing constants */
+uint32_t previous_millis_display = 0;
+uint32_t interval_display = 25;
 
-uint32_t PIDupdate_previousMillis = 0;
-uint32_t PIDupdate_Interval = 50;
+uint32_t previous_millis_debug = 0;
+uint32_t interval_debug = 50;
 
-// INITIAL TUNING PARAMETERS
-volatile double Kp = 10;
-volatile double Ki = 0;
-volatile double Kd = 0;
-volatile double custom_temp = 100;
-// ----------------------------------------------
+uint32_t previous_millis_PID_update = 0;
+uint32_t interval_PID_update = 50;
 
-char buffer[40]; //Buffer for UART print
-uint8_t UART1_rxBuffer[12] = {0};
-uint8_t rx_flag = 0;
-uint8_t txDone = true;
-uint8_t byte, rx; //Was previously char
+/* INITIAL TUNING PARAMETERS */
+double Kp = 10;
+double Ki = 0;
+double Kd = 0;
+double custom_temperature = 100;
 
-float powerReductionFactor = 0.12; // Converts power in W to correct duty cycle
-float max_power = 0; // Sets the maximum output power
+char buffer[40];								/* Buffer for UART print */
+uint8_t tx_done = 1;
 
-float ADC_filter_Mean = 0.0; //ADC reading value
-#define ADC1_BUF_LEN 400 // takes 564 us to fill up buffer
-uint16_t adc1_buf[ADC1_BUF_LEN];
+#define POWER_REDUCTION_FACTOR 0.12 			/* Converts power in W to correct duty cycle */
+float max_power_watt = 0.0; 							/* Sets the maximum output power */
 
-float voltageCompensationConstant = 0.00648678945;
+float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
+#define ADC_BUF_LEN 400
+uint16_t ADC_buffer[ADC_BUF_LEN];
 
-// TC Compensation constants
-float TCCompensationConstant_x3_T210 = -6.798689261365103e-09;
-float TCCompensationConstant_x2_T210 = -6.084684965926526e-06;
-float TCCompensationConstant_x1_T210 = 0.2710175613404393;
-float TCCompensationConstant_x0_T210 = 25.398999666765054; //This is the actual temp from the temp sensor, first, use 23, later the actual amb temp
+#define VOLTAGE_COMPENSATION 0.00648678945
 
-float TCCompensationConstant_x3_T245 = 2.0923844111330006e-09;
-float TCCompensationConstant_x2_T245 = -1.2139133328964936e-05;
-float TCCompensationConstant_x1_T245 = 0.11753371673595008;
-float TCCompensationConstant_x0_T245 = 25.051871505499836; //This is the actual temp from the temp sensor, first, use 23, later the actual amb temp
+#define MIN_SELECTABLE_TEMPERTURE 20
+#define MAX_SELECTABLE_TEMPERTURE 450
 
-float TC_temperature_temp = 0.0;
 
-float ambTempCompensationConstant = 3.3/4095;
+/* TC Compensation constants */
+#define TC_COMPENSATION_X3_T210 -6.798689261365103e-09
+#define TC_COMPENSATION_X2_T210 -6.084684965926526e-06
+#define TC_COMPENSATION_X1_T210 0.2710175613404393
+#define TC_COMPENSATION_X0_T210 25.398999666765054
 
-struct sensorValues_struct {
-	double set_temp;
-	double act_temp;
-	float busVoltage;
-	float pcbTemp;
-	uint8_t inStand;
-	float amb_temp;
+#define TC_COMPENSATION_X3_T245 2.0923844111330006e-09
+#define TC_COMPENSATION_X2_T245 -1.2139133328964936e-05
+#define TC_COMPENSATION_X1_T245 0.11753371673595008
+#define TC_COMPENSATION_X0_T245 25.051871505499836
+
+/* Ambient temperature compensation constant */
+#define AMBIENT_TEMP_COMPENSATION 0.0008058608 //3.3/4095
+
+/* Struct to hold sensor values */
+struct sensor_values_struct {
+	double set_temperature;
+	double actual_temperature;
+	float bus_voltage;
+	float pcb_temperature;
+	uint8_t in_stand;
+	float ambient_temperature;
 };
 
-struct sensorValues_struct sensorValues  = {.set_temp = 0.0,
-        									.act_temp = 0.0,
-											.busVoltage = 0.0,
-											.pcbTemp = 0.0,
-											.inStand = 0,
-											.amb_temp = 0.0};
+struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
+        									.actual_temperature = 0.0,
+											.bus_voltage = 0.0,
+											.pcb_temperature = 0.0,
+											.in_stand = 0,
+											.ambient_temperature = 0.0};
 
-double heaterPower = 0.0;
-double heaterPower_DutyCycle = 0.0;
+double heater_power = 0.0;
+double heater_power_duty_cycle = 0.0;
 
-FilterTypeDef act_temp_filterStruct;
-FilterTypeDef amb_temp_filterStruct;
-FilterTypeDef inp_voltage_filterStruct;
+/* Moving average filters for sensor data */
+FilterTypeDef actual_temperature_filter_struct;
+FilterTypeDef ambient_temperature_filter_struct;
+FilterTypeDef input_voltage_filterStruct;
 
 /* USER CODE END PTD */
 
@@ -158,70 +162,69 @@ static void MX_I2C1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
 PID_TypeDef TPID;
-double Temp, PIDOut, TempSetpoint;
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
 	/* Set transmission flag: transfer complete */
-	txDone = true;
+	tx_done = 1;
 }
 
-//Returns the average of 100 readings of the index+4*n value in the adc1_buf vector
+/* Returns the average of 100 readings of the index+4*n value in the ADC_buffer vector */
 float get_mean_ADC_reading(uint8_t index){
-	ADC_filter_Mean = 0;
+	ADC_filter_mean = 0;
 	for(int n=index;n<400;n=n+4){
-		ADC_filter_Mean += adc1_buf[n];
+		ADC_filter_mean += ADC_buffer[n];
 	}
-	return ADC_filter_Mean/100.0;
+	return ADC_filter_mean/100.0;
 }
 
-void get_busVoltage(){
-	//Index 3 is bus Voltage
-	sensorValues.busVoltage = Moving_Average_Compute(get_mean_ADC_reading(3), &inp_voltage_filterStruct)*voltageCompensationConstant;
+void get_bus_voltage(){
+	/* Index 3 is bus Voltage */
+	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading(3), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION;
 }
 
-void get_act_temp(){
-	//Index 0 is bus Voltage
-	TC_temperature_temp = Moving_Average_Compute(get_mean_ADC_reading(0), &act_temp_filterStruct);
+void get_actual_temperature(){
+	/* Index 0 is bus Voltage */
+	float TC_temperature_temp = Moving_Average_Compute(get_mean_ADC_reading(0), &actual_temperature_filter_struct);
 
 	if(handle == T210){
-		sensorValues.act_temp = pow(TC_temperature_temp, 3)*TCCompensationConstant_x3_T210 + pow(TC_temperature_temp, 2)*TCCompensationConstant_x2_T210  +  	TC_temperature_temp*TCCompensationConstant_x1_T210  +  TCCompensationConstant_x0_T210;
+		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T210 + pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T210 + TC_temperature_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
 	}
 	else if(handle == T245){
-		sensorValues.act_temp = pow(TC_temperature_temp, 3)*TCCompensationConstant_x3_T245 + pow(TC_temperature_temp, 2)*TCCompensationConstant_x2_T245  +  	TC_temperature_temp*TCCompensationConstant_x1_T245  +  TCCompensationConstant_x0_T245;
+		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T245 + pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T245 + TC_temperature_temp*TC_COMPENSATION_X1_T245 + TC_COMPENSATION_X0_T245;
 	}
 
-	if(sensorValues.act_temp > 999){
-		sensorValues.act_temp = 999;
+	if(sensor_values.actual_temperature > 999){
+		sensor_values.actual_temperature = 999;
 	}
 }
 
 void get_ambient_temp(){
 	//Index 2 is PCB temp
-	sensorValues.amb_temp = ((Moving_Average_Compute(get_mean_ADC_reading(2), &amb_temp_filterStruct)*ambTempCompensationConstant)-0.4)/0.0195;
+	sensor_values.ambient_temperature = ((Moving_Average_Compute(get_mean_ADC_reading(2), &ambient_temperature_filter_struct)*AMBIENT_TEMP_COMPENSATION)-0.4)/0.0195;
 	//• Positive slope sensor gain, offset (typical):
 	//– 19.5 mV/°C, 400 mV at 0°C (TMP236-Q1) From data sheet
 }
 
 void debugPrint(UART_HandleTypeDef *huart, char _out[]){
-    txDone = false;
+    tx_done = 0;
 	HAL_UART_Transmit_IT(huart, (uint8_t *) _out, strlen(_out));
-	while(!txDone);
+	while(!tx_done);
 }
 
+/* Initiate OLED display */
 void init_OLED(){
-	if((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) {
+	if((black_image = (UBYTE *)malloc(image_size)) == NULL) {
 		return;
 	}
-	Paint_NewImage(BlackImage, OLED_1in5_WIDTH, OLED_1in5_HEIGHT, 270, BLACK);
+	Paint_NewImage(black_image, OLED_1in5_WIDTH, OLED_1in5_HEIGHT, 270, BLACK);
 	Paint_SetScale(16);
-	Paint_SelectImage(BlackImage);
+	Paint_SelectImage(black_image);
 	Driver_Delay_ms(100);
 	Paint_Clear(BLACK);
 
 	// Show image
-	OLED_1in5_Display(BlackImage);
+	OLED_1in5_Display(black_image);
 
 	OLED_1in5_Init();
 	Driver_Delay_ms(500);
@@ -234,7 +237,7 @@ void update_OLED(){
 
 	Paint_DrawString_EN(3, 20, "Set temp", &Font16, 0x00, 0xff);
 	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.f", sensorValues.set_temp);
+	sprintf(buffer, "%.f", sensor_values.set_temperature);
 	Paint_DrawString_EN(3, 32, buffer, &Font24,  0x0, 0xff);
 	Paint_DrawCircle(67, 37, 2, WHITE, 1, DRAW_FILL_EMPTY);
 	Paint_DrawString_EN(70, 32, "C", &Font24,  0x0, 0xff);
@@ -242,11 +245,11 @@ void update_OLED(){
 	Paint_DrawString_EN(3, 58, "Act temp", &Font16, 0x00, 0xff);
 	memset(&buffer, '\0', sizeof(buffer));
 
-	if(sensorValues.act_temp >= 600){
+	if(sensor_values.actual_temperature >= 600){
 		Paint_DrawString_EN(3, 70, "---", &Font24, 0x0, 0xff);
 	}
 	else{
-		sprintf(buffer, "%.f", sensorValues.act_temp);
+		sprintf(buffer, "%.f", sensor_values.actual_temperature);
 		Paint_DrawString_EN(3, 70, buffer, &Font24, 0x0, 0xff);
 	}
 
@@ -266,15 +269,15 @@ void update_OLED(){
 	Paint_DrawString_EN(0, 118, "AMB TEMP:     POWER ->", &Font8, 0x00, 0xff);
 
 	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.1f", sensorValues.busVoltage);
+	sprintf(buffer, "%.1f", sensor_values.bus_voltage);
 	Paint_DrawString_EN(75, 109, buffer, &Font8, 0x0, 0xff);
 
 	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.1f", sensorValues.amb_temp);
+	sprintf(buffer, "%.1f", sensor_values.ambient_temperature);
 	Paint_DrawString_EN(45, 118, buffer, &Font8, 0x0, 0xff);
 
 	Paint_DrawRectangle(116, 25, 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
-	if(sensorValues.inStand){
+	if(sensor_values.in_stand){
 		Paint_DrawString_EN(116, 30,  "Z", &Font16, 0x00, 0xff);
 		Paint_DrawString_EN(116, 50,  "z", &Font16, 0x00, 0xff);
 		Paint_DrawString_EN(116, 70,  "Z", &Font16, 0x00, 0xff);
@@ -283,47 +286,48 @@ void update_OLED(){
 
 	}
 	else{
-		Paint_DrawRectangle(116, 125-heaterPower/10, 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+		Paint_DrawRectangle(116, 125-heater_power/10, 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_FULL);
 	}
-	// Show image on page2
-	OLED_1in5_Display(BlackImage);
+	// Show image on page
+	OLED_1in5_Display(black_image);
 	Paint_Clear(BLACK);
 }
 
-void get_set_temp(){
-	// Get encoder value (Set temp.) and limit
-	if (TIM3->CNT<=20){TIM3->CNT=20;}
-	if (TIM3->CNT>=450){TIM3->CNT=450;}
-
-	sensorValues.set_temp = TIM3->CNT;
+/* Get encoder value (Set temp.) and limit */
+void get_set_temperature(){
+	if (TIM3->CNT <= MIN_SELECTABLE_TEMPERTURE) {TIM3->CNT = MIN_SELECTABLE_TEMPERTURE; }
+	if (TIM3->CNT >= MAX_SELECTABLE_TEMPERTURE) {TIM3->CNT = MAX_SELECTABLE_TEMPERTURE; }
+	sensor_values.set_temperature = TIM3->CNT;
 }
 
 void get_stand_status(){
 	if((HAL_GPIO_ReadPin (GPIOA, INPUT0_Pin) == 0) || (HAL_GPIO_ReadPin (GPIOA, INPUT1_Pin) == 0)){
-		sensorValues.inStand = 1;
+		sensor_values.in_stand = 1;
 	}
 	else{
-		sensorValues.inStand = 0;
+		sensor_values.in_stand = 0;
 	}
 }
 
-void beep(int beep_time){
+void beep_ms(int beep_time){
   	TIM2->CCR1 = 50;
   	HAL_Delay(beep_time);
   	TIM2->CCR1 = 0;
 }
 
-// Called when buffer is completely filled, used for DEBUG
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
-    //HAL_GPIO_TogglePin(GPIOF, DEBUG_SIGNAL_A_Pin);
-}
+/* Called when buffer is completely filled, used for DEBUG */
+//void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+//    //HAL_GPIO_TogglePin(GPIOF, DEBUG_SIGNAL_A_Pin);
+//}
 
+/* Interrupts at every encoder increment */
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
-		beep_once = true;
+		beep_requested = 1;
 	}
 }
 
+/* Sets the duty cycle of timer controlling the heater */
 void set_heater_duty(uint16_t dutycycle){
 	TIM17->CCR1 = dutycycle;
 }
@@ -335,75 +339,75 @@ void set_heater_duty(uint16_t dutycycle){
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	/* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_ADC1_Init();
-  MX_TIM2_Init();
-  MX_SPI1_Init();
-  MX_TIM17_Init();
-  MX_USART2_UART_Init();
-  MX_TIM3_Init();
-  MX_TIM16_Init();
-  MX_I2C1_Init();
-  /* USER CODE BEGIN 2 */
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_DMA_Init();
+	MX_ADC1_Init();
+	MX_TIM2_Init();
+	MX_SPI1_Init();
+	MX_TIM17_Init();
+	MX_USART2_UART_Init();
+	MX_TIM3_Init();
+	MX_TIM16_Init();
+	MX_I2C1_Init();
+	/* USER CODE BEGIN 2 */
 	HAL_TIM_Encoder_Start_IT(&htim3, TIM_CHANNEL_ALL);
 	HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc1_buf, ADC1_BUF_LEN);//Start ADC DMA
-  /* USER CODE END 2 */
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_buffer, ADC_BUF_LEN);	//Start ADC DMA
+	/* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
 
-	// Init and fill filter structures with initial values
-	handle = T210; // Default handle
+	/* Init and fill filter structures with initial values */
+	handle = T210;		// Default handle
 	set_heater_duty(0);
 	for (int i = 0; i<40;i++){
-		get_busVoltage();
+		get_bus_voltage();
 		get_ambient_temp();
-		get_act_temp();
+		get_actual_temperature();
 		HAL_Delay(1);
 	}
 
-	// Start-up beep
-	beep(10);
+	/* Start-up beep */
+	beep_ms(10);
 	HAL_Delay(100);
-	beep(10);
+	beep_ms(10);
 
+	/* Initiate OLED display */
 	init_OLED();
 
-	// if button is pressed during startup - Show SETTINGS and allow to release button, Then user can choose between T210 and T245 Handle
+	/* If button is pressed during startup - Show SETTINGS and allow to release button. Then the user can choose between T210 and T245 handle */
 	if (HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_Pin) == 0){
 		Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
 		Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
 		Paint_DrawString_EN(3, 20, "Handle:", &Font12, 0x00, 0xff);
 		Paint_DrawString_EN(55, 20, "T210", &Font12, 0xff, 0x00);
 		Paint_DrawString_EN(90, 20, "T245", &Font12, 0x00, 0xff);
-		OLED_1in5_Display(BlackImage);
+		OLED_1in5_Display(black_image);
 		Paint_Clear(BLACK);
-
 		HAL_Delay(1000);
 
 		while(HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_Pin) == 1){
@@ -414,98 +418,101 @@ int main(void)
 			if(((TIM3->CNT)/2 % 2) == 0){
 				Paint_DrawString_EN(55, 20, "T210", &Font12, 0xff, 0x00);
 				Paint_DrawString_EN(90, 20, "T245", &Font12, 0x00, 0xff);
-			    handle = T210;
+				handle = T210;
 			}
 			else{
 				Paint_DrawString_EN(55, 20, "T210", &Font12, 0x00, 0xff);
 				Paint_DrawString_EN(90, 20, "T245", &Font12, 0xff, 0x00);
-			    handle = T245;
+				handle = T245;
 			}
-			OLED_1in5_Display(BlackImage);
+			OLED_1in5_Display(black_image);
 			Paint_Clear(BLACK);
 		}
 	}
 
-	// Set initial encoder timer value
+	/* Set initial encoder timer value */
 	TIM3->CNT = 330;
 
-	//Startup beep
-	beep(10);
+	/* Startup beep */
+	beep_ms(10);
 
-	// Set-up handle-specific constants
+	/* Set-up handle-specific constants */
 	if(handle == T210){
-		max_power = 60;// 60W
-		Kp = 20;
-		Ki = 60;
-		Kd = 0.5;
+	max_power_watt = 60; //60W
+	Kp = 20;
+	Ki = 60;
+	Kd = 0.5;
 	}
 	else if(handle == T245){
-		max_power = 120;// 120W
-		Kp = 30;
-		Ki = 60;
-		Kd = 1;
+	max_power_watt = 120; //120W
+	Kp = 30;
+	Ki = 60;
+	Kd = 1;
 	}
 
-	// Initiate PID controller
-	PID(&TPID, &sensorValues.act_temp, &heaterPower, &sensorValues.set_temp, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
+	/* Initiate PID controller */
+	PID(&TPID, &sensor_values.actual_temperature, &heater_power, &sensor_values.set_temperature, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 	PID_SetSampleTime(&TPID, 50);
-	PID_SetOutputLimits(&TPID, 0, 1000); // Set max and min output limit
-	PID_SetILimits(&TPID, -200, 200); // Set max and min I limit
+	PID_SetOutputLimits(&TPID, 0, 1000); 	// Set max and min output limit
+	PID_SetILimits(&TPID, -200, 200); 		// Set max and min I limit
 
 	while (1){
-		// beep if encoder value is changed
-		if(beep_once){
-			beep(5);
-			beep_once = false;
-		}
+	/* beep if encoder value is changed */
+	if(beep_requested){
+		beep_ms(5);
+		beep_requested = 0;
+	}
 
-		// TUNING - COMMENT OUT WHEN PID TUNING IS DONE
+	if(HAL_GetTick() - previous_millis_PID_update >= interval_PID_update){
+		get_set_temperature();
+		get_stand_status();
+		get_bus_voltage();
+
+		// TUNING - ONLY USED DURING PID TUNING
 		// ----------------------------------------------
 		//PID_SetTunings(&TPID, Kp, Ki, Kd);
-		//sensorValues.set_temp = custom_temp;
+		//sensor_values.set_temperature = custom_temperature;
 		// ----------------------------------------------
 
-		if(HAL_GetTick() - PIDupdate_previousMillis >= PIDupdate_Interval){
-			get_set_temp();
-			get_stand_status();
-			get_busVoltage();
+		set_heater_duty(0);
+		HAL_Delay(10); // Wait to let the thermocouple voltage stabilize before taking measurement
+		get_actual_temperature();
+		PID_Compute(&TPID);
 
-			set_heater_duty(0);
-			HAL_Delay(10); // Wait to let the thermocouple voltage stabilize before taking measurement
-			get_act_temp();
-			PID_Compute(&TPID);
-
-			if(!sensorValues.inStand){
-				heaterPower_DutyCycle = heaterPower*(max_power*powerReductionFactor/sensorValues.busVoltage);
-			}
-			else{
-				heaterPower_DutyCycle = 0;
-			}
-			set_heater_duty(heaterPower_DutyCycle);
-			PIDupdate_previousMillis = HAL_GetTick();
+		/* If handle is not in stand - calculate duty cycle for PWM */
+		if(!sensor_values.in_stand){
+			heater_power_duty_cycle = heater_power*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
 		}
-
-
-		if(HAL_GetTick() - DEBUG_previousMillis >= DEBUG_Interval){
-			memset(&buffer, '\0', sizeof(buffer));
-			sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n", sensorValues.act_temp, sensorValues.set_temp, heaterPower/10, PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID))/10;
-			debugPrint(&huart2,buffer);
-			DEBUG_previousMillis = HAL_GetTick();
+		/* If handle is in stand - set duty cycle for PWM to zero */
+		else{
+			heater_power_duty_cycle = 0;
 		}
-
-
-		if(HAL_GetTick() - display_previousMillis >= display_Interval){
-			get_ambient_temp();
-			update_OLED();
-			display_previousMillis = HAL_GetTick();
-		}
-
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
+		set_heater_duty(heater_power_duty_cycle);
+		previous_millis_PID_update = HAL_GetTick();
 	}
-  /* USER CODE END 3 */
+
+
+	/* Send debug information over serial */
+	if(HAL_GetTick() - previous_millis_debug >= interval_debug){
+		memset(&buffer, '\0', sizeof(buffer));
+		sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n", sensor_values.actual_temperature, sensor_values.set_temperature, heater_power/10, PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID))/10;
+		debugPrint(&huart2,buffer);
+		previous_millis_debug = HAL_GetTick();
+	}
+
+	/* Update display */
+	if(HAL_GetTick() - previous_millis_display >= interval_display){
+		get_ambient_temp();
+		update_OLED();
+		previous_millis_display = HAL_GetTick();
+	}
+
+	/* USER CODE END WHILE */
+
+	/* USER CODE BEGIN 3 */
+	}
+	/* USER CODE END 3 */
 }
 
 /**
