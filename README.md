@@ -1,6 +1,6 @@
 # AxxSolder Overview
 AxxSolder is a STM32 based soldering controller for JBC C210 and C245 cartridges. 
-Two versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-26V.  The software is written for the [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html) and implements a PID for temperature control, LCD driver and sleep function. Cases for the station and portable versions are printed and design files are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the soldering station working can be found here: XXX[TODO].
+Two versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-26V.  The software is written for the [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html) and implements a PID for temperature control, LCD driver and sleep function. Cases for the station and portable versions are printed and design files are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the soldering station working can be found under [DEMO](#demo).
 ![coverphoto](./photos/AxxSolder_cover.jpg)
 The schematic for AxxSolder is shown below. Both the station and portable versions use the same PCB and software. The MCU is a [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html) and the PCB footprint allows for either the UFQFPN32 or LQFP32 package. 
 
@@ -20,6 +20,9 @@ The AxxSolder goes into sleep mode when the soldering iron is not used. This hap
 ![AxxSolder_station](./photos/AxxSolder_Schematic.png)
 A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown below. 
 ![AxxSolder_station](./photos/PCB_3D.jpg)
+## DEMO
+Click on the gif to get to YouTube and see the demo in full resolution.  
+[![AxxSolder DEMO](./photos/AxxSolder_DEMO.gif)](https://www.youtube.com/watch?v=-3MtJyTwZFQ)
 ## AxxSolder Station
 ![AxxSolder_station](./photos/AxxSolder_station.jpg)
 ## AxxSolder Portable
