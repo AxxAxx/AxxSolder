@@ -1,13 +1,13 @@
 # AxxSolder Overview
-AxxSolder is a STM32 based soldering controller for JBC C210 and C245 cartridges. 
-Two versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-26V.  The software is written for the [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html) and implements a PID for temperature control, LCD driver and sleep function. Cases for the station and portable versions are printed and design files are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the soldering station working can be found under [DEMO](#demo).
+AxxSolder is a STM32 based soldering iron controller for JBC C210 and C245 cartridges. 
+Two different versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-26V.  The software is written for the [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html) and implements a PID for temperature control, LCD drivera and a sleep function when the handle is at rest. Enclosures for both the station and portable versions are 3D printed and design files are found under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the AxxSolder station can be found under [DEMO](#demo).
 ![coverphoto](./photos/AxxSolder_cover.jpg)
-The schematic for AxxSolder is shown below. Both the station and portable versions use the same PCB and software. The MCU is a [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html) and the PCB footprint allows for either the UFQFPN32 or LQFP32 package. 
+The schematic for AxxSolder is shown below. Both the station and portable versions use the same PCB and software. The MCU is a [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html) and the PCB footprint allows for either UFQFPN32 or LQFP32 package. 
 
-The OLED display used is a 1.5 inch 128 x 128 pixel SPI Display [WaveShare 1.5inch OLED Module](https://www.waveshare.com/wiki/1.5inch_OLED_Module) and shows:
+The OLED display used in this project is a 1.5 inch 128 x 128 pixel SPI Display [WaveShare 1.5inch OLED Module](https://www.waveshare.com/wiki/1.5inch_OLED_Module) and shows information about:
 * Set temperature
 * Actual temperature
-* Current power as a bar on the right side
+* Current power as a bar graph
 * In case of sleep mode, the power bar shows "ZzZzZz"
 * Input voltage
 * Ambient temperature
