@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="E">
   <design>
-    <source>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder\AxxSolder.kicad_sch</source>
-    <date>2023-08-26 20:59:03</date>
-    <tool>Eeschema (6.0.10)</tool>
+    <source>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder\AxxSolder.kicad_sch</source>
+    <date>2023-10-06 19:22:33</date>
+    <tool>Eeschema 7.0.8</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title/>
@@ -30,6 +30,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>44151c47-2a57-428d-94bc-fc0f28c90a94</tstamps>
     </comp>
@@ -39,6 +41,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>60de2681-f431-40c2-9879-cbe12c35031f</tstamps>
     </comp>
@@ -48,6 +52,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>b8268291-96f6-4f78-88b3-c57a605bac4c</tstamps>
     </comp>
@@ -57,6 +63,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>d25a39a1-fc0a-4ce5-a3ce-1494b4c8def4</tstamps>
     </comp>
@@ -66,6 +74,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>8b5fa4d4-f790-4795-bb97-6a08cef458fb</tstamps>
     </comp>
@@ -75,6 +85,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>1a029568-79db-485f-b4a3-4fd4d6739d00</tstamps>
     </comp>
@@ -84,6 +96,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>66f9b623-69f6-4fe7-b308-856c6ba15f5e</tstamps>
     </comp>
@@ -93,6 +107,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>9437a4ee-6c68-455d-97c7-aa525d1896d4</tstamps>
     </comp>
@@ -102,6 +118,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>df3d089a-6608-4969-8240-2d492140751d</tstamps>
     </comp>
@@ -111,6 +129,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>86d7ec9a-8f89-4820-9ca5-9f0684422f83</tstamps>
     </comp>
@@ -120,6 +140,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>5aa6abf1-3397-48be-9e4f-8e052b90787f</tstamps>
     </comp>
@@ -129,6 +151,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>925d9810-4250-444e-848c-643149bc634d</tstamps>
     </comp>
@@ -138,6 +162,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>9b966b6d-fd2d-412b-b4fb-54a4e893941d</tstamps>
     </comp>
@@ -147,6 +173,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>99d2cf27-e18c-448c-99a0-3b2fbce7892c</tstamps>
     </comp>
@@ -156,6 +184,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>ce2680e7-889d-47e3-9c98-13f0d366091f</tstamps>
     </comp>
@@ -165,6 +195,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>d8440ff7-0adc-4441-9e13-a1a749aa214c</tstamps>
     </comp>
@@ -174,6 +206,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>5c47d8f8-6fd8-4338-b773-885c07bb53bc</tstamps>
     </comp>
@@ -183,6 +217,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>04f278e8-3ecc-4929-bd24-371e25febbaf</tstamps>
     </comp>
@@ -192,6 +228,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>0e8ec738-a403-40f5-8d6e-0d3cd884cbad</tstamps>
     </comp>
@@ -201,6 +239,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>103b5b72-6fdc-4f6a-8623-244fd791f88f</tstamps>
     </comp>
@@ -210,6 +250,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>45da831c-e4b9-4195-90a7-57c94adef4e8</tstamps>
     </comp>
@@ -219,6 +261,8 @@
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>d591ffd6-dc2d-44ec-ab9b-b9b403f142ea</tstamps>
     </comp>
@@ -242,8 +286,42 @@
       <property name="Manufacturer_Part_Number" value="EMZR500ARA331MJA0G"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Cap Aluminum Lytic 330uF 50V 20% (10 X 10mm) SMD 0.12 Ohm 900mA 2000h 105C Automotive T/R"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>f1208938-fd02-4819-acd2-6c775055d322</tstamps>
+    </comp>
+    <comp ref="C24">
+      <value>10u</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1a68011a-dfbb-41d2-826a-5895ae2d8d96</tstamps>
+    </comp>
+    <comp ref="C25">
+      <value>22u</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>995cda05-4328-4529-b06b-c2cd0ccabd66</tstamps>
+    </comp>
+    <comp ref="C26">
+      <value>75p</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>6355f716-45f4-4ea8-9117-a48917affaae</tstamps>
     </comp>
     <comp ref="D1">
       <value>BAT54S</value>
@@ -251,6 +329,8 @@
       <libsource lib="Device" part="D_Schottky_Dual_Series_AKC" description="Dual Schottky diode, anode/cathode/center"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Dual Schottky diode, anode/cathode/center"/>
+      <property name="ki_keywords" value="diode"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>20ba8ef0-32c8-4985-89b2-620485693b9d</tstamps>
     </comp>
@@ -275,6 +355,7 @@
       <property name="Manufacturer_Part_Number" value="PMEG6020ER,115"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Nexperia PMEG6020ER,115 SMT Schottky Diode, 60V 2A, 2-Pin SOD-123W"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>abb7dac2-e053-4254-a81c-cea53bb7f1a8</tstamps>
     </comp>
@@ -284,6 +365,8 @@
       <libsource lib="Device" part="D_Schottky_Dual_Series_AKC" description="Dual Schottky diode, anode/cathode/center"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Dual Schottky diode, anode/cathode/center"/>
+      <property name="ki_keywords" value="diode"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>2f4a4480-e8e7-4cad-819f-1d5f71419dae</tstamps>
     </comp>
@@ -302,6 +385,8 @@
       <libsource lib="Device" part="D_Schottky_Dual_Series_AKC" description="Dual Schottky diode, anode/cathode/center"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Dual Schottky diode, anode/cathode/center"/>
+      <property name="ki_keywords" value="diode"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>1dbdefec-862f-485f-91c0-a9cf09a74b2f</tstamps>
     </comp>
@@ -311,6 +396,8 @@
       <libsource lib="Device" part="D_Schottky_Dual_Series_AKC" description="Dual Schottky diode, anode/cathode/center"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Dual Schottky diode, anode/cathode/center"/>
+      <property name="ki_keywords" value="diode"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>c2a8d921-b50a-48df-9879-2304cdf52882</tstamps>
     </comp>
@@ -335,6 +422,7 @@
       <property name="Manufacturer_Part_Number" value="PMEG10030ELPX"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Schottky Diodes &amp; Rectifiers 3A Schottky Barrier Rectifier"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>754eb04a-e55a-4af9-a9aa-134e0ea812e5</tstamps>
     </comp>
@@ -359,6 +447,7 @@
       <property name="Manufacturer_Part_Number" value="SMCJ24CA"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="LITTELFUSE - SMCJ24CA - TVS Diode, SMCJ Series, Bidirectional, 24 V, 38.9 V, DO-214AB (SMC), 2 Pins"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>ef16da6b-441b-461f-83c2-5f9a813ad745</tstamps>
     </comp>
@@ -368,6 +457,8 @@
       <libsource lib="Device" part="D_Schottky_Dual_Series_AKC" description="Dual Schottky diode, anode/cathode/center"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Dual Schottky diode, anode/cathode/center"/>
+      <property name="ki_keywords" value="diode"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>41639a6b-2cf3-428c-bfa8-6f546b5e498d</tstamps>
     </comp>
@@ -377,6 +468,8 @@
       <libsource lib="Device" part="Fuse" description="Fuse"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Fuse"/>
+      <property name="ki_keywords" value="fuse"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>8f85c762-7131-4418-9939-b517bb90b1f0</tstamps>
     </comp>
@@ -386,6 +479,8 @@
       <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Mounting Hole without connection"/>
+      <property name="ki_keywords" value="mounting hole"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>54cdf9df-21ca-4459-a69a-06d7390d8166</tstamps>
     </comp>
@@ -395,6 +490,8 @@
       <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Mounting Hole without connection"/>
+      <property name="ki_keywords" value="mounting hole"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>d4d102f9-d923-4000-be0b-b5ca2b5ecce9</tstamps>
     </comp>
@@ -404,6 +501,8 @@
       <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Mounting Hole without connection"/>
+      <property name="ki_keywords" value="mounting hole"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>0ff4d045-d982-4ca6-9cb7-e7c63852a553</tstamps>
     </comp>
@@ -413,6 +512,8 @@
       <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Mounting Hole without connection"/>
+      <property name="ki_keywords" value="mounting hole"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>3468577a-122d-4813-b53c-c4bfadd37431</tstamps>
     </comp>
@@ -437,6 +538,7 @@
       <property name="Manufacturer_Part_Number" value="LTC4440AHMS8E-5#PBF"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Driver 1.1A 1-OUT High Side Full Brdg Non-Inv Automotive 8-Pin MSOP EP Tube"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>9747a5e0-152b-4ca3-bf1b-6f5363178f5c</tstamps>
     </comp>
@@ -461,6 +563,7 @@
       <property name="Manufacturer_Part_Number" value="STM32G431KBT6"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>faa3e510-72c9-444c-96c9-e7ce54d5fda8</tstamps>
     </comp>
@@ -485,6 +588,7 @@
       <property name="Manufacturer_Part_Number" value="TMP236AQDBZRQ1"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Automotive grade, +/-0.5C analog output temperature sensor with 19.5 mV/C gain"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>db4dbdb6-9be9-4d71-8f54-a116ec2069de</tstamps>
     </comp>
@@ -509,6 +613,7 @@
       <property name="Manufacturer_Part_Number" value="OPA2333AIDRBR"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="1.8V, 17A, 2 channels, microPower, Precision, Zero Drift CMOS Op Amp"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>4c84caa4-b7ad-46d3-b17d-399fc2835011</tstamps>
     </comp>
@@ -533,8 +638,32 @@
       <property name="Manufacturer_Part_Number" value="STM32G431KBT6"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>b28f40fd-f175-4db3-8891-ed4bcb055de2</tstamps>
+    </comp>
+    <comp ref="IC6">
+      <value>TPS54302DDCR</value>
+      <footprint>SOT95P280X110-6N</footprint>
+      <datasheet>http://www.ti.com/general/docs/suppproductinfo.tsp?distId=10&amp;gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Ftps54302</datasheet>
+      <fields>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">Texas Instruments</field>
+        <field name="Manufacturer_Part_Number">TPS54302DDCR</field>
+        <field name="Mouser Part Number">595-TPS54302DDCR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TPS54302DDCR?qs=zEmsApcVOkUXM7UP0GSO2g%3D%3D</field>
+      </fields>
+      <libsource lib="TPS54302DDCR" part="TPS54302DDCR" description="Conv DC-DC 4.5V to 28V Synchronous Step Down Single-Out 0.6V to 26V 3A 6-Pin TSOT-23 T/R"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="595-TPS54302DDCR"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TPS54302DDCR?qs=zEmsApcVOkUXM7UP0GSO2g%3D%3D"/>
+      <property name="Manufacturer_Name" value="Texas Instruments"/>
+      <property name="Manufacturer_Part_Number" value="TPS54302DDCR"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Conv DC-DC 4.5V to 28V Synchronous Step Down Single-Out 0.6V to 26V 3A 6-Pin TSOT-23 T/R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>cd426eac-7d5e-4a9d-9b7b-8e3345d037b4</tstamps>
     </comp>
     <comp ref="J1">
       <value>Conn_01x07_Male</value>
@@ -542,6 +671,8 @@
       <libsource lib="Connector" part="Conn_01x07_Male" description="Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="ki_keywords" value="connector"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>26006ae2-4971-48aa-8602-437353987295</tstamps>
     </comp>
@@ -551,8 +682,31 @@
       <libsource lib="Connector" part="Conn_01x07_Male" description="Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="ki_keywords" value="connector"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>654acd77-b89c-4646-b294-be4d5da0a24c</tstamps>
+    </comp>
+    <comp ref="L1">
+      <value>SRP7028CC-100M</value>
+      <footprint>INDPM7366X300N</footprint>
+      <datasheet>https://www.bourns.com/docs/Product-Datasheets/SRP7028CC.pdf</datasheet>
+      <fields>
+        <field name="Height">3</field>
+        <field name="Manufacturer_Name">Bourns</field>
+        <field name="Manufacturer_Part_Number">SRP7028CC-100M</field>
+      </fields>
+      <libsource lib="SRP7028CC-100M" part="SRP7028CC-100M" description="Ind,7.3x6.6x2.8mm,10uH+/-20%,3.5A,shd"/>
+      <property name="Height" value="3"/>
+      <property name="Mouser Part Number" value=""/>
+      <property name="Mouser Price/Stock" value=""/>
+      <property name="Manufacturer_Name" value="Bourns"/>
+      <property name="Manufacturer_Part_Number" value="SRP7028CC-100M"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Ind,7.3x6.6x2.8mm,10uH+/-20%,3.5A,shd"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>16b33d2b-24d9-42bd-b02f-056ed7958ee6</tstamps>
     </comp>
     <comp ref="LS1">
       <value>CMI-9653S-SMT-TR</value>
@@ -575,6 +729,7 @@
       <property name="Manufacturer_Part_Number" value="CMI-9653S-SMT-TR"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Audio Indicators &amp; Alerts Buzzer 9.6mm sq 2.7kHz 3V SMT"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>09ac8a68-c7b1-4d76-be4e-24bf4081e931</tstamps>
     </comp>
@@ -599,31 +754,9 @@
       <property name="Manufacturer_Part_Number" value="LD1117AS33TR"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="STMICROELECTRONICS - LD1117AS33TR - Fixed LDO Voltage Regulator, 5.3V to 10V, 1.15V Dropout, 3.3Vout, 1Aout, SOT-223-3"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>c7a03ce5-cb48-4afe-9b8e-7bd78c2df80f</tstamps>
-    </comp>
-    <comp ref="PS2">
-      <value>TSR_2-2450</value>
-      <footprint>TSR-2</footprint>
-      <datasheet>https://tracopower.com/tsr2-datasheet/</datasheet>
-      <fields>
-        <field name="Description">2 Amp POL switching regulator, 3.0 to -36 VDC input, pos.-pos. circuit, LM78 compatible, SIP-3</field>
-        <field name="Manufacturer_Name">Traco Power</field>
-        <field name="Manufacturer_Part_Number">TSR 2-2450</field>
-        <field name="Mouser Part Number">495-TSR2-2450</field>
-        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/TRACO-Power/TSR-2-2450?qs=NtE2QagKf6RzknAolzm%2FTQ%3D%3D</field>
-      </fields>
-      <libsource lib="TSR_2-2450" part="TSR_2-2450" description="2 Amp POL switching regulator, 3.0 to -36 VDC input, pos.-pos. circuit, LM78 compatible, SIP-3"/>
-      <property name="Description" value="2 Amp POL switching regulator, 3.0 to -36 VDC input, pos.-pos. circuit, LM78 compatible, SIP-3"/>
-      <property name="Height" value=""/>
-      <property name="Mouser Part Number" value="495-TSR2-2450"/>
-      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/TRACO-Power/TSR-2-2450?qs=NtE2QagKf6RzknAolzm%2FTQ%3D%3D"/>
-      <property name="Manufacturer_Name" value="Traco Power"/>
-      <property name="Manufacturer_Part_Number" value="TSR 2-2450"/>
-      <property name="Sheetname" value=""/>
-      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
-      <sheetpath names="/" tstamps="/"/>
-      <tstamps>cb84a1ec-2651-4e68-bdc2-eff77d6be89d</tstamps>
     </comp>
     <comp ref="Q2">
       <value>2N7002NXAKR</value>
@@ -652,6 +785,7 @@
       <property name="Mouser Testing Price/Stock" value=""/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="NEXPERIA - 2N7002NXAKR - MOSFET Transistor, Trench, N Channel, 190 mA, 60 V, 3 ohm, 10 V, 1.6 V"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>ce0bb672-02b4-43e8-bfbb-cc94aec90d22</tstamps>
     </comp>
@@ -661,6 +795,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>94fdce62-df60-438f-b446-fff71e760a6a</tstamps>
     </comp>
@@ -670,6 +806,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>09c782b2-5d4f-41d6-971a-b93840c6b70b</tstamps>
     </comp>
@@ -679,6 +817,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>c57886b7-e2ec-41ed-a6e1-21391aaaf2df</tstamps>
     </comp>
@@ -688,6 +828,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>bb97aef4-3c7e-4f7c-994a-99bc882cc442</tstamps>
     </comp>
@@ -697,6 +839,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>f451cc69-9419-4684-9a72-bbeb7d282009</tstamps>
     </comp>
@@ -706,6 +850,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>94c1ec7e-6f07-48c9-a6ab-a4553efd0c2a</tstamps>
     </comp>
@@ -715,6 +861,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>9a36b66e-a727-42c9-950d-8fa93127ed84</tstamps>
     </comp>
@@ -728,6 +876,8 @@
       <property name="part_id" value="WSLP25122L500FEA"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>2949e5e2-c9b2-4a46-b7a4-8f4dace5b7de</tstamps>
     </comp>
@@ -737,6 +887,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>2752ef19-08c9-4b7c-9685-ad45e3ad691c</tstamps>
     </comp>
@@ -746,6 +898,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>d6b7cee9-a4aa-49b8-9fa5-8242be7b4ada</tstamps>
     </comp>
@@ -755,6 +909,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>2da95b45-99c6-44ff-95cf-7d435953f03a</tstamps>
     </comp>
@@ -764,6 +920,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>82af7a26-2e24-45f2-9885-a0ae506f1d52</tstamps>
     </comp>
@@ -773,6 +931,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>19c47702-591f-4a04-9970-7ba375cb73f4</tstamps>
     </comp>
@@ -782,6 +942,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>1e0560a6-f856-43c2-8c1c-9a79d702f684</tstamps>
     </comp>
@@ -791,6 +953,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>7244bcaf-fb4a-41f4-9ea1-87aa7523bdd4</tstamps>
     </comp>
@@ -800,6 +964,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>db940e51-6578-4b97-8eca-b3b88d829824</tstamps>
     </comp>
@@ -809,6 +975,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>f56eb70a-f343-49e7-ba97-dfd023b5ee38</tstamps>
     </comp>
@@ -818,6 +986,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>7cefe6c8-fdb2-40b5-9635-eab787e7787a</tstamps>
     </comp>
@@ -827,6 +997,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>27105952-a3e7-4c16-9644-5d1177b2d4b9</tstamps>
     </comp>
@@ -836,6 +1008,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>867875d0-acf3-4749-84b0-1c577009c8df</tstamps>
     </comp>
@@ -845,6 +1019,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>c78f270a-2524-4f41-b583-03aa1b32c05e</tstamps>
     </comp>
@@ -854,6 +1030,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>8aaf0ae3-71d3-48bb-a3e4-17b9ab035252</tstamps>
     </comp>
@@ -863,6 +1041,8 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>c75425b4-d558-4c4b-9fad-ccb8451347e5</tstamps>
     </comp>
@@ -872,8 +1052,43 @@
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>32475768-e6c8-4b7f-bd5c-33fb191f7d13</tstamps>
+    </comp>
+    <comp ref="R27">
+      <value>100k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8e113322-2100-4a80-b788-11a4141c8478</tstamps>
+    </comp>
+    <comp ref="R28">
+      <value>49.9</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1808c4f1-416f-40ed-b1c6-b808d1bdf59b</tstamps>
+    </comp>
+    <comp ref="R29">
+      <value>13k3</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>01767385-8123-4074-b52f-15ef59a19d88</tstamps>
     </comp>
     <comp ref="TP1">
       <value>AmbTemp_TP</value>
@@ -881,6 +1096,8 @@
       <libsource lib="Connector" part="TestPoint" description="test point"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>a39eff84-f271-4343-adde-5799f33e9d81</tstamps>
     </comp>
@@ -890,6 +1107,8 @@
       <libsource lib="Connector" part="TestPoint" description="test point"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>42bc0bdd-e279-4a6b-b7cf-78b4a83baef1</tstamps>
     </comp>
@@ -899,6 +1118,8 @@
       <libsource lib="Connector" part="TestPoint" description="test point"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>261df737-07b5-42b7-b889-37db8e7ac85c</tstamps>
     </comp>
@@ -908,6 +1129,8 @@
       <libsource lib="Connector" part="TestPoint" description="test point"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>5ebc7a86-0fd0-4f49-af2c-15d5808b33fe</tstamps>
     </comp>
@@ -917,6 +1140,8 @@
       <libsource lib="Connector" part="TestPoint" description="test point"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>3a5a60c2-8a0c-4277-a18e-189de25664e4</tstamps>
     </comp>
@@ -926,6 +1151,8 @@
       <libsource lib="Connector" part="TestPoint" description="test point"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>e88b6dc4-a2a5-4b66-af06-7c3ebf2aef12</tstamps>
     </comp>
@@ -935,6 +1162,8 @@
       <libsource lib="Connector" part="TestPoint" description="test point"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>87c0f496-3804-4cbc-a141-891711d6315e</tstamps>
     </comp>
@@ -944,6 +1173,8 @@
       <libsource lib="Connector" part="TestPoint" description="test point"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>6467d21d-487b-42f4-bf66-bcb10d8fce0a</tstamps>
     </comp>
@@ -968,6 +1199,7 @@
       <property name="Manufacturer_Part_Number" value="PEC11L-4220F-S0015"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="BOURNS - PEC11L-4220F-S0015 - INCREMENTAL ENCODER, 15 PULSES"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>f41cc2b0-9027-46e0-9aa2-d871a2772545</tstamps>
     </comp>
@@ -1195,7 +1427,7 @@
       <description>STMICROELECTRONICS - LD1117AS33TR - Fixed LDO Voltage Regulator, 5.3V to 10V, 1.15V Dropout, 3.3Vout, 1Aout, SOT-223-3</description>
       <docs>https://4donline.ihs.com/images/VipMasterIC/IC/SGST/SGSTS49356/SGSTS49356-1.pdf?hkey=6D3A4C79FDBF58556ACFDE234799DDF0</docs>
       <fields>
-        <field name="Reference">PS?</field>
+        <field name="Reference">PS1</field>
         <field name="Value">LD1117AS33TR</field>
         <field name="Footprint">SOT230P700X190-4N</field>
         <field name="Datasheet">https://4donline.ihs.com/images/VipMasterIC/IC/SGST/SGSTS49356/SGSTS49356-1.pdf?hkey=6D3A4C79FDBF58556ACFDE234799DDF0</field>
@@ -1362,6 +1594,23 @@
         <pin num="2" name="" type="passive"/>
       </pins>
     </libpart>
+    <libpart lib="SRP7028CC-100M" part="SRP7028CC-100M">
+      <description>Ind,7.3x6.6x2.8mm,10uH+/-20%,3.5A,shd</description>
+      <docs>https://www.bourns.com/docs/Product-Datasheets/SRP7028CC.pdf</docs>
+      <fields>
+        <field name="Reference">L1</field>
+        <field name="Value">SRP7028CC-100M</field>
+        <field name="Footprint">INDPM7366X300N</field>
+        <field name="Datasheet">https://www.bourns.com/docs/Product-Datasheets/SRP7028CC.pdf</field>
+        <field name="Height">3</field>
+        <field name="Manufacturer_Name">Bourns</field>
+        <field name="Manufacturer_Part_Number">SRP7028CC-100M</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
     <libpart lib="STM32G431KBT6" part="STM32G431KBT6">
       <description>ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration</description>
       <docs>https://www.st.com/resource/en/datasheet/stm32g431kb.pdf</docs>
@@ -1433,81 +1682,87 @@
         <pin num="3" name="GND" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="TSR_2-2450" part="TSR_2-2450">
-      <description>2 Amp POL switching regulator, 3.0 to -36 VDC input, pos.-pos. circuit, LM78 compatible, SIP-3</description>
-      <docs>https://tracopower.com/tsr2-datasheet/</docs>
+    <libpart lib="TPS54302DDCR" part="TPS54302DDCR">
+      <description>Conv DC-DC 4.5V to 28V Synchronous Step Down Single-Out 0.6V to 26V 3A 6-Pin TSOT-23 T/R</description>
+      <docs>http://www.ti.com/general/docs/suppproductinfo.tsp?distId=10&amp;gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Ftps54302</docs>
       <fields>
-        <field name="Reference">PS?</field>
-        <field name="Value">TSR_2-2450</field>
-        <field name="Footprint">TSR-2</field>
-        <field name="Datasheet">https://tracopower.com/tsr2-datasheet/</field>
-        <field name="Description">2 Amp POL switching regulator, 3.0 to -36 VDC input, pos.-pos. circuit, LM78 compatible, SIP-3</field>
-        <field name="Mouser Part Number">495-TSR2-2450</field>
-        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/TRACO-Power/TSR-2-2450?qs=NtE2QagKf6RzknAolzm%2FTQ%3D%3D</field>
-        <field name="Manufacturer_Name">Traco Power</field>
-        <field name="Manufacturer_Part_Number">TSR 2-2450</field>
+        <field name="Reference">IC6</field>
+        <field name="Value">TPS54302DDCR</field>
+        <field name="Footprint">SOT95P280X110-6N</field>
+        <field name="Datasheet">http://www.ti.com/general/docs/suppproductinfo.tsp?distId=10&amp;gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Ftps54302</field>
+        <field name="Height">1.1</field>
+        <field name="Mouser Part Number">595-TPS54302DDCR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TPS54302DDCR?qs=zEmsApcVOkUXM7UP0GSO2g%3D%3D</field>
+        <field name="Manufacturer_Name">Texas Instruments</field>
+        <field name="Manufacturer_Part_Number">TPS54302DDCR</field>
       </fields>
       <pins>
-        <pin num="1" name="+VIN" type="input"/>
-        <pin num="2" name="GND" type="power_in"/>
-        <pin num="3" name="+VOUT" type="output"/>
+        <pin num="1" name="GND" type="passive"/>
+        <pin num="2" name="SW" type="passive"/>
+        <pin num="3" name="VIN" type="passive"/>
+        <pin num="4" name="FB" type="passive"/>
+        <pin num="5" name="EN" type="passive"/>
+        <pin num="6" name="BOOT" type="passive"/>
       </pins>
     </libpart>
   </libparts>
   <libraries>
     <library logical="1_5inch-rgb-oled-module_asm-1110">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/1_5inch-rgb-oled-module_asm-1110/1_5inch-rgb-oled-module_asm-1110.kicad_sym</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/1_5inch-rgb-oled-module_asm-1110/1_5inch-rgb-oled-module_asm-1110.kicad_sym</uri>
     </library>
     <library logical="2N7002NXAKR">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/2N7002NXAKR/2N7002NXAKR.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/2N7002NXAKR/2N7002NXAKR.lib</uri>
     </library>
     <library logical="BSC014N04LS">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/BSC014N04LS/BSC014N04LS.kicad_sym</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/BSC014N04LS/BSC014N04LS.kicad_sym</uri>
     </library>
     <library logical="CMI-9653S-SMT-TR">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/CMI-9653S-SMT-TR/CMI-9653S-SMT-TR.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/CMI-9653S-SMT-TR/CMI-9653S-SMT-TR.lib</uri>
     </library>
     <library logical="Connector">
-      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Connector.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/Connector.kicad_sym</uri>
     </library>
     <library logical="Device">
-      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Device.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/Device.kicad_sym</uri>
     </library>
     <library logical="EMZR500ARA331MJA0G">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/EMZR500ARA331MJA0G/EMZR500ARA331MJA0G.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/EMZR500ARA331MJA0G/EMZR500ARA331MJA0G.lib</uri>
     </library>
     <library logical="LD1117AS33TR">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/LD1117AS33TR/LD1117AS33TR.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/LD1117AS33TR/LD1117AS33TR.lib</uri>
     </library>
     <library logical="LTC4440AHMS8E-5#PBF">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/LTC4440AHMS8E-5#PBF/LTC4440AHMS8E-5#PBF.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/LTC4440AHMS8E-5#PBF/LTC4440AHMS8E-5#PBF.lib</uri>
     </library>
     <library logical="Mechanical">
-      <uri>C:\Program Files\KiCad\6.0\share\kicad\symbols\/Mechanical.kicad_sym</uri>
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/Mechanical.kicad_sym</uri>
     </library>
     <library logical="OPA2333AIDRBR">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/OPA2333AIDRBR/OPA2333AIDRBR.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/OPA2333AIDRBR/OPA2333AIDRBR.lib</uri>
     </library>
     <library logical="PEC11L-4220F-S0015">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/PEC11L-4220F-S0015/PEC11L-4220F-S0015.kicad_sym</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/PEC11L-4220F-S0015/PEC11L-4220F-S0015.kicad_sym</uri>
     </library>
     <library logical="PMEG10030ELPX">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/PMEG10030ELPX/PMEG10030ELPX.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/PMEG10030ELPX/PMEG10030ELPX.lib</uri>
     </library>
     <library logical="PMEG6020ER_115">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/PMEG6020ER,115/PMEG6020ER_115.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/PMEG6020ER,115/PMEG6020ER_115.lib</uri>
     </library>
     <library logical="SMCJ24CA">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/SMCJ24CA/SMCJ24CA.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/SMCJ24CA/SMCJ24CA.lib</uri>
+    </library>
+    <library logical="SRP7028CC-100M">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/SRP7028CC-100M/SRP7028CC-100M.kicad_sym</uri>
     </library>
     <library logical="STM32G431KBT6">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/STM32G431KBT6/STM32G431KBT6.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/STM32G431KBT6/STM32G431KBT6.lib</uri>
     </library>
     <library logical="TMP236AQDBZRQ1">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/TMP236AQDBZRQ1/TMP236AQDBZRQ1.lib</uri>
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/TMP236AQDBZRQ1/TMP236AQDBZRQ1.lib</uri>
     </library>
-    <library logical="TSR_2-2450">
-      <uri>C:\Users\Axel\Desktop\AxxSolder\PCB\AxxSolder/libs/TSR_2-2450/TSR_2-2450.lib</uri>
+    <library logical="TPS54302DDCR">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/TPS54302DDCR/TPS54302DDCR.kicad_sym</uri>
     </library>
   </libraries>
   <nets>
@@ -1542,16 +1797,19 @@
     </net>
     <net code="2" name="+5V">
       <node ref="C1" pin="1" pintype="passive"/>
-      <node ref="C13" pin="1" pintype="passive"/>
+      <node ref="C13" pin="2" pintype="passive"/>
       <node ref="C2" pin="1" pintype="passive"/>
-      <node ref="C6" pin="1" pintype="passive"/>
+      <node ref="C25" pin="2" pintype="passive"/>
+      <node ref="C26" pin="2" pintype="passive"/>
+      <node ref="C6" pin="2" pintype="passive"/>
       <node ref="D2" pin="2" pintype="passive"/>
       <node ref="D4" pin="1" pinfunction="VCC" pintype="bidirectional"/>
       <node ref="IC1" pin="3" pinfunction="VCC" pintype="passive"/>
+      <node ref="L1" pin="2" pintype="passive"/>
       <node ref="LS1" pin="2" pinfunction="+" pintype="passive"/>
       <node ref="PS1" pin="3" pinfunction="VIN" pintype="input"/>
-      <node ref="PS2" pin="3" pinfunction="+VOUT" pintype="output"/>
       <node ref="R17" pin="1" pintype="passive"/>
+      <node ref="R28" pin="1" pintype="passive"/>
       <node ref="TP7" pin="1" pinfunction="1" pintype="passive"/>
     </net>
     <net code="3" name="/AMBIENT_TEMP">
@@ -1713,7 +1971,7 @@
       <node ref="C10" pin="2" pintype="passive"/>
       <node ref="C11" pin="2" pintype="passive"/>
       <node ref="C12" pin="2" pintype="passive"/>
-      <node ref="C13" pin="2" pintype="passive"/>
+      <node ref="C13" pin="1" pintype="passive"/>
       <node ref="C14" pin="1" pintype="passive"/>
       <node ref="C15" pin="2" pintype="passive"/>
       <node ref="C16" pin="2" pintype="passive"/>
@@ -1725,9 +1983,10 @@
       <node ref="C21" pin="1" pintype="passive"/>
       <node ref="C22" pin="2" pintype="passive"/>
       <node ref="C23" pin="" pintype="passive"/>
+      <node ref="C25" pin="1" pintype="passive"/>
       <node ref="C3" pin="2" pintype="passive"/>
       <node ref="C5" pin="2" pintype="passive"/>
-      <node ref="C6" pin="2" pintype="passive"/>
+      <node ref="C6" pin="1" pintype="passive"/>
       <node ref="C7" pin="1" pintype="passive"/>
       <node ref="C8" pin="2" pintype="passive"/>
       <node ref="C9" pin="2" pintype="passive"/>
@@ -1750,10 +2009,10 @@
       <node ref="IC5" pin="14" pinfunction="VSSA" pintype="passive"/>
       <node ref="IC5" pin="16" pinfunction="VSS_1" pintype="passive"/>
       <node ref="IC5" pin="32" pinfunction="VSS_2" pintype="passive"/>
+      <node ref="IC6" pin="1" pinfunction="GND" pintype="passive"/>
       <node ref="J1" pin="6" pinfunction="Pin_6" pintype="passive"/>
       <node ref="J4" pin="1" pinfunction="Pin_1" pintype="passive"/>
       <node ref="PS1" pin="1" pinfunction="ADJ/GND" pintype="power_in"/>
-      <node ref="PS2" pin="2" pinfunction="GND" pintype="power_in"/>
       <node ref="Q2" pin="2" pintype="passive"/>
       <node ref="R10" pin="2" pintype="passive"/>
       <node ref="R14" pin="1" pintype="passive"/>
@@ -1762,6 +2021,7 @@
       <node ref="R21" pin="2" pintype="passive"/>
       <node ref="R23" pin="2" pintype="passive"/>
       <node ref="R26" pin="1" pintype="passive"/>
+      <node ref="R29" pin="2" pintype="passive"/>
       <node ref="R3" pin="2" pintype="passive"/>
       <node ref="TP3" pin="1" pinfunction="1" pintype="passive"/>
       <node ref="U1" pin="2" pinfunction="2" pintype="passive"/>
@@ -1773,91 +2033,113 @@
       <node ref="R2" pin="2" pintype="passive"/>
       <node ref="R3" pin="1" pintype="passive"/>
     </net>
-    <net code="31" name="Net-(C4-Pad2)">
-      <node ref="C4" pin="2" pintype="passive"/>
-      <node ref="D2" pin="1" pintype="passive"/>
-      <node ref="IC1" pin="6" pinfunction="BOOST" pintype="passive"/>
-    </net>
-    <net code="32" name="Net-(D5-Pad3)">
+    <net code="31" name="Net-(D5-common)">
       <node ref="D5" pin="3" pinfunction="common" pintype="passive"/>
       <node ref="IC4" pin="2" pinfunction="-IN_A" pintype="passive"/>
       <node ref="R19" pin="2" pintype="passive"/>
       <node ref="R22" pin="2" pintype="passive"/>
     </net>
-    <net code="33" name="Net-(D6-Pad3)">
+    <net code="32" name="Net-(D6-common)">
       <node ref="D6" pin="3" pinfunction="common" pintype="passive"/>
       <node ref="IC4" pin="3" pinfunction="+IN_A" pintype="passive"/>
       <node ref="R20" pin="2" pintype="passive"/>
       <node ref="R21" pin="1" pintype="passive"/>
     </net>
-    <net code="34" name="Net-(D8-Pad2)">
-      <node ref="D8" pin="2" pintype="passive"/>
-      <node ref="F1" pin="2" pintype="passive"/>
-      <node ref="J1" pin="7" pinfunction="Pin_7" pintype="passive"/>
+    <net code="33" name="Net-(IC1-BOOST)">
+      <node ref="C4" pin="2" pintype="passive"/>
+      <node ref="D2" pin="1" pintype="passive"/>
+      <node ref="IC1" pin="6" pinfunction="BOOST" pintype="passive"/>
     </net>
-    <net code="35" name="Net-(IC1-Pad7)">
+    <net code="34" name="Net-(IC1-TG)">
       <node ref="IC1" pin="7" pinfunction="TG" pintype="passive"/>
       <node ref="U2" pin="9" pinfunction="G" pintype="passive"/>
     </net>
-    <net code="36" name="Net-(IC2-Pad2)">
-      <node ref="IC2" pin="2" pinfunction="PF0-OSC_IN" pintype="passive"/>
-      <node ref="IC5" pin="2" pinfunction="PF0-OSC_IN" pintype="passive"/>
-      <node ref="TP2" pin="1" pinfunction="1" pintype="passive"/>
-    </net>
-    <net code="37" name="Net-(IC2-Pad3)">
-      <node ref="IC2" pin="3" pinfunction="PF1-OSC_OUT" pintype="passive"/>
-      <node ref="IC5" pin="3" pinfunction="PF1-OSC_OUT" pintype="passive"/>
-    </net>
-    <net code="38" name="Net-(IC2-Pad18)">
+    <net code="35" name="Net-(IC2-PA8)">
       <node ref="IC2" pin="18" pinfunction="PA8" pintype="passive"/>
       <node ref="IC5" pin="18" pinfunction="PA8" pintype="passive"/>
     </net>
-    <net code="39" name="Net-(IC2-Pad30)">
+    <net code="36" name="Net-(IC2-PB7)">
       <node ref="IC2" pin="30" pinfunction="PB7" pintype="passive"/>
       <node ref="IC5" pin="30" pinfunction="PB7" pintype="passive"/>
     </net>
-    <net code="40" name="Net-(IC2-Pad31)">
+    <net code="37" name="Net-(IC2-PB8-BOOT0)">
       <node ref="IC2" pin="31" pinfunction="PB8-BOOT0" pintype="passive"/>
       <node ref="IC5" pin="31" pinfunction="PB8-BOOT0" pintype="passive"/>
       <node ref="R14" pin="2" pintype="passive"/>
     </net>
-    <net code="41" name="Net-(IC4-Pad5)">
+    <net code="38" name="Net-(IC2-PF0-OSC_IN)">
+      <node ref="IC2" pin="2" pinfunction="PF0-OSC_IN" pintype="passive"/>
+      <node ref="IC5" pin="2" pinfunction="PF0-OSC_IN" pintype="passive"/>
+      <node ref="TP2" pin="1" pinfunction="1" pintype="passive"/>
+    </net>
+    <net code="39" name="Net-(IC2-PF1-OSC_OUT)">
+      <node ref="IC2" pin="3" pinfunction="PF1-OSC_OUT" pintype="passive"/>
+      <node ref="IC5" pin="3" pinfunction="PF1-OSC_OUT" pintype="passive"/>
+    </net>
+    <net code="40" name="Net-(IC4-+IN_B)">
       <node ref="IC4" pin="5" pinfunction="+IN_B" pintype="passive"/>
       <node ref="R23" pin="1" pintype="passive"/>
       <node ref="R25" pin="1" pintype="passive"/>
     </net>
-    <net code="42" name="Net-(IC4-Pad6)">
+    <net code="41" name="Net-(IC4--IN_B)">
       <node ref="IC4" pin="6" pinfunction="-IN_B" pintype="passive"/>
       <node ref="R24" pin="1" pintype="passive"/>
       <node ref="R26" pin="2" pintype="passive"/>
     </net>
-    <net code="43" name="Net-(LS1-Pad1)">
+    <net code="42" name="Net-(IC6-BOOT)">
+      <node ref="C24" pin="1" pintype="passive"/>
+      <node ref="IC6" pin="6" pinfunction="BOOT" pintype="passive"/>
+    </net>
+    <net code="43" name="Net-(IC6-FB)">
+      <node ref="C26" pin="1" pintype="passive"/>
+      <node ref="IC6" pin="4" pinfunction="FB" pintype="passive"/>
+      <node ref="R27" pin="1" pintype="passive"/>
+      <node ref="R28" pin="2" pintype="passive"/>
+    </net>
+    <net code="44" name="Net-(IC6-SW)">
+      <node ref="C24" pin="2" pintype="passive"/>
+      <node ref="IC6" pin="2" pinfunction="SW" pintype="passive"/>
+      <node ref="L1" pin="1" pintype="passive"/>
+    </net>
+    <net code="45" name="Net-(J1-Pin_7)">
+      <node ref="D8" pin="2" pintype="passive"/>
+      <node ref="F1" pin="2" pintype="passive"/>
+      <node ref="J1" pin="7" pinfunction="Pin_7" pintype="passive"/>
+    </net>
+    <net code="46" name="Net-(LS1--)">
       <node ref="LS1" pin="1" pinfunction="-" pintype="passive"/>
       <node ref="Q2" pin="3" pintype="passive"/>
       <node ref="R17" pin="2" pintype="passive"/>
     </net>
-    <net code="44" name="Net-(Q2-Pad1)">
+    <net code="47" name="Net-(Q2-Pad1)">
       <node ref="Q2" pin="1" pintype="passive"/>
       <node ref="R15" pin="2" pintype="passive"/>
       <node ref="R16" pin="1" pintype="passive"/>
     </net>
-    <net code="47" name="VDD">
+    <net code="48" name="Net-(R27-Pad2)">
+      <node ref="R27" pin="2" pintype="passive"/>
+      <node ref="R29" pin="1" pintype="passive"/>
+    </net>
+    <net code="51" name="VDD">
       <node ref="C14" pin="2" pintype="passive"/>
       <node ref="C17" pin="1" pintype="passive"/>
       <node ref="C18" pin="1" pintype="passive"/>
       <node ref="C21" pin="2" pintype="passive"/>
       <node ref="C23" pin="" pintype="passive"/>
       <node ref="F1" pin="1" pintype="passive"/>
-      <node ref="PS2" pin="1" pinfunction="+VIN" pintype="input"/>
+      <node ref="IC6" pin="3" pinfunction="VIN" pintype="passive"/>
       <node ref="R2" pin="1" pintype="passive"/>
       <node ref="TP8" pin="1" pinfunction="1" pintype="passive"/>
       <node ref="U2" pin="10" pinfunction="D" pintype="passive"/>
     </net>
-    <net code="48" name="unconnected-(D4-Pad3)">
+    <net code="52" name="unconnected-(D4-NC-Pad3)">
       <node ref="D4" pin="3" pinfunction="NC" pintype="bidirectional"/>
     </net>
-    <net code="49" name="unconnected-(IC1-Pad5)">
+    <net code="53" name="unconnected-(IC1-NC-Pad5)">
       <node ref="IC1" pin="5" pinfunction="NC" pintype="no_connect"/>
+    </net>
+    <net code="54" name="unconnected-(IC6-EN-Pad5)">
+      <node ref="IC6" pin="5" pinfunction="EN" pintype="passive"/>
     </net>
   </nets>
 </export>
