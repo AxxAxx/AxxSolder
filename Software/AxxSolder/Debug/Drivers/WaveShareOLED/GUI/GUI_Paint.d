@@ -1,7 +1,7 @@
 Drivers/WaveShareOLED/GUI/GUI_Paint.o: \
  ../Drivers/WaveShareOLED/GUI/GUI_Paint.c \
  ../Drivers/WaveShareOLED/GUI/GUI_Paint.h \
- C:/owncloud/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Config/DEV_Config.h \
+ C:/Users/axel_/ownCloud\ -\ axel@192.168.1.36/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Config/DEV_Config.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
@@ -39,9 +39,9 @@ Drivers/WaveShareOLED/GUI/GUI_Paint.o: \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
  ../Core/Inc/main.h ../Drivers/WaveShareOLED/GUI/../Fonts/fonts.h \
- C:/owncloud/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Config/Debug.h
+ C:/Users/axel_/ownCloud\ -\ axel@192.168.1.36/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Config/Debug.h
 ../Drivers/WaveShareOLED/GUI/GUI_Paint.h:
-C:/owncloud/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Config/DEV_Config.h:
+C:/Users/axel_/ownCloud\ -\ axel@192.168.1.36/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Config/DEV_Config.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h:
@@ -80,4 +80,4 @@ C:/owncloud/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveSh
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
 ../Core/Inc/main.h:
 ../Drivers/WaveShareOLED/GUI/../Fonts/fonts.h:
-C:/owncloud/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Config/Debug.h:
+C:/Users/axel_/ownCloud\ -\ axel@192.168.1.36/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Config/Debug.h:

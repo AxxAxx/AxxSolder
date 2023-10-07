@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (10.3-2021.10)
+# Toolchain: GNU Tools for STM32 (11.3.rel1)
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
@@ -33,13 +33,13 @@ C_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-Drivers/WaveShareOLED/Fonts/%.o Drivers/WaveShareOLED/Fonts/%.su: ../Drivers/WaveShareOLED/Fonts/%.c Drivers/WaveShareOLED/Fonts/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G431xx -c -I"C:/owncloud/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Config" -I"C:/owncloud/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Example" -I"C:/owncloud/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Fonts" -I"C:/owncloud/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/GUI" -I"C:/owncloud/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/OLED" -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Drivers/WaveShareOLED/Fonts/%.o Drivers/WaveShareOLED/Fonts/%.su Drivers/WaveShareOLED/Fonts/%.cyclo: ../Drivers/WaveShareOLED/Fonts/%.c Drivers/WaveShareOLED/Fonts/subdir.mk
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G431xx -c -I"C:/Users/axel_/ownCloud - axel@192.168.1.36/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Config" -I"C:/Users/axel_/ownCloud - axel@192.168.1.36/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Example" -I"C:/Users/axel_/ownCloud - axel@192.168.1.36/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/Fonts" -I"C:/Users/axel_/ownCloud - axel@192.168.1.36/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/GUI" -I"C:/Users/axel_/ownCloud - axel@192.168.1.36/2_Project/00_AxxProjects/AxxSolder/Software/AxxSolder/Drivers/WaveShareOLED/OLED" -I../Core/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc -I../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 
 clean: clean-Drivers-2f-WaveShareOLED-2f-Fonts
 
 clean-Drivers-2f-WaveShareOLED-2f-Fonts:
-	-$(RM) ./Drivers/WaveShareOLED/Fonts/font12.d ./Drivers/WaveShareOLED/Fonts/font12.o ./Drivers/WaveShareOLED/Fonts/font12.su ./Drivers/WaveShareOLED/Fonts/font12CN.d ./Drivers/WaveShareOLED/Fonts/font12CN.o ./Drivers/WaveShareOLED/Fonts/font12CN.su ./Drivers/WaveShareOLED/Fonts/font16.d ./Drivers/WaveShareOLED/Fonts/font16.o ./Drivers/WaveShareOLED/Fonts/font16.su ./Drivers/WaveShareOLED/Fonts/font20.d ./Drivers/WaveShareOLED/Fonts/font20.o ./Drivers/WaveShareOLED/Fonts/font20.su ./Drivers/WaveShareOLED/Fonts/font24.d ./Drivers/WaveShareOLED/Fonts/font24.o ./Drivers/WaveShareOLED/Fonts/font24.su ./Drivers/WaveShareOLED/Fonts/font24CN.d ./Drivers/WaveShareOLED/Fonts/font24CN.o ./Drivers/WaveShareOLED/Fonts/font24CN.su ./Drivers/WaveShareOLED/Fonts/font8.d ./Drivers/WaveShareOLED/Fonts/font8.o ./Drivers/WaveShareOLED/Fonts/font8.su
+	-$(RM) ./Drivers/WaveShareOLED/Fonts/font12.cyclo ./Drivers/WaveShareOLED/Fonts/font12.d ./Drivers/WaveShareOLED/Fonts/font12.o ./Drivers/WaveShareOLED/Fonts/font12.su ./Drivers/WaveShareOLED/Fonts/font12CN.cyclo ./Drivers/WaveShareOLED/Fonts/font12CN.d ./Drivers/WaveShareOLED/Fonts/font12CN.o ./Drivers/WaveShareOLED/Fonts/font12CN.su ./Drivers/WaveShareOLED/Fonts/font16.cyclo ./Drivers/WaveShareOLED/Fonts/font16.d ./Drivers/WaveShareOLED/Fonts/font16.o ./Drivers/WaveShareOLED/Fonts/font16.su ./Drivers/WaveShareOLED/Fonts/font20.cyclo ./Drivers/WaveShareOLED/Fonts/font20.d ./Drivers/WaveShareOLED/Fonts/font20.o ./Drivers/WaveShareOLED/Fonts/font20.su ./Drivers/WaveShareOLED/Fonts/font24.cyclo ./Drivers/WaveShareOLED/Fonts/font24.d ./Drivers/WaveShareOLED/Fonts/font24.o ./Drivers/WaveShareOLED/Fonts/font24.su ./Drivers/WaveShareOLED/Fonts/font24CN.cyclo ./Drivers/WaveShareOLED/Fonts/font24CN.d ./Drivers/WaveShareOLED/Fonts/font24CN.o ./Drivers/WaveShareOLED/Fonts/font24CN.su ./Drivers/WaveShareOLED/Fonts/font8.cyclo ./Drivers/WaveShareOLED/Fonts/font8.d ./Drivers/WaveShareOLED/Fonts/font8.o ./Drivers/WaveShareOLED/Fonts/font8.su
 
 .PHONY: clean-Drivers-2f-WaveShareOLED-2f-Fonts
 
