@@ -78,10 +78,10 @@ void Error_Handler(void);
 #define BUSVOLTAGE_GPIO_Port GPIOB
 #define ENC_BUTTON_Pin GPIO_PIN_9
 #define ENC_BUTTON_GPIO_Port GPIOA
-#define INPUT0_Pin GPIO_PIN_10
-#define INPUT0_GPIO_Port GPIOA
-#define INPUT1_Pin GPIO_PIN_11
-#define INPUT1_GPIO_Port GPIOA
+#define STAND_Pin GPIO_PIN_10
+#define STAND_GPIO_Port GPIOA
+#define HANDLE_DETECTION_Pin GPIO_PIN_11
+#define HANDLE_DETECTION_GPIO_Port GPIOA
 #define SPI_DC_Pin GPIO_PIN_12
 #define SPI_DC_GPIO_Port GPIOA
 #define T_SWDIO_Pin GPIO_PIN_13

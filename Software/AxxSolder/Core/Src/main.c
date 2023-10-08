@@ -52,11 +52,19 @@ uint32_t interval_debug = 50;
 uint32_t previous_millis_PID_update = 0;
 uint32_t interval_PID_update = 50;
 
-/* INITIAL TUNING PARAMETERS */
+uint32_t previous_millis_HANDLE_update = 0;
+uint32_t interval_HANDLE_update = 200;
+
+/* Custom tuning parameters */
+double Kp_custom = 0;
+double Ki_custom = 0;
+double Kd_custom = 0;
+double temperature_custom = 100;
+
+/* PID tuning parameters */
 double Kp = 10;
 double Ki = 0;
 double Kd = 0;
-double custom_temperature = 100;
 
 char buffer[40];								/* Buffer for UART print */
 uint8_t tx_done = 1;
@@ -188,10 +196,12 @@ void get_actual_temperature(){
 	float TC_temperature_temp = Moving_Average_Compute(get_mean_ADC_reading(0), &actual_temperature_filter_struct);
 
 	if(handle == T210){
-		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T210 + pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T210 + TC_temperature_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
+		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T210 + pow(TC_temperature_temp, 2)*
+						TC_COMPENSATION_X2_T210 + TC_temperature_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
 	}
 	else if(handle == T245){
-		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T245 + pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T245 + TC_temperature_temp*TC_COMPENSATION_X1_T245 + TC_COMPENSATION_X0_T245;
+		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T245 + pow(TC_temperature_temp, 2)*
+						TC_COMPENSATION_X2_T245 + TC_temperature_temp*TC_COMPENSATION_X1_T245 + TC_COMPENSATION_X0_T245;
 	}
 
 	if(sensor_values.actual_temperature > 999){
@@ -301,12 +311,31 @@ void get_set_temperature(){
 }
 
 void get_stand_status(){
-	if((HAL_GPIO_ReadPin (GPIOA, INPUT0_Pin) == 0) || (HAL_GPIO_ReadPin (GPIOA, INPUT1_Pin) == 0)){
+	if(HAL_GPIO_ReadPin (GPIOA, STAND_Pin) == 0){
 		sensor_values.in_stand = 1;
 	}
 	else{
 		sensor_values.in_stand = 0;
 	}
+}
+
+/* Automatically detect handle type, T210 or T245 based on HANDLE_DETECTION_Pin, which is connected to BLUE for T210.*/
+void get_handle_type(){
+	if(HAL_GPIO_ReadPin (GPIOA, HANDLE_DETECTION_Pin) == 0){
+		handle = T210;
+		max_power_watt = 60; //60W
+		Kp = 20;
+		Ki = 60;
+		Kd = 0.5;
+	}
+	else{
+		handle = T245;
+		max_power_watt = 120; //120W
+		Kp = 30;
+		Ki = 60;
+		Kd = 1;
+	}
+	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
 }
 
 void beep_ms(int beep_time){
@@ -403,9 +432,6 @@ int main(void)
 	if (HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_Pin) == 0){
 		Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
 		Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
-		Paint_DrawString_EN(3, 20, "Handle:", &Font12, 0x00, 0xff);
-		Paint_DrawString_EN(55, 20, "T210", &Font12, 0xff, 0x00);
-		Paint_DrawString_EN(90, 20, "T245", &Font12, 0x00, 0xff);
 		OLED_1in5_Display(black_image);
 		Paint_Clear(BLACK);
 		HAL_Delay(1000);
@@ -414,17 +440,18 @@ int main(void)
 			Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
 			Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
 
-			Paint_DrawString_EN(3, 20, "Handle:", &Font12, 0x00, 0xff);
-			if(((TIM3->CNT)/2 % 2) == 0){
-				Paint_DrawString_EN(55, 20, "T210", &Font12, 0xff, 0x00);
-				Paint_DrawString_EN(90, 20, "T245", &Font12, 0x00, 0xff);
-				handle = T210;
-			}
-			else{
-				Paint_DrawString_EN(55, 20, "T210", &Font12, 0x00, 0xff);
-				Paint_DrawString_EN(90, 20, "T245", &Font12, 0xff, 0x00);
-				handle = T245;
-			}
+			Paint_DrawString_EN(3, 20, "Coming soon...:", &Font12, 0x00, 0xff);
+			// Not needed now when we have automatic handle detection
+			//if(((TIM3->CNT)/2 % 2) == 0){
+			//	Paint_DrawString_EN(55, 20, "T210", &Font12, 0xff, 0x00);
+			//	Paint_DrawString_EN(90, 20, "T245", &Font12, 0x00, 0xff);
+			//	handle = T210;
+			//}
+			//else{
+			//	Paint_DrawString_EN(55, 20, "T210", &Font12, 0x00, 0xff);
+			//	Paint_DrawString_EN(90, 20, "T245", &Font12, 0xff, 0x00);
+			//	handle = T245;
+			//}
 			OLED_1in5_Display(black_image);
 			Paint_Clear(BLACK);
 		}
@@ -436,19 +463,8 @@ int main(void)
 	/* Startup beep */
 	beep_ms(10);
 
-	/* Set-up handle-specific constants */
-	if(handle == T210){
-	max_power_watt = 60; //60W
-	Kp = 20;
-	Ki = 60;
-	Kd = 0.5;
-	}
-	else if(handle == T245){
-	max_power_watt = 120; //120W
-	Kp = 30;
-	Ki = 60;
-	Kd = 1;
-	}
+	/* Get handle-specific constants */
+	get_handle_type();
 
 	/* Initiate PID controller */
 	PID(&TPID, &sensor_values.actual_temperature, &heater_power, &sensor_values.set_temperature, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
@@ -464,6 +480,12 @@ int main(void)
 		beep_requested = 0;
 	}
 
+	// Set handle type depending on HANDLE_DETECTION_Pin status
+	if(HAL_GetTick() - previous_millis_HANDLE_update >= interval_HANDLE_update){
+		get_handle_type();
+	previous_millis_HANDLE_update = HAL_GetTick();
+	}
+
 	if(HAL_GetTick() - previous_millis_PID_update >= interval_PID_update){
 		get_set_temperature();
 		get_stand_status();
@@ -471,8 +493,8 @@ int main(void)
 
 		// TUNING - ONLY USED DURING PID TUNING
 		// ----------------------------------------------
-		//PID_SetTunings(&TPID, Kp, Ki, Kd);
-		//sensor_values.set_temperature = custom_temperature;
+		//PID_SetTunings(&TPID, Kp_custom, Ki_custom, Kd_custom);
+		//sensor_values.set_temperature = temperature_custom;
 		// ----------------------------------------------
 
 		set_heater_duty(0);
@@ -496,7 +518,8 @@ int main(void)
 	/* Send debug information over serial */
 	if(HAL_GetTick() - previous_millis_debug >= interval_debug){
 		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n", sensor_values.actual_temperature, sensor_values.set_temperature, heater_power/10, PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID))/10;
+		sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n", sensor_values.actual_temperature, sensor_values.set_temperature, heater_power/10,
+						PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID))/10;
 		debugPrint(&huart2,buffer);
 		previous_millis_debug = HAL_GetTick();
 	}
@@ -1057,8 +1080,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC_BUTTON_Pin INPUT0_Pin INPUT1_Pin */
-  GPIO_InitStruct.Pin = ENC_BUTTON_Pin|INPUT0_Pin|INPUT1_Pin;
+  /*Configure GPIO pins : ENC_BUTTON_Pin STAND_Pin HANDLE_DETECTION_Pin */
+  GPIO_InitStruct.Pin = ENC_BUTTON_Pin|STAND_Pin|HANDLE_DETECTION_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
