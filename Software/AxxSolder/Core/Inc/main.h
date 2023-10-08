@@ -79,10 +79,10 @@ void Error_Handler(void);
 #define ENC_BUTTON_Pin GPIO_PIN_9
 #define ENC_BUTTON_GPIO_Port GPIOA
 #define ENC_BUTTON_EXTI_IRQn EXTI9_5_IRQn
-#define STAND_Pin GPIO_PIN_10
-#define STAND_GPIO_Port GPIOA
-#define HANDLE_DETECTION_Pin GPIO_PIN_11
-#define HANDLE_DETECTION_GPIO_Port GPIOA
+#define HANDLE_INP_Pin GPIO_PIN_10
+#define HANDLE_INP_GPIO_Port GPIOA
+#define STAND_INP_Pin GPIO_PIN_11
+#define STAND_INP_GPIO_Port GPIOA
 #define SPI_DC_Pin GPIO_PIN_12
 #define SPI_DC_GPIO_Port GPIOA
 #define T_SWDIO_Pin GPIO_PIN_13

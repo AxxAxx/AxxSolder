@@ -58,6 +58,18 @@ uint32_t interval_HANDLE_update = 200;
 uint32_t previous_millis_heating_halted_update = 0;
 uint32_t interval_heating_halted_update = 500;
 
+uint32_t previous_millis_left_stand = 0;
+uint32_t EMERGENCY_shutdown_time = 1800000; //30 minutes
+
+/* stated for runtime switch */
+typedef enum {
+    RUN,
+	SLEEP,
+	EMERGENCY_SLEEP,
+	HALTED,
+} mainstates;
+mainstates active_state = SLEEP;
+
 /* Custom tuning parameters */
 double Kp_custom = 0;
 double Ki_custom = 0;
@@ -79,13 +91,10 @@ float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
 #define ADC_BUF_LEN 400
 uint16_t ADC_buffer[ADC_BUF_LEN];
 
-uint8_t heating_halted = 0;						/* flag for heating halted */
-
 #define VOLTAGE_COMPENSATION 0.00648678945
 
 #define MIN_SELECTABLE_TEMPERTURE 20
 #define MAX_SELECTABLE_TEMPERTURE 450
-
 
 /* TC Compensation constants */
 #define TC_COMPENSATION_X3_T210 -6.798689261365103e-09
@@ -108,6 +117,7 @@ struct sensor_values_struct {
 	float bus_voltage;
 	float pcb_temperature;
 	uint8_t in_stand;
+	mainstates previous_state;
 	uint8_t button_pressed;
 	uint8_t button_read;
 	float ambient_temperature;
@@ -118,6 +128,7 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.bus_voltage = 0.0,
 											.pcb_temperature = 0.0,
 											.in_stand = 0,
+											.previous_state = SLEEP,
 											.button_pressed = 0,
 											.button_read = 0,
 											.ambient_temperature = 0.0};
@@ -205,12 +216,10 @@ void get_actual_temperature(){
 	float TC_temperature_temp = Moving_Average_Compute(get_mean_ADC_reading(0), &actual_temperature_filter_struct);
 
 	if(handle == T210){
-		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T210 + pow(TC_temperature_temp, 2)*
-						TC_COMPENSATION_X2_T210 + TC_temperature_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
+		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T210 + pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T210 + TC_temperature_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
 	}
 	else if(handle == T245){
-		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T245 + pow(TC_temperature_temp, 2)*
-						TC_COMPENSATION_X2_T245 + TC_temperature_temp*TC_COMPENSATION_X1_T245 + TC_COMPENSATION_X0_T245;
+		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T245 + pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T245 + TC_temperature_temp*TC_COMPENSATION_X1_T245 + TC_COMPENSATION_X0_T245;
 	}
 
 	if(sensor_values.actual_temperature > 999){
@@ -255,16 +264,11 @@ void update_OLED(){
     Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
 
 	Paint_DrawString_EN(3, 20, "Set temp", &Font16, 0x00, 0xff);
-	if(heating_halted == 1){
-		Paint_DrawString_EN(3, 32, "---", &Font24,  0x0, 0xff);
-	}
-	else{
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.f", sensor_values.set_temperature);
-		Paint_DrawString_EN(3, 32, buffer, &Font24,  0x0, 0xff);
-		Paint_DrawCircle(67, 37, 2, WHITE, 1, DRAW_FILL_EMPTY);
-		Paint_DrawString_EN(70, 32, "C", &Font24,  0x0, 0xff);
-	}
+	memset(&buffer, '\0', sizeof(buffer));
+	sprintf(buffer, "%.f", sensor_values.set_temperature);
+	Paint_DrawString_EN(3, 32, buffer, &Font24,  0x0, 0xff);
+	Paint_DrawCircle(67, 37, 2, WHITE, 1, DRAW_FILL_EMPTY);
+	Paint_DrawString_EN(70, 32, "C", &Font24,  0x0, 0xff);
 
 	Paint_DrawString_EN(3, 58, "Act temp", &Font16, 0x00, 0xff);
 	memset(&buffer, '\0', sizeof(buffer));
@@ -301,7 +305,7 @@ void update_OLED(){
 	Paint_DrawString_EN(45, 118, buffer, &Font8, 0x0, 0xff);
 
 	Paint_DrawRectangle(116, 25, 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
-	if(sensor_values.in_stand){
+	if(active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED){
 		Paint_DrawString_EN(116, 30,  "Z", &Font16, 0x00, 0xff);
 		Paint_DrawString_EN(116, 50,  "z", &Font16, 0x00, 0xff);
 		Paint_DrawString_EN(116, 70,  "Z", &Font16, 0x00, 0xff);
@@ -319,18 +323,13 @@ void update_OLED(){
 
 /* Get encoder value (Set temp.) and limit is NOT heating_halted*/
 void get_set_temperature(){
-	if(heating_halted == 1){
-		sensor_values.set_temperature = 0;
-	}
-	else{
-		if (TIM3->CNT <= MIN_SELECTABLE_TEMPERTURE) {TIM3->CNT = MIN_SELECTABLE_TEMPERTURE; }
-		if (TIM3->CNT >= MAX_SELECTABLE_TEMPERTURE) {TIM3->CNT = MAX_SELECTABLE_TEMPERTURE; }
-		sensor_values.set_temperature = TIM3->CNT;
-	}
+	if (TIM3->CNT <= MIN_SELECTABLE_TEMPERTURE) {TIM3->CNT = MIN_SELECTABLE_TEMPERTURE; }
+	if (TIM3->CNT >= MAX_SELECTABLE_TEMPERTURE) {TIM3->CNT = MAX_SELECTABLE_TEMPERTURE; }
+	sensor_values.set_temperature = TIM3->CNT;
 }
 
 void get_stand_status(){
-	if(HAL_GPIO_ReadPin (GPIOA, STAND_Pin) == 0){
+	if(HAL_GPIO_ReadPin (GPIOA, STAND_INP_Pin) == 0){
 		sensor_values.in_stand = 1;
 	}
 	else{
@@ -340,7 +339,7 @@ void get_stand_status(){
 
 /* Automatically detect handle type, T210 or T245 based on HANDLE_DETECTION_Pin, which is connected to BLUE for T210.*/
 void get_handle_type(){
-	if(HAL_GPIO_ReadPin (GPIOA, HANDLE_DETECTION_Pin) == 0){
+	if(HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_Pin) == 0){
 		handle = T210;
 		max_power_watt = 60; //60W
 		Kp = 20;
@@ -370,11 +369,8 @@ void beep_ms(int beep_time){
 
 /* interrupts when encoder button is pressed */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-    if(GPIO_Pin == ENC_BUTTON_Pin) // If The INT Source Is EXTI Line9 (A9 Pin)
-    {
-    	if (sensor_values.button_pressed == 0){
-    		sensor_values.button_pressed = 1;
-    	}
+    if(GPIO_Pin == ENC_BUTTON_Pin && !sensor_values.button_pressed){ // If The INT Source Is EXTI Line9 (A9 Pin)
+    	sensor_values.button_pressed = 1;
     }
 }
 
@@ -512,8 +508,17 @@ int main(void)
 	/* Structure to toggle between heating_halted true/false at each press of the encoder button */
 	if ((sensor_values.button_pressed == 1) && (sensor_values.button_read == 0)){
 		sensor_values.button_read = 1;
-		beep_ms(5);
-		heating_halted = abs(heating_halted-1); // toggle between 0 and 1
+		beep_requested = 1;
+		// toggle between RUN and HALTED
+		if (active_state == RUN){
+			active_state = HALTED;
+		}
+		else if (active_state == HALTED){
+			active_state = RUN;
+		}
+		else if (active_state == EMERGENCY_SLEEP){
+			active_state = RUN;
+		}
 		previous_millis_heating_halted_update = HAL_GetTick();
 	}
 	if ((sensor_values.button_read == 1) && (HAL_GetTick()-previous_millis_heating_halted_update >= interval_heating_halted_update)){
@@ -524,7 +529,7 @@ int main(void)
 	// Set handle type depending on HANDLE_DETECTION_Pin status
 	if(HAL_GetTick() - previous_millis_HANDLE_update >= interval_HANDLE_update){
 		get_handle_type();
-	previous_millis_HANDLE_update = HAL_GetTick();
+		previous_millis_HANDLE_update = HAL_GetTick();
 	}
 
 	if(HAL_GetTick() - previous_millis_PID_update >= interval_PID_update){
@@ -543,24 +548,52 @@ int main(void)
 		get_actual_temperature();
 		PID_Compute(&TPID);
 
-		/* If handle is in stand or heating halted - set duty cycle for PWM to zero */
-		if(sensor_values.in_stand || heating_halted){
-			heater_power_duty_cycle = 0;
+		/* If handle is in stand set state to SLEEP */
+		if(sensor_values.in_stand){
+			active_state = SLEEP;
 		}
-		/* If handle is not in stand or heating not halted - calculate duty cycle for PWM */
-		else{
-			heater_power_duty_cycle = heater_power*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+
+		/* Main switch */
+		switch (active_state) {
+			case EMERGENCY_SLEEP: {
+				heater_power_duty_cycle = 0;
+				break;
+			}
+			case RUN: {
+				/* calculate duty cycle for PWM */
+				heater_power_duty_cycle = heater_power*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+				break;
+			}
+			case SLEEP: {
+				heater_power_duty_cycle = 0;
+				if(!sensor_values.in_stand){
+					active_state = RUN;
+					}
+				break;
+			}
+			case HALTED: {
+				heater_power_duty_cycle = 0;
+				break;
+			}
 		}
 		set_heater_duty(heater_power_duty_cycle);
 		previous_millis_PID_update = HAL_GetTick();
 	}
 
+	/* Function to set state to SLEEP if iron is in RUN state for longer than EMERGENCY_shutdown_time */
+	if(!sensor_values.previous_state == RUN  && active_state == RUN){
+		previous_millis_left_stand = HAL_GetTick();
+	}
+	if ((!sensor_values.in_stand) && (HAL_GetTick() - previous_millis_left_stand >= EMERGENCY_shutdown_time) && active_state == RUN){
+		active_state = EMERGENCY_SLEEP;
+		beep_requested = 1;
+	}
+	sensor_values.previous_state = active_state;
 
 	/* Send debug information over serial */
 	if(HAL_GetTick() - previous_millis_debug >= interval_debug){
 		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n", sensor_values.actual_temperature, sensor_values.set_temperature, heater_power/10,
-						PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID))/10;
+		sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n", sensor_values.actual_temperature, sensor_values.set_temperature,heater_power/10,PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID))/10;
 		debugPrint(&huart2,buffer);
 		previous_millis_debug = HAL_GetTick();
 	}
@@ -1127,8 +1160,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(ENC_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : STAND_Pin HANDLE_DETECTION_Pin */
-  GPIO_InitStruct.Pin = STAND_Pin|HANDLE_DETECTION_Pin;
+  /*Configure GPIO pins : HANDLE_INP_Pin STAND_INP_Pin */
+  GPIO_InitStruct.Pin = HANDLE_INP_Pin|STAND_INP_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
