@@ -78,6 +78,7 @@ void Error_Handler(void);
 #define BUSVOLTAGE_GPIO_Port GPIOB
 #define ENC_BUTTON_Pin GPIO_PIN_9
 #define ENC_BUTTON_GPIO_Port GPIOA
+#define ENC_BUTTON_EXTI_IRQn EXTI9_5_IRQn
 #define STAND_Pin GPIO_PIN_10
 #define STAND_GPIO_Port GPIOA
 #define HANDLE_DETECTION_Pin GPIO_PIN_11

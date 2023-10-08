@@ -55,6 +55,9 @@ uint32_t interval_PID_update = 50;
 uint32_t previous_millis_HANDLE_update = 0;
 uint32_t interval_HANDLE_update = 200;
 
+uint32_t previous_millis_heating_halted_update = 0;
+uint32_t interval_heating_halted_update = 500;
+
 /* Custom tuning parameters */
 double Kp_custom = 0;
 double Ki_custom = 0;
@@ -70,11 +73,13 @@ char buffer[40];								/* Buffer for UART print */
 uint8_t tx_done = 1;
 
 #define POWER_REDUCTION_FACTOR 0.12 			/* Converts power in W to correct duty cycle */
-float max_power_watt = 0.0; 							/* Sets the maximum output power */
+float max_power_watt = 0.0; 					/* Sets the maximum output power */
 
 float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
 #define ADC_BUF_LEN 400
 uint16_t ADC_buffer[ADC_BUF_LEN];
+
+uint8_t heating_halted = 0;						/* flag for heating halted */
 
 #define VOLTAGE_COMPENSATION 0.00648678945
 
@@ -103,6 +108,8 @@ struct sensor_values_struct {
 	float bus_voltage;
 	float pcb_temperature;
 	uint8_t in_stand;
+	uint8_t button_pressed;
+	uint8_t button_read;
 	float ambient_temperature;
 };
 
@@ -111,6 +118,8 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.bus_voltage = 0.0,
 											.pcb_temperature = 0.0,
 											.in_stand = 0,
+											.button_pressed = 0,
+											.button_read = 0,
 											.ambient_temperature = 0.0};
 
 double heater_power = 0.0;
@@ -246,11 +255,16 @@ void update_OLED(){
     Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
 
 	Paint_DrawString_EN(3, 20, "Set temp", &Font16, 0x00, 0xff);
-	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.f", sensor_values.set_temperature);
-	Paint_DrawString_EN(3, 32, buffer, &Font24,  0x0, 0xff);
-	Paint_DrawCircle(67, 37, 2, WHITE, 1, DRAW_FILL_EMPTY);
-	Paint_DrawString_EN(70, 32, "C", &Font24,  0x0, 0xff);
+	if(heating_halted == 1){
+		Paint_DrawString_EN(3, 32, "---", &Font24,  0x0, 0xff);
+	}
+	else{
+		memset(&buffer, '\0', sizeof(buffer));
+		sprintf(buffer, "%.f", sensor_values.set_temperature);
+		Paint_DrawString_EN(3, 32, buffer, &Font24,  0x0, 0xff);
+		Paint_DrawCircle(67, 37, 2, WHITE, 1, DRAW_FILL_EMPTY);
+		Paint_DrawString_EN(70, 32, "C", &Font24,  0x0, 0xff);
+	}
 
 	Paint_DrawString_EN(3, 58, "Act temp", &Font16, 0x00, 0xff);
 	memset(&buffer, '\0', sizeof(buffer));
@@ -303,11 +317,16 @@ void update_OLED(){
 	Paint_Clear(BLACK);
 }
 
-/* Get encoder value (Set temp.) and limit */
+/* Get encoder value (Set temp.) and limit is NOT heating_halted*/
 void get_set_temperature(){
-	if (TIM3->CNT <= MIN_SELECTABLE_TEMPERTURE) {TIM3->CNT = MIN_SELECTABLE_TEMPERTURE; }
-	if (TIM3->CNT >= MAX_SELECTABLE_TEMPERTURE) {TIM3->CNT = MAX_SELECTABLE_TEMPERTURE; }
-	sensor_values.set_temperature = TIM3->CNT;
+	if(heating_halted == 1){
+		sensor_values.set_temperature = 0;
+	}
+	else{
+		if (TIM3->CNT <= MIN_SELECTABLE_TEMPERTURE) {TIM3->CNT = MIN_SELECTABLE_TEMPERTURE; }
+		if (TIM3->CNT >= MAX_SELECTABLE_TEMPERTURE) {TIM3->CNT = MAX_SELECTABLE_TEMPERTURE; }
+		sensor_values.set_temperature = TIM3->CNT;
+	}
 }
 
 void get_stand_status(){
@@ -348,6 +367,16 @@ void beep_ms(int beep_time){
 //void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 //    //HAL_GPIO_TogglePin(GPIOF, DEBUG_SIGNAL_A_Pin);
 //}
+
+/* interrupts when encoder button is pressed */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+    if(GPIO_Pin == ENC_BUTTON_Pin) // If The INT Source Is EXTI Line9 (A9 Pin)
+    {
+    	if (sensor_values.button_pressed == 0){
+    		sensor_values.button_pressed = 1;
+    	}
+    }
+}
 
 /* Interrupts at every encoder increment */
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
@@ -480,6 +509,18 @@ int main(void)
 		beep_requested = 0;
 	}
 
+	/* Structure to toggle between heating_halted true/false at each press of the encoder button */
+	if ((sensor_values.button_pressed == 1) && (sensor_values.button_read == 0)){
+		sensor_values.button_read = 1;
+		beep_ms(5);
+		heating_halted = abs(heating_halted-1); // toggle between 0 and 1
+		previous_millis_heating_halted_update = HAL_GetTick();
+	}
+	if ((sensor_values.button_read == 1) && (HAL_GetTick()-previous_millis_heating_halted_update >= interval_heating_halted_update)){
+		sensor_values.button_pressed = 0;
+		sensor_values.button_read = 0;
+	}
+
 	// Set handle type depending on HANDLE_DETECTION_Pin status
 	if(HAL_GetTick() - previous_millis_HANDLE_update >= interval_HANDLE_update){
 		get_handle_type();
@@ -502,13 +543,13 @@ int main(void)
 		get_actual_temperature();
 		PID_Compute(&TPID);
 
-		/* If handle is not in stand - calculate duty cycle for PWM */
-		if(!sensor_values.in_stand){
-			heater_power_duty_cycle = heater_power*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
-		}
-		/* If handle is in stand - set duty cycle for PWM to zero */
-		else{
+		/* If handle is in stand or heating halted - set duty cycle for PWM to zero */
+		if(sensor_values.in_stand || heating_halted){
 			heater_power_duty_cycle = 0;
+		}
+		/* If handle is not in stand or heating not halted - calculate duty cycle for PWM */
+		else{
+			heater_power_duty_cycle = heater_power*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
 		}
 		set_heater_duty(heater_power_duty_cycle);
 		previous_millis_PID_update = HAL_GetTick();
@@ -1080,8 +1121,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC_BUTTON_Pin STAND_Pin HANDLE_DETECTION_Pin */
-  GPIO_InitStruct.Pin = ENC_BUTTON_Pin|STAND_Pin|HANDLE_DETECTION_Pin;
+  /*Configure GPIO pin : ENC_BUTTON_Pin */
+  GPIO_InitStruct.Pin = ENC_BUTTON_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(ENC_BUTTON_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : STAND_Pin HANDLE_DETECTION_Pin */
+  GPIO_InitStruct.Pin = STAND_Pin|HANDLE_DETECTION_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -1099,6 +1146,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 

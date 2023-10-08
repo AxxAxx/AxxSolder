@@ -9,6 +9,7 @@
 ../Core/Src/stm32g4xx_it.c:187:6:SysTick_Handler	1
 ../Core/Src/stm32g4xx_it.c:208:6:DMA1_Channel1_IRQHandler	1
 ../Core/Src/stm32g4xx_it.c:222:6:ADC1_2_IRQHandler	1
-../Core/Src/stm32g4xx_it.c:236:6:TIM1_UP_TIM16_IRQHandler	1
-../Core/Src/stm32g4xx_it.c:250:6:TIM3_IRQHandler	1
-../Core/Src/stm32g4xx_it.c:264:6:USART2_IRQHandler	1
+../Core/Src/stm32g4xx_it.c:236:6:EXTI9_5_IRQHandler	1
+../Core/Src/stm32g4xx_it.c:250:6:TIM1_UP_TIM16_IRQHandler	1
+../Core/Src/stm32g4xx_it.c:264:6:TIM3_IRQHandler	1
+../Core/Src/stm32g4xx_it.c:278:6:USART2_IRQHandler	1
