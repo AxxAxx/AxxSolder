@@ -9744,39 +9744,39 @@ LOAD C:/ST/STM32CubeIDE_1.13.2/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_macro   0x000000000002325a      0x3a8 ./Drivers/WaveShareOLED/GUI/GUI_Paint.o
  .debug_macro   0x0000000000023602      0x346 ./Drivers/WaveShareOLED/OLED/OLED_1in5.o
 
-.debug_line     0x0000000000000000    0x23a0d
- .debug_line    0x0000000000000000     0x14a7 ./Core/Src/main.o
- .debug_line    0x00000000000014a7      0x488 ./Core/Src/moving_average.o
- .debug_line    0x000000000000192f      0xda7 ./Core/Src/pid.o
- .debug_line    0x00000000000026d6      0xac7 ./Core/Src/stm32g4xx_hal_msp.o
- .debug_line    0x000000000000319d      0x945 ./Core/Src/stm32g4xx_it.o
- .debug_line    0x0000000000003ae2      0x8a8 ./Core/Src/syscalls.o
- .debug_line    0x000000000000438a      0x579 ./Core/Src/sysmem.o
- .debug_line    0x0000000000004903      0x874 ./Core/Src/system_stm32g4xx.o
- .debug_line    0x0000000000005177       0x7b ./Core/Startup/startup_stm32g431kbtx.o
- .debug_line    0x00000000000051f2      0xbeb ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
- .debug_line    0x0000000000005ddd     0x1f78 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc.o
- .debug_line    0x0000000000007d55     0x19ee ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc_ex.o
- .debug_line    0x0000000000009743      0xd9e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
- .debug_line    0x000000000000a4e1      0xf57 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
- .debug_line    0x000000000000b438      0xc2e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
- .debug_line    0x000000000000c066     0x349c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c.o
- .debug_line    0x000000000000f502      0xa28 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c_ex.o
- .debug_line    0x000000000000ff2a      0xda2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
- .debug_line    0x0000000000010ccc      0xffe ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
- .debug_line    0x0000000000011cca     0x11c4 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
- .debug_line    0x0000000000012e8e     0x202d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
- .debug_line    0x0000000000014ebb     0x3eea ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
- .debug_line    0x0000000000018da5     0x216e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
- .debug_line    0x000000000001af13     0x3c42 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
- .debug_line    0x000000000001eb55      0xe96 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
- .debug_line    0x000000000001f9eb      0xaba ./Drivers/WaveShareOLED/Config/DEV_Config.o
- .debug_line    0x00000000000204a5      0x412 ./Drivers/WaveShareOLED/Fonts/font12.o
- .debug_line    0x00000000000208b7      0x412 ./Drivers/WaveShareOLED/Fonts/font16.o
- .debug_line    0x0000000000020cc9      0x412 ./Drivers/WaveShareOLED/Fonts/font24.o
- .debug_line    0x00000000000210db      0x411 ./Drivers/WaveShareOLED/Fonts/font8.o
- .debug_line    0x00000000000214ec     0x1992 ./Drivers/WaveShareOLED/GUI/GUI_Paint.o
- .debug_line    0x0000000000022e7e      0xb8f ./Drivers/WaveShareOLED/OLED/OLED_1in5.o
+.debug_line     0x0000000000000000    0x23a0f
+ .debug_line    0x0000000000000000     0x14a9 ./Core/Src/main.o
+ .debug_line    0x00000000000014a9      0x488 ./Core/Src/moving_average.o
+ .debug_line    0x0000000000001931      0xda7 ./Core/Src/pid.o
+ .debug_line    0x00000000000026d8      0xac7 ./Core/Src/stm32g4xx_hal_msp.o
+ .debug_line    0x000000000000319f      0x945 ./Core/Src/stm32g4xx_it.o
+ .debug_line    0x0000000000003ae4      0x8a8 ./Core/Src/syscalls.o
+ .debug_line    0x000000000000438c      0x579 ./Core/Src/sysmem.o
+ .debug_line    0x0000000000004905      0x874 ./Core/Src/system_stm32g4xx.o
+ .debug_line    0x0000000000005179       0x7b ./Core/Startup/startup_stm32g431kbtx.o
+ .debug_line    0x00000000000051f4      0xbeb ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+ .debug_line    0x0000000000005ddf     0x1f78 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc.o
+ .debug_line    0x0000000000007d57     0x19ee ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc_ex.o
+ .debug_line    0x0000000000009745      0xd9e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+ .debug_line    0x000000000000a4e3      0xf57 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.o
+ .debug_line    0x000000000000b43a      0xc2e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+ .debug_line    0x000000000000c068     0x349c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c.o
+ .debug_line    0x000000000000f504      0xa28 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c_ex.o
+ .debug_line    0x000000000000ff2c      0xda2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+ .debug_line    0x0000000000010cce      0xffe ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
+ .debug_line    0x0000000000011ccc     0x11c4 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
+ .debug_line    0x0000000000012e90     0x202d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
+ .debug_line    0x0000000000014ebd     0x3eea ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.o
+ .debug_line    0x0000000000018da7     0x216e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.o
+ .debug_line    0x000000000001af15     0x3c42 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.o
+ .debug_line    0x000000000001eb57      0xe96 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.o
+ .debug_line    0x000000000001f9ed      0xaba ./Drivers/WaveShareOLED/Config/DEV_Config.o
+ .debug_line    0x00000000000204a7      0x412 ./Drivers/WaveShareOLED/Fonts/font12.o
+ .debug_line    0x00000000000208b9      0x412 ./Drivers/WaveShareOLED/Fonts/font16.o
+ .debug_line    0x0000000000020ccb      0x412 ./Drivers/WaveShareOLED/Fonts/font24.o
+ .debug_line    0x00000000000210dd      0x411 ./Drivers/WaveShareOLED/Fonts/font8.o
+ .debug_line    0x00000000000214ee     0x1992 ./Drivers/WaveShareOLED/GUI/GUI_Paint.o
+ .debug_line    0x0000000000022e80      0xb8f ./Drivers/WaveShareOLED/OLED/OLED_1in5.o
 
 .debug_str      0x0000000000000000    0xe409e
  .debug_str     0x0000000000000000    0xdb566 ./Core/Src/main.o
