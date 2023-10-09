@@ -31,6 +31,8 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
+#define version "2.1.3"
+
 enum handles {
 	T210,
 	T245
@@ -465,7 +467,10 @@ int main(void)
 			Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
 			Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
 
-			Paint_DrawString_EN(3, 20, "Coming soon...:", &Font12, 0x00, 0xff);
+			Paint_DrawString_EN(3, 20, "Coming soon...", &Font12, 0x00, 0xff);
+			Paint_DrawString_EN(0, 110, "Version: ", &Font12, 0x00, 0xff);
+			Paint_DrawString_EN(60, 110, version, &Font12, 0x00, 0xff);
+
 			// Not needed now when we have automatic handle detection
 			//if(((TIM3->CNT)/2 % 2) == 0){
 			//	Paint_DrawString_EN(55, 20, "T210", &Font12, 0xff, 0x00);
