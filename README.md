@@ -40,19 +40,23 @@ The connections from the handle to the PCB throught the Hirose RPC1-12RB-6P(71) 
 ## PID control
 As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification the PID parameters are only different between the different handle types, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
 ```c
-    // Set-up handle-specific constants
-    if(handle == T210){
-        max_power = 60;// 60W
-        Kp = 30;
-        Ki = 50;
-        Kd = 0.5;
-    }
-    else if(handle == T245){
-        max_power = 120;// 120W
-        Kp = 50;
-        Ki = 50;
-        Kd = 1;
-    }
+	/* If the handle_sense is high -> T210 handle is detected */
+	if(sensor_values.handle_sense > 0.5){
+		handle = T210;
+		max_power_watt = 60;
+		Kp = 20;
+		Ki = 60;
+		Kd = 0.5;
+	}
+	/* If the handle_sense is low -> T245 Handle */
+	else{
+		handle = T245;
+		max_power_watt = 120;
+		Kp = 30;
+		Ki = 60;
+		Kd = 1;
+	}
+	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
 ```
 The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-007 cartridge.  
 
