@@ -1,2 +1,2 @@
 ../Core/Src/moving_average.c:39:6:Moving_Average_Init	24	static
-../Core/Src/moving_average.c:56:8:Moving_Average_Compute	16	static
+../Core/Src/moving_average.c:58:8:Moving_Average_Compute	16	static

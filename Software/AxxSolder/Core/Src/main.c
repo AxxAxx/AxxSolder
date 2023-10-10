@@ -61,9 +61,10 @@ uint32_t previous_millis_heating_halted_update = 0;
 uint32_t interval_heating_halted_update = 500;
 
 uint32_t previous_millis_left_stand = 0;
-uint32_t EMERGENCY_shutdown_time = 1800000; //30 minutes
+uint32_t EMERGENCY_shutdown_time = 1800000; 	//30 minutes
+uint32_t EMERGENCY_shutdown_temperature = 500;  //500 Deg C
 
-/* stated for runtime switch */
+/* states for runtime switch */
 typedef enum {
     RUN,
 	SLEEP,
@@ -79,7 +80,7 @@ double Kd_custom = 0;
 double temperature_custom = 100;
 
 /* PID tuning parameters */
-double Kp = 10;
+double Kp = 0;
 double Ki = 0;
 double Kd = 0;
 
@@ -93,7 +94,7 @@ float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
 #define ADC_BUF_LEN 400
 uint16_t ADC_buffer[ADC_BUF_LEN];
 
-#define VOLTAGE_COMPENSATION 0.00648678945
+#define VOLTAGE_COMPENSATION 0.00648678945 		/* Constant for scaling input voltage ADC value*/
 
 #define MIN_SELECTABLE_TEMPERTURE 20
 #define MAX_SELECTABLE_TEMPERTURE 450
@@ -135,7 +136,8 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.button_read = 0,
 											.ambient_temperature = 0.0};
 
-double heater_power = 0.0;
+double PID_output = 0.0;
+double PID_setpoint = 0.0;
 
 /* Moving average filters for sensor data */
 FilterTypeDef actual_temperature_filter_struct;
@@ -245,21 +247,23 @@ void debugPrint(UART_HandleTypeDef *huart, char _out[]){
 
 /* Initiate OLED display */
 void init_OLED(){
+	OLED_1in5_Init();
+	Driver_Delay_ms(500);
+	OLED_1in5_Clear();
+
+	//0.Create a new image cache
+	UBYTE *BlackImage;
+	UWORD Imagesize = ((OLED_1in5_WIDTH%2==0)? (OLED_1in5_WIDTH/2): (OLED_1in5_WIDTH/2+1)) * OLED_1in5_HEIGHT;
 	if((black_image = (UBYTE *)malloc(image_size)) == NULL) {
 		return;
 	}
 	Paint_NewImage(black_image, OLED_1in5_WIDTH, OLED_1in5_HEIGHT, 270, BLACK);
 	Paint_SetScale(16);
+
+	//1.Select Image
 	Paint_SelectImage(black_image);
-	Driver_Delay_ms(100);
 	Paint_Clear(BLACK);
-
-	// Show image
-	OLED_1in5_Display(black_image);
-
-	OLED_1in5_Init();
-	Driver_Delay_ms(500);
-	OLED_1in5_Clear();
+	Driver_Delay_ms(200);
 }
 
 void update_OLED(){
@@ -314,10 +318,9 @@ void update_OLED(){
 		Paint_DrawString_EN(116, 70,  "Z", &Font16, 0x00, 0xff);
 		Paint_DrawString_EN(116, 90,  "z", &Font16, 0x00, 0xff);
 		Paint_DrawString_EN(116, 110, "z", &Font16, 0x00, 0xff);
-
 	}
 	else{
-		Paint_DrawRectangle(116, 125-heater_power/10, 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+		Paint_DrawRectangle(116, 125-PID_output/10, 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_FULL);
 	}
 	// Show image on page
 	OLED_1in5_Display(black_image);
@@ -329,6 +332,12 @@ void get_set_temperature(){
 	if (TIM3->CNT <= MIN_SELECTABLE_TEMPERTURE) {TIM3->CNT = MIN_SELECTABLE_TEMPERTURE; }
 	if (TIM3->CNT >= MAX_SELECTABLE_TEMPERTURE) {TIM3->CNT = MAX_SELECTABLE_TEMPERTURE; }
 	sensor_values.set_temperature = TIM3->CNT;
+}
+
+void beep_ms(uint16_t beep_time){
+	TIM2->CCR1 = 50;
+  	HAL_Delay(beep_time);
+  	TIM2->CCR1 = 0;
 }
 
 void check_beep(){
@@ -348,7 +357,14 @@ void check_emergency_shutdown(){
 		beep_requested = 1;
 	}
 	sensor_values.previous_state = active_state;
+
+	/* Function to set state to EMERGENCY_SLEEP if iron is over 500 deg C */
+	if((sensor_values.actual_temperature > EMERGENCY_shutdown_temperature) && (active_state == RUN)){
+		active_state = EMERGENCY_SLEEP;
+		beep_requested = 1;
+	}
 }
+
 void get_button_status(){
 	/* Structure to toggle between heating_halted true/false at each press of the encoder button */
 	if ((sensor_values.button_pressed == 1) && (sensor_values.button_read == 0)){
@@ -398,6 +414,7 @@ void get_handle_type(){
 	else{
 		handle_status = 0;
 	}
+	/* Moving average filter */
 	handle_status_filtered = Moving_Average_Compute(handle_status, &handle_sense_filterStruct);
 
 	if(handle_status_filtered > 0.5){
@@ -417,18 +434,12 @@ void get_handle_type(){
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
 }
 
-void beep_ms(int beep_time){
-	TIM2->CCR1 = 50;
-  	HAL_Delay(beep_time);
-  	TIM2->CCR1 = 0;
-}
-
 /* Called when buffer is completely filled, used for DEBUG */
 //void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 //    //HAL_GPIO_TogglePin(GPIOF, DEBUG_SIGNAL_A_Pin);
 //}
 
-/* interrupts when encoder button is pressed */
+/* Interrupts when encoder button is pressed */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
     if(GPIO_Pin == ENC_BUTTON_Pin && !sensor_values.button_pressed){ // If The INT Source Is EXTI Line9 (A9 Pin)
     	sensor_values.button_pressed = 1;
@@ -549,76 +560,76 @@ int main(void)
 	beep_ms(10);
 
 	/* Initiate PID controller */
-	PID(&TPID, &sensor_values.actual_temperature, &heater_power, &sensor_values.set_temperature, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
+	PID(&TPID, &sensor_values.actual_temperature, &PID_output, &PID_setpoint, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 	PID_SetSampleTime(&TPID, 50);
 	PID_SetOutputLimits(&TPID, 0, 1000); 	// Set max and min output limit
 	PID_SetILimits(&TPID, -200, 200); 		// Set max and min I limit
 
 	while (1){
-	get_stand_status();
-	get_bus_voltage();
-	get_handle_type();
-	get_button_status();
-	check_beep();
-	check_emergency_shutdown();
-
-	/* switch */
-	switch (active_state) {
-		case EMERGENCY_SLEEP: {
-			sensor_values.set_temperature = 0;
-			break;
-		}
-		case RUN: {
-			/* calculate duty cycle for PWM */
-			get_set_temperature();
-			break;
-		}
-		case SLEEP: {
-			sensor_values.set_temperature = 0;
-			if(sensor_values.in_stand == 0){
-				active_state = RUN;
-				}
-			break;
-		}
-		case HALTED: {
-			sensor_values.set_temperature = 0;
-			break;
-		}
-	}
-
-	if(HAL_GetTick() - previous_millis_PID_update >= interval_PID_update){
-		set_heater_duty(0);
-		HAL_Delay(10); // Wait to let the thermocouple voltage stabilize before taking measurement
-		get_actual_temperature();
-		previous_millis_PID_update = HAL_GetTick();
-	}
-
-	// TUNING - ONLY USED DURING PID TUNING
-	// ----------------------------------------------
-	//PID_SetTunings(&TPID, Kp_custom, Ki_custom, Kd_custom);
-	//sensor_values.set_temperature = temperature_custom;
-	// ----------------------------------------------
-
-	/* Compute PID and set duty cycle */
-	PID_Compute(&TPID);
-	set_heater_duty(heater_power*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage));
-
-	/* Send debug information over serial */
-	if(HAL_GetTick() - previous_millis_debug >= interval_debug){
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n", sensor_values.actual_temperature, sensor_values.set_temperature,heater_power/10,PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID)/10);
-		debugPrint(&huart2,buffer);
-		previous_millis_debug = HAL_GetTick();
-	}
-
-	/* Update display */
-	if(HAL_GetTick() - previous_millis_display >= interval_display){
-		get_ambient_temp();
+		get_stand_status();
+		get_bus_voltage();
+		get_handle_type();
+		get_button_status();
 		get_set_temperature();
-		update_OLED();
-		previous_millis_display = HAL_GetTick();
-	}
+		check_beep();
+		check_emergency_shutdown();
+
+		/* switch */
+		switch (active_state) {
+			case EMERGENCY_SLEEP: {
+				PID_setpoint = 0;
+				break;
+			}
+			case RUN: {
+				/* calculate duty cycle for PWM */
+				PID_setpoint = sensor_values.set_temperature;
+				break;
+			}
+			case SLEEP: {
+				PID_setpoint = 0;
+				if(sensor_values.in_stand == 0){
+					active_state = RUN;
+					}
+				break;
+			}
+			case HALTED: {
+				PID_setpoint = 0;
+				break;
+			}
+		}
+
+		if(HAL_GetTick() - previous_millis_PID_update >= interval_PID_update){
+			set_heater_duty(0);
+			HAL_Delay(10); // Wait to let the thermocouple voltage stabilize before taking measurement
+			get_actual_temperature();
+			previous_millis_PID_update = HAL_GetTick();
+		}
+
+		// TUNING - ONLY USED DURING PID TUNING
+		// ----------------------------------------------
+		//PID_SetTunings(&TPID, Kp_custom, Ki_custom, Kd_custom);
+		//sensor_values.set_temperature = temperature_custom;
+		// ----------------------------------------------
+
+		/* Compute PID and set duty cycle */
+		PID_Compute(&TPID);
+		set_heater_duty(PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage));
+
+		/* Send debug information over serial */
+		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
+			memset(&buffer, '\0', sizeof(buffer));
+			sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n", sensor_values.actual_temperature, sensor_values.set_temperature,PID_output/10,PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID)/10);
+			debugPrint(&huart2,buffer);
+			previous_millis_debug = HAL_GetTick();
+		}
+
+		/* Update display */
+		if(HAL_GetTick() - previous_millis_display >= interval_display){
+			get_ambient_temp();
+			update_OLED();
+			previous_millis_display = HAL_GetTick();
+		}
 
     /* USER CODE END WHILE */
 
