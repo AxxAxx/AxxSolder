@@ -62,7 +62,7 @@ uint32_t interval_heating_halted_update = 500;
 
 uint32_t previous_millis_left_stand = 0;
 uint32_t EMERGENCY_shutdown_time = 1800000; 	//30 minutes
-uint32_t EMERGENCY_shutdown_temperature = 500;  //500 Deg C
+uint32_t EMERGENCY_shutdown_temperature = 475;  //475 Deg C
 
 /* states for runtime switch */
 typedef enum {
@@ -110,8 +110,8 @@ uint16_t ADC_buffer[ADC_BUF_LEN];
 #define TC_COMPENSATION_X1_T245 0.11753371673595008
 #define TC_COMPENSATION_X0_T245 25.051871505499836
 
-/* Ambient temperature compensation constant */
-#define AMBIENT_TEMP_COMPENSATION 0.0008058608 //3.3/4095
+
+#define AMBIENT_TEMP_COMPENSATION 0.0008058608 /* Ambient temperature compensation constant 3.3/4095 */
 
 /* Struct to hold sensor values */
 struct sensor_values_struct {
@@ -119,22 +119,24 @@ struct sensor_values_struct {
 	double actual_temperature;
 	float bus_voltage;
 	float pcb_temperature;
+	float ambient_temperature;
 	double in_stand;
+	double handle_sense;
 	mainstates previous_state;
 	uint8_t button_pressed;
 	uint8_t button_read;
-	float ambient_temperature;
 };
 
 struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
         									.actual_temperature = 0.0,
 											.bus_voltage = 0.0,
 											.pcb_temperature = 0.0,
+											.ambient_temperature = 0.0,
 											.in_stand = 0.0,
+											.handle_sense  = 0.0,
 											.previous_state = SLEEP,
 											.button_pressed = 0,
-											.button_read = 0,
-											.ambient_temperature = 0.0};
+											.button_read = 0};
 
 double PID_output = 0.0;
 double PID_setpoint = 0.0;
@@ -158,7 +160,7 @@ FilterTypeDef handle_sense_filterStruct;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
 I2C_HandleTypeDef hi2c1;
@@ -213,18 +215,19 @@ float get_mean_ADC_reading(uint8_t index){
 
 void get_bus_voltage(){
 	/* Index 3 is bus Voltage */
-	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading(3), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION;
+	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading(3), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION; /* Moving average filter */
 }
 
 void get_actual_temperature(){
 	/* Index 0 is bus Voltage */
-	float TC_temperature_temp = Moving_Average_Compute(get_mean_ADC_reading(0), &actual_temperature_filter_struct);
-
+	float TC_temperature_temp = Moving_Average_Compute(get_mean_ADC_reading(0), &actual_temperature_filter_struct); /* Moving average filter */
 	if(handle == T210){
-		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T210 + pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T210 + TC_temperature_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
+		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T210 +
+				pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T210 + TC_temperature_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
 	}
 	else if(handle == T245){
-		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T245 + pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T245 + TC_temperature_temp*TC_COMPENSATION_X1_T245 + TC_COMPENSATION_X0_T245;
+		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T245 +
+				pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T245 + TC_temperature_temp*TC_COMPENSATION_X1_T245 + TC_COMPENSATION_X0_T245;
 	}
 
 	if(sensor_values.actual_temperature > 999){
@@ -234,6 +237,7 @@ void get_actual_temperature(){
 
 void get_ambient_temp(){
 	//Index 2 is PCB temp
+	/* Moving average filter */
 	sensor_values.ambient_temperature = ((Moving_Average_Compute(get_mean_ADC_reading(2), &ambient_temperature_filter_struct)*AMBIENT_TEMP_COMPENSATION)-0.4)/0.0195;
 	//• Positive slope sensor gain, offset (typical):
 	//– 19.5 mV/°C, 400 mV at 0°C (TMP236-Q1) From data sheet
@@ -252,8 +256,6 @@ void init_OLED(){
 	OLED_1in5_Clear();
 
 	//0.Create a new image cache
-	UBYTE *BlackImage;
-	UWORD Imagesize = ((OLED_1in5_WIDTH%2==0)? (OLED_1in5_WIDTH/2): (OLED_1in5_WIDTH/2+1)) * OLED_1in5_HEIGHT;
 	if((black_image = (UBYTE *)malloc(image_size)) == NULL) {
 		return;
 	}
@@ -334,12 +336,14 @@ void get_set_temperature(){
 	sensor_values.set_temperature = TIM3->CNT;
 }
 
-void beep_ms(uint16_t beep_time){
+/* Beep the buzzer for beep_time_ms */
+void beep_ms(uint16_t beep_time_ms){
 	TIM2->CCR1 = 50;
-  	HAL_Delay(beep_time);
+  	HAL_Delay(beep_time_ms);
   	TIM2->CCR1 = 0;
 }
 
+/* Create a beep is beep is requested */
 void check_beep(){
 	if(beep_requested){
 		beep_ms(5);
@@ -347,6 +351,7 @@ void check_beep(){
 	}
 }
 
+/* Function to set state to EMERGENCY_SLEEP */
 void check_emergency_shutdown(){
 	/* Function to set state to EMERGENCY_SLEEP if iron is in RUN state for longer than EMERGENCY_shutdown_time */
 	if(!sensor_values.previous_state == RUN  && active_state == RUN){
@@ -365,8 +370,8 @@ void check_emergency_shutdown(){
 	}
 }
 
+/* Function to toggle between RUN and HALTED at each press of the encoder button */
 void get_button_status(){
-	/* Structure to toggle between heating_halted true/false at each press of the encoder button */
 	if ((sensor_values.button_pressed == 1) && (sensor_values.button_read == 0)){
 		sensor_values.button_read = 1;
 		beep_requested = 1;
@@ -388,6 +393,7 @@ void get_button_status(){
 	}
 }
 
+/* Get the status of handle in/on stand to trigger SLEEP */
 void get_stand_status(){
 	uint8_t stand_status;
 	if(HAL_GPIO_ReadPin (GPIOA, STAND_INP_Pin) == 0){
@@ -396,34 +402,39 @@ void get_stand_status(){
 	else{
 		stand_status = 0;
 	}
-	sensor_values.in_stand = Moving_Average_Compute(stand_status, &stand_sense_filterStruct);
+	sensor_values.in_stand = Moving_Average_Compute(stand_status, &stand_sense_filterStruct); /* Moving average filter */
 
 	/* If handle is in stand set state to SLEEP */
-	if(sensor_values.in_stand == 1){
+	if(sensor_values.in_stand > 0.5){
 		active_state = SLEEP;
+	}
+
+	/* If handle is NOT in stand and state is SLEEP, change state to RUN */
+	if((sensor_values.in_stand < 0.5) && (active_state == SLEEP)){
+		active_state = RUN;
 	}
 }
 
 /* Automatically detect handle type, T210 or T245 based on HANDLE_DETECTION_Pin, which is connected to BLUE for T210.*/
 void get_handle_type(){
 	uint8_t handle_status;
-	float handle_status_filtered;
 	if(HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_Pin) == 0){
 		handle_status = 1;
 	}
 	else{
 		handle_status = 0;
 	}
-	/* Moving average filter */
-	handle_status_filtered = Moving_Average_Compute(handle_status, &handle_sense_filterStruct);
+	sensor_values.handle_sense = Moving_Average_Compute(handle_status, &handle_sense_filterStruct); /* Moving average filter */
 
-	if(handle_status_filtered > 0.5){
+	/* If the handle_sense is high -> T210 handle is detected */
+	if(sensor_values.handle_sense > 0.5){
 		handle = T210;
 		max_power_watt = 60; //60W
 		Kp = 20;
 		Ki = 60;
 		Kd = 0.5;
 	}
+	/* If the handle_sense is low -> T245 Handle */
 	else{
 		handle = T245;
 		max_power_watt = 120; //120W
@@ -504,10 +515,10 @@ int main(void)
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_buffer, ADC_BUF_LEN);	//Start ADC DMA
 
 	Moving_Average_Init(&actual_temperature_filter_struct,5);
-	Moving_Average_Init(&ambient_temperature_filter_struct,5);
-	Moving_Average_Init(&input_voltage_filterStruct,5);
-	Moving_Average_Init(&stand_sense_filterStruct,20);
-	Moving_Average_Init(&handle_sense_filterStruct,20);
+	Moving_Average_Init(&ambient_temperature_filter_struct,200);
+	Moving_Average_Init(&input_voltage_filterStruct,200);
+	Moving_Average_Init(&stand_sense_filterStruct,200);
+	Moving_Average_Init(&handle_sense_filterStruct,200);
 
   /* USER CODE END 2 */
 
@@ -516,7 +527,7 @@ int main(void)
 
 	/* Init and fill filter structures with initial values */
 	set_heater_duty(0);
-	for (int i = 0; i<40;i++){
+	for (int i = 0; i<200;i++){
 		get_bus_voltage();
 		get_ambient_temp();
 		get_actual_temperature();
@@ -532,7 +543,7 @@ int main(void)
 	/* Initiate OLED display */
 	init_OLED();
 
-	/* If button is pressed during startup - Show SETTINGS and allow to release button. Then the user can choose between T210 and T245 handle */
+	/* If button is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_Pin) == 0){
 		Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
 		Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
@@ -582,15 +593,11 @@ int main(void)
 				break;
 			}
 			case RUN: {
-				/* calculate duty cycle for PWM */
 				PID_setpoint = sensor_values.set_temperature;
 				break;
 			}
 			case SLEEP: {
 				PID_setpoint = 0;
-				if(sensor_values.in_stand == 0){
-					active_state = RUN;
-					}
 				break;
 			}
 			case HALTED: {
@@ -606,7 +613,7 @@ int main(void)
 			previous_millis_PID_update = HAL_GetTick();
 		}
 
-		// TUNING - ONLY USED DURING PID TUNING
+		// TUNING - ONLY USED DURING MANUAL PID TUNING
 		// ----------------------------------------------
 		//PID_SetTunings(&TPID, Kp_custom, Ki_custom, Kd_custom);
 		//sensor_values.set_temperature = temperature_custom;
@@ -619,7 +626,11 @@ int main(void)
 		/* Send debug information over serial */
 		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
 			memset(&buffer, '\0', sizeof(buffer));
-			sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n", sensor_values.actual_temperature, sensor_values.set_temperature,PID_output/10,PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID)/10);
+			sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
+					sensor_values.actual_temperature, sensor_values.set_temperature,
+					PID_output/10, PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID)/10,
+					sensor_values.in_stand*50, sensor_values.handle_sense*50)
+					;
 			debugPrint(&huart2,buffer);
 			previous_millis_debug = HAL_GetTick();
 		}

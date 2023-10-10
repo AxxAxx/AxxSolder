@@ -39,7 +39,7 @@
 /* TypeDefs ------------------------------------------------------------------*/
 typedef struct{
 	float WindowLength;
-	uint32_t History[50]; /*Array to store values of filter window*/
+	uint32_t History[200]; /*Array to store values of filter window*/
 	uint32_t Sum;	/* Sum of filter window's elements*/
 	uint32_t WindowPointer; /* Pointer to the first element of window*/
 }FilterTypeDef;
