@@ -9,6 +9,8 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+[Rr]elease/
+[Dd]ebug/
 
 # External tool builders
 .externalToolBuilders/
