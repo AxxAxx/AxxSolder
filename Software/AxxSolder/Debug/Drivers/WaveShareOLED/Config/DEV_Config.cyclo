@@ -1,6 +1,0 @@
-../Drivers/WaveShareOLED/Config/DEV_Config.c:25:9:System_Init	1
-../Drivers/WaveShareOLED/Config/DEV_Config.c:41:6:System_Exit	1
-../Drivers/WaveShareOLED/Config/DEV_Config.c:55:9:SPI4W_Write_Byte	4
-../Drivers/WaveShareOLED/Config/DEV_Config.c:89:6:I2C_Write_Byte	3
-../Drivers/WaveShareOLED/Config/DEV_Config.c:110:6:Driver_Delay_ms	1
-../Drivers/WaveShareOLED/Config/DEV_Config.c:115:6:Driver_Delay_us	2
