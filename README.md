@@ -37,6 +37,21 @@ It is often nice to have a compact and portable soldering iron controller for wh
 ![AxxSolder_portable](./photos/AxxSolder_portable.jpg)
 The connections from the handle to the PCB throught the Hirose RPC1-12RB-6P(71) connector is shown below. The blue wire in the portable version is connected to the aluminium plate which tells the AxxSolder to go into sleep mode when in contact with the soldering iron. The yellow wire is connected to pin 6 and is used to determine which handle is connected.
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
+## Programming/Firmware update
+Programming the STM32 MCU is done by using a SWD programmer. These come in a variety of models and are availible from several different places online. In the below eaxample a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is is used. The MCU is programmed by the following steps:
+1. Disconnect any soldering iron handles from AxxSolder during the firmware update processs.
+2. Download the latest AxxSolder.bin file from [Releases](https://github.com/AxxAxx/AxxSolder/releases)
+3. Connect your SWD programmer to the target MCU with GND, 3.3V, (N)RST, SWCLK, SWDIO
+4. If your SWD programmer *can not* supply 3.3V it is necessary to power the AxxSolder from an external supply.
+5. Start your programming software. [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) is used in this example.
+6. Connect to the target by selecting *ST-LINK* and click on *Connect*
+7. Load the latest AxxSolder.bin donwloaded in *Step 2* by clicking *Open file* and select the donwloaded binary file.
+8. Write the firmware to the MCU by clicking *Download*.
+9. If you get the message *File download complete* everything succeded and the SWD programmer can be disconnected and power cycled once and AxxSolder should boot.
+<img src="./photos/AxxSolder_SWD_connection.png" width="400">
+
+![AxxSolder_SWD_programming](./photos/AxxSolder_SWD_programming.png)
+
 ## PID control
 As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification the PID parameters are only different between the different handle types, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
 ```c
