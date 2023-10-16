@@ -52,6 +52,9 @@ Programming the STM32 MCU is done by using a SWD programmer. These come in a var
 
 ![AxxSolder_SWD_programming](./photos/AxxSolder_SWD_programming.png)
 
+## First start up after build
+The first start up after you have built your AxxSolder can be intense. Double-check all solder connections under a loupe/microscope, especially the OPA2333, LTC4440 and the STM32G431 are small packages with tight pad spacing. Do also double check the connections to the soldering iron shown in this document. It is wise to do the first start of AxxSolder without any handle piece and with a current limited VDD of 9-24 V. 100 mA at 24 V is enought to check that the MCU and the display starts. You can now measure teh 3 bus voltages 3.3V, 5V and VDD and make sure they all look correct. If the boot-up looks good and the display shows the main screen you can connect the handle piece. If you are not 110% sure about your soldering/connections it is wise to be on the safe side and keep your soldering tip in a waterbath in over to prevent it from over-heating in an uncontrolled manner. During the development this method was used and saved a few of thoese expensive JBC cartridges..
+
 ## PID control
 As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification the PID parameters are only different between the different handle types, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
 ```c
