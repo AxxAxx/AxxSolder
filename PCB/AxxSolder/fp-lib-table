@@ -47,4 +47,5 @@
   (lib (name "BSC014N04LS")(type "KiCad")(uri "${KIPRJMOD}/libs/BSC014N04LS/BSC014N04LS.pretty")(options "")(descr ""))
   (lib (name "TPS54302DDCR")(type "KiCad")(uri "${KIPRJMOD}/libs/TPS54302DDCR")(options "")(descr ""))
   (lib (name "SRP7028CC-100M")(type "KiCad")(uri "${KIPRJMOD}/libs/SRP7028CC-100M")(options "")(descr ""))
+  (lib (name "SMBJ24CA")(type "KiCad")(uri "${KIPRJMOD}/libs/SMBJ24CA")(options "")(descr ""))
 )

@@ -2,7 +2,7 @@
 <export version="E">
   <design>
     <source>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder\AxxSolder.kicad_sch</source>
-    <date>2023-10-06 19:22:33</date>
+    <date>2023-10-18 08:26:38</date>
     <tool>Eeschema 7.0.8</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -291,7 +291,7 @@
       <tstamps>f1208938-fd02-4819-acd2-6c775055d322</tstamps>
     </comp>
     <comp ref="C24">
-      <value>10u</value>
+      <value>100n</value>
       <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
@@ -303,7 +303,7 @@
     </comp>
     <comp ref="C25">
       <value>22u</value>
-      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
@@ -322,6 +322,39 @@
       <property name="ki_keywords" value="capacitor cap"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>6355f716-45f4-4ea8-9117-a48917affaae</tstamps>
+    </comp>
+    <comp ref="C27">
+      <value>22u</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3301524d-9e03-4c84-ac14-8be3d7d457fd</tstamps>
+    </comp>
+    <comp ref="C28">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>5279c349-6898-4b0e-a1fa-3fb52ed574c9</tstamps>
+    </comp>
+    <comp ref="C29">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>44096ba0-91d3-4ef1-8069-c2d9a57d3ada</tstamps>
     </comp>
     <comp ref="D1">
       <value>BAT54S</value>
@@ -426,30 +459,28 @@
       <sheetpath names="/" tstamps="/"/>
       <tstamps>754eb04a-e55a-4af9-a9aa-134e0ea812e5</tstamps>
     </comp>
-    <comp ref="D8">
-      <value>SMCJ24CA</value>
-      <footprint>SMCJ24CA:DIONM7969X262N</footprint>
-      <datasheet>https://componentsearchengine.com/Datasheets/2/SMCJ24CA.pdf</datasheet>
+    <comp ref="D9">
+      <value>SMBJ24CA</value>
+      <footprint>DIOM5436X261N</footprint>
+      <datasheet>https://m.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smbj_datasheet.pdf.pdf</datasheet>
       <fields>
-        <field name="Description">LITTELFUSE - SMCJ24CA - TVS Diode, SMCJ Series, Bidirectional, 24 V, 38.9 V, DO-214AB (SMC), 2 Pins</field>
-        <field name="Height">2.62</field>
+        <field name="Height">2.61</field>
         <field name="Manufacturer_Name">LITTELFUSE</field>
-        <field name="Manufacturer_Part_Number">SMCJ24CA</field>
-        <field name="Mouser Part Number">576-SMCJ24CA</field>
-        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Littelfuse/SMCJ24CA?qs=HR2RnyOI4E6hN4LN6Thpwg%3D%3D</field>
+        <field name="Manufacturer_Part_Number">SMBJ24CA</field>
+        <field name="Mouser Part Number">576-SMBJ24CA</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Littelfuse/SMBJ24CA?qs=JJML70Qc14u3Wc4gmMep1w%3D%3D</field>
       </fields>
-      <libsource lib="SMCJ24CA" part="SMCJ24CA" description="LITTELFUSE - SMCJ24CA - TVS Diode, SMCJ Series, Bidirectional, 24 V, 38.9 V, DO-214AB (SMC), 2 Pins"/>
-      <property name="Description" value="LITTELFUSE - SMCJ24CA - TVS Diode, SMCJ Series, Bidirectional, 24 V, 38.9 V, DO-214AB (SMC), 2 Pins"/>
-      <property name="Height" value="2.62"/>
-      <property name="Mouser Part Number" value="576-SMCJ24CA"/>
-      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Littelfuse/SMCJ24CA?qs=HR2RnyOI4E6hN4LN6Thpwg%3D%3D"/>
+      <libsource lib="SMBJ24CA" part="SMBJ24CA" description="Littelfuse SMBJ24CA, Bi-Directional TVS Diode, 600W, 2-Pin DO-214AA"/>
+      <property name="Height" value="2.61"/>
+      <property name="Mouser Part Number" value="576-SMBJ24CA"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Littelfuse/SMBJ24CA?qs=JJML70Qc14u3Wc4gmMep1w%3D%3D"/>
       <property name="Manufacturer_Name" value="LITTELFUSE"/>
-      <property name="Manufacturer_Part_Number" value="SMCJ24CA"/>
+      <property name="Manufacturer_Part_Number" value="SMBJ24CA"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
-      <property name="ki_description" value="LITTELFUSE - SMCJ24CA - TVS Diode, SMCJ Series, Bidirectional, 24 V, 38.9 V, DO-214AB (SMC), 2 Pins"/>
+      <property name="ki_description" value="Littelfuse SMBJ24CA, Bi-Directional TVS Diode, 600W, 2-Pin DO-214AA"/>
       <sheetpath names="/" tstamps="/"/>
-      <tstamps>ef16da6b-441b-461f-83c2-5f9a813ad745</tstamps>
+      <tstamps>5af32eb9-d8d9-4d2a-8d80-7d4b3d1b2920</tstamps>
     </comp>
     <comp ref="D12">
       <value>BAT54S</value>
@@ -644,7 +675,7 @@
     </comp>
     <comp ref="IC6">
       <value>TPS54302DDCR</value>
-      <footprint>SOT95P280X110-6N</footprint>
+      <footprint>TPS54302DDCR:SOT95P280X110-6N</footprint>
       <datasheet>http://www.ti.com/general/docs/suppproductinfo.tsp?distId=10&amp;gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Ftps54302</datasheet>
       <fields>
         <field name="Height">1.1</field>
@@ -668,7 +699,11 @@
     <comp ref="J1">
       <value>Conn_01x07_Male</value>
       <footprint>691243310007:691243310007</footprint>
+      <fields>
+        <field name="Manufacturer_Part_Number">691243310007</field>
+      </fields>
       <libsource lib="Connector" part="Conn_01x07_Male" description="Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Manufacturer_Part_Number" value="691243310007"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
       <property name="ki_description" value="Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
@@ -689,7 +724,7 @@
     </comp>
     <comp ref="L1">
       <value>SRP7028CC-100M</value>
-      <footprint>INDPM7366X300N</footprint>
+      <footprint>SRP7028CC-100M:INDPM7366X300N</footprint>
       <datasheet>https://www.bourns.com/docs/Product-Datasheets/SRP7028CC.pdf</datasheet>
       <fields>
         <field name="Height">3</field>
@@ -1057,19 +1092,8 @@
       <sheetpath names="/" tstamps="/"/>
       <tstamps>32475768-e6c8-4b7f-bd5c-33fb191f7d13</tstamps>
     </comp>
-    <comp ref="R27">
-      <value>100k</value>
-      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
-      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
-      <property name="Sheetname" value=""/>
-      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
-      <property name="ki_description" value="Resistor, small symbol"/>
-      <property name="ki_keywords" value="R resistor"/>
-      <sheetpath names="/" tstamps="/"/>
-      <tstamps>8e113322-2100-4a80-b788-11a4141c8478</tstamps>
-    </comp>
     <comp ref="R28">
-      <value>49.9</value>
+      <value>100k</value>
       <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
@@ -1114,7 +1138,7 @@
     </comp>
     <comp ref="TP3">
       <value>GND_TP</value>
-      <footprint>testpin black 1mm:testpin black 1mm</footprint>
+      <footprint>TestPoint:TestPoint_THTPad_D1.0mm_Drill0.5mm</footprint>
       <libsource lib="Connector" part="TestPoint" description="test point"/>
       <property name="Sheetname" value=""/>
       <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
@@ -1180,7 +1204,7 @@
     </comp>
     <comp ref="U1">
       <value>PEC11L-4220F-S0015</value>
-      <footprint>PEC11L4220FS0015</footprint>
+      <footprint>PEC11L-4220F-S0015:PEC11L4220FS0015</footprint>
       <datasheet>https://www.bourns.com/PDFs/pec11l.pdf</datasheet>
       <fields>
         <field name="Description">BOURNS - PEC11L-4220F-S0015 - INCREMENTAL ENCODER, 15 PULSES</field>
@@ -1256,13 +1280,12 @@
     </libpart>
     <libpart lib="BSC014N04LS" part="BSC014N04LS">
       <fields>
-        <field name="Reference">U</field>
+        <field name="Reference">U2</field>
         <field name="Value">BSC014N04LS</field>
+        <field name="Footprint">BSC014N04LS:BSC014N04LS</field>
       </fields>
       <pins>
         <pin num="1" name="S" type="passive"/>
-        <pin num="2" name="S" type="passive"/>
-        <pin num="3" name="S" type="passive"/>
         <pin num="9" name="G" type="passive"/>
         <pin num="10" name="D" type="passive"/>
       </pins>
@@ -1410,7 +1433,7 @@
       <docs>https://ru.mouser.com/datasheet/2/420/United-Chemi-Con-776012.pdf</docs>
       <fields>
         <field name="Reference">C23</field>
-        <field name="Value">EMZR500ARA331MJ</field>
+        <field name="Value">330u</field>
         <field name="Footprint">EMZR500ARA331MJA0G:CAPAE1030X1050N</field>
         <field name="Datasheet">https://ru.mouser.com/datasheet/2/420/United-Chemi-Con-776012.pdf</field>
         <field name="Description">Cap Aluminum Lytic 330uF 50V 20% (10 X 10mm) SMD 0.12 Ohm 900mA 2000h 105C Automotive T/R</field>
@@ -1420,7 +1443,8 @@
         <field name="Manufacturer_Part_Number">EMZR500ARA331MJA0G</field>
       </fields>
       <pins>
-        <pin num="" name="" type="passive"/>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
       </pins>
     </libpart>
     <libpart lib="LD1117AS33TR" part="LD1117AS33TR">
@@ -1449,9 +1473,9 @@
       <description>Driver 1.1A 1-OUT High Side Full Brdg Non-Inv Automotive 8-Pin MSOP EP Tube</description>
       <docs>https://www.arrow.com/en/products/ltc4440ahms8e-5pbf/analog-devices</docs>
       <fields>
-        <field name="Reference">IC?</field>
+        <field name="Reference">IC1</field>
         <field name="Value">LTC4440AHMS8E-5#PBF</field>
-        <field name="Footprint">SOP65P490X110-9N</field>
+        <field name="Footprint">LTC4440AHMS8E-5#PBF:SOP65P490X110-9N</field>
         <field name="Datasheet">https://www.arrow.com/en/products/ltc4440ahms8e-5pbf/analog-devices</field>
         <field name="Description">Driver 1.1A 1-OUT High Side Full Brdg Non-Inv Automotive 8-Pin MSOP EP Tube</field>
         <field name="Height">1.1</field>
@@ -1574,20 +1598,19 @@
         <pin num="2" name="" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="SMCJ24CA" part="SMCJ24CA">
-      <description>LITTELFUSE - SMCJ24CA - TVS Diode, SMCJ Series, Bidirectional, 24 V, 38.9 V, DO-214AB (SMC), 2 Pins</description>
-      <docs>https://componentsearchengine.com/Datasheets/2/SMCJ24CA.pdf</docs>
+    <libpart lib="SMBJ24CA" part="SMBJ24CA">
+      <description>Littelfuse SMBJ24CA, Bi-Directional TVS Diode, 600W, 2-Pin DO-214AA</description>
+      <docs>https://m.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smbj_datasheet.pdf.pdf</docs>
       <fields>
-        <field name="Reference">D8</field>
-        <field name="Value">SMCJ24CA</field>
-        <field name="Footprint">DIONM7969X262N</field>
-        <field name="Datasheet">https://componentsearchengine.com/Datasheets/2/SMCJ24CA.pdf</field>
-        <field name="Description">LITTELFUSE - SMCJ24CA - TVS Diode, SMCJ Series, Bidirectional, 24 V, 38.9 V, DO-214AB (SMC), 2 Pins</field>
-        <field name="Height">2.62</field>
-        <field name="Mouser Part Number">576-SMCJ24CA</field>
-        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Littelfuse/SMCJ24CA?qs=HR2RnyOI4E6hN4LN6Thpwg%3D%3D</field>
+        <field name="Reference">D</field>
+        <field name="Value">SMBJ24CA</field>
+        <field name="Footprint">DIOM5436X261N</field>
+        <field name="Datasheet">https://m.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smbj_datasheet.pdf.pdf</field>
+        <field name="Height">2.61</field>
+        <field name="Mouser Part Number">576-SMBJ24CA</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Littelfuse/SMBJ24CA?qs=JJML70Qc14u3Wc4gmMep1w%3D%3D</field>
         <field name="Manufacturer_Name">LITTELFUSE</field>
-        <field name="Manufacturer_Part_Number">SMCJ24CA</field>
+        <field name="Manufacturer_Part_Number">SMBJ24CA</field>
       </fields>
       <pins>
         <pin num="1" name="" type="passive"/>
@@ -1749,8 +1772,8 @@
     <library logical="PMEG6020ER_115">
       <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/PMEG6020ER,115/PMEG6020ER_115.lib</uri>
     </library>
-    <library logical="SMCJ24CA">
-      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/SMCJ24CA/SMCJ24CA.lib</uri>
+    <library logical="SMBJ24CA">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/SMBJ24CA/SMBJ24CA.kicad_sym</uri>
     </library>
     <library logical="SRP7028CC-100M">
       <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/SRP7028CC-100M/SRP7028CC-100M.kicad_sym</uri>
@@ -1789,7 +1812,7 @@
       <node ref="PS1" pin="2" pinfunction="VOUT_1" pintype="output"/>
       <node ref="PS1" pin="4" pinfunction="VOUT_2" pintype="output"/>
       <node ref="R11" pin="2" pintype="passive"/>
-      <node ref="R12" pin="2" pintype="passive"/>
+      <node ref="R12" pin="1" pintype="passive"/>
       <node ref="R13" pin="1" pintype="passive"/>
       <node ref="R8" pin="1" pintype="passive"/>
       <node ref="R9" pin="1" pintype="passive"/>
@@ -1801,6 +1824,7 @@
       <node ref="C2" pin="1" pintype="passive"/>
       <node ref="C25" pin="2" pintype="passive"/>
       <node ref="C26" pin="2" pintype="passive"/>
+      <node ref="C27" pin="2" pintype="passive"/>
       <node ref="C6" pin="2" pintype="passive"/>
       <node ref="D2" pin="2" pintype="passive"/>
       <node ref="D4" pin="1" pinfunction="VCC" pintype="bidirectional"/>
@@ -1812,7 +1836,7 @@
       <node ref="R28" pin="1" pintype="passive"/>
       <node ref="TP7" pin="1" pinfunction="1" pintype="passive"/>
     </net>
-    <net code="3" name="/AMBIENT_TEMP">
+    <net code="3" name="/Ambient_temp">
       <node ref="C20" pin="1" pintype="passive"/>
       <node ref="IC2" pin="8" pinfunction="PA3" pintype="passive"/>
       <node ref="IC3" pin="2" pinfunction="VOUT" pintype="passive"/>
@@ -1825,16 +1849,16 @@
       <node ref="R10" pin="1" pintype="passive"/>
       <node ref="R25" pin="2" pintype="passive"/>
     </net>
-    <net code="5" name="/BUZZER">
-      <node ref="IC2" pin="10" pinfunction="PA5" pintype="passive"/>
-      <node ref="IC5" pin="10" pinfunction="PA5" pintype="passive"/>
-      <node ref="R15" pin="1" pintype="passive"/>
-    </net>
-    <net code="6" name="/Busvoltage">
+    <net code="5" name="/Busvoltage">
       <node ref="D12" pin="3" pinfunction="common" pintype="passive"/>
       <node ref="IC2" pin="13" pinfunction="PB0" pintype="passive"/>
       <node ref="IC5" pin="13" pinfunction="PB0" pintype="passive"/>
       <node ref="R1" pin="2" pintype="passive"/>
+    </net>
+    <net code="6" name="/Buzzer">
+      <node ref="IC2" pin="10" pinfunction="PA5" pintype="passive"/>
+      <node ref="IC5" pin="10" pinfunction="PA5" pintype="passive"/>
+      <node ref="R15" pin="1" pintype="passive"/>
     </net>
     <net code="7" name="/Current">
       <node ref="C16" pin="1" pintype="passive"/>
@@ -1862,45 +1886,46 @@
       <node ref="C8" pin="1" pintype="passive"/>
       <node ref="IC2" pin="19" pinfunction="PA9" pintype="passive"/>
       <node ref="IC5" pin="19" pinfunction="PA9" pintype="passive"/>
-      <node ref="R12" pin="1" pintype="passive"/>
+      <node ref="R12" pin="2" pintype="passive"/>
       <node ref="U1" pin="1" pinfunction="1" pintype="passive"/>
     </net>
     <net code="11" name="/GREEN">
       <node ref="J1" pin="3" pinfunction="Pin_3" pintype="passive"/>
       <node ref="R19" pin="1" pintype="passive"/>
     </net>
-    <net code="12" name="/HandleStand">
-      <node ref="J1" pin="1" pinfunction="Pin_1" pintype="passive"/>
-      <node ref="R5" pin="2" pintype="passive"/>
-      <node ref="R8" pin="2" pintype="passive"/>
-    </net>
-    <net code="13" name="/Heater">
-      <node ref="IC1" pin="1" pinfunction="INP" pintype="passive"/>
-      <node ref="IC2" pin="12" pinfunction="PA7" pintype="passive"/>
-      <node ref="IC5" pin="12" pinfunction="PA7" pintype="passive"/>
-      <node ref="R18" pin="1" pintype="passive"/>
-    </net>
-    <net code="14" name="/Input0">
+    <net code="12" name="/Handle_inp">
       <node ref="D3" pin="3" pinfunction="common" pintype="passive"/>
       <node ref="IC2" pin="20" pinfunction="PA10" pintype="passive"/>
       <node ref="IC5" pin="20" pinfunction="PA10" pintype="passive"/>
       <node ref="R6" pin="1" pintype="passive"/>
     </net>
-    <net code="15" name="/Input1">
-      <node ref="D1" pin="3" pinfunction="common" pintype="passive"/>
-      <node ref="IC2" pin="21" pinfunction="PA11" pintype="passive"/>
-      <node ref="IC5" pin="21" pinfunction="PA11" pintype="passive"/>
-      <node ref="R5" pin="1" pintype="passive"/>
+    <net code="13" name="/Handle_sense">
+      <node ref="C28" pin="1" pintype="passive"/>
+      <node ref="J1" pin="2" pinfunction="Pin_2" pintype="passive"/>
+      <node ref="R6" pin="2" pintype="passive"/>
+      <node ref="R9" pin="2" pintype="passive"/>
     </net>
-    <net code="16" name="/MCU_RX">
+    <net code="14" name="/Heater">
+      <node ref="IC1" pin="1" pinfunction="INP" pintype="passive"/>
+      <node ref="IC2" pin="12" pinfunction="PA7" pintype="passive"/>
+      <node ref="IC5" pin="12" pinfunction="PA7" pintype="passive"/>
+      <node ref="R18" pin="1" pintype="passive"/>
+    </net>
+    <net code="15" name="/MCU_RX">
       <node ref="IC2" pin="25" pinfunction="PA15" pintype="passive"/>
       <node ref="IC5" pin="25" pinfunction="PA15" pintype="passive"/>
       <node ref="J4" pin="7" pinfunction="Pin_7" pintype="passive"/>
     </net>
-    <net code="17" name="/MCU_TX">
+    <net code="16" name="/MCU_TX">
       <node ref="IC2" pin="7" pinfunction="PA2" pintype="passive"/>
       <node ref="IC5" pin="7" pinfunction="PA2" pintype="passive"/>
       <node ref="J4" pin="6" pinfunction="Pin_6" pintype="passive"/>
+    </net>
+    <net code="17" name="/NRST">
+      <node ref="C7" pin="2" pintype="passive"/>
+      <node ref="IC2" pin="4" pinfunction="PG10-NRST" pintype="passive"/>
+      <node ref="IC5" pin="4" pinfunction="PG10-NRST" pintype="passive"/>
+      <node ref="J4" pin="3" pinfunction="Pin_3" pintype="passive"/>
     </net>
     <net code="18" name="/RED">
       <node ref="C4" pin="1" pintype="passive"/>
@@ -1909,62 +1934,61 @@
       <node ref="J1" pin="5" pinfunction="Pin_5" pintype="passive"/>
       <node ref="R20" pin="1" pintype="passive"/>
       <node ref="U2" pin="1" pinfunction="S" pintype="passive"/>
-      <node ref="U2" pin="2" pinfunction="S" pintype="passive"/>
-      <node ref="U2" pin="3" pinfunction="S" pintype="passive"/>
     </net>
-    <net code="19" name="/RST">
-      <node ref="C7" pin="2" pintype="passive"/>
-      <node ref="IC2" pin="4" pinfunction="PG10-NRST" pintype="passive"/>
-      <node ref="IC5" pin="4" pinfunction="PG10-NRST" pintype="passive"/>
-      <node ref="J4" pin="3" pinfunction="Pin_3" pintype="passive"/>
-    </net>
-    <net code="20" name="/SPI_CS">
+    <net code="19" name="/SPI_CS">
       <node ref="D4" pin="6" pinfunction="CS" pintype="bidirectional"/>
       <node ref="IC2" pin="29" pinfunction="PB6" pintype="passive"/>
       <node ref="IC5" pin="29" pinfunction="PB6" pintype="passive"/>
     </net>
-    <net code="21" name="/SPI_DC">
+    <net code="20" name="/SPI_DC">
       <node ref="D4" pin="7" pinfunction="DC" pintype="bidirectional"/>
       <node ref="IC2" pin="22" pinfunction="PA12" pintype="passive"/>
       <node ref="IC5" pin="22" pinfunction="PA12" pintype="passive"/>
     </net>
-    <net code="22" name="/SPI_MOSI">
+    <net code="21" name="/SPI_MOSI">
       <node ref="D4" pin="4" pinfunction="DIN" pintype="bidirectional"/>
       <node ref="IC2" pin="28" pinfunction="PB5" pintype="passive"/>
       <node ref="IC5" pin="28" pinfunction="PB5" pintype="passive"/>
     </net>
-    <net code="23" name="/SPI_RST">
+    <net code="22" name="/SPI_RST">
       <node ref="D4" pin="8" pinfunction="RST" pintype="bidirectional"/>
       <node ref="IC2" pin="27" pinfunction="PB4" pintype="passive"/>
       <node ref="IC5" pin="27" pinfunction="PB4" pintype="passive"/>
     </net>
-    <net code="24" name="/SPI_SCK">
+    <net code="23" name="/SPI_SCK">
       <node ref="D4" pin="5" pinfunction="CLK" pintype="bidirectional"/>
       <node ref="IC2" pin="26" pinfunction="PB3" pintype="passive"/>
       <node ref="IC5" pin="26" pinfunction="PB3" pintype="passive"/>
     </net>
-    <net code="25" name="/SWCLK">
+    <net code="24" name="/SWCLK">
       <node ref="IC2" pin="24" pinfunction="PA14" pintype="passive"/>
       <node ref="IC5" pin="24" pinfunction="PA14" pintype="passive"/>
       <node ref="J4" pin="4" pinfunction="Pin_4" pintype="passive"/>
     </net>
-    <net code="26" name="/SWDIO">
+    <net code="25" name="/SWDIO">
       <node ref="IC2" pin="23" pinfunction="PA13" pintype="passive"/>
       <node ref="IC5" pin="23" pinfunction="PA13" pintype="passive"/>
       <node ref="J4" pin="5" pinfunction="Pin_5" pintype="passive"/>
     </net>
-    <net code="27" name="/Thermocouple">
+    <net code="26" name="/Stand_inp">
+      <node ref="D1" pin="3" pinfunction="common" pintype="passive"/>
+      <node ref="IC2" pin="21" pinfunction="PA11" pintype="passive"/>
+      <node ref="IC5" pin="21" pinfunction="PA11" pintype="passive"/>
+      <node ref="R5" pin="1" pintype="passive"/>
+    </net>
+    <net code="27" name="/Stand_sense">
+      <node ref="C29" pin="1" pintype="passive"/>
+      <node ref="J1" pin="1" pinfunction="Pin_1" pintype="passive"/>
+      <node ref="R5" pin="2" pintype="passive"/>
+      <node ref="R8" pin="2" pintype="passive"/>
+    </net>
+    <net code="28" name="/Thermocouple">
       <node ref="C15" pin="1" pintype="passive"/>
       <node ref="IC2" pin="5" pinfunction="PA0" pintype="passive"/>
       <node ref="IC4" pin="1" pinfunction="OUT_A" pintype="passive"/>
       <node ref="IC5" pin="5" pinfunction="PA0" pintype="passive"/>
       <node ref="R22" pin="1" pintype="passive"/>
       <node ref="TP5" pin="1" pinfunction="1" pintype="passive"/>
-    </net>
-    <net code="28" name="/TipChanger">
-      <node ref="J1" pin="2" pinfunction="Pin_2" pintype="passive"/>
-      <node ref="R6" pin="2" pintype="passive"/>
-      <node ref="R9" pin="2" pintype="passive"/>
     </net>
     <net code="29" name="GND">
       <node ref="C1" pin="2" pintype="passive"/>
@@ -1982,8 +2006,11 @@
       <node ref="C20" pin="2" pintype="passive"/>
       <node ref="C21" pin="1" pintype="passive"/>
       <node ref="C22" pin="2" pintype="passive"/>
-      <node ref="C23" pin="" pintype="passive"/>
+      <node ref="C23" pin="2" pintype="passive"/>
       <node ref="C25" pin="1" pintype="passive"/>
+      <node ref="C27" pin="1" pintype="passive"/>
+      <node ref="C28" pin="2" pintype="passive"/>
+      <node ref="C29" pin="2" pintype="passive"/>
       <node ref="C3" pin="2" pintype="passive"/>
       <node ref="C5" pin="2" pintype="passive"/>
       <node ref="C6" pin="1" pintype="passive"/>
@@ -1996,7 +2023,7 @@
       <node ref="D4" pin="2" pinfunction="GND" pintype="bidirectional"/>
       <node ref="D5" pin="1" pinfunction="A" pintype="passive"/>
       <node ref="D6" pin="1" pinfunction="A" pintype="passive"/>
-      <node ref="D8" pin="1" pintype="passive"/>
+      <node ref="D9" pin="1" pintype="passive"/>
       <node ref="IC1" pin="2" pinfunction="GND_1" pintype="passive"/>
       <node ref="IC1" pin="4" pinfunction="GND_2" pintype="passive"/>
       <node ref="IC1" pin="9" pinfunction="EP" pintype="passive"/>
@@ -2093,8 +2120,8 @@
     <net code="43" name="Net-(IC6-FB)">
       <node ref="C26" pin="1" pintype="passive"/>
       <node ref="IC6" pin="4" pinfunction="FB" pintype="passive"/>
-      <node ref="R27" pin="1" pintype="passive"/>
       <node ref="R28" pin="2" pintype="passive"/>
+      <node ref="R29" pin="1" pintype="passive"/>
     </net>
     <net code="44" name="Net-(IC6-SW)">
       <node ref="C24" pin="2" pintype="passive"/>
@@ -2102,7 +2129,7 @@
       <node ref="L1" pin="1" pintype="passive"/>
     </net>
     <net code="45" name="Net-(J1-Pin_7)">
-      <node ref="D8" pin="2" pintype="passive"/>
+      <node ref="D9" pin="2" pintype="passive"/>
       <node ref="F1" pin="2" pintype="passive"/>
       <node ref="J1" pin="7" pinfunction="Pin_7" pintype="passive"/>
     </net>
@@ -2116,29 +2143,25 @@
       <node ref="R15" pin="2" pintype="passive"/>
       <node ref="R16" pin="1" pintype="passive"/>
     </net>
-    <net code="48" name="Net-(R27-Pad2)">
-      <node ref="R27" pin="2" pintype="passive"/>
-      <node ref="R29" pin="1" pintype="passive"/>
-    </net>
-    <net code="51" name="VDD">
+    <net code="50" name="VDD">
       <node ref="C14" pin="2" pintype="passive"/>
       <node ref="C17" pin="1" pintype="passive"/>
       <node ref="C18" pin="1" pintype="passive"/>
       <node ref="C21" pin="2" pintype="passive"/>
-      <node ref="C23" pin="" pintype="passive"/>
+      <node ref="C23" pin="1" pintype="passive"/>
       <node ref="F1" pin="1" pintype="passive"/>
       <node ref="IC6" pin="3" pinfunction="VIN" pintype="passive"/>
       <node ref="R2" pin="1" pintype="passive"/>
       <node ref="TP8" pin="1" pinfunction="1" pintype="passive"/>
       <node ref="U2" pin="10" pinfunction="D" pintype="passive"/>
     </net>
-    <net code="52" name="unconnected-(D4-NC-Pad3)">
+    <net code="51" name="unconnected-(D4-NC-Pad3)">
       <node ref="D4" pin="3" pinfunction="NC" pintype="bidirectional"/>
     </net>
-    <net code="53" name="unconnected-(IC1-NC-Pad5)">
+    <net code="52" name="unconnected-(IC1-NC-Pad5)">
       <node ref="IC1" pin="5" pinfunction="NC" pintype="no_connect"/>
     </net>
-    <net code="54" name="unconnected-(IC6-EN-Pad5)">
+    <net code="53" name="unconnected-(IC6-EN-Pad5)">
       <node ref="IC6" pin="5" pinfunction="EN" pintype="passive"/>
     </net>
   </nets>
