@@ -31,7 +31,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-#define version "2.1.3"
+#define version "2.2.0"
 
 enum handles {
 	T210,
