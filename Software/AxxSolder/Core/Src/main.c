@@ -391,7 +391,7 @@ void get_button_status(){
 		sensor_values.button_read = 1;
 		beep_requested = 1;
 		// toggle between RUN and HALTED
-		if (active_state == RUN){
+		if ((active_state == RUN) || (active_state == STANDBY)){
 			active_state = HALTED;
 		}
 		else if (active_state == HALTED){
