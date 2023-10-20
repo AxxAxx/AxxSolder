@@ -65,7 +65,7 @@ uint32_t EMERGENCY_shutdown_time = 1800000; 	//30 minutes
 uint32_t EMERGENCY_shutdown_temperature = 475;  //475 Deg C
 
 uint32_t previous_standby = 0;
-uint32_t STANDBY_time_ms = 300000; //5 min by default
+uint32_t STANDBY_time_ms = 600000; //10 min by default
 
 /* states for runtime switch */
 typedef enum {
