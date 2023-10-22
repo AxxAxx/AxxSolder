@@ -21,7 +21,7 @@ The OLED display used in this project is a 1.5 inch 128 x 128 pixel SPI Display 
 Cartridges from JBC do all contain a thermocouple element to read the tip temperature and a resistive heater element. The configuration of thermocouple and heater element differ slightly between cartridge models. In order to determine the internal configuration of the cartridges two cross secions were done. These show clearly how the C210 and C245 cartridges are constructed internally. The images can be seen here: [https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller](https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller/msg5124267/#msg5124267).
 As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. The PID parameters will be set as well based on selected handle type. The selection is done by holding down the encoder knob while starting the AxxSolder. A menu will then allow the user to select the proper handle (T210 or T245). The default handle is T210.
 
-The AxxSolder goes into sleep mode when the soldering iron is not used. This happens when the handle is placed in the soldering iron holder or is in contact with the cartrigde pull-out bracket on the station. On the portable version an aluminium plate is mounted and allows the AxxSolder to go into sleep when the cartridge or handle rests againts it.
+The AxxSolder goes into sleep mode when the soldering iron is not used. This happens when the handle is placed in the soldering iron holder or is in contact with the cartridge pull-out bracket on the station. On the portable version an aluminium plate is mounted and allows the AxxSolder to go into sleep when the cartridge or handle rests against it.
 
 ![AxxSolder_station](./photos/AxxSolder_Schematic.png)
 A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown below. 
@@ -39,14 +39,14 @@ It is often nice to have a compact and portable soldering iron controller for wh
 The connections from the handle to the PCB throught the Hirose RPC1-12RB-6P(71) connector is shown below. The blue wire in the portable version is connected to the aluminium plate which tells the AxxSolder to go into sleep mode when in contact with the soldering iron. The yellow wire is connected to pin 6 and is used to determine which handle is connected.
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
 ## Firmware update
-Programming or updating the firmware the STM32 MCU is done by using a SWD programmer. These come in a variety of models and are availible from several different places online. In the below eaxample a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is is used. The MCU is programmed by the following steps:
+Programming or updating the firmware the STM32 MCU is done by using a SWD programmer. These come in a variety of models and are available from several different places online. In the below eaxample a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is is used. The MCU is programmed by the following steps:
 1. Disconnect any soldering iron handles from AxxSolder during the firmware update processs.
 2. Download the latest AxxSolder.bin file from [Releases](https://github.com/AxxAxx/AxxSolder/releases)
 3. Connect your SWD programmer to the target MCU with GND, 3.3V, (N)RST, SWCLK, SWDIO
 4. If your SWD programmer *can not* supply 3.3V it is necessary to power the AxxSolder from an external supply.
 5. Start your programming software. [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) is used in this example.
 6. Connect to the target by selecting *ST-LINK* and click on *Connect*
-7. Load the latest AxxSolder.bin donwloaded in *Step 2* by clicking *Open file* and select the donwloaded binary file.
+7. Load the latest AxxSolder.bin downloaded in *Step 2* by clicking *Open file* and select the downloaded binary file.
 8. Write the firmware to the MCU by clicking *Download*.
 9. If you get the message *File download complete* everything succeded and the SWD programmer can be disconnected and power cycled once and AxxSolder should boot.
 <img src="./photos/AxxSolder_SWD_connection.png" width="400">
