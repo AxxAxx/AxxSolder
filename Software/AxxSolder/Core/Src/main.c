@@ -31,7 +31,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-#define version "2.2.0"
+#define version "2.2.1"
 
 enum handles {
 	T210,
@@ -64,9 +64,13 @@ uint32_t previous_millis_left_stand = 0;
 uint32_t EMERGENCY_shutdown_time = 1800000; 	//30 minutes
 uint32_t EMERGENCY_shutdown_temperature = 475;  //475 Deg C
 
+uint32_t previous_standby = 0;
+uint32_t STANDBY_time_ms = 600000; //10 min by default
+
 /* states for runtime switch */
 typedef enum {
     RUN,
+	STANDBY,
 	SLEEP,
 	EMERGENCY_SLEEP,
 	HALTED,
@@ -83,6 +87,8 @@ double temperature_custom = 100;
 double Kp = 0;
 double Ki = 0;
 double Kd = 0;
+
+double STANDBY_temperature = 150;				/* The STANDBY temperature in deg C */
 
 char buffer[40];								/* Buffer for UART print */
 uint8_t tx_done = 1;
@@ -321,6 +327,15 @@ void update_OLED(){
 		Paint_DrawString_EN(116, 90,  "z", &Font16, 0x00, 0xff);
 		Paint_DrawString_EN(116, 110, "z", &Font16, 0x00, 0xff);
 	}
+	else if(active_state == STANDBY){
+		Paint_DrawString_EN(116, 30,  "S", &Font16, 0x00, 0xff);
+		Paint_DrawString_EN(116, 43,  "T", &Font16, 0x00, 0xff);
+		Paint_DrawString_EN(116, 56,  "A", &Font16, 0x00, 0xff);
+		Paint_DrawString_EN(116, 69,  "N", &Font16, 0x00, 0xff);
+		Paint_DrawString_EN(116, 82,  "D", &Font16, 0x00, 0xff);
+		Paint_DrawString_EN(116, 95,  "B", &Font16, 0x00, 0xff);
+		Paint_DrawString_EN(116, 108, "Y", &Font16, 0x00, 0xff);
+	}
 	else{
 		Paint_DrawRectangle(116, 125-PID_output/10, 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_FULL);
 	}
@@ -376,7 +391,7 @@ void get_button_status(){
 		sensor_values.button_read = 1;
 		beep_requested = 1;
 		// toggle between RUN and HALTED
-		if (active_state == RUN){
+		if ((active_state == RUN) || (active_state == STANDBY)){
 			active_state = HALTED;
 		}
 		else if (active_state == HALTED){
@@ -404,14 +419,25 @@ void get_stand_status(){
 	}
 	sensor_values.in_stand = Moving_Average_Compute(stand_status, &stand_sense_filterStruct); /* Moving average filter */
 
-	/* If handle is in stand set state to SLEEP */
+	/* If handle is in stand set state to STANDBY */
 	if(sensor_values.in_stand > 0.5){
-		active_state = SLEEP;
+		if(active_state == RUN){
+			active_state = STANDBY;
+			previous_standby = HAL_GetTick();
+		}
+		if((HAL_GetTick()-previous_standby >= STANDBY_time_ms) && (active_state == STANDBY)){
+			active_state = SLEEP;
+		}
+		if((active_state == EMERGENCY_SLEEP) || (active_state == HALTED)){
+			active_state = SLEEP;
+		}
 	}
 
 	/* If handle is NOT in stand and state is SLEEP, change state to RUN */
-	if((sensor_values.in_stand < 0.5) && (active_state == SLEEP)){
-		active_state = RUN;
+	if(sensor_values.in_stand < 0.5){
+		if((active_state == SLEEP) || (active_state == STANDBY)){
+			active_state = RUN;
+		}
 	}
 }
 
@@ -534,6 +560,8 @@ int main(void)
 		get_handle_type();
 		get_stand_status();
 	}
+	/* Set startup state */
+	active_state = SLEEP;
 
 	/* Start-up beep */
 	beep_ms(10);
@@ -594,6 +622,10 @@ int main(void)
 			}
 			case RUN: {
 				PID_setpoint = sensor_values.set_temperature;
+				break;
+			}
+			case STANDBY: {
+				PID_setpoint = STANDBY_temperature;
 				break;
 			}
 			case SLEEP: {
