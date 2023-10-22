@@ -10,7 +10,11 @@ local.properties
 .loadpath
 .recommenders
 [Rr]elease/
+
+# ignore everything in debug folder
 [Dd]ebug/
+# but do track .bin
+![Dd]ebug/*.bin
 
 # External tool builders
 .externalToolBuilders/
