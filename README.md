@@ -26,6 +26,15 @@ The AxxSolder goes into sleep mode when the soldering iron is not used. This hap
 ![AxxSolder_station](./photos/AxxSolder_Schematic.png)
 A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown below. 
 ![AxxSolder_station](./photos/PCB_3D.jpg)
+
+## Software Version History and Hardware Compability
+| Version | Date  | Hardware Compability |
+|---------|------|----------------------|
+|[v2.2.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.0)|Oct 20, 2023|V2.*|
+|[v2.1.3-revC](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.3-revC)|Oct 16, 2023|V2.*|
+|[v2.1.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.1)|Oct 7, 2023|V2.*|
+|[v2.1.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.0)|Oct 7, 2023|V2.*|
+
 ## DEMO
 Click on the gif to get to YouTube and see the demo in full resolution.  
 [![AxxSolder DEMO](./photos/AxxSolder_DEMO.gif)](https://www.youtube.com/watch?v=-3MtJyTwZFQ)
