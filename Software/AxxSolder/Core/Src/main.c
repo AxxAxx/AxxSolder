@@ -31,7 +31,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-#define version "2.2.1"
+#define version "2.2.2"
 
 enum handles {
 	T210,
@@ -129,8 +129,7 @@ struct sensor_values_struct {
 	double in_stand;
 	double handle_sense;
 	mainstates previous_state;
-	uint8_t button_pressed;
-	uint8_t button_read;
+	double enc_button_status;
 };
 
 struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
@@ -141,8 +140,7 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.in_stand = 0.0,
 											.handle_sense  = 0.0,
 											.previous_state = SLEEP,
-											.button_pressed = 0,
-											.button_read = 0};
+											.enc_button_status = 0.0};
 
 double PID_output = 0.0;
 double PID_setpoint = 0.0;
@@ -153,7 +151,7 @@ FilterTypeDef ambient_temperature_filter_struct;
 FilterTypeDef input_voltage_filterStruct;
 FilterTypeDef stand_sense_filterStruct;
 FilterTypeDef handle_sense_filterStruct;
-
+FilterTypeDef enc_button_sense_filterStruct;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -166,7 +164,7 @@ FilterTypeDef handle_sense_filterStruct;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
+ ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
 I2C_HandleTypeDef hi2c1;
@@ -386,9 +384,18 @@ void check_emergency_shutdown(){
 }
 
 /* Function to toggle between RUN and HALTED at each press of the encoder button */
-void get_button_status(){
-	if ((sensor_values.button_pressed == 1) && (sensor_values.button_read == 0)){
-		sensor_values.button_read = 1;
+void get_enc_button_status(){
+	uint8_t button_status;
+	if(HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0){
+		button_status = 1;
+	}
+	else{
+		button_status = 0;
+	}
+	sensor_values.enc_button_status = Moving_Average_Compute(button_status, &enc_button_sense_filterStruct); /* Moving average filter */
+
+	/* If encoder button is pressed */
+	if((sensor_values.enc_button_status > 0.8) && (HAL_GetTick()-previous_millis_heating_halted_update >= interval_heating_halted_update)){
 		beep_requested = 1;
 		// toggle between RUN and HALTED
 		if ((active_state == RUN) || (active_state == STANDBY)){
@@ -401,10 +408,6 @@ void get_button_status(){
 			active_state = RUN;
 		}
 		previous_millis_heating_halted_update = HAL_GetTick();
-	}
-	if ((sensor_values.button_read == 1) && (HAL_GetTick()-previous_millis_heating_halted_update >= interval_heating_halted_update)){
-		sensor_values.button_pressed = 0;
-		sensor_values.button_read = 0;
 	}
 }
 
@@ -476,13 +479,6 @@ void get_handle_type(){
 //    //HAL_GPIO_TogglePin(GPIOF, DEBUG_SIGNAL_A_Pin);
 //}
 
-/* Interrupts when encoder button is pressed */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-    if(GPIO_Pin == ENC_BUTTON_Pin && !sensor_values.button_pressed){ // If The INT Source Is EXTI Line9 (A9 Pin)
-    	sensor_values.button_pressed = 1;
-    }
-}
-
 /* Interrupts at every encoder increment */
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
@@ -545,7 +541,7 @@ int main(void)
 	Moving_Average_Init(&input_voltage_filterStruct,200);
 	Moving_Average_Init(&stand_sense_filterStruct,200);
 	Moving_Average_Init(&handle_sense_filterStruct,200);
-
+	Moving_Average_Init(&enc_button_sense_filterStruct,200);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -559,6 +555,7 @@ int main(void)
 		get_actual_temperature();
 		get_handle_type();
 		get_stand_status();
+		get_enc_button_status();
 	}
 	/* Set startup state */
 	active_state = SLEEP;
@@ -572,14 +569,14 @@ int main(void)
 	init_OLED();
 
 	/* If button is pressed during startup - Show SETTINGS and allow to release button. */
-	if (HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_Pin) == 0){
+	if (HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0){
 		Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
 		Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
 		OLED_1in5_Display(black_image);
 		Paint_Clear(BLACK);
 		HAL_Delay(1000);
 
-		while(HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_Pin) == 1){
+		while(HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 1){
 			Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
 			Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
 
@@ -609,7 +606,7 @@ int main(void)
 		get_stand_status();
 		get_bus_voltage();
 		get_handle_type();
-		get_button_status();
+		get_enc_button_status();
 		get_set_temperature();
 		check_beep();
 		check_emergency_shutdown();
@@ -1223,14 +1220,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : ENC_BUTTON_Pin */
-  GPIO_InitStruct.Pin = ENC_BUTTON_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(ENC_BUTTON_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : HANDLE_INP_Pin STAND_INP_Pin */
-  GPIO_InitStruct.Pin = HANDLE_INP_Pin|STAND_INP_Pin;
+  /*Configure GPIO pins : ENC_BUTTON_INP_Pin HANDLE_INP_Pin STAND_INP_Pin */
+  GPIO_InitStruct.Pin = ENC_BUTTON_INP_Pin|HANDLE_INP_Pin|STAND_INP_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -1248,10 +1239,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 
