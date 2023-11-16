@@ -26,12 +26,14 @@
 #include "test.h"
 #include "pid.h"
 #include "moving_average.h"
+#include "flash.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-#define version "2.2.2"
+#define version "2.2.3"
 
 enum handles {
 	T210,
@@ -64,8 +66,13 @@ uint32_t previous_millis_left_stand = 0;
 uint32_t EMERGENCY_shutdown_time = 1800000; 	//30 minutes
 uint32_t EMERGENCY_shutdown_temperature = 475;  //475 Deg C
 
-uint32_t previous_standby = 0;
-uint32_t STANDBY_time_ms = 600000; //10 min by default
+uint32_t previous_standby_millis = 0;
+
+ConfigurationMsg configurationMsg  = {.start_temperature  = 330,
+                                                                                .global_temp_offset = 0,
+                                                                                .standby_time_ms = 600000, 	//10 min by default
+                                                                                .standby_temp = 150,		// The STANDBY temperature in deg C
+                                                                                .beep_active = 1};
 
 /* states for runtime switch */
 typedef enum {
@@ -87,8 +94,6 @@ double temperature_custom = 100;
 double Kp = 0;
 double Ki = 0;
 double Kd = 0;
-
-double STANDBY_temperature = 150;				/* The STANDBY temperature in deg C */
 
 char buffer[40];								/* Buffer for UART print */
 uint8_t tx_done = 1;
@@ -167,6 +172,8 @@ FilterTypeDef enc_button_sense_filterStruct;
  ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
+CRC_HandleTypeDef hcrc;
+
 I2C_HandleTypeDef hi2c1;
 
 SPI_HandleTypeDef hspi1;
@@ -194,6 +201,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM16_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_CRC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -426,9 +434,9 @@ void get_stand_status(){
 	if(sensor_values.in_stand > 0.5){
 		if(active_state == RUN){
 			active_state = STANDBY;
-			previous_standby = HAL_GetTick();
+			previous_standby_millis = HAL_GetTick();
 		}
-		if((HAL_GetTick()-previous_standby >= STANDBY_time_ms) && (active_state == STANDBY)){
+		if((HAL_GetTick()-previous_standby_millis >= configurationMsg.standby_time_ms) && (active_state == STANDBY)){
 			active_state = SLEEP;
 		}
 		if((active_state == EMERGENCY_SLEEP) || (active_state == HALTED)){
@@ -529,6 +537,7 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM16_Init();
   MX_I2C1_Init();
+  MX_CRC_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Encoder_Start_IT(&htim3, TIM_CHANNEL_ALL);
 	HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
@@ -557,6 +566,14 @@ int main(void)
 		get_stand_status();
 		get_enc_button_status();
 	}
+
+
+    /* Check if flash memory is empty - first time programming */
+    if(*(volatile uint32_t*) (FLASH_USER_START_ADDR) == 0xffffffff){
+              FlashWrite(&configurationMsg);
+    }
+    FlashRead(&configurationMsg);
+
 	/* Set startup state */
 	active_state = SLEEP;
 
@@ -568,9 +585,14 @@ int main(void)
 	/* Initiate OLED display */
 	init_OLED();
 
+
+
+
+
 	/* If button is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0){
-		Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
+		Paint_DrawString_EN(0, 0, "SETTINGS" , &Font16, 0x00, 0xff);
+
 		Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
 		OLED_1in5_Display(black_image);
 		Paint_Clear(BLACK);
@@ -579,10 +601,10 @@ int main(void)
 		while(HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 1){
 			Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
 			Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
-
-			Paint_DrawString_EN(3, 20, "Coming soon...", &Font12, 0x00, 0xff);
 			Paint_DrawString_EN(0, 110, "Version: ", &Font12, 0x00, 0xff);
 			Paint_DrawString_EN(60, 110, version, &Font12, 0x00, 0xff);
+
+			menuHandle();
 
 			OLED_1in5_Display(black_image);
 			Paint_Clear(BLACK);
@@ -622,11 +644,13 @@ int main(void)
 				break;
 			}
 			case STANDBY: {
-				PID_setpoint = STANDBY_temperature;
+				PID_setpoint = configurationMsg.standby_temp;
 				break;
 			}
 			case SLEEP: {
 				PID_setpoint = 0;
+
+
 				break;
 			}
 			case HALTED: {
@@ -831,6 +855,37 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
+  * @brief CRC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_CRC_Init(void)
+{
+
+  /* USER CODE BEGIN CRC_Init 0 */
+
+  /* USER CODE END CRC_Init 0 */
+
+  /* USER CODE BEGIN CRC_Init 1 */
+
+  /* USER CODE END CRC_Init 1 */
+  hcrc.Instance = CRC;
+  hcrc.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
+  hcrc.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_ENABLE;
+  hcrc.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
+  hcrc.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
+  hcrc.InputDataFormat = CRC_INPUTDATA_FORMAT_BYTES;
+  if (HAL_CRC_Init(&hcrc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN CRC_Init 2 */
+
+  /* USER CODE END CRC_Init 2 */
 
 }
 

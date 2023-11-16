@@ -37,7 +37,14 @@ extern SPI_HandleTypeDef hspi1;
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef struct
+{
+	uint16_t start_temperature;
+	int16_t global_temp_offset;
+	uint32_t  standby_time_ms;
+	double standby_temp;
+	uint16_t beep_active;
+}ConfigurationMsg;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
