@@ -26,12 +26,16 @@
 #include "test.h"
 #include "pid.h"
 #include "moving_average.h"
+#include "flash.h"
+#include <stdint.h>
+#include <string.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-#define version "2.2.2"
+#define version "2.2.3"
 
 enum handles {
 	T210,
@@ -64,8 +68,9 @@ uint32_t previous_millis_left_stand = 0;
 uint32_t EMERGENCY_shutdown_time = 1800000; 	//30 minutes
 uint32_t EMERGENCY_shutdown_temperature = 475;  //475 Deg C
 
-uint32_t previous_standby = 0;
-uint32_t STANDBY_time_ms = 600000; //10 min by default
+uint32_t previous_standby_millis = 0;
+
+
 
 /* states for runtime switch */
 typedef enum {
@@ -87,8 +92,6 @@ double temperature_custom = 100;
 double Kp = 0;
 double Ki = 0;
 double Kd = 0;
-
-double STANDBY_temperature = 150;				/* The STANDBY temperature in deg C */
 
 char buffer[40];								/* Buffer for UART print */
 uint8_t tx_done = 1;
@@ -116,8 +119,9 @@ uint16_t ADC_buffer[ADC_BUF_LEN];
 #define TC_COMPENSATION_X1_T245 0.11753371673595008
 #define TC_COMPENSATION_X0_T245 25.051871505499836
 
-
 #define AMBIENT_TEMP_COMPENSATION 0.0008058608 /* Ambient temperature compensation constant 3.3/4095 */
+
+char *menu_names[10];
 
 /* Struct to hold sensor values */
 struct sensor_values_struct {
@@ -167,6 +171,8 @@ FilterTypeDef enc_button_sense_filterStruct;
  ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
+CRC_HandleTypeDef hcrc;
+
 I2C_HandleTypeDef hi2c1;
 
 SPI_HandleTypeDef hspi1;
@@ -194,12 +200,16 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM16_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_CRC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+ConfigurationMsg user_saved_configurationMsg;
+ConfigurationMsg default_configurationMsg;
 
 PID_TypeDef TPID;
 
@@ -233,7 +243,7 @@ void get_actual_temperature(){
 		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T245 +
 				pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T245 + TC_temperature_temp*TC_COMPENSATION_X1_T245 + TC_COMPENSATION_X0_T245;
 	}
-
+	sensor_values.actual_temperature = sensor_values.actual_temperature + user_saved_configurationMsg.numerical_flash_values[1]; // Add temperature offset value
 	if(sensor_values.actual_temperature > 999){
 		sensor_values.actual_temperature = 999;
 	}
@@ -351,9 +361,11 @@ void get_set_temperature(){
 
 /* Beep the buzzer for beep_time_ms */
 void beep_ms(uint16_t beep_time_ms){
-	TIM2->CCR1 = 50;
-  	HAL_Delay(beep_time_ms);
-  	TIM2->CCR1 = 0;
+	if(user_saved_configurationMsg.numerical_flash_values[4]){
+		TIM2->CCR1 = 50;
+		HAL_Delay(beep_time_ms);
+		TIM2->CCR1 = 0;
+	}
 }
 
 /* Create a beep is beep is requested */
@@ -426,9 +438,9 @@ void get_stand_status(){
 	if(sensor_values.in_stand > 0.5){
 		if(active_state == RUN){
 			active_state = STANDBY;
-			previous_standby = HAL_GetTick();
+			previous_standby_millis = HAL_GetTick();
 		}
-		if((HAL_GetTick()-previous_standby >= STANDBY_time_ms) && (active_state == STANDBY)){
+		if((HAL_GetTick()-previous_standby_millis >= user_saved_configurationMsg.numerical_flash_values[3]*60000.0) && (active_state == STANDBY)){
 			active_state = SLEEP;
 		}
 		if((active_state == EMERGENCY_SLEEP) || (active_state == HALTED)){
@@ -529,6 +541,7 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM16_Init();
   MX_I2C1_Init();
+  MX_CRC_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Encoder_Start_IT(&htim3, TIM_CHANNEL_ALL);
 	HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
@@ -557,6 +570,30 @@ int main(void)
 		get_stand_status();
 		get_enc_button_status();
 	}
+
+	default_configurationMsg.numerical_flash_values[0] = 330;
+	default_configurationMsg.numerical_flash_values[1] = 0;
+	default_configurationMsg.numerical_flash_values[2] = 150;
+	default_configurationMsg.numerical_flash_values[3] = 10;
+	default_configurationMsg.numerical_flash_values[4] = 1;
+
+	menu_names[0] = "Startup Temp";
+	menu_names[1] = "Temp Offset ";
+	menu_names[2] = "Standby Temp";
+	menu_names[3] = "Standby Time";
+	menu_names[4] = "Buzzer Enable";
+	menu_names[5] = "-Load Default-";
+	menu_names[6] = "-Exit and Save-";
+	menu_names[7] = "-Exit no Save-";
+
+	uint16_t menu_length = 7;
+
+
+	if(!FlashCheckCRC()){
+    	FlashWrite(&default_configurationMsg);
+	}
+    FlashRead(&user_saved_configurationMsg);
+
 	/* Set startup state */
 	active_state = SLEEP;
 
@@ -567,30 +604,114 @@ int main(void)
 
 	/* Initiate OLED display */
 	init_OLED();
+	TIM3->CNT = 1000;
+	uint16_t menu_cursor_position = 0;
+	uint16_t old_menu_cursor_position = 0;
+	uint16_t menue_start = 0;
+	uint16_t menue_level = 0;
+	uint16_t menu_active = 1;
+	float old_value = 0;
+
 
 	/* If button is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0){
-		Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
+		Paint_DrawString_EN(0, 0, "SETTINGS" , &Font16, 0x00, 0xff);
 		Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
 		OLED_1in5_Display(black_image);
 		Paint_Clear(BLACK);
 		HAL_Delay(1000);
+		while(menu_active == 1){
+			if(menue_level == 0){
+				if(TIM3->CNT < 1000)
+				{
+					TIM3->CNT = 1000;
+				}
+				menu_cursor_position = (TIM3->CNT - 1000) / 2;
+			}
+			if (menue_level == 1){
+				if (menu_cursor_position == 4){
+					user_saved_configurationMsg.numerical_flash_values[menu_cursor_position] = fmod((old_value + ((TIM3->CNT - 1000) / 2) - menu_cursor_position), 2);
+				}
+				else{
+					user_saved_configurationMsg.numerical_flash_values[menu_cursor_position] = (float)old_value + (float)(TIM3->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
+				}
+			}
 
-		while(HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 1){
-			Paint_DrawString_EN(0, 0, " SETTINGS ", &Font16, 0x00, 0xff);
+			if(menu_cursor_position > menu_length){
+							menu_cursor_position = menu_length;
+							TIM3->CNT = 1000 + menu_length*2;
+			}
+
+			if(menu_cursor_position >= menu_length-(menu_length-5)){
+				menue_start = menu_cursor_position-5;
+			}
+
+
+			if((HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0) && (menu_cursor_position < menu_length-2)){
+				if(menue_level == 0){
+					old_value = user_saved_configurationMsg.numerical_flash_values[menu_cursor_position];
+					old_menu_cursor_position = menu_cursor_position;
+				}
+				if(menue_level == 1){
+					TIM3->CNT = old_menu_cursor_position*2 + 1000;
+				}
+
+				menue_level = abs(menue_level-1);
+				HAL_Delay(200);
+			}
+			else if((HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0) && (menu_cursor_position == menu_length)){
+				menu_active = 0;
+			}
+			else if((HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0) && (menu_cursor_position == menu_length-1)){
+				menu_active = 0;
+				FlashWrite(&user_saved_configurationMsg);
+			}
+			else if((HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0) && (menu_cursor_position == menu_length-2)){
+				user_saved_configurationMsg.numerical_flash_values[0] = default_configurationMsg.numerical_flash_values[0];
+				user_saved_configurationMsg.numerical_flash_values[1] = default_configurationMsg.numerical_flash_values[1];
+				user_saved_configurationMsg.numerical_flash_values[2] = default_configurationMsg.numerical_flash_values[2];
+				user_saved_configurationMsg.numerical_flash_values[3] = default_configurationMsg.numerical_flash_values[3];
+				user_saved_configurationMsg.numerical_flash_values[4] = default_configurationMsg.numerical_flash_values[4];
+
+			}
+
+
+			Paint_DrawString_EN(0, 0, "SETTINGS", &Font16, 0x00, 0xff);
 			Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
-
-			Paint_DrawString_EN(3, 20, "Coming soon...", &Font12, 0x00, 0xff);
 			Paint_DrawString_EN(0, 110, "Version: ", &Font12, 0x00, 0xff);
 			Paint_DrawString_EN(60, 110, version, &Font12, 0x00, 0xff);
 
+			//menuHandle();
+
+			for(int i = menue_start;i<menue_start+6;i++){
+
+				if((i == menu_cursor_position) && (menue_level == 0)){
+					Paint_DrawString_EN(0, 20+(i-menue_start)*12, menu_names[i], &Font12, 0xff, 0x00);
+				}
+				else{
+					Paint_DrawString_EN(0, 20+(i-menue_start)*12, menu_names[i], &Font12, 0x00, 0xff);
+				}
+
+				char str[20];
+			  	memset(&str, '\0', sizeof(str));
+				sprintf(str, "%.0f", (user_saved_configurationMsg.numerical_flash_values[i]));
+				if(i <= menu_length-3){
+					if((i == menu_cursor_position) && (menue_level == 1)){
+						Paint_DrawString_EN(100, 20+(i-menue_start)*12, str, &Font12, 0xff, 0x00);
+					}
+					else{
+						Paint_DrawString_EN(100, 20+(i-menue_start)*12, str, &Font12, 0x00, 0xff);
+					}
+				}
+			}
 			OLED_1in5_Display(black_image);
 			Paint_Clear(BLACK);
 		}
 	}
 
+
 	/* Set initial encoder timer value */
-	TIM3->CNT = 330;
+	TIM3->CNT = user_saved_configurationMsg.numerical_flash_values[0];
 
 	/* Startup beep */
 	beep_ms(10);
@@ -622,11 +743,13 @@ int main(void)
 				break;
 			}
 			case STANDBY: {
-				PID_setpoint = STANDBY_temperature;
+				PID_setpoint = (double)user_saved_configurationMsg.numerical_flash_values[2];
 				break;
 			}
 			case SLEEP: {
 				PID_setpoint = 0;
+
+
 				break;
 			}
 			case HALTED: {
@@ -831,6 +954,37 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
+  * @brief CRC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_CRC_Init(void)
+{
+
+  /* USER CODE BEGIN CRC_Init 0 */
+
+  /* USER CODE END CRC_Init 0 */
+
+  /* USER CODE BEGIN CRC_Init 1 */
+
+  /* USER CODE END CRC_Init 1 */
+  hcrc.Instance = CRC;
+  hcrc.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
+  hcrc.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_ENABLE;
+  hcrc.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
+  hcrc.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
+  hcrc.InputDataFormat = CRC_INPUTDATA_FORMAT_BYTES;
+  if (HAL_CRC_Init(&hcrc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN CRC_Init 2 */
+
+  /* USER CODE END CRC_Init 2 */
 
 }
 

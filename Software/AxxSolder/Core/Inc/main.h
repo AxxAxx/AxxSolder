@@ -37,7 +37,10 @@ extern SPI_HandleTypeDef hspi1;
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef struct
+{
+  float numerical_flash_values[10];
+}ConfigurationMsg;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
