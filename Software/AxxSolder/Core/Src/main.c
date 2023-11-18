@@ -584,7 +584,7 @@ int main(void)
 	menu_names[4] = "Buzzer Enable";
 	menu_names[5] = "-Load Default-";
 	menu_names[6] = "-Exit and Save-";
-	menu_names[7] = "-Discard-";
+	menu_names[7] = "-Exit no Save-";
 
 	uint16_t menu_length = 7;
 
