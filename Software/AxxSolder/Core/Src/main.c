@@ -740,7 +740,7 @@ int main(void)
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 	PID_SetSampleTime(&TPID, 50);
 	PID_SetOutputLimits(&TPID, 0, 1000); 	// Set max and min output limit
-	PID_SetILimits(&TPID, -200, 200); 		// Set max and min I limit
+	PID_SetILimits(&TPID, -400, 400); 		// Set max and min I limit
 
 	while (1){
 		get_stand_status();
