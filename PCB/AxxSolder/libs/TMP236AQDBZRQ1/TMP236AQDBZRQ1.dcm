@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TMP236AQDBZRQ1
+D Automotive grade, +/-0.5C analog output temperature sensor with 19.5 mV/C gain
+K
+F https://www.ti.com/lit/gpn/TMP236-Q1
+$ENDCMP
+#
+#End Doc Library

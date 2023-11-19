@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LTC4440AHMS8E-5#PBF
+D Driver 1.1A 1-OUT High Side Full Brdg Non-Inv Automotive 8-Pin MSOP EP Tube
+K
+F https://www.arrow.com/en/products/ltc4440ahms8e-5pbf/analog-devices
+$ENDCMP
+#
+#End Doc Library

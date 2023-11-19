@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP STM32G431KBT6
+D ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration
+K
+F https://www.st.com/resource/en/datasheet/stm32g431kb.pdf
+$ENDCMP
+#
+#End Doc Library

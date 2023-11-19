@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP 74HC4053PW,118
+D 74HC(T)4053 - Triple 2-channel analog multiplexer/demultiplexer@en-us
+K
+F https://assets.nexperia.com/documents/data-sheet/74HC_HCT4053.pdf
+$ENDCMP
+#
+#End Doc Library

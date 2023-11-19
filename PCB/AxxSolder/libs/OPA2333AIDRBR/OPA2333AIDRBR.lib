@@ -1,0 +1,30 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model OPA2333AIDRBR
+#/379259/241585/2.49/9/3/Integrated Circuit
+DEF OPA2333AIDRBR IC 0 30 Y Y 1 F N
+F0 "IC" 1050 300 50 H V L CNN
+F1 "OPA2333AIDRBR" 1050 200 50 H V L CNN
+F2 "SON65P300X300X100-9N-D" 1050 100 50 H I L CNN
+F3 "https://www.ti.com/lit/ds/symlink/opa2333.pdf?ts=1606982025063&ref_url=https%253A%252F%252Fwww.ti.com%252Fstore%252Fti%252Fen%252Fp%252Fproduct%252F%253Fp%253DOPA2333AIDRBR%2526keyMatch%253DOPA2333AIDRBR%2526tisearch%253DSearch-EN-everything%2526usecase%2" 1050 0 50 H I L CNN
+F4 "1.8V, 17A, 2 channels, microPower, Precision, Zero Drift CMOS Op Amp" 1050 -100 50 H I L CNN "Description"
+F5 "1" 1050 -200 50 H I L CNN "Height"
+F6 "595-OPA2333AIDRBR" 1050 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/Texas-Instruments/OPA2333AIDRBR?qs=pJP364FAHqRpZMi9vrj2VQ%3D%3D" 1050 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "Texas Instruments" 1050 -500 50 H I L CNN "Manufacturer_Name"
+F9 "OPA2333AIDRBR" 1050 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X OUT_A 1 0 0 200 R 50 50 0 0 P
+X -IN_A 2 0 -100 200 R 50 50 0 0 P
+X +IN_A 3 0 -200 200 R 50 50 0 0 P
+X V- 4 0 -300 200 R 50 50 0 0 P
+X EP 9 600 -800 200 U 50 50 0 0 P
+X V+ 8 1200 0 200 L 50 50 0 0 P
+X OUT_B 7 1200 -100 200 L 50 50 0 0 P
+X -IN_B 6 1200 -200 200 L 50 50 0 0 P
+X +IN_B 5 1200 -300 200 L 50 50 0 0 P
+P 5 0 1 6 200 100 1000 100 1000 -600 200 -600 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library

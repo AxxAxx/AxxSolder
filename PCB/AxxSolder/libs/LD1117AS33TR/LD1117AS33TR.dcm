@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LD1117AS33TR
+D STMICROELECTRONICS - LD1117AS33TR - Fixed LDO Voltage Regulator, 5.3V to 10V, 1.15V Dropout, 3.3Vout, 1Aout, SOT-223-3
+K
+F https://4donline.ihs.com/images/VipMasterIC/IC/SGST/SGSTS49356/SGSTS49356-1.pdf?hkey=6D3A4C79FDBF58556ACFDE234799DDF0
+$ENDCMP
+#
+#End Doc Library

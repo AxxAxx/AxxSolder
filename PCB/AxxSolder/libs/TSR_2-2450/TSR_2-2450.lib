@@ -1,0 +1,24 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model TSR_2-2450
+#/380298/300009/2.50/3/2/Power Supply
+DEF TSR_2-2450 PS 0 30 Y Y 1 F N
+F0 "PS" 850 300 50 H V L CNN
+F1 "TSR_2-2450" 850 200 50 H V L CNN
+F2 "TSR-2" 850 100 50 H I L CNN
+F3 "https://tracopower.com/tsr2-datasheet/" 850 0 50 H I L CNN
+F4 "2 Amp POL switching regulator, 3.0 to -36 VDC input, pos.-pos. circuit, LM78 compatible, SIP-3" 850 -100 50 H I L CNN "Description"
+F5 "" 850 -200 50 H I L CNN "Height"
+F6 "495-TSR2-2450" 850 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/TRACO-Power/TSR-2-2450?qs=NtE2QagKf6RzknAolzm%2FTQ%3D%3D" 850 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "Traco Power" 850 -500 50 H I L CNN "Manufacturer_Name"
+F9 "TSR 2-2450" 850 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X +VIN 1 0 0 200 R 50 50 0 0 I
+X GND 2 0 -100 200 R 50 50 0 0 W
+X +VOUT 3 0 -200 200 R 50 50 0 0 O
+P 5 0 1 6 200 100 800 100 800 -300 200 -300 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library

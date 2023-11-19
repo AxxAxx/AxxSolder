@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP PMEG10030ELPX
+D Schottky Diodes & Rectifiers 3A Schottky Barrier Rectifier
+K
+F https://assets.nexperia.com/documents/data-sheet/PMEG10030ELP.pdf
+$ENDCMP
+#
+#End Doc Library

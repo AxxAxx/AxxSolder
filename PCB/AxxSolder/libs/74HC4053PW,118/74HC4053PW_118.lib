@@ -1,0 +1,37 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model 74HC4053PW,118
+#/645935/241585/2.49/16/2/Integrated Circuit
+DEF 74HC4053PW,118 IC 0 30 Y Y 1 F N
+F0 "IC" 850 300 50 H V L CNN
+F1 "74HC4053PW,118" 850 200 50 H V L CNN
+F2 "SOP65P640X110-16N" 850 100 50 H I L CNN
+F3 "https://assets.nexperia.com/documents/data-sheet/74HC_HCT4053.pdf" 850 0 50 H I L CNN
+F4 "74HC(T)4053 - Triple 2-channel analog multiplexer/demultiplexer@en-us" 850 -100 50 H I L CNN "Description"
+F5 "1.1" 850 -200 50 H I L CNN "Height"
+F6 "771-74HC4053PW-T" 850 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/Nexperia/74HC4053PW118?qs=P62ublwmbi9UfOd4c5n7Mw%3D%3D" 850 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "Nexperia" 850 -500 50 H I L CNN "Manufacturer_Name"
+F9 "74HC4053PW,118" 850 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X 2Y1 1 0 0 200 R 50 50 0 0 P
+X 2Y0 2 0 -100 200 R 50 50 0 0 P
+X 3Y1 3 0 -200 200 R 50 50 0 0 P
+X 3Z 4 0 -300 200 R 50 50 0 0 P
+X 3Y0 5 0 -400 200 R 50 50 0 0 P
+X ~E 6 0 -500 200 R 50 50 0 0 P
+X VEE 7 0 -600 200 R 50 50 0 0 P
+X GND 8 0 -700 200 R 50 50 0 0 P
+X VCC 16 1000 0 200 L 50 50 0 0 P
+X 2Z 15 1000 -100 200 L 50 50 0 0 P
+X 1Z 14 1000 -200 200 L 50 50 0 0 P
+X 1Y1 13 1000 -300 200 L 50 50 0 0 P
+X 1Y0 12 1000 -400 200 L 50 50 0 0 P
+X S1 11 1000 -500 200 L 50 50 0 0 P
+X S2 10 1000 -600 200 L 50 50 0 0 P
+X S3 9 1000 -700 200 L 50 50 0 0 P
+P 5 0 1 6 200 100 800 100 800 -800 200 -800 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library

@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TSR_2-2450
+D 2 Amp POL switching regulator, 3.0 to -36 VDC input, pos.-pos. circuit, LM78 compatible, SIP-3
+K
+F https://tracopower.com/tsr2-datasheet/
+$ENDCMP
+#
+#End Doc Library

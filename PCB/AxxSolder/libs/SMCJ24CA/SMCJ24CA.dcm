@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP SMCJ24CA
+D LITTELFUSE - SMCJ24CA - TVS Diode, SMCJ Series, Bidirectional, 24 V, 38.9 V, DO-214AB (SMC), 2 Pins
+K
+F https://componentsearchengine.com/Datasheets/2/SMCJ24CA.pdf
+$ENDCMP
+#
+#End Doc Library

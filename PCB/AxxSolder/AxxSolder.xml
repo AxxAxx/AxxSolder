@@ -1,0 +1,2168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="E">
+  <design>
+    <source>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder\AxxSolder.kicad_sch</source>
+    <date>2023-10-18 08:26:38</date>
+    <tool>Eeschema 7.0.8</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>AxxSolder.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="C1">
+      <value>10u</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>44151c47-2a57-428d-94bc-fc0f28c90a94</tstamps>
+    </comp>
+    <comp ref="C2">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>60de2681-f431-40c2-9879-cbe12c35031f</tstamps>
+    </comp>
+    <comp ref="C3">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b8268291-96f6-4f78-88b3-c57a605bac4c</tstamps>
+    </comp>
+    <comp ref="C4">
+      <value>22u</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d25a39a1-fc0a-4ce5-a3ce-1494b4c8def4</tstamps>
+    </comp>
+    <comp ref="C5">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8b5fa4d4-f790-4795-bb97-6a08cef458fb</tstamps>
+    </comp>
+    <comp ref="C6">
+      <value>10u</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1a029568-79db-485f-b4a3-4fd4d6739d00</tstamps>
+    </comp>
+    <comp ref="C7">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>66f9b623-69f6-4fe7-b308-856c6ba15f5e</tstamps>
+    </comp>
+    <comp ref="C8">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9437a4ee-6c68-455d-97c7-aa525d1896d4</tstamps>
+    </comp>
+    <comp ref="C9">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>df3d089a-6608-4969-8240-2d492140751d</tstamps>
+    </comp>
+    <comp ref="C10">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>86d7ec9a-8f89-4820-9ca5-9f0684422f83</tstamps>
+    </comp>
+    <comp ref="C11">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>5aa6abf1-3397-48be-9e4f-8e052b90787f</tstamps>
+    </comp>
+    <comp ref="C12">
+      <value>10u</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>925d9810-4250-444e-848c-643149bc634d</tstamps>
+    </comp>
+    <comp ref="C13">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9b966b6d-fd2d-412b-b4fb-54a4e893941d</tstamps>
+    </comp>
+    <comp ref="C14">
+      <value>10u</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>99d2cf27-e18c-448c-99a0-3b2fbce7892c</tstamps>
+    </comp>
+    <comp ref="C15">
+      <value>1n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>ce2680e7-889d-47e3-9c98-13f0d366091f</tstamps>
+    </comp>
+    <comp ref="C16">
+      <value>1n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d8440ff7-0adc-4441-9e13-a1a749aa214c</tstamps>
+    </comp>
+    <comp ref="C17">
+      <value>22u</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>5c47d8f8-6fd8-4338-b773-885c07bb53bc</tstamps>
+    </comp>
+    <comp ref="C18">
+      <value>22u</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>04f278e8-3ecc-4929-bd24-371e25febbaf</tstamps>
+    </comp>
+    <comp ref="C19">
+      <value>10u</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>0e8ec738-a403-40f5-8d6e-0d3cd884cbad</tstamps>
+    </comp>
+    <comp ref="C20">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>103b5b72-6fdc-4f6a-8623-244fd791f88f</tstamps>
+    </comp>
+    <comp ref="C21">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>45da831c-e4b9-4195-90a7-57c94adef4e8</tstamps>
+    </comp>
+    <comp ref="C22">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d591ffd6-dc2d-44ec-ab9b-b9b403f142ea</tstamps>
+    </comp>
+    <comp ref="C23">
+      <value>330u</value>
+      <footprint>EMZR500ARA331MJA0G:CAPAE1030X1050N</footprint>
+      <datasheet>https://ru.mouser.com/datasheet/2/420/United-Chemi-Con-776012.pdf</datasheet>
+      <fields>
+        <field name="Description">Cap Aluminum Lytic 330uF 50V 20% (10 X 10mm) SMD 0.12 Ohm 900mA 2000h 105C Automotive T/R</field>
+        <field name="Height">10.5</field>
+        <field name="Manufacturer_Name">Chemi-Con</field>
+        <field name="Manufacturer_Part_Number">EMZR500ARA331MJA0G</field>
+        <field name="Mouser Part Number">661-EMZR500ARA331MJA</field>
+      </fields>
+      <libsource lib="EMZR500ARA331MJA0G" part="EMZR500ARA331MJA0G" description="Cap Aluminum Lytic 330uF 50V 20% (10 X 10mm) SMD 0.12 Ohm 900mA 2000h 105C Automotive T/R"/>
+      <property name="Description" value="Cap Aluminum Lytic 330uF 50V 20% (10 X 10mm) SMD 0.12 Ohm 900mA 2000h 105C Automotive T/R"/>
+      <property name="Height" value="10.5"/>
+      <property name="Mouser Part Number" value="661-EMZR500ARA331MJA"/>
+      <property name="Mouser Price/Stock" value=""/>
+      <property name="Manufacturer_Name" value="Chemi-Con"/>
+      <property name="Manufacturer_Part_Number" value="EMZR500ARA331MJA0G"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Cap Aluminum Lytic 330uF 50V 20% (10 X 10mm) SMD 0.12 Ohm 900mA 2000h 105C Automotive T/R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f1208938-fd02-4819-acd2-6c775055d322</tstamps>
+    </comp>
+    <comp ref="C24">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1a68011a-dfbb-41d2-826a-5895ae2d8d96</tstamps>
+    </comp>
+    <comp ref="C25">
+      <value>22u</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>995cda05-4328-4529-b06b-c2cd0ccabd66</tstamps>
+    </comp>
+    <comp ref="C26">
+      <value>75p</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>6355f716-45f4-4ea8-9117-a48917affaae</tstamps>
+    </comp>
+    <comp ref="C27">
+      <value>22u</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3301524d-9e03-4c84-ac14-8be3d7d457fd</tstamps>
+    </comp>
+    <comp ref="C28">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>5279c349-6898-4b0e-a1fa-3fb52ed574c9</tstamps>
+    </comp>
+    <comp ref="C29">
+      <value>100n</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor, small symbol"/>
+      <property name="ki_keywords" value="capacitor cap"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>44096ba0-91d3-4ef1-8069-c2d9a57d3ada</tstamps>
+    </comp>
+    <comp ref="D1">
+      <value>BAT54S</value>
+      <footprint>BAT54S,215:SOT95P230X110-3N</footprint>
+      <libsource lib="Device" part="D_Schottky_Dual_Series_AKC" description="Dual Schottky diode, anode/cathode/center"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Dual Schottky diode, anode/cathode/center"/>
+      <property name="ki_keywords" value="diode"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>20ba8ef0-32c8-4985-89b2-620485693b9d</tstamps>
+    </comp>
+    <comp ref="D2">
+      <value>PMEG6020ER</value>
+      <footprint>PMEG6020ER,115:PMEG6020ER115</footprint>
+      <datasheet>https://assets.nexperia.com/documents/data-sheet/PMEG6020ER.pdf</datasheet>
+      <fields>
+        <field name="Description">Nexperia PMEG6020ER,115 SMT Schottky Diode, 60V 2A, 2-Pin SOD-123W</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">Nexperia</field>
+        <field name="Manufacturer_Part_Number">PMEG6020ER,115</field>
+        <field name="Mouser Part Number">771-PMEG6020ER-115</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Nexperia/PMEG6020ER115?qs=5DYmZrWuUErk3dU9e9SSpA%3D%3D</field>
+      </fields>
+      <libsource lib="PMEG6020ER_115" part="PMEG6020ER,115" description="Nexperia PMEG6020ER,115 SMT Schottky Diode, 60V 2A, 2-Pin SOD-123W"/>
+      <property name="Description" value="Nexperia PMEG6020ER,115 SMT Schottky Diode, 60V 2A, 2-Pin SOD-123W"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="771-PMEG6020ER-115"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Nexperia/PMEG6020ER115?qs=5DYmZrWuUErk3dU9e9SSpA%3D%3D"/>
+      <property name="Manufacturer_Name" value="Nexperia"/>
+      <property name="Manufacturer_Part_Number" value="PMEG6020ER,115"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Nexperia PMEG6020ER,115 SMT Schottky Diode, 60V 2A, 2-Pin SOD-123W"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>abb7dac2-e053-4254-a81c-cea53bb7f1a8</tstamps>
+    </comp>
+    <comp ref="D3">
+      <value>BAT54S</value>
+      <footprint>BAT54S,215:SOT95P230X110-3N</footprint>
+      <libsource lib="Device" part="D_Schottky_Dual_Series_AKC" description="Dual Schottky diode, anode/cathode/center"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Dual Schottky diode, anode/cathode/center"/>
+      <property name="ki_keywords" value="diode"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2f4a4480-e8e7-4cad-819f-1d5f71419dae</tstamps>
+    </comp>
+    <comp ref="D4">
+      <value>Waveshare 1.5inch OLED Module</value>
+      <footprint>1_5inch-rgb-oled-module_asm-1110:1_5inch-rgb-oled-module_asm-1110</footprint>
+      <libsource lib="1_5inch-rgb-oled-module_asm-1110" part="1_5inch-rgb-oled-module_asm-1110" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c65b1727-7814-4eb7-bc82-5965523c27fb</tstamps>
+    </comp>
+    <comp ref="D5">
+      <value>BAT54S</value>
+      <footprint>BAT54S,215:SOT95P230X110-3N</footprint>
+      <libsource lib="Device" part="D_Schottky_Dual_Series_AKC" description="Dual Schottky diode, anode/cathode/center"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Dual Schottky diode, anode/cathode/center"/>
+      <property name="ki_keywords" value="diode"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1dbdefec-862f-485f-91c0-a9cf09a74b2f</tstamps>
+    </comp>
+    <comp ref="D6">
+      <value>BAT54S</value>
+      <footprint>BAT54S,215:SOT95P230X110-3N</footprint>
+      <libsource lib="Device" part="D_Schottky_Dual_Series_AKC" description="Dual Schottky diode, anode/cathode/center"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Dual Schottky diode, anode/cathode/center"/>
+      <property name="ki_keywords" value="diode"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c2a8d921-b50a-48df-9879-2304cdf52882</tstamps>
+    </comp>
+    <comp ref="D7">
+      <value>PMEG10030ELPX</value>
+      <footprint>PMEG10030ELPX:SODFL4725X110N</footprint>
+      <datasheet>https://assets.nexperia.com/documents/data-sheet/PMEG10030ELP.pdf</datasheet>
+      <fields>
+        <field name="Description">Schottky Diodes &amp; Rectifiers 3A Schottky Barrier Rectifier</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">Nexperia</field>
+        <field name="Manufacturer_Part_Number">PMEG10030ELPX</field>
+        <field name="Mouser Part Number">771-PMEG10030ELPX</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Nexperia/PMEG10030ELPX?qs=bel5lzaZNxQd6L7wuvMmFQ%3D%3D</field>
+      </fields>
+      <libsource lib="PMEG10030ELPX" part="PMEG10030ELPX" description="Schottky Diodes &amp; Rectifiers 3A Schottky Barrier Rectifier"/>
+      <property name="Description" value="Schottky Diodes &amp; Rectifiers 3A Schottky Barrier Rectifier"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="771-PMEG10030ELPX"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Nexperia/PMEG10030ELPX?qs=bel5lzaZNxQd6L7wuvMmFQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="Nexperia"/>
+      <property name="Manufacturer_Part_Number" value="PMEG10030ELPX"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Schottky Diodes &amp; Rectifiers 3A Schottky Barrier Rectifier"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>754eb04a-e55a-4af9-a9aa-134e0ea812e5</tstamps>
+    </comp>
+    <comp ref="D9">
+      <value>SMBJ24CA</value>
+      <footprint>DIOM5436X261N</footprint>
+      <datasheet>https://m.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smbj_datasheet.pdf.pdf</datasheet>
+      <fields>
+        <field name="Height">2.61</field>
+        <field name="Manufacturer_Name">LITTELFUSE</field>
+        <field name="Manufacturer_Part_Number">SMBJ24CA</field>
+        <field name="Mouser Part Number">576-SMBJ24CA</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Littelfuse/SMBJ24CA?qs=JJML70Qc14u3Wc4gmMep1w%3D%3D</field>
+      </fields>
+      <libsource lib="SMBJ24CA" part="SMBJ24CA" description="Littelfuse SMBJ24CA, Bi-Directional TVS Diode, 600W, 2-Pin DO-214AA"/>
+      <property name="Height" value="2.61"/>
+      <property name="Mouser Part Number" value="576-SMBJ24CA"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Littelfuse/SMBJ24CA?qs=JJML70Qc14u3Wc4gmMep1w%3D%3D"/>
+      <property name="Manufacturer_Name" value="LITTELFUSE"/>
+      <property name="Manufacturer_Part_Number" value="SMBJ24CA"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Littelfuse SMBJ24CA, Bi-Directional TVS Diode, 600W, 2-Pin DO-214AA"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>5af32eb9-d8d9-4d2a-8d80-7d4b3d1b2920</tstamps>
+    </comp>
+    <comp ref="D12">
+      <value>BAT54S</value>
+      <footprint>BAT54S,215:SOT95P230X110-3N</footprint>
+      <libsource lib="Device" part="D_Schottky_Dual_Series_AKC" description="Dual Schottky diode, anode/cathode/center"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Dual Schottky diode, anode/cathode/center"/>
+      <property name="ki_keywords" value="diode"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>41639a6b-2cf3-428c-bfa8-6f546b5e498d</tstamps>
+    </comp>
+    <comp ref="F1">
+      <value>10A Fuse</value>
+      <footprint>3557-2:3557-2</footprint>
+      <libsource lib="Device" part="Fuse" description="Fuse"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Fuse"/>
+      <property name="ki_keywords" value="fuse"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8f85c762-7131-4418-9939-b517bb90b1f0</tstamps>
+    </comp>
+    <comp ref="H1">
+      <value>MountingHole</value>
+      <footprint>MountingHole:MountingHole_3mm</footprint>
+      <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Mounting Hole without connection"/>
+      <property name="ki_keywords" value="mounting hole"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>54cdf9df-21ca-4459-a69a-06d7390d8166</tstamps>
+    </comp>
+    <comp ref="H2">
+      <value>MountingHole</value>
+      <footprint>MountingHole:MountingHole_3mm</footprint>
+      <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Mounting Hole without connection"/>
+      <property name="ki_keywords" value="mounting hole"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d4d102f9-d923-4000-be0b-b5ca2b5ecce9</tstamps>
+    </comp>
+    <comp ref="H3">
+      <value>MountingHole</value>
+      <footprint>MountingHole:MountingHole_3mm</footprint>
+      <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Mounting Hole without connection"/>
+      <property name="ki_keywords" value="mounting hole"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>0ff4d045-d982-4ca6-9cb7-e7c63852a553</tstamps>
+    </comp>
+    <comp ref="H4">
+      <value>MountingHole</value>
+      <footprint>MountingHole:MountingHole_3mm</footprint>
+      <libsource lib="Mechanical" part="MountingHole" description="Mounting Hole without connection"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Mounting Hole without connection"/>
+      <property name="ki_keywords" value="mounting hole"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3468577a-122d-4813-b53c-c4bfadd37431</tstamps>
+    </comp>
+    <comp ref="IC1">
+      <value>LTC4440AHMS8E-5#PBF</value>
+      <footprint>LTC4440AHMS8E-5#PBF:SOP65P490X110-9N</footprint>
+      <datasheet>https://www.arrow.com/en/products/ltc4440ahms8e-5pbf/analog-devices</datasheet>
+      <fields>
+        <field name="Description">Driver 1.1A 1-OUT High Side Full Brdg Non-Inv Automotive 8-Pin MSOP EP Tube</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">Analog Devices</field>
+        <field name="Manufacturer_Part_Number">LTC4440AHMS8E-5#PBF</field>
+        <field name="Mouser Part Number">584-C4440AHMS8E-5PBF</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Analog-Devices/LTC4440AHMS8E-5PBF?qs=hVkxg5c3xu86VC%252BBJjm7uA%3D%3D</field>
+      </fields>
+      <libsource lib="LTC4440AHMS8E-5#PBF" part="LTC4440AHMS8E-5#PBF" description="Driver 1.1A 1-OUT High Side Full Brdg Non-Inv Automotive 8-Pin MSOP EP Tube"/>
+      <property name="Description" value="Driver 1.1A 1-OUT High Side Full Brdg Non-Inv Automotive 8-Pin MSOP EP Tube"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="584-C4440AHMS8E-5PBF"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Analog-Devices/LTC4440AHMS8E-5PBF?qs=hVkxg5c3xu86VC%252BBJjm7uA%3D%3D"/>
+      <property name="Manufacturer_Name" value="Analog Devices"/>
+      <property name="Manufacturer_Part_Number" value="LTC4440AHMS8E-5#PBF"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Driver 1.1A 1-OUT High Side Full Brdg Non-Inv Automotive 8-Pin MSOP EP Tube"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9747a5e0-152b-4ca3-bf1b-6f5363178f5c</tstamps>
+    </comp>
+    <comp ref="IC2">
+      <value>STM32G431KBT6</value>
+      <footprint>STM32G431KBT6:QFP80P900X900X160-32N</footprint>
+      <datasheet>https://www.st.com/resource/en/datasheet/stm32g431kb.pdf</datasheet>
+      <fields>
+        <field name="Description">ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration</field>
+        <field name="Height">1.6</field>
+        <field name="Manufacturer_Name">STMicroelectronics</field>
+        <field name="Manufacturer_Part_Number">STM32G431KBT6</field>
+        <field name="Mouser Part Number">511-STM32G431KBT6</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/STMicroelectronics/STM32G431KBT6?qs=T3oQrply3y8teCTeNAFOLg%3D%3D</field>
+      </fields>
+      <libsource lib="STM32G431KBT6" part="STM32G431KBT6" description="ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration"/>
+      <property name="Description" value="ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration"/>
+      <property name="Height" value="1.6"/>
+      <property name="Mouser Part Number" value="511-STM32G431KBT6"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/STMicroelectronics/STM32G431KBT6?qs=T3oQrply3y8teCTeNAFOLg%3D%3D"/>
+      <property name="Manufacturer_Name" value="STMicroelectronics"/>
+      <property name="Manufacturer_Part_Number" value="STM32G431KBT6"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>faa3e510-72c9-444c-96c9-e7ce54d5fda8</tstamps>
+    </comp>
+    <comp ref="IC3">
+      <value>TMP236AQDBZRQ1</value>
+      <footprint>TMP236AQDBZRQ1:SOT95P237X112-3N</footprint>
+      <datasheet>https://www.ti.com/lit/gpn/TMP236-Q1</datasheet>
+      <fields>
+        <field name="Description">Automotive grade, +/-0.5C analog output temperature sensor with 19.5 mV/C gain</field>
+        <field name="Height">1.12</field>
+        <field name="Manufacturer_Name">Texas Instruments</field>
+        <field name="Manufacturer_Part_Number">TMP236AQDBZRQ1</field>
+        <field name="Mouser Part Number">595-TMP236AQDBZRQ1</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TMP236AQDBZRQ1?qs=T3oQrply3y83CHFf%2F7t6GQ%3D%3D</field>
+      </fields>
+      <libsource lib="TMP236AQDBZRQ1" part="TMP236AQDBZRQ1" description="Automotive grade, +/-0.5C analog output temperature sensor with 19.5 mV/C gain"/>
+      <property name="Description" value="Automotive grade, +/-0.5C analog output temperature sensor with 19.5 mV/C gain"/>
+      <property name="Height" value="1.12"/>
+      <property name="Mouser Part Number" value="595-TMP236AQDBZRQ1"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TMP236AQDBZRQ1?qs=T3oQrply3y83CHFf%2F7t6GQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="Texas Instruments"/>
+      <property name="Manufacturer_Part_Number" value="TMP236AQDBZRQ1"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Automotive grade, +/-0.5C analog output temperature sensor with 19.5 mV/C gain"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>db4dbdb6-9be9-4d71-8f54-a116ec2069de</tstamps>
+    </comp>
+    <comp ref="IC4">
+      <value>OPA2333AIDRBR</value>
+      <footprint>OPA2333AIDRBR:SON65P300X300X100-9N-D</footprint>
+      <datasheet>https://www.ti.com/lit/ds/symlink/opa2333.pdf?ts=1606982025063&amp;ref_url=https%253A%252F%252Fwww.ti.com%252Fstore%252Fti%252Fen%252Fp%252Fproduct%252F%253Fp%253DOPA2333AIDRBR%2526keyMatch%253DOPA2333AIDRBR%2526tisearch%253DSearch-EN-everything%2526usecase%2</datasheet>
+      <fields>
+        <field name="Description">1.8V, 17A, 2 channels, microPower, Precision, Zero Drift CMOS Op Amp</field>
+        <field name="Height">1</field>
+        <field name="Manufacturer_Name">Texas Instruments</field>
+        <field name="Manufacturer_Part_Number">OPA2333AIDRBR</field>
+        <field name="Mouser Part Number">595-OPA2333AIDRBR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Texas-Instruments/OPA2333AIDRBR?qs=pJP364FAHqRpZMi9vrj2VQ%3D%3D</field>
+      </fields>
+      <libsource lib="OPA2333AIDRBR" part="OPA2333AIDRBR" description="1.8V, 17A, 2 channels, microPower, Precision, Zero Drift CMOS Op Amp"/>
+      <property name="Description" value="1.8V, 17A, 2 channels, microPower, Precision, Zero Drift CMOS Op Amp"/>
+      <property name="Height" value="1"/>
+      <property name="Mouser Part Number" value="595-OPA2333AIDRBR"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Texas-Instruments/OPA2333AIDRBR?qs=pJP364FAHqRpZMi9vrj2VQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="Texas Instruments"/>
+      <property name="Manufacturer_Part_Number" value="OPA2333AIDRBR"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="1.8V, 17A, 2 channels, microPower, Precision, Zero Drift CMOS Op Amp"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>4c84caa4-b7ad-46d3-b17d-399fc2835011</tstamps>
+    </comp>
+    <comp ref="IC5">
+      <value>STM32G431KBT6</value>
+      <footprint>Package_DFN_QFN:UFQFPN-32-1EP_5x5mm_P0.5mm_EP3.5x3.5mm</footprint>
+      <datasheet>https://www.st.com/resource/en/datasheet/stm32g431kb.pdf</datasheet>
+      <fields>
+        <field name="Description">ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration</field>
+        <field name="Height">1.6</field>
+        <field name="Manufacturer_Name">STMicroelectronics</field>
+        <field name="Manufacturer_Part_Number">STM32G431KBT6</field>
+        <field name="Mouser Part Number">511-STM32G431KBT6</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/STMicroelectronics/STM32G431KBT6?qs=T3oQrply3y8teCTeNAFOLg%3D%3D</field>
+      </fields>
+      <libsource lib="STM32G431KBT6" part="STM32G431KBT6" description="ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration"/>
+      <property name="Description" value="ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration"/>
+      <property name="Height" value="1.6"/>
+      <property name="Mouser Part Number" value="511-STM32G431KBT6"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/STMicroelectronics/STM32G431KBT6?qs=T3oQrply3y8teCTeNAFOLg%3D%3D"/>
+      <property name="Manufacturer_Name" value="STMicroelectronics"/>
+      <property name="Manufacturer_Part_Number" value="STM32G431KBT6"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b28f40fd-f175-4db3-8891-ed4bcb055de2</tstamps>
+    </comp>
+    <comp ref="IC6">
+      <value>TPS54302DDCR</value>
+      <footprint>TPS54302DDCR:SOT95P280X110-6N</footprint>
+      <datasheet>http://www.ti.com/general/docs/suppproductinfo.tsp?distId=10&amp;gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Ftps54302</datasheet>
+      <fields>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">Texas Instruments</field>
+        <field name="Manufacturer_Part_Number">TPS54302DDCR</field>
+        <field name="Mouser Part Number">595-TPS54302DDCR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TPS54302DDCR?qs=zEmsApcVOkUXM7UP0GSO2g%3D%3D</field>
+      </fields>
+      <libsource lib="TPS54302DDCR" part="TPS54302DDCR" description="Conv DC-DC 4.5V to 28V Synchronous Step Down Single-Out 0.6V to 26V 3A 6-Pin TSOT-23 T/R"/>
+      <property name="Height" value="1.1"/>
+      <property name="Mouser Part Number" value="595-TPS54302DDCR"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TPS54302DDCR?qs=zEmsApcVOkUXM7UP0GSO2g%3D%3D"/>
+      <property name="Manufacturer_Name" value="Texas Instruments"/>
+      <property name="Manufacturer_Part_Number" value="TPS54302DDCR"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Conv DC-DC 4.5V to 28V Synchronous Step Down Single-Out 0.6V to 26V 3A 6-Pin TSOT-23 T/R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>cd426eac-7d5e-4a9d-9b7b-8e3345d037b4</tstamps>
+    </comp>
+    <comp ref="J1">
+      <value>Conn_01x07_Male</value>
+      <footprint>691243310007:691243310007</footprint>
+      <fields>
+        <field name="Manufacturer_Part_Number">691243310007</field>
+      </fields>
+      <libsource lib="Connector" part="Conn_01x07_Male" description="Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Manufacturer_Part_Number" value="691243310007"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="ki_keywords" value="connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>26006ae2-4971-48aa-8602-437353987295</tstamps>
+    </comp>
+    <comp ref="J4">
+      <value>Conn_01x07_Male</value>
+      <footprint>Connector_PinSocket_2.54mm:PinSocket_1x07_P2.54mm_Vertical</footprint>
+      <libsource lib="Connector" part="Conn_01x07_Male" description="Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="ki_keywords" value="connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>654acd77-b89c-4646-b294-be4d5da0a24c</tstamps>
+    </comp>
+    <comp ref="L1">
+      <value>SRP7028CC-100M</value>
+      <footprint>SRP7028CC-100M:INDPM7366X300N</footprint>
+      <datasheet>https://www.bourns.com/docs/Product-Datasheets/SRP7028CC.pdf</datasheet>
+      <fields>
+        <field name="Height">3</field>
+        <field name="Manufacturer_Name">Bourns</field>
+        <field name="Manufacturer_Part_Number">SRP7028CC-100M</field>
+      </fields>
+      <libsource lib="SRP7028CC-100M" part="SRP7028CC-100M" description="Ind,7.3x6.6x2.8mm,10uH+/-20%,3.5A,shd"/>
+      <property name="Height" value="3"/>
+      <property name="Mouser Part Number" value=""/>
+      <property name="Mouser Price/Stock" value=""/>
+      <property name="Manufacturer_Name" value="Bourns"/>
+      <property name="Manufacturer_Part_Number" value="SRP7028CC-100M"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Ind,7.3x6.6x2.8mm,10uH+/-20%,3.5A,shd"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>16b33d2b-24d9-42bd-b02f-056ed7958ee6</tstamps>
+    </comp>
+    <comp ref="LS1">
+      <value>CMI-9653S-SMT-TR</value>
+      <footprint>CMI-9653S-SMT-TR:CMI9653SSMTTR</footprint>
+      <datasheet>https://componentsearchengine.com/Datasheets/1/CMI-9653S-SMT-TR.pdf</datasheet>
+      <fields>
+        <field name="Description">Audio Indicators &amp; Alerts Buzzer 9.6mm sq 2.7kHz 3V SMT</field>
+        <field name="Height">5</field>
+        <field name="Manufacturer_Name">CUI Devices</field>
+        <field name="Manufacturer_Part_Number">CMI-9653S-SMT-TR</field>
+        <field name="Mouser Part Number">490-CMI-9653S-SMT-TR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/CUI-Devices/CMI-9653S-SMT-TR?qs=qCxwlXJ4fnz7UpLQu8UKbg%3D%3D</field>
+      </fields>
+      <libsource lib="CMI-9653S-SMT-TR" part="CMI-9653S-SMT-TR" description="Audio Indicators &amp; Alerts Buzzer 9.6mm sq 2.7kHz 3V SMT"/>
+      <property name="Description" value="Audio Indicators &amp; Alerts Buzzer 9.6mm sq 2.7kHz 3V SMT"/>
+      <property name="Height" value="5"/>
+      <property name="Mouser Part Number" value="490-CMI-9653S-SMT-TR"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/CUI-Devices/CMI-9653S-SMT-TR?qs=qCxwlXJ4fnz7UpLQu8UKbg%3D%3D"/>
+      <property name="Manufacturer_Name" value="CUI Devices"/>
+      <property name="Manufacturer_Part_Number" value="CMI-9653S-SMT-TR"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Audio Indicators &amp; Alerts Buzzer 9.6mm sq 2.7kHz 3V SMT"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>09ac8a68-c7b1-4d76-be4e-24bf4081e931</tstamps>
+    </comp>
+    <comp ref="PS1">
+      <value>LD1117AS33TR</value>
+      <footprint>SOT230P700X190-4N</footprint>
+      <datasheet>https://4donline.ihs.com/images/VipMasterIC/IC/SGST/SGSTS49356/SGSTS49356-1.pdf?hkey=6D3A4C79FDBF58556ACFDE234799DDF0</datasheet>
+      <fields>
+        <field name="Description">STMICROELECTRONICS - LD1117AS33TR - Fixed LDO Voltage Regulator, 5.3V to 10V, 1.15V Dropout, 3.3Vout, 1Aout, SOT-223-3</field>
+        <field name="Height">1.9</field>
+        <field name="Manufacturer_Name">STMicroelectronics</field>
+        <field name="Manufacturer_Part_Number">LD1117AS33TR</field>
+        <field name="Mouser Part Number">511-LD1117AS33</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/STMicroelectronics/LD1117AS33TR?qs=C3bf%2FVrkE5CoDDd7wyn%252BaQ%3D%3D</field>
+      </fields>
+      <libsource lib="LD1117AS33TR" part="LD1117AS33TR" description="STMICROELECTRONICS - LD1117AS33TR - Fixed LDO Voltage Regulator, 5.3V to 10V, 1.15V Dropout, 3.3Vout, 1Aout, SOT-223-3"/>
+      <property name="Description" value="STMICROELECTRONICS - LD1117AS33TR - Fixed LDO Voltage Regulator, 5.3V to 10V, 1.15V Dropout, 3.3Vout, 1Aout, SOT-223-3"/>
+      <property name="Height" value="1.9"/>
+      <property name="Mouser Part Number" value="511-LD1117AS33"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/STMicroelectronics/LD1117AS33TR?qs=C3bf%2FVrkE5CoDDd7wyn%252BaQ%3D%3D"/>
+      <property name="Manufacturer_Name" value="STMicroelectronics"/>
+      <property name="Manufacturer_Part_Number" value="LD1117AS33TR"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="STMICROELECTRONICS - LD1117AS33TR - Fixed LDO Voltage Regulator, 5.3V to 10V, 1.15V Dropout, 3.3Vout, 1Aout, SOT-223-3"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c7a03ce5-cb48-4afe-9b8e-7bd78c2df80f</tstamps>
+    </comp>
+    <comp ref="Q2">
+      <value>2N7002NXAKR</value>
+      <footprint>2N7002NXAKR:SOT95P230X110-3N</footprint>
+      <datasheet>https://assets.nexperia.com/documents/data-sheet/2N7002NXAK.pdf</datasheet>
+      <fields>
+        <field name="Arrow Part Number">2N7002NXAKR</field>
+        <field name="Arrow Price/Stock">https://www.arrow.com/en/products/2n7002nxakr/nexperia?region=nac</field>
+        <field name="Description">NEXPERIA - 2N7002NXAKR - MOSFET Transistor, Trench, N Channel, 190 mA, 60 V, 3 ohm, 10 V, 1.6 V</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">Nexperia</field>
+        <field name="Manufacturer_Part_Number">2N7002NXAKR</field>
+        <field name="Mouser Part Number">771-2N7002NXAKR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Nexperia/2N7002NXAKR?qs=%252B6g0mu59x7JoAsZYPFXqhw%3D%3D</field>
+      </fields>
+      <libsource lib="2N7002NXAKR" part="2N7002NXAKR" description="NEXPERIA - 2N7002NXAKR - MOSFET Transistor, Trench, N Channel, 190 mA, 60 V, 3 ohm, 10 V, 1.6 V"/>
+      <property name="Description" value="NEXPERIA - 2N7002NXAKR - MOSFET Transistor, Trench, N Channel, 190 mA, 60 V, 3 ohm, 10 V, 1.6 V"/>
+      <property name="Height" value="1.1"/>
+      <property name="Manufacturer_Name" value="Nexperia"/>
+      <property name="Manufacturer_Part_Number" value="2N7002NXAKR"/>
+      <property name="Mouser Part Number" value="771-2N7002NXAKR"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Nexperia/2N7002NXAKR?qs=%252B6g0mu59x7JoAsZYPFXqhw%3D%3D"/>
+      <property name="Arrow Part Number" value="2N7002NXAKR"/>
+      <property name="Arrow Price/Stock" value="https://www.arrow.com/en/products/2n7002nxakr/nexperia?region=nac"/>
+      <property name="Mouser Testing Part Number" value=""/>
+      <property name="Mouser Testing Price/Stock" value=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="NEXPERIA - 2N7002NXAKR - MOSFET Transistor, Trench, N Channel, 190 mA, 60 V, 3 ohm, 10 V, 1.6 V"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>ce0bb672-02b4-43e8-bfbb-cc94aec90d22</tstamps>
+    </comp>
+    <comp ref="R1">
+      <value>4k7</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>94fdce62-df60-438f-b446-fff71e760a6a</tstamps>
+    </comp>
+    <comp ref="R2">
+      <value>47k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>09c782b2-5d4f-41d6-971a-b93840c6b70b</tstamps>
+    </comp>
+    <comp ref="R3">
+      <value>6k8</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c57886b7-e2ec-41ed-a6e1-21391aaaf2df</tstamps>
+    </comp>
+    <comp ref="R5">
+      <value>4k7</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>bb97aef4-3c7e-4f7c-994a-99bc882cc442</tstamps>
+    </comp>
+    <comp ref="R6">
+      <value>4k7</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f451cc69-9419-4684-9a72-bbeb7d282009</tstamps>
+    </comp>
+    <comp ref="R8">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>94c1ec7e-6f07-48c9-a6ab-a4553efd0c2a</tstamps>
+    </comp>
+    <comp ref="R9">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>9a36b66e-a727-42c9-950d-8fa93127ed84</tstamps>
+    </comp>
+    <comp ref="R10">
+      <value>2m</value>
+      <footprint>WSLP25122L500FEA:RESC6432X89N</footprint>
+      <fields>
+        <field name="part_id">WSLP25122L500FEA</field>
+      </fields>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="part_id" value="WSLP25122L500FEA"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2949e5e2-c9b2-4a46-b7a4-8f4dace5b7de</tstamps>
+    </comp>
+    <comp ref="R11">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2752ef19-08c9-4b7c-9685-ad45e3ad691c</tstamps>
+    </comp>
+    <comp ref="R12">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d6b7cee9-a4aa-49b8-9fa5-8242be7b4ada</tstamps>
+    </comp>
+    <comp ref="R13">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2da95b45-99c6-44ff-95cf-7d435953f03a</tstamps>
+    </comp>
+    <comp ref="R14">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>82af7a26-2e24-45f2-9885-a0ae506f1d52</tstamps>
+    </comp>
+    <comp ref="R15">
+      <value>220</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>19c47702-591f-4a04-9970-7ba375cb73f4</tstamps>
+    </comp>
+    <comp ref="R16">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1e0560a6-f856-43c2-8c1c-9a79d702f684</tstamps>
+    </comp>
+    <comp ref="R17">
+      <value>4k7</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>7244bcaf-fb4a-41f4-9ea1-87aa7523bdd4</tstamps>
+    </comp>
+    <comp ref="R18">
+      <value>10k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>db940e51-6578-4b97-8eca-b3b88d829824</tstamps>
+    </comp>
+    <comp ref="R19">
+      <value>1k5</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f56eb70a-f343-49e7-ba97-dfd023b5ee38</tstamps>
+    </comp>
+    <comp ref="R20">
+      <value>1k5</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>7cefe6c8-fdb2-40b5-9635-eab787e7787a</tstamps>
+    </comp>
+    <comp ref="R21">
+      <value>470k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>27105952-a3e7-4c16-9644-5d1177b2d4b9</tstamps>
+    </comp>
+    <comp ref="R22">
+      <value>470k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>867875d0-acf3-4749-84b0-1c577009c8df</tstamps>
+    </comp>
+    <comp ref="R23">
+      <value>220k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c78f270a-2524-4f41-b583-03aa1b32c05e</tstamps>
+    </comp>
+    <comp ref="R24">
+      <value>220k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8aaf0ae3-71d3-48bb-a3e4-17b9ab035252</tstamps>
+    </comp>
+    <comp ref="R25">
+      <value>4k7</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>c75425b4-d558-4c4b-9fad-ccb8451347e5</tstamps>
+    </comp>
+    <comp ref="R26">
+      <value>4k7</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>32475768-e6c8-4b7f-bd5c-33fb191f7d13</tstamps>
+    </comp>
+    <comp ref="R28">
+      <value>100k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1808c4f1-416f-40ed-b1c6-b808d1bdf59b</tstamps>
+    </comp>
+    <comp ref="R29">
+      <value>13k3</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="Resistor, small symbol"/>
+      <property name="ki_keywords" value="R resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>01767385-8123-4074-b52f-15ef59a19d88</tstamps>
+    </comp>
+    <comp ref="TP1">
+      <value>AmbTemp_TP</value>
+      <footprint>TestPoint:TestPoint_THTPad_D1.0mm_Drill0.5mm</footprint>
+      <libsource lib="Connector" part="TestPoint" description="test point"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>a39eff84-f271-4343-adde-5799f33e9d81</tstamps>
+    </comp>
+    <comp ref="TP2">
+      <value>TestPoint</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.0mm</footprint>
+      <libsource lib="Connector" part="TestPoint" description="test point"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>42bc0bdd-e279-4a6b-b7cf-78b4a83baef1</tstamps>
+    </comp>
+    <comp ref="TP3">
+      <value>GND_TP</value>
+      <footprint>TestPoint:TestPoint_THTPad_D1.0mm_Drill0.5mm</footprint>
+      <libsource lib="Connector" part="TestPoint" description="test point"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>261df737-07b5-42b7-b889-37db8e7ac85c</tstamps>
+    </comp>
+    <comp ref="TP5">
+      <value>Thermocouple_TP</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.0mm</footprint>
+      <libsource lib="Connector" part="TestPoint" description="test point"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>5ebc7a86-0fd0-4f49-af2c-15d5808b33fe</tstamps>
+    </comp>
+    <comp ref="TP6">
+      <value>Current_TP</value>
+      <footprint>TestPoint:TestPoint_Pad_D1.0mm</footprint>
+      <libsource lib="Connector" part="TestPoint" description="test point"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3a5a60c2-8a0c-4277-a18e-189de25664e4</tstamps>
+    </comp>
+    <comp ref="TP7">
+      <value>5V_TP</value>
+      <footprint>TestPoint:TestPoint_THTPad_D1.0mm_Drill0.5mm</footprint>
+      <libsource lib="Connector" part="TestPoint" description="test point"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e88b6dc4-a2a5-4b66-af06-7c3ebf2aef12</tstamps>
+    </comp>
+    <comp ref="TP8">
+      <value>VDD_TP</value>
+      <footprint>TestPoint:TestPoint_THTPad_D1.0mm_Drill0.5mm</footprint>
+      <libsource lib="Connector" part="TestPoint" description="test point"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>87c0f496-3804-4cbc-a141-891711d6315e</tstamps>
+    </comp>
+    <comp ref="TP9">
+      <value>3.3V_TP</value>
+      <footprint>TestPoint:TestPoint_THTPad_D1.0mm_Drill0.5mm</footprint>
+      <libsource lib="Connector" part="TestPoint" description="test point"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="test point"/>
+      <property name="ki_keywords" value="test point tp"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>6467d21d-487b-42f4-bf66-bcb10d8fce0a</tstamps>
+    </comp>
+    <comp ref="U1">
+      <value>PEC11L-4220F-S0015</value>
+      <footprint>PEC11L-4220F-S0015:PEC11L4220FS0015</footprint>
+      <datasheet>https://www.bourns.com/PDFs/pec11l.pdf</datasheet>
+      <fields>
+        <field name="Description">BOURNS - PEC11L-4220F-S0015 - INCREMENTAL ENCODER, 15 PULSES</field>
+        <field name="Height">25</field>
+        <field name="Manufacturer_Name">Bourns</field>
+        <field name="Manufacturer_Part_Number">PEC11L-4220F-S0015</field>
+        <field name="Mouser Part Number">652-PEC11L4220FS0015</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Bourns/PEC11L-4220F-S0015?qs=Q4nXA9D1WFOSxqK3IduBbA%3D%3D</field>
+      </fields>
+      <libsource lib="PEC11L-4220F-S0015" part="PEC11L-4220F-S0015" description="BOURNS - PEC11L-4220F-S0015 - INCREMENTAL ENCODER, 15 PULSES"/>
+      <property name="Description" value="BOURNS - PEC11L-4220F-S0015 - INCREMENTAL ENCODER, 15 PULSES"/>
+      <property name="Height" value="25"/>
+      <property name="Mouser Part Number" value="652-PEC11L4220FS0015"/>
+      <property name="Mouser Price/Stock" value="https://www.mouser.co.uk/ProductDetail/Bourns/PEC11L-4220F-S0015?qs=Q4nXA9D1WFOSxqK3IduBbA%3D%3D"/>
+      <property name="Manufacturer_Name" value="Bourns"/>
+      <property name="Manufacturer_Part_Number" value="PEC11L-4220F-S0015"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <property name="ki_description" value="BOURNS - PEC11L-4220F-S0015 - INCREMENTAL ENCODER, 15 PULSES"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>f41cc2b0-9027-46e0-9aa2-d871a2772545</tstamps>
+    </comp>
+    <comp ref="U2">
+      <value>BSC014N04LS</value>
+      <footprint>BSC014N04LS:BSC014N04LS</footprint>
+      <libsource lib="BSC014N04LS" part="BSC014N04LS" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="AxxSolder.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>ab3ed480-38fe-4524-a8ec-6faf31ee0608</tstamps>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="1_5inch-rgb-oled-module_asm-1110" part="1_5inch-rgb-oled-module_asm-1110">
+      <fields>
+        <field name="Reference">D4</field>
+        <field name="Value">1_5inch-rgb-oled</field>
+        <field name="Footprint">1_5inch-rgb-oled-module_asm-1110:1_5inch-rgb-oled-module_asm-1110</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VCC" type="bidirectional"/>
+        <pin num="2" name="GND" type="bidirectional"/>
+        <pin num="3" name="NC" type="bidirectional"/>
+        <pin num="4" name="DIN" type="bidirectional"/>
+        <pin num="5" name="CLK" type="bidirectional"/>
+        <pin num="6" name="CS" type="bidirectional"/>
+        <pin num="7" name="DC" type="bidirectional"/>
+        <pin num="8" name="RST" type="bidirectional"/>
+      </pins>
+    </libpart>
+    <libpart lib="2N7002NXAKR" part="2N7002NXAKR">
+      <description>NEXPERIA - 2N7002NXAKR - MOSFET Transistor, Trench, N Channel, 190 mA, 60 V, 3 ohm, 10 V, 1.6 V</description>
+      <docs>https://assets.nexperia.com/documents/data-sheet/2N7002NXAK.pdf</docs>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">2N7002NXAKR</field>
+        <field name="Footprint">SOT95P230X110-3N</field>
+        <field name="Datasheet">https://assets.nexperia.com/documents/data-sheet/2N7002NXAK.pdf</field>
+        <field name="Description">NEXPERIA - 2N7002NXAKR - MOSFET Transistor, Trench, N Channel, 190 mA, 60 V, 3 ohm, 10 V, 1.6 V</field>
+        <field name="Height">1.1</field>
+        <field name="Manufacturer_Name">Nexperia</field>
+        <field name="Manufacturer_Part_Number">2N7002NXAKR</field>
+        <field name="Mouser Part Number">771-2N7002NXAKR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Nexperia/2N7002NXAKR?qs=%252B6g0mu59x7JoAsZYPFXqhw%3D%3D</field>
+        <field name="Arrow Part Number">2N7002NXAKR</field>
+        <field name="Arrow Price/Stock">https://www.arrow.com/en/products/2n7002nxakr/nexperia?region=nac</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+        <pin num="3" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="BSC014N04LS" part="BSC014N04LS">
+      <fields>
+        <field name="Reference">U2</field>
+        <field name="Value">BSC014N04LS</field>
+        <field name="Footprint">BSC014N04LS:BSC014N04LS</field>
+      </fields>
+      <pins>
+        <pin num="1" name="S" type="passive"/>
+        <pin num="9" name="G" type="passive"/>
+        <pin num="10" name="D" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="CMI-9653S-SMT-TR" part="CMI-9653S-SMT-TR">
+      <description>Audio Indicators &amp; Alerts Buzzer 9.6mm sq 2.7kHz 3V SMT</description>
+      <docs>https://componentsearchengine.com/Datasheets/1/CMI-9653S-SMT-TR.pdf</docs>
+      <fields>
+        <field name="Reference">LS1</field>
+        <field name="Value">CMI-9653S-SMT-TR</field>
+        <field name="Footprint">CMI9653SSMTTR</field>
+        <field name="Datasheet">https://componentsearchengine.com/Datasheets/1/CMI-9653S-SMT-TR.pdf</field>
+        <field name="Description">Audio Indicators &amp; Alerts Buzzer 9.6mm sq 2.7kHz 3V SMT</field>
+        <field name="Height">5</field>
+        <field name="Mouser Part Number">490-CMI-9653S-SMT-TR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/CUI-Devices/CMI-9653S-SMT-TR?qs=qCxwlXJ4fnz7UpLQu8UKbg%3D%3D</field>
+        <field name="Manufacturer_Name">CUI Devices</field>
+        <field name="Manufacturer_Part_Number">CMI-9653S-SMT-TR</field>
+      </fields>
+      <pins>
+        <pin num="1" name="-" type="passive"/>
+        <pin num="2" name="+" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="Conn_01x07_Male">
+      <description>Generic connector, single row, 01x07, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x07_Male</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+        <pin num="7" name="Pin_7" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="TestPoint">
+      <description>test point</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Pin*</fp>
+        <fp>Test*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">TP</field>
+        <field name="Value">TestPoint</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="C_Small">
+      <description>Unpolarized capacitor, small symbol</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C_Small</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="D_Schottky_Dual_Series_AKC">
+      <description>Dual Schottky diode, anode/cathode/center</description>
+      <docs>~</docs>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">D_Schottky_Dual_Series_AKC</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="A" type="passive"/>
+        <pin num="2" name="K" type="passive"/>
+        <pin num="3" name="common" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="Fuse">
+      <description>Fuse</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>*Fuse*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">F</field>
+        <field name="Value">Fuse</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R_Small">
+      <description>Resistor, small symbol</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R_Small</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="Thermocouple">
+      <description>Thermocouple</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>PIN?ARRAY*</fp>
+        <fp>bornier*</fp>
+        <fp>*Terminal?Block*</fp>
+        <fp>Thermo*Couple*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">TC</field>
+        <field name="Value">Thermocouple</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="+" type="passive"/>
+        <pin num="2" name="-" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="EMZR500ARA331MJA0G" part="EMZR500ARA331MJA0G">
+      <description>Cap Aluminum Lytic 330uF 50V 20% (10 X 10mm) SMD 0.12 Ohm 900mA 2000h 105C Automotive T/R</description>
+      <docs>https://ru.mouser.com/datasheet/2/420/United-Chemi-Con-776012.pdf</docs>
+      <fields>
+        <field name="Reference">C23</field>
+        <field name="Value">330u</field>
+        <field name="Footprint">EMZR500ARA331MJA0G:CAPAE1030X1050N</field>
+        <field name="Datasheet">https://ru.mouser.com/datasheet/2/420/United-Chemi-Con-776012.pdf</field>
+        <field name="Description">Cap Aluminum Lytic 330uF 50V 20% (10 X 10mm) SMD 0.12 Ohm 900mA 2000h 105C Automotive T/R</field>
+        <field name="Height">10.5</field>
+        <field name="Mouser Part Number">661-EMZR500ARA331MJA</field>
+        <field name="Manufacturer_Name">Chemi-Con</field>
+        <field name="Manufacturer_Part_Number">EMZR500ARA331MJA0G</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="LD1117AS33TR" part="LD1117AS33TR">
+      <description>STMICROELECTRONICS - LD1117AS33TR - Fixed LDO Voltage Regulator, 5.3V to 10V, 1.15V Dropout, 3.3Vout, 1Aout, SOT-223-3</description>
+      <docs>https://4donline.ihs.com/images/VipMasterIC/IC/SGST/SGSTS49356/SGSTS49356-1.pdf?hkey=6D3A4C79FDBF58556ACFDE234799DDF0</docs>
+      <fields>
+        <field name="Reference">PS1</field>
+        <field name="Value">LD1117AS33TR</field>
+        <field name="Footprint">SOT230P700X190-4N</field>
+        <field name="Datasheet">https://4donline.ihs.com/images/VipMasterIC/IC/SGST/SGSTS49356/SGSTS49356-1.pdf?hkey=6D3A4C79FDBF58556ACFDE234799DDF0</field>
+        <field name="Description">STMICROELECTRONICS - LD1117AS33TR - Fixed LDO Voltage Regulator, 5.3V to 10V, 1.15V Dropout, 3.3Vout, 1Aout, SOT-223-3</field>
+        <field name="Height">1.9</field>
+        <field name="Mouser Part Number">511-LD1117AS33</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/STMicroelectronics/LD1117AS33TR?qs=C3bf%2FVrkE5CoDDd7wyn%252BaQ%3D%3D</field>
+        <field name="Manufacturer_Name">STMicroelectronics</field>
+        <field name="Manufacturer_Part_Number">LD1117AS33TR</field>
+      </fields>
+      <pins>
+        <pin num="1" name="ADJ/GND" type="power_in"/>
+        <pin num="2" name="VOUT_1" type="output"/>
+        <pin num="3" name="VIN" type="input"/>
+        <pin num="4" name="VOUT_2" type="output"/>
+      </pins>
+    </libpart>
+    <libpart lib="LTC4440AHMS8E-5#PBF" part="LTC4440AHMS8E-5#PBF">
+      <description>Driver 1.1A 1-OUT High Side Full Brdg Non-Inv Automotive 8-Pin MSOP EP Tube</description>
+      <docs>https://www.arrow.com/en/products/ltc4440ahms8e-5pbf/analog-devices</docs>
+      <fields>
+        <field name="Reference">IC1</field>
+        <field name="Value">LTC4440AHMS8E-5#PBF</field>
+        <field name="Footprint">LTC4440AHMS8E-5#PBF:SOP65P490X110-9N</field>
+        <field name="Datasheet">https://www.arrow.com/en/products/ltc4440ahms8e-5pbf/analog-devices</field>
+        <field name="Description">Driver 1.1A 1-OUT High Side Full Brdg Non-Inv Automotive 8-Pin MSOP EP Tube</field>
+        <field name="Height">1.1</field>
+        <field name="Mouser Part Number">584-C4440AHMS8E-5PBF</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Analog-Devices/LTC4440AHMS8E-5PBF?qs=hVkxg5c3xu86VC%252BBJjm7uA%3D%3D</field>
+        <field name="Manufacturer_Name">Analog Devices</field>
+        <field name="Manufacturer_Part_Number">LTC4440AHMS8E-5#PBF</field>
+      </fields>
+      <pins>
+        <pin num="1" name="INP" type="passive"/>
+        <pin num="2" name="GND_1" type="passive"/>
+        <pin num="3" name="VCC" type="passive"/>
+        <pin num="4" name="GND_2" type="passive"/>
+        <pin num="5" name="NC" type="no_connect"/>
+        <pin num="6" name="BOOST" type="passive"/>
+        <pin num="7" name="TG" type="passive"/>
+        <pin num="8" name="TS" type="passive"/>
+        <pin num="9" name="EP" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Mechanical" part="MountingHole">
+      <description>Mounting Hole without connection</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>MountingHole*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">H</field>
+        <field name="Value">MountingHole</field>
+        <field name="Datasheet">~</field>
+      </fields>
+    </libpart>
+    <libpart lib="OPA2333AIDRBR" part="OPA2333AIDRBR">
+      <description>1.8V, 17A, 2 channels, microPower, Precision, Zero Drift CMOS Op Amp</description>
+      <docs>https://www.ti.com/lit/ds/symlink/opa2333.pdf?ts=1606982025063&amp;ref_url=https%253A%252F%252Fwww.ti.com%252Fstore%252Fti%252Fen%252Fp%252Fproduct%252F%253Fp%253DOPA2333AIDRBR%2526keyMatch%253DOPA2333AIDRBR%2526tisearch%253DSearch-EN-everything%2526usecase%2</docs>
+      <fields>
+        <field name="Reference">IC?</field>
+        <field name="Value">OPA2333AIDRBR</field>
+        <field name="Footprint">SON65P300X300X100-9N-D</field>
+        <field name="Datasheet">https://www.ti.com/lit/ds/symlink/opa2333.pdf?ts=1606982025063&amp;ref_url=https%253A%252F%252Fwww.ti.com%252Fstore%252Fti%252Fen%252Fp%252Fproduct%252F%253Fp%253DOPA2333AIDRBR%2526keyMatch%253DOPA2333AIDRBR%2526tisearch%253DSearch-EN-everything%2526usecase%2</field>
+        <field name="Description">1.8V, 17A, 2 channels, microPower, Precision, Zero Drift CMOS Op Amp</field>
+        <field name="Height">1</field>
+        <field name="Mouser Part Number">595-OPA2333AIDRBR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Texas-Instruments/OPA2333AIDRBR?qs=pJP364FAHqRpZMi9vrj2VQ%3D%3D</field>
+        <field name="Manufacturer_Name">Texas Instruments</field>
+        <field name="Manufacturer_Part_Number">OPA2333AIDRBR</field>
+      </fields>
+      <pins>
+        <pin num="1" name="OUT_A" type="passive"/>
+        <pin num="2" name="-IN_A" type="passive"/>
+        <pin num="3" name="+IN_A" type="passive"/>
+        <pin num="4" name="V-" type="passive"/>
+        <pin num="5" name="+IN_B" type="passive"/>
+        <pin num="6" name="-IN_B" type="passive"/>
+        <pin num="7" name="OUT_B" type="passive"/>
+        <pin num="8" name="V+" type="passive"/>
+        <pin num="9" name="EP" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="PEC11L-4220F-S0015" part="PEC11L-4220F-S0015">
+      <description>BOURNS - PEC11L-4220F-S0015 - INCREMENTAL ENCODER, 15 PULSES</description>
+      <docs>https://www.bourns.com/PDFs/pec11l.pdf</docs>
+      <fields>
+        <field name="Reference">U1</field>
+        <field name="Value">PEC11L-4220F-S0015</field>
+        <field name="Footprint">PEC11L4220FS0015</field>
+        <field name="Datasheet">https://www.bourns.com/PDFs/pec11l.pdf</field>
+        <field name="Description">BOURNS - PEC11L-4220F-S0015 - INCREMENTAL ENCODER, 15 PULSES</field>
+        <field name="Height">25</field>
+        <field name="Mouser Part Number">652-PEC11L4220FS0015</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Bourns/PEC11L-4220F-S0015?qs=Q4nXA9D1WFOSxqK3IduBbA%3D%3D</field>
+        <field name="Manufacturer_Name">Bourns</field>
+        <field name="Manufacturer_Part_Number">PEC11L-4220F-S0015</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="PMEG10030ELPX" part="PMEG10030ELPX">
+      <description>Schottky Diodes &amp; Rectifiers 3A Schottky Barrier Rectifier</description>
+      <docs>https://assets.nexperia.com/documents/data-sheet/PMEG10030ELP.pdf</docs>
+      <fields>
+        <field name="Reference">D?</field>
+        <field name="Value">PMEG10030ELPX</field>
+        <field name="Footprint">SODFL4725X110N</field>
+        <field name="Datasheet">https://assets.nexperia.com/documents/data-sheet/PMEG10030ELP.pdf</field>
+        <field name="Description">Schottky Diodes &amp; Rectifiers 3A Schottky Barrier Rectifier</field>
+        <field name="Height">1.1</field>
+        <field name="Mouser Part Number">771-PMEG10030ELPX</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Nexperia/PMEG10030ELPX?qs=bel5lzaZNxQd6L7wuvMmFQ%3D%3D</field>
+        <field name="Manufacturer_Name">Nexperia</field>
+        <field name="Manufacturer_Part_Number">PMEG10030ELPX</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="PMEG6020ER_115" part="PMEG6020ER,115">
+      <description>Nexperia PMEG6020ER,115 SMT Schottky Diode, 60V 2A, 2-Pin SOD-123W</description>
+      <docs>https://assets.nexperia.com/documents/data-sheet/PMEG6020ER.pdf</docs>
+      <fields>
+        <field name="Reference">D?</field>
+        <field name="Value">PMEG6020ER,115</field>
+        <field name="Footprint">PMEG6020ER115</field>
+        <field name="Datasheet">https://assets.nexperia.com/documents/data-sheet/PMEG6020ER.pdf</field>
+        <field name="Description">Nexperia PMEG6020ER,115 SMT Schottky Diode, 60V 2A, 2-Pin SOD-123W</field>
+        <field name="Height">1.1</field>
+        <field name="Mouser Part Number">771-PMEG6020ER-115</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Nexperia/PMEG6020ER115?qs=5DYmZrWuUErk3dU9e9SSpA%3D%3D</field>
+        <field name="Manufacturer_Name">Nexperia</field>
+        <field name="Manufacturer_Part_Number">PMEG6020ER,115</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SMBJ24CA" part="SMBJ24CA">
+      <description>Littelfuse SMBJ24CA, Bi-Directional TVS Diode, 600W, 2-Pin DO-214AA</description>
+      <docs>https://m.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smbj_datasheet.pdf.pdf</docs>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">SMBJ24CA</field>
+        <field name="Footprint">DIOM5436X261N</field>
+        <field name="Datasheet">https://m.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smbj_datasheet.pdf.pdf</field>
+        <field name="Height">2.61</field>
+        <field name="Mouser Part Number">576-SMBJ24CA</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Littelfuse/SMBJ24CA?qs=JJML70Qc14u3Wc4gmMep1w%3D%3D</field>
+        <field name="Manufacturer_Name">LITTELFUSE</field>
+        <field name="Manufacturer_Part_Number">SMBJ24CA</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SRP7028CC-100M" part="SRP7028CC-100M">
+      <description>Ind,7.3x6.6x2.8mm,10uH+/-20%,3.5A,shd</description>
+      <docs>https://www.bourns.com/docs/Product-Datasheets/SRP7028CC.pdf</docs>
+      <fields>
+        <field name="Reference">L1</field>
+        <field name="Value">SRP7028CC-100M</field>
+        <field name="Footprint">INDPM7366X300N</field>
+        <field name="Datasheet">https://www.bourns.com/docs/Product-Datasheets/SRP7028CC.pdf</field>
+        <field name="Height">3</field>
+        <field name="Manufacturer_Name">Bourns</field>
+        <field name="Manufacturer_Part_Number">SRP7028CC-100M</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="STM32G431KBT6" part="STM32G431KBT6">
+      <description>ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration</description>
+      <docs>https://www.st.com/resource/en/datasheet/stm32g431kb.pdf</docs>
+      <fields>
+        <field name="Reference">IC6</field>
+        <field name="Value">STM32G431KBT6</field>
+        <field name="Footprint">STM32G431KBT6:QFP80P900X900X160-32N</field>
+        <field name="Datasheet">https://www.st.com/resource/en/datasheet/stm32g431kb.pdf</field>
+        <field name="Description">ARM Microcontrollers - MCU Mainstream Arm Cortex-M4+ MCU 170MHz with 128Kbytes of Flash memory, Math Accelerator, Medium Analog level integration</field>
+        <field name="Height">1.6</field>
+        <field name="Mouser Part Number">511-STM32G431KBT6</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/STMicroelectronics/STM32G431KBT6?qs=T3oQrply3y8teCTeNAFOLg%3D%3D</field>
+        <field name="Manufacturer_Name">STMicroelectronics</field>
+        <field name="Manufacturer_Part_Number">STM32G431KBT6</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VDD_1" type="passive"/>
+        <pin num="2" name="PF0-OSC_IN" type="passive"/>
+        <pin num="3" name="PF1-OSC_OUT" type="passive"/>
+        <pin num="4" name="PG10-NRST" type="passive"/>
+        <pin num="5" name="PA0" type="passive"/>
+        <pin num="6" name="PA1" type="passive"/>
+        <pin num="7" name="PA2" type="passive"/>
+        <pin num="8" name="PA3" type="passive"/>
+        <pin num="9" name="PA4" type="passive"/>
+        <pin num="10" name="PA5" type="passive"/>
+        <pin num="11" name="PA6" type="passive"/>
+        <pin num="12" name="PA7" type="passive"/>
+        <pin num="13" name="PB0" type="passive"/>
+        <pin num="14" name="VSSA" type="passive"/>
+        <pin num="15" name="VDDA" type="passive"/>
+        <pin num="16" name="VSS_1" type="passive"/>
+        <pin num="17" name="VDD_2" type="passive"/>
+        <pin num="18" name="PA8" type="passive"/>
+        <pin num="19" name="PA9" type="passive"/>
+        <pin num="20" name="PA10" type="passive"/>
+        <pin num="21" name="PA11" type="passive"/>
+        <pin num="22" name="PA12" type="passive"/>
+        <pin num="23" name="PA13" type="passive"/>
+        <pin num="24" name="PA14" type="passive"/>
+        <pin num="25" name="PA15" type="passive"/>
+        <pin num="26" name="PB3" type="passive"/>
+        <pin num="27" name="PB4" type="passive"/>
+        <pin num="28" name="PB5" type="passive"/>
+        <pin num="29" name="PB6" type="passive"/>
+        <pin num="30" name="PB7" type="passive"/>
+        <pin num="31" name="PB8-BOOT0" type="passive"/>
+        <pin num="32" name="VSS_2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="TMP236AQDBZRQ1" part="TMP236AQDBZRQ1">
+      <description>Automotive grade, +/-0.5C analog output temperature sensor with 19.5 mV/C gain</description>
+      <docs>https://www.ti.com/lit/gpn/TMP236-Q1</docs>
+      <fields>
+        <field name="Reference">IC3</field>
+        <field name="Value">TMP236AQDBZRQ1</field>
+        <field name="Footprint">TMP236AQDBZRQ1:SOT95P237X112-3N</field>
+        <field name="Datasheet">https://www.ti.com/lit/gpn/TMP236-Q1</field>
+        <field name="Description">Automotive grade, +/-0.5C analog output temperature sensor with 19.5 mV/C gain</field>
+        <field name="Height">1.12</field>
+        <field name="Mouser Part Number">595-TMP236AQDBZRQ1</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TMP236AQDBZRQ1?qs=T3oQrply3y83CHFf%2F7t6GQ%3D%3D</field>
+        <field name="Manufacturer_Name">Texas Instruments</field>
+        <field name="Manufacturer_Part_Number">TMP236AQDBZRQ1</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VDD" type="passive"/>
+        <pin num="2" name="VOUT" type="passive"/>
+        <pin num="3" name="GND" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="TPS54302DDCR" part="TPS54302DDCR">
+      <description>Conv DC-DC 4.5V to 28V Synchronous Step Down Single-Out 0.6V to 26V 3A 6-Pin TSOT-23 T/R</description>
+      <docs>http://www.ti.com/general/docs/suppproductinfo.tsp?distId=10&amp;gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Ftps54302</docs>
+      <fields>
+        <field name="Reference">IC6</field>
+        <field name="Value">TPS54302DDCR</field>
+        <field name="Footprint">SOT95P280X110-6N</field>
+        <field name="Datasheet">http://www.ti.com/general/docs/suppproductinfo.tsp?distId=10&amp;gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Ftps54302</field>
+        <field name="Height">1.1</field>
+        <field name="Mouser Part Number">595-TPS54302DDCR</field>
+        <field name="Mouser Price/Stock">https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TPS54302DDCR?qs=zEmsApcVOkUXM7UP0GSO2g%3D%3D</field>
+        <field name="Manufacturer_Name">Texas Instruments</field>
+        <field name="Manufacturer_Part_Number">TPS54302DDCR</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="passive"/>
+        <pin num="2" name="SW" type="passive"/>
+        <pin num="3" name="VIN" type="passive"/>
+        <pin num="4" name="FB" type="passive"/>
+        <pin num="5" name="EN" type="passive"/>
+        <pin num="6" name="BOOT" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="1_5inch-rgb-oled-module_asm-1110">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/1_5inch-rgb-oled-module_asm-1110/1_5inch-rgb-oled-module_asm-1110.kicad_sym</uri>
+    </library>
+    <library logical="2N7002NXAKR">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/2N7002NXAKR/2N7002NXAKR.lib</uri>
+    </library>
+    <library logical="BSC014N04LS">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/BSC014N04LS/BSC014N04LS.kicad_sym</uri>
+    </library>
+    <library logical="CMI-9653S-SMT-TR">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/CMI-9653S-SMT-TR/CMI-9653S-SMT-TR.lib</uri>
+    </library>
+    <library logical="Connector">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/Connector.kicad_sym</uri>
+    </library>
+    <library logical="Device">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/Device.kicad_sym</uri>
+    </library>
+    <library logical="EMZR500ARA331MJA0G">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/EMZR500ARA331MJA0G/EMZR500ARA331MJA0G.lib</uri>
+    </library>
+    <library logical="LD1117AS33TR">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/LD1117AS33TR/LD1117AS33TR.lib</uri>
+    </library>
+    <library logical="LTC4440AHMS8E-5#PBF">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/LTC4440AHMS8E-5#PBF/LTC4440AHMS8E-5#PBF.lib</uri>
+    </library>
+    <library logical="Mechanical">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/Mechanical.kicad_sym</uri>
+    </library>
+    <library logical="OPA2333AIDRBR">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/OPA2333AIDRBR/OPA2333AIDRBR.lib</uri>
+    </library>
+    <library logical="PEC11L-4220F-S0015">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/PEC11L-4220F-S0015/PEC11L-4220F-S0015.kicad_sym</uri>
+    </library>
+    <library logical="PMEG10030ELPX">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/PMEG10030ELPX/PMEG10030ELPX.lib</uri>
+    </library>
+    <library logical="PMEG6020ER_115">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/PMEG6020ER,115/PMEG6020ER_115.lib</uri>
+    </library>
+    <library logical="SMBJ24CA">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/SMBJ24CA/SMBJ24CA.kicad_sym</uri>
+    </library>
+    <library logical="SRP7028CC-100M">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/SRP7028CC-100M/SRP7028CC-100M.kicad_sym</uri>
+    </library>
+    <library logical="STM32G431KBT6">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/STM32G431KBT6/STM32G431KBT6.lib</uri>
+    </library>
+    <library logical="TMP236AQDBZRQ1">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/TMP236AQDBZRQ1/TMP236AQDBZRQ1.lib</uri>
+    </library>
+    <library logical="TPS54302DDCR">
+      <uri>C:\Users\axel_\ownCloud - axel@192.168.1.36\2_Project\00_AxxProjects\AxxSolder\PCB\AxxSolder/libs/TPS54302DDCR/TPS54302DDCR.kicad_sym</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="+3.3V">
+      <node ref="C11" pin="1" pintype="passive"/>
+      <node ref="C12" pin="1" pintype="passive"/>
+      <node ref="C19" pin="1" pintype="passive"/>
+      <node ref="C22" pin="1" pintype="passive"/>
+      <node ref="C5" pin="1" pintype="passive"/>
+      <node ref="D1" pin="2" pinfunction="K" pintype="passive"/>
+      <node ref="D12" pin="2" pinfunction="K" pintype="passive"/>
+      <node ref="D3" pin="2" pinfunction="K" pintype="passive"/>
+      <node ref="D5" pin="2" pinfunction="K" pintype="passive"/>
+      <node ref="D6" pin="2" pinfunction="K" pintype="passive"/>
+      <node ref="IC2" pin="1" pinfunction="VDD_1" pintype="passive"/>
+      <node ref="IC2" pin="15" pinfunction="VDDA" pintype="passive"/>
+      <node ref="IC2" pin="17" pinfunction="VDD_2" pintype="passive"/>
+      <node ref="IC3" pin="1" pinfunction="VDD" pintype="passive"/>
+      <node ref="IC4" pin="8" pinfunction="V+" pintype="passive"/>
+      <node ref="IC5" pin="1" pinfunction="VDD_1" pintype="passive"/>
+      <node ref="IC5" pin="15" pinfunction="VDDA" pintype="passive"/>
+      <node ref="IC5" pin="17" pinfunction="VDD_2" pintype="passive"/>
+      <node ref="J4" pin="2" pinfunction="Pin_2" pintype="passive"/>
+      <node ref="PS1" pin="2" pinfunction="VOUT_1" pintype="output"/>
+      <node ref="PS1" pin="4" pinfunction="VOUT_2" pintype="output"/>
+      <node ref="R11" pin="2" pintype="passive"/>
+      <node ref="R12" pin="1" pintype="passive"/>
+      <node ref="R13" pin="1" pintype="passive"/>
+      <node ref="R8" pin="1" pintype="passive"/>
+      <node ref="R9" pin="1" pintype="passive"/>
+      <node ref="TP9" pin="1" pinfunction="1" pintype="passive"/>
+    </net>
+    <net code="2" name="+5V">
+      <node ref="C1" pin="1" pintype="passive"/>
+      <node ref="C13" pin="2" pintype="passive"/>
+      <node ref="C2" pin="1" pintype="passive"/>
+      <node ref="C25" pin="2" pintype="passive"/>
+      <node ref="C26" pin="2" pintype="passive"/>
+      <node ref="C27" pin="2" pintype="passive"/>
+      <node ref="C6" pin="2" pintype="passive"/>
+      <node ref="D2" pin="2" pintype="passive"/>
+      <node ref="D4" pin="1" pinfunction="VCC" pintype="bidirectional"/>
+      <node ref="IC1" pin="3" pinfunction="VCC" pintype="passive"/>
+      <node ref="L1" pin="2" pintype="passive"/>
+      <node ref="LS1" pin="2" pinfunction="+" pintype="passive"/>
+      <node ref="PS1" pin="3" pinfunction="VIN" pintype="input"/>
+      <node ref="R17" pin="1" pintype="passive"/>
+      <node ref="R28" pin="1" pintype="passive"/>
+      <node ref="TP7" pin="1" pinfunction="1" pintype="passive"/>
+    </net>
+    <net code="3" name="/Ambient_temp">
+      <node ref="C20" pin="1" pintype="passive"/>
+      <node ref="IC2" pin="8" pinfunction="PA3" pintype="passive"/>
+      <node ref="IC3" pin="2" pinfunction="VOUT" pintype="passive"/>
+      <node ref="IC5" pin="8" pinfunction="PA3" pintype="passive"/>
+      <node ref="TP1" pin="1" pinfunction="1" pintype="passive"/>
+    </net>
+    <net code="4" name="/BLUE">
+      <node ref="D7" pin="2" pintype="passive"/>
+      <node ref="J1" pin="4" pinfunction="Pin_4" pintype="passive"/>
+      <node ref="R10" pin="1" pintype="passive"/>
+      <node ref="R25" pin="2" pintype="passive"/>
+    </net>
+    <net code="5" name="/Busvoltage">
+      <node ref="D12" pin="3" pinfunction="common" pintype="passive"/>
+      <node ref="IC2" pin="13" pinfunction="PB0" pintype="passive"/>
+      <node ref="IC5" pin="13" pinfunction="PB0" pintype="passive"/>
+      <node ref="R1" pin="2" pintype="passive"/>
+    </net>
+    <net code="6" name="/Buzzer">
+      <node ref="IC2" pin="10" pinfunction="PA5" pintype="passive"/>
+      <node ref="IC5" pin="10" pinfunction="PA5" pintype="passive"/>
+      <node ref="R15" pin="1" pintype="passive"/>
+    </net>
+    <net code="7" name="/Current">
+      <node ref="C16" pin="1" pintype="passive"/>
+      <node ref="IC2" pin="6" pinfunction="PA1" pintype="passive"/>
+      <node ref="IC4" pin="7" pinfunction="OUT_B" pintype="passive"/>
+      <node ref="IC5" pin="6" pinfunction="PA1" pintype="passive"/>
+      <node ref="R24" pin="2" pintype="passive"/>
+      <node ref="TP6" pin="1" pinfunction="1" pintype="passive"/>
+    </net>
+    <net code="8" name="/ENC_A">
+      <node ref="C10" pin="1" pintype="passive"/>
+      <node ref="IC2" pin="9" pinfunction="PA4" pintype="passive"/>
+      <node ref="IC5" pin="9" pinfunction="PA4" pintype="passive"/>
+      <node ref="R13" pin="2" pintype="passive"/>
+      <node ref="U1" pin="5" pinfunction="5" pintype="passive"/>
+    </net>
+    <net code="9" name="/ENC_B">
+      <node ref="C9" pin="1" pintype="passive"/>
+      <node ref="IC2" pin="11" pinfunction="PA6" pintype="passive"/>
+      <node ref="IC5" pin="11" pinfunction="PA6" pintype="passive"/>
+      <node ref="R11" pin="1" pintype="passive"/>
+      <node ref="U1" pin="3" pinfunction="3" pintype="passive"/>
+    </net>
+    <net code="10" name="/ENC_Button">
+      <node ref="C8" pin="1" pintype="passive"/>
+      <node ref="IC2" pin="19" pinfunction="PA9" pintype="passive"/>
+      <node ref="IC5" pin="19" pinfunction="PA9" pintype="passive"/>
+      <node ref="R12" pin="2" pintype="passive"/>
+      <node ref="U1" pin="1" pinfunction="1" pintype="passive"/>
+    </net>
+    <net code="11" name="/GREEN">
+      <node ref="J1" pin="3" pinfunction="Pin_3" pintype="passive"/>
+      <node ref="R19" pin="1" pintype="passive"/>
+    </net>
+    <net code="12" name="/Handle_inp">
+      <node ref="D3" pin="3" pinfunction="common" pintype="passive"/>
+      <node ref="IC2" pin="20" pinfunction="PA10" pintype="passive"/>
+      <node ref="IC5" pin="20" pinfunction="PA10" pintype="passive"/>
+      <node ref="R6" pin="1" pintype="passive"/>
+    </net>
+    <net code="13" name="/Handle_sense">
+      <node ref="C28" pin="1" pintype="passive"/>
+      <node ref="J1" pin="2" pinfunction="Pin_2" pintype="passive"/>
+      <node ref="R6" pin="2" pintype="passive"/>
+      <node ref="R9" pin="2" pintype="passive"/>
+    </net>
+    <net code="14" name="/Heater">
+      <node ref="IC1" pin="1" pinfunction="INP" pintype="passive"/>
+      <node ref="IC2" pin="12" pinfunction="PA7" pintype="passive"/>
+      <node ref="IC5" pin="12" pinfunction="PA7" pintype="passive"/>
+      <node ref="R18" pin="1" pintype="passive"/>
+    </net>
+    <net code="15" name="/MCU_RX">
+      <node ref="IC2" pin="25" pinfunction="PA15" pintype="passive"/>
+      <node ref="IC5" pin="25" pinfunction="PA15" pintype="passive"/>
+      <node ref="J4" pin="7" pinfunction="Pin_7" pintype="passive"/>
+    </net>
+    <net code="16" name="/MCU_TX">
+      <node ref="IC2" pin="7" pinfunction="PA2" pintype="passive"/>
+      <node ref="IC5" pin="7" pinfunction="PA2" pintype="passive"/>
+      <node ref="J4" pin="6" pinfunction="Pin_6" pintype="passive"/>
+    </net>
+    <net code="17" name="/NRST">
+      <node ref="C7" pin="2" pintype="passive"/>
+      <node ref="IC2" pin="4" pinfunction="PG10-NRST" pintype="passive"/>
+      <node ref="IC5" pin="4" pinfunction="PG10-NRST" pintype="passive"/>
+      <node ref="J4" pin="3" pinfunction="Pin_3" pintype="passive"/>
+    </net>
+    <net code="18" name="/RED">
+      <node ref="C4" pin="1" pintype="passive"/>
+      <node ref="D7" pin="1" pintype="passive"/>
+      <node ref="IC1" pin="8" pinfunction="TS" pintype="passive"/>
+      <node ref="J1" pin="5" pinfunction="Pin_5" pintype="passive"/>
+      <node ref="R20" pin="1" pintype="passive"/>
+      <node ref="U2" pin="1" pinfunction="S" pintype="passive"/>
+    </net>
+    <net code="19" name="/SPI_CS">
+      <node ref="D4" pin="6" pinfunction="CS" pintype="bidirectional"/>
+      <node ref="IC2" pin="29" pinfunction="PB6" pintype="passive"/>
+      <node ref="IC5" pin="29" pinfunction="PB6" pintype="passive"/>
+    </net>
+    <net code="20" name="/SPI_DC">
+      <node ref="D4" pin="7" pinfunction="DC" pintype="bidirectional"/>
+      <node ref="IC2" pin="22" pinfunction="PA12" pintype="passive"/>
+      <node ref="IC5" pin="22" pinfunction="PA12" pintype="passive"/>
+    </net>
+    <net code="21" name="/SPI_MOSI">
+      <node ref="D4" pin="4" pinfunction="DIN" pintype="bidirectional"/>
+      <node ref="IC2" pin="28" pinfunction="PB5" pintype="passive"/>
+      <node ref="IC5" pin="28" pinfunction="PB5" pintype="passive"/>
+    </net>
+    <net code="22" name="/SPI_RST">
+      <node ref="D4" pin="8" pinfunction="RST" pintype="bidirectional"/>
+      <node ref="IC2" pin="27" pinfunction="PB4" pintype="passive"/>
+      <node ref="IC5" pin="27" pinfunction="PB4" pintype="passive"/>
+    </net>
+    <net code="23" name="/SPI_SCK">
+      <node ref="D4" pin="5" pinfunction="CLK" pintype="bidirectional"/>
+      <node ref="IC2" pin="26" pinfunction="PB3" pintype="passive"/>
+      <node ref="IC5" pin="26" pinfunction="PB3" pintype="passive"/>
+    </net>
+    <net code="24" name="/SWCLK">
+      <node ref="IC2" pin="24" pinfunction="PA14" pintype="passive"/>
+      <node ref="IC5" pin="24" pinfunction="PA14" pintype="passive"/>
+      <node ref="J4" pin="4" pinfunction="Pin_4" pintype="passive"/>
+    </net>
+    <net code="25" name="/SWDIO">
+      <node ref="IC2" pin="23" pinfunction="PA13" pintype="passive"/>
+      <node ref="IC5" pin="23" pinfunction="PA13" pintype="passive"/>
+      <node ref="J4" pin="5" pinfunction="Pin_5" pintype="passive"/>
+    </net>
+    <net code="26" name="/Stand_inp">
+      <node ref="D1" pin="3" pinfunction="common" pintype="passive"/>
+      <node ref="IC2" pin="21" pinfunction="PA11" pintype="passive"/>
+      <node ref="IC5" pin="21" pinfunction="PA11" pintype="passive"/>
+      <node ref="R5" pin="1" pintype="passive"/>
+    </net>
+    <net code="27" name="/Stand_sense">
+      <node ref="C29" pin="1" pintype="passive"/>
+      <node ref="J1" pin="1" pinfunction="Pin_1" pintype="passive"/>
+      <node ref="R5" pin="2" pintype="passive"/>
+      <node ref="R8" pin="2" pintype="passive"/>
+    </net>
+    <net code="28" name="/Thermocouple">
+      <node ref="C15" pin="1" pintype="passive"/>
+      <node ref="IC2" pin="5" pinfunction="PA0" pintype="passive"/>
+      <node ref="IC4" pin="1" pinfunction="OUT_A" pintype="passive"/>
+      <node ref="IC5" pin="5" pinfunction="PA0" pintype="passive"/>
+      <node ref="R22" pin="1" pintype="passive"/>
+      <node ref="TP5" pin="1" pinfunction="1" pintype="passive"/>
+    </net>
+    <net code="29" name="GND">
+      <node ref="C1" pin="2" pintype="passive"/>
+      <node ref="C10" pin="2" pintype="passive"/>
+      <node ref="C11" pin="2" pintype="passive"/>
+      <node ref="C12" pin="2" pintype="passive"/>
+      <node ref="C13" pin="1" pintype="passive"/>
+      <node ref="C14" pin="1" pintype="passive"/>
+      <node ref="C15" pin="2" pintype="passive"/>
+      <node ref="C16" pin="2" pintype="passive"/>
+      <node ref="C17" pin="2" pintype="passive"/>
+      <node ref="C18" pin="2" pintype="passive"/>
+      <node ref="C19" pin="2" pintype="passive"/>
+      <node ref="C2" pin="2" pintype="passive"/>
+      <node ref="C20" pin="2" pintype="passive"/>
+      <node ref="C21" pin="1" pintype="passive"/>
+      <node ref="C22" pin="2" pintype="passive"/>
+      <node ref="C23" pin="2" pintype="passive"/>
+      <node ref="C25" pin="1" pintype="passive"/>
+      <node ref="C27" pin="1" pintype="passive"/>
+      <node ref="C28" pin="2" pintype="passive"/>
+      <node ref="C29" pin="2" pintype="passive"/>
+      <node ref="C3" pin="2" pintype="passive"/>
+      <node ref="C5" pin="2" pintype="passive"/>
+      <node ref="C6" pin="1" pintype="passive"/>
+      <node ref="C7" pin="1" pintype="passive"/>
+      <node ref="C8" pin="2" pintype="passive"/>
+      <node ref="C9" pin="2" pintype="passive"/>
+      <node ref="D1" pin="1" pinfunction="A" pintype="passive"/>
+      <node ref="D12" pin="1" pinfunction="A" pintype="passive"/>
+      <node ref="D3" pin="1" pinfunction="A" pintype="passive"/>
+      <node ref="D4" pin="2" pinfunction="GND" pintype="bidirectional"/>
+      <node ref="D5" pin="1" pinfunction="A" pintype="passive"/>
+      <node ref="D6" pin="1" pinfunction="A" pintype="passive"/>
+      <node ref="D9" pin="1" pintype="passive"/>
+      <node ref="IC1" pin="2" pinfunction="GND_1" pintype="passive"/>
+      <node ref="IC1" pin="4" pinfunction="GND_2" pintype="passive"/>
+      <node ref="IC1" pin="9" pinfunction="EP" pintype="passive"/>
+      <node ref="IC2" pin="14" pinfunction="VSSA" pintype="passive"/>
+      <node ref="IC2" pin="16" pinfunction="VSS_1" pintype="passive"/>
+      <node ref="IC2" pin="32" pinfunction="VSS_2" pintype="passive"/>
+      <node ref="IC3" pin="3" pinfunction="GND" pintype="passive"/>
+      <node ref="IC4" pin="4" pinfunction="V-" pintype="passive"/>
+      <node ref="IC4" pin="9" pinfunction="EP" pintype="passive"/>
+      <node ref="IC5" pin="14" pinfunction="VSSA" pintype="passive"/>
+      <node ref="IC5" pin="16" pinfunction="VSS_1" pintype="passive"/>
+      <node ref="IC5" pin="32" pinfunction="VSS_2" pintype="passive"/>
+      <node ref="IC6" pin="1" pinfunction="GND" pintype="passive"/>
+      <node ref="J1" pin="6" pinfunction="Pin_6" pintype="passive"/>
+      <node ref="J4" pin="1" pinfunction="Pin_1" pintype="passive"/>
+      <node ref="PS1" pin="1" pinfunction="ADJ/GND" pintype="power_in"/>
+      <node ref="Q2" pin="2" pintype="passive"/>
+      <node ref="R10" pin="2" pintype="passive"/>
+      <node ref="R14" pin="1" pintype="passive"/>
+      <node ref="R16" pin="2" pintype="passive"/>
+      <node ref="R18" pin="2" pintype="passive"/>
+      <node ref="R21" pin="2" pintype="passive"/>
+      <node ref="R23" pin="2" pintype="passive"/>
+      <node ref="R26" pin="1" pintype="passive"/>
+      <node ref="R29" pin="2" pintype="passive"/>
+      <node ref="R3" pin="2" pintype="passive"/>
+      <node ref="TP3" pin="1" pinfunction="1" pintype="passive"/>
+      <node ref="U1" pin="2" pinfunction="2" pintype="passive"/>
+      <node ref="U1" pin="4" pinfunction="4" pintype="passive"/>
+    </net>
+    <net code="30" name="Net-(C3-Pad1)">
+      <node ref="C3" pin="1" pintype="passive"/>
+      <node ref="R1" pin="1" pintype="passive"/>
+      <node ref="R2" pin="2" pintype="passive"/>
+      <node ref="R3" pin="1" pintype="passive"/>
+    </net>
+    <net code="31" name="Net-(D5-common)">
+      <node ref="D5" pin="3" pinfunction="common" pintype="passive"/>
+      <node ref="IC4" pin="2" pinfunction="-IN_A" pintype="passive"/>
+      <node ref="R19" pin="2" pintype="passive"/>
+      <node ref="R22" pin="2" pintype="passive"/>
+    </net>
+    <net code="32" name="Net-(D6-common)">
+      <node ref="D6" pin="3" pinfunction="common" pintype="passive"/>
+      <node ref="IC4" pin="3" pinfunction="+IN_A" pintype="passive"/>
+      <node ref="R20" pin="2" pintype="passive"/>
+      <node ref="R21" pin="1" pintype="passive"/>
+    </net>
+    <net code="33" name="Net-(IC1-BOOST)">
+      <node ref="C4" pin="2" pintype="passive"/>
+      <node ref="D2" pin="1" pintype="passive"/>
+      <node ref="IC1" pin="6" pinfunction="BOOST" pintype="passive"/>
+    </net>
+    <net code="34" name="Net-(IC1-TG)">
+      <node ref="IC1" pin="7" pinfunction="TG" pintype="passive"/>
+      <node ref="U2" pin="9" pinfunction="G" pintype="passive"/>
+    </net>
+    <net code="35" name="Net-(IC2-PA8)">
+      <node ref="IC2" pin="18" pinfunction="PA8" pintype="passive"/>
+      <node ref="IC5" pin="18" pinfunction="PA8" pintype="passive"/>
+    </net>
+    <net code="36" name="Net-(IC2-PB7)">
+      <node ref="IC2" pin="30" pinfunction="PB7" pintype="passive"/>
+      <node ref="IC5" pin="30" pinfunction="PB7" pintype="passive"/>
+    </net>
+    <net code="37" name="Net-(IC2-PB8-BOOT0)">
+      <node ref="IC2" pin="31" pinfunction="PB8-BOOT0" pintype="passive"/>
+      <node ref="IC5" pin="31" pinfunction="PB8-BOOT0" pintype="passive"/>
+      <node ref="R14" pin="2" pintype="passive"/>
+    </net>
+    <net code="38" name="Net-(IC2-PF0-OSC_IN)">
+      <node ref="IC2" pin="2" pinfunction="PF0-OSC_IN" pintype="passive"/>
+      <node ref="IC5" pin="2" pinfunction="PF0-OSC_IN" pintype="passive"/>
+      <node ref="TP2" pin="1" pinfunction="1" pintype="passive"/>
+    </net>
+    <net code="39" name="Net-(IC2-PF1-OSC_OUT)">
+      <node ref="IC2" pin="3" pinfunction="PF1-OSC_OUT" pintype="passive"/>
+      <node ref="IC5" pin="3" pinfunction="PF1-OSC_OUT" pintype="passive"/>
+    </net>
+    <net code="40" name="Net-(IC4-+IN_B)">
+      <node ref="IC4" pin="5" pinfunction="+IN_B" pintype="passive"/>
+      <node ref="R23" pin="1" pintype="passive"/>
+      <node ref="R25" pin="1" pintype="passive"/>
+    </net>
+    <net code="41" name="Net-(IC4--IN_B)">
+      <node ref="IC4" pin="6" pinfunction="-IN_B" pintype="passive"/>
+      <node ref="R24" pin="1" pintype="passive"/>
+      <node ref="R26" pin="2" pintype="passive"/>
+    </net>
+    <net code="42" name="Net-(IC6-BOOT)">
+      <node ref="C24" pin="1" pintype="passive"/>
+      <node ref="IC6" pin="6" pinfunction="BOOT" pintype="passive"/>
+    </net>
+    <net code="43" name="Net-(IC6-FB)">
+      <node ref="C26" pin="1" pintype="passive"/>
+      <node ref="IC6" pin="4" pinfunction="FB" pintype="passive"/>
+      <node ref="R28" pin="2" pintype="passive"/>
+      <node ref="R29" pin="1" pintype="passive"/>
+    </net>
+    <net code="44" name="Net-(IC6-SW)">
+      <node ref="C24" pin="2" pintype="passive"/>
+      <node ref="IC6" pin="2" pinfunction="SW" pintype="passive"/>
+      <node ref="L1" pin="1" pintype="passive"/>
+    </net>
+    <net code="45" name="Net-(J1-Pin_7)">
+      <node ref="D9" pin="2" pintype="passive"/>
+      <node ref="F1" pin="2" pintype="passive"/>
+      <node ref="J1" pin="7" pinfunction="Pin_7" pintype="passive"/>
+    </net>
+    <net code="46" name="Net-(LS1--)">
+      <node ref="LS1" pin="1" pinfunction="-" pintype="passive"/>
+      <node ref="Q2" pin="3" pintype="passive"/>
+      <node ref="R17" pin="2" pintype="passive"/>
+    </net>
+    <net code="47" name="Net-(Q2-Pad1)">
+      <node ref="Q2" pin="1" pintype="passive"/>
+      <node ref="R15" pin="2" pintype="passive"/>
+      <node ref="R16" pin="1" pintype="passive"/>
+    </net>
+    <net code="50" name="VDD">
+      <node ref="C14" pin="2" pintype="passive"/>
+      <node ref="C17" pin="1" pintype="passive"/>
+      <node ref="C18" pin="1" pintype="passive"/>
+      <node ref="C21" pin="2" pintype="passive"/>
+      <node ref="C23" pin="1" pintype="passive"/>
+      <node ref="F1" pin="1" pintype="passive"/>
+      <node ref="IC6" pin="3" pinfunction="VIN" pintype="passive"/>
+      <node ref="R2" pin="1" pintype="passive"/>
+      <node ref="TP8" pin="1" pinfunction="1" pintype="passive"/>
+      <node ref="U2" pin="10" pinfunction="D" pintype="passive"/>
+    </net>
+    <net code="51" name="unconnected-(D4-NC-Pad3)">
+      <node ref="D4" pin="3" pinfunction="NC" pintype="bidirectional"/>
+    </net>
+    <net code="52" name="unconnected-(IC1-NC-Pad5)">
+      <node ref="IC1" pin="5" pinfunction="NC" pintype="no_connect"/>
+    </net>
+    <net code="53" name="unconnected-(IC6-EN-Pad5)">
+      <node ref="IC6" pin="5" pinfunction="EN" pintype="passive"/>
+    </net>
+  </nets>
+</export>

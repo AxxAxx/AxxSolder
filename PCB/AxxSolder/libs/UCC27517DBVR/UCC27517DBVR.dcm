@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP UCC27517DBVR
+D 4A/4A Single Channel High-speed Low-side Gate Driver
+K
+F http://www.ti.com/lit/gpn/ucc27517
+$ENDCMP
+#
+#End Doc Library
