@@ -146,6 +146,17 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.previous_state = SLEEP,
 											.enc_button_status = 0.0};
 
+/* Struct to hold flash_data values */
+struct Flash_values {
+	double startup_temperature;
+	double temperature_offset;
+	double standby_temp;
+	double standby_time;
+	double emergency_time;
+	uint16_t buzzer_enable;
+};
+struct Flash_values flash_values;
+
 double PID_output = 0.0;
 double PID_setpoint = 0.0;
 
@@ -168,7 +179,7 @@ FilterTypeDef enc_button_sense_filterStruct;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
 CRC_HandleTypeDef hcrc;
@@ -211,6 +222,7 @@ static void MX_CRC_Init(void);
 ConfigurationMsg user_saved_configurationMsg;
 ConfigurationMsg default_configurationMsg;
 
+
 PID_TypeDef TPID;
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
@@ -243,7 +255,7 @@ void get_actual_temperature(){
 		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T245 +
 				pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T245 + TC_temperature_temp*TC_COMPENSATION_X1_T245 + TC_COMPENSATION_X0_T245;
 	}
-	sensor_values.actual_temperature = sensor_values.actual_temperature + user_saved_configurationMsg.numerical_flash_values[1]; // Add temperature offset value
+	sensor_values.actual_temperature = sensor_values.actual_temperature + flash_values.temperature_offset; // Add temperature offset value
 	if(sensor_values.actual_temperature > 999){
 		sensor_values.actual_temperature = 999;
 	}
@@ -361,7 +373,7 @@ void get_set_temperature(){
 
 /* Beep the buzzer for beep_time_ms */
 void beep_ms(uint16_t beep_time_ms){
-	if(user_saved_configurationMsg.numerical_flash_values[4]){
+	if(flash_values.buzzer_enable){
 		TIM2->CCR1 = 50;
 		HAL_Delay(beep_time_ms);
 		TIM2->CCR1 = 0;
@@ -382,7 +394,7 @@ void check_emergency_shutdown(){
 	if(!sensor_values.previous_state == RUN  && active_state == RUN){
 		previous_millis_left_stand = HAL_GetTick();
 	}
-	if ((sensor_values.in_stand == 0) && (HAL_GetTick() - previous_millis_left_stand >= EMERGENCY_shutdown_time) && active_state == RUN){
+	if ((sensor_values.in_stand == 0) && (HAL_GetTick() - previous_millis_left_stand >= flash_values.emergency_time*60000) && active_state == RUN){
 		active_state = EMERGENCY_SLEEP;
 		beep_requested = 1;
 	}
@@ -440,7 +452,7 @@ void get_stand_status(){
 			active_state = STANDBY;
 			previous_standby_millis = HAL_GetTick();
 		}
-		if((HAL_GetTick()-previous_standby_millis >= user_saved_configurationMsg.numerical_flash_values[3]*60000.0) && (active_state == STANDBY)){
+		if((HAL_GetTick()-previous_standby_millis >= flash_values.standby_time*60000.0) && (active_state == STANDBY)){
 			active_state = SLEEP;
 		}
 		if((active_state == EMERGENCY_SLEEP) || (active_state == HALTED)){
@@ -575,19 +587,20 @@ int main(void)
 	default_configurationMsg.numerical_flash_values[1] = 0;
 	default_configurationMsg.numerical_flash_values[2] = 150;
 	default_configurationMsg.numerical_flash_values[3] = 10;
-	default_configurationMsg.numerical_flash_values[4] = 1;
+	default_configurationMsg.numerical_flash_values[4] = 30;
+	default_configurationMsg.numerical_flash_values[5] = 1;
 
 	menu_names[0] = "Startup Temp";
 	menu_names[1] = "Temp Offset ";
 	menu_names[2] = "Standby Temp";
 	menu_names[3] = "Standby Time";
-	menu_names[4] = "Buzzer Enable";
-	menu_names[5] = "-Load Default-";
-	menu_names[6] = "-Exit and Save-";
-	menu_names[7] = "-Exit no Save-";
+	menu_names[4] = "EM Time";
+	menu_names[5] = "Buzzer Enable";
+	menu_names[6] = "-Load Default-";
+	menu_names[7] = "-Exit and Save-";
+	menu_names[8] = "-Exit no Save-";
 
-	uint16_t menu_length = 7;
-
+	uint16_t menu_length = 8;
 
 	if(!FlashCheckCRC()){
     	FlashWrite(&default_configurationMsg);
@@ -611,6 +624,7 @@ int main(void)
 	uint16_t menue_level = 0;
 	uint16_t menu_active = 1;
 	float old_value = 0;
+	float counter = 0.0;
 
 
 	/* If button is pressed during startup - Show SETTINGS and allow to release button. */
@@ -621,6 +635,7 @@ int main(void)
 		Paint_Clear(BLACK);
 		HAL_Delay(1000);
 		while(menu_active == 1){
+			counter = TIM3->CNT-1000;
 			if(menue_level == 0){
 				if(TIM3->CNT < 1000)
 				{
@@ -629,11 +644,12 @@ int main(void)
 				menu_cursor_position = (TIM3->CNT - 1000) / 2;
 			}
 			if (menue_level == 1){
-				if (menu_cursor_position == 4){
-					user_saved_configurationMsg.numerical_flash_values[menu_cursor_position] = fmod((old_value + ((TIM3->CNT - 1000) / 2) - menu_cursor_position), 2);
+				user_saved_configurationMsg.numerical_flash_values[menu_cursor_position] = (float)old_value + (float)(TIM3->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
+				if (menu_cursor_position == 5){
+					user_saved_configurationMsg.numerical_flash_values[menu_cursor_position] = round(fmod(abs(user_saved_configurationMsg.numerical_flash_values[menu_cursor_position]), 2));
 				}
-				else{
-					user_saved_configurationMsg.numerical_flash_values[menu_cursor_position] = (float)old_value + (float)(TIM3->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
+				if(menu_cursor_position != 1){
+					user_saved_configurationMsg.numerical_flash_values[menu_cursor_position] = abs(user_saved_configurationMsg.numerical_flash_values[menu_cursor_position]);
 				}
 			}
 
@@ -672,9 +688,9 @@ int main(void)
 				user_saved_configurationMsg.numerical_flash_values[2] = default_configurationMsg.numerical_flash_values[2];
 				user_saved_configurationMsg.numerical_flash_values[3] = default_configurationMsg.numerical_flash_values[3];
 				user_saved_configurationMsg.numerical_flash_values[4] = default_configurationMsg.numerical_flash_values[4];
+				user_saved_configurationMsg.numerical_flash_values[5] = default_configurationMsg.numerical_flash_values[5];
 
 			}
-
 
 			Paint_DrawString_EN(0, 0, "SETTINGS", &Font16, 0x00, 0xff);
 			Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
@@ -709,9 +725,15 @@ int main(void)
 		}
 	}
 
+	flash_values.startup_temperature = user_saved_configurationMsg.numerical_flash_values[0];
+	flash_values.temperature_offset = user_saved_configurationMsg.numerical_flash_values[1];
+	flash_values.standby_temp = user_saved_configurationMsg.numerical_flash_values[2];
+	flash_values.standby_time = user_saved_configurationMsg.numerical_flash_values[3];
+	flash_values.emergency_time = user_saved_configurationMsg.numerical_flash_values[4];
+	flash_values.buzzer_enable = user_saved_configurationMsg.numerical_flash_values[5];
 
 	/* Set initial encoder timer value */
-	TIM3->CNT = user_saved_configurationMsg.numerical_flash_values[0];
+	TIM3->CNT = flash_values.startup_temperature;
 
 	/* Startup beep */
 	beep_ms(10);
@@ -743,7 +765,7 @@ int main(void)
 				break;
 			}
 			case STANDBY: {
-				PID_setpoint = (double)user_saved_configurationMsg.numerical_flash_values[2];
+				PID_setpoint = flash_values.standby_temp;
 				break;
 			}
 			case SLEEP: {
