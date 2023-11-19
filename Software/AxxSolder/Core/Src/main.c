@@ -566,7 +566,7 @@ int main(void)
 	Moving_Average_Init(&input_voltage_filterStruct,200);
 	Moving_Average_Init(&stand_sense_filterStruct,200);
 	Moving_Average_Init(&handle_sense_filterStruct,200);
-	Moving_Average_Init(&enc_button_sense_filterStruct,200);
+	Moving_Average_Init(&enc_button_sense_filterStruct,100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
