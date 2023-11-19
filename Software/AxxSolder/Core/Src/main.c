@@ -624,8 +624,6 @@ int main(void)
 	uint16_t menue_level = 0;
 	uint16_t menu_active = 1;
 	float old_value = 0;
-	float counter = 0.0;
-
 
 	/* If button is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0){
@@ -635,7 +633,6 @@ int main(void)
 		Paint_Clear(BLACK);
 		HAL_Delay(1000);
 		while(menu_active == 1){
-			counter = TIM3->CNT-1000;
 			if(menue_level == 0){
 				if(TIM3->CNT < 1000)
 				{
