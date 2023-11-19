@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP ADP7118ACPZN3.3-R7
-D LDO Voltage Regulators 20V 200mA LDO 3.3Vo
-K
-F https://componentsearchengine.com/Datasheets/1/ADP7118ACPZN3.3-R7.pdf
-$ENDCMP
-#
-#End Doc Library

@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP IRF7749L1TRPBF
-D IRF7749L1TRPBF N-Channel MOSFET, 375 A, 60 V DirectFET, HEXFET, 15-Pin DirectFET Infineon
-K
-F https://datasheet.datasheetarchive.com/originals/distributors/Datasheets_SAMA/883054cb6ebc0e2606373d543bb516b0.pdf
-$ENDCMP
-#
-#End Doc Library

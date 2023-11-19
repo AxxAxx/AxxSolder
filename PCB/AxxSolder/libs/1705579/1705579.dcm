@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP 1705579
-D PCB terminal block, nominal current: 8 A, rated voltage (III/2): 320 V, nominal cross section: 1.5 mm?, Number of potentials: 5, Number of rows: 1, Number of positions per row: 5, product range: MKDSD 1,5, pitch: 3.81 mm, connection method: Screw connection with tension sleeve, mounting: Wave soldering, conductor/PCB connection direction: 0 ?, color: green, Pin layout: Linear pinning, Solder pin [P]: 2.7 mm, type of packaging: packed in cardboard
-K
-F http://www.phoenixcontact.com/de/produkte/1705579/pdf
-$ENDCMP
-#
-#End Doc Library
