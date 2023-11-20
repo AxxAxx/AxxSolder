@@ -65,12 +65,9 @@ uint32_t previous_millis_heating_halted_update = 0;
 uint32_t interval_heating_halted_update = 500;
 
 uint32_t previous_millis_left_stand = 0;
-uint32_t EMERGENCY_shutdown_time = 1800000; 	//30 minutes
 uint32_t EMERGENCY_shutdown_temperature = 475;  //475 Deg C
 
 uint32_t previous_standby_millis = 0;
-
-
 
 /* states for runtime switch */
 typedef enum {
@@ -100,7 +97,7 @@ uint8_t tx_done = 1;
 float max_power_watt = 0.0; 					/* Sets the maximum output power */
 
 float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
-#define ADC_BUF_LEN 400
+#define ADC_BUF_LEN 150
 uint16_t ADC_buffer[ADC_BUF_LEN];
 
 #define VOLTAGE_COMPENSATION 0.00648678945 		/* Constant for scaling input voltage ADC value*/
@@ -128,6 +125,7 @@ struct sensor_values_struct {
 	double set_temperature;
 	double actual_temperature;
 	float bus_voltage;
+	float heater_current;
 	float pcb_temperature;
 	float ambient_temperature;
 	double in_stand;
@@ -138,6 +136,7 @@ struct sensor_values_struct {
 
 struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
         									.actual_temperature = 0.0,
+											.bus_voltage = 0.0,
 											.bus_voltage = 0.0,
 											.pcb_temperature = 0.0,
 											.ambient_temperature = 0.0,
@@ -179,7 +178,8 @@ FilterTypeDef enc_button_sense_filterStruct;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
+ ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc2;
 DMA_HandleTypeDef hdma_adc1;
 
 CRC_HandleTypeDef hcrc;
@@ -212,6 +212,7 @@ static void MX_TIM3_Init(void);
 static void MX_TIM16_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_CRC_Init(void);
+static void MX_ADC2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -221,7 +222,6 @@ static void MX_CRC_Init(void);
 
 ConfigurationMsg user_saved_configurationMsg;
 ConfigurationMsg default_configurationMsg;
-
 
 PID_TypeDef TPID;
 
@@ -233,10 +233,10 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
 /* Returns the average of 100 readings of the index+4*n value in the ADC_buffer vector */
 float get_mean_ADC_reading(uint8_t index){
 	ADC_filter_mean = 0;
-	for(int n=index;n<400;n=n+4){
+	for(int n=index;n<ADC_BUF_LEN;n=n+3){
 		ADC_filter_mean += ADC_buffer[n];
 	}
-	return ADC_filter_mean/100.0;
+	return ADC_filter_mean/50.0;
 }
 
 void get_bus_voltage(){
@@ -483,17 +483,17 @@ void get_handle_type(){
 	if(sensor_values.handle_sense > 0.5){
 		handle = T210;
 		max_power_watt = 60; //60W
-		Kp = 20;
-		Ki = 60;
-		Kd = 0.5;
+		Kp = 10;
+		Ki = 30;
+		Kd = 0.25;
 	}
 	/* If the handle_sense is low -> T245 Handle */
 	else{
 		handle = T245;
 		max_power_watt = 120; //120W
-		Kp = 30;
-		Ki = 60;
-		Kd = 1;
+		Kp = 15;
+		Ki = 30;
+		Kd = 0.5;
 	}
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
 }
@@ -554,12 +554,14 @@ int main(void)
   MX_TIM16_Init();
   MX_I2C1_Init();
   MX_CRC_Init();
+  MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Encoder_Start_IT(&htim3, TIM_CHANNEL_ALL);
 	HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_buffer, ADC_BUF_LEN);	//Start ADC DMA
+	HAL_ADC_Start_IT(&hadc2);	//Start ADC DMA
 
 	Moving_Average_Init(&actual_temperature_filter_struct,5);
 	Moving_Average_Init(&ambient_temperature_filter_struct,200);
@@ -739,8 +741,8 @@ int main(void)
 	PID(&TPID, &sensor_values.actual_temperature, &PID_output, &PID_setpoint, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 	PID_SetSampleTime(&TPID, 50);
-	PID_SetOutputLimits(&TPID, 0, 1000); 	// Set max and min output limit
-	PID_SetILimits(&TPID, -400, 400); 		// Set max and min I limit
+	PID_SetOutputLimits(&TPID, 0, 500); 	// Set max and min output limit
+	PID_SetILimits(&TPID, -300, 300); 		// Set max and min I limit
 
 	while (1){
 		get_stand_status();
@@ -767,8 +769,6 @@ int main(void)
 			}
 			case SLEEP: {
 				PID_setpoint = 0;
-
-
 				break;
 			}
 			case HALTED: {
@@ -779,7 +779,7 @@ int main(void)
 
 		if(HAL_GetTick() - previous_millis_PID_update >= interval_PID_update){
 			set_heater_duty(0);
-			HAL_Delay(10); // Wait to let the thermocouple voltage stabilize before taking measurement
+			HAL_Delay(5); // Wait to let the thermocouple voltage stabilize before taking measurement
 			get_actual_temperature();
 			previous_millis_PID_update = HAL_GetTick();
 		}
@@ -897,7 +897,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.ContinuousConvMode = ENABLE;
-  hadc1.Init.NbrOfConversion = 4;
+  hadc1.Init.NbrOfConversion = 3;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
@@ -921,7 +921,7 @@ static void MX_ADC1_Init(void)
   */
   AnalogWDGConfig.WatchdogNumber = ADC_ANALOGWATCHDOG_1;
   AnalogWDGConfig.WatchdogMode = ADC_ANALOGWATCHDOG_SINGLE_REG;
-  AnalogWDGConfig.Channel = ADC_CHANNEL_2;
+  AnalogWDGConfig.Channel = ADC_CHANNEL_1;
   AnalogWDGConfig.ITMode = ENABLE;
   AnalogWDGConfig.HighThreshold = 100;
   AnalogWDGConfig.LowThreshold = 0;
@@ -935,7 +935,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_47CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_247CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -946,17 +946,9 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_2;
-  sConfig.Rank = ADC_REGULAR_RANK_2;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
   sConfig.Channel = ADC_CHANNEL_4;
-  sConfig.Rank = ADC_REGULAR_RANK_3;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
+  sConfig.SamplingTime = ADC_SAMPLETIME_47CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -965,7 +957,8 @@ static void MX_ADC1_Init(void)
   /** Configure Regular Channel
   */
   sConfig.Channel = ADC_CHANNEL_15;
-  sConfig.Rank = ADC_REGULAR_RANK_4;
+  sConfig.Rank = ADC_REGULAR_RANK_3;
+  sConfig.SamplingTime = ADC_SAMPLETIME_247CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -973,6 +966,65 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
+  * @brief ADC2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC2_Init(void)
+{
+
+  /* USER CODE BEGIN ADC2_Init 0 */
+
+  /* USER CODE END ADC2_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC2_Init 1 */
+
+  /* USER CODE END ADC2_Init 1 */
+
+  /** Common config
+  */
+  hadc2.Instance = ADC2;
+  hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc2.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc2.Init.GainCompensation = 0;
+  hadc2.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc2.Init.LowPowerAutoWait = DISABLE;
+  hadc2.Init.ContinuousConvMode = DISABLE;
+  hadc2.Init.NbrOfConversion = 1;
+  hadc2.Init.DiscontinuousConvMode = DISABLE;
+  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc2.Init.DMAContinuousRequests = DISABLE;
+  hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  hadc2.Init.OversamplingMode = DISABLE;
+  if (HAL_ADC_Init(&hadc2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_2;
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfig.SingleDiff = ADC_SINGLE_ENDED;
+  sConfig.OffsetNumber = ADC_OFFSET_NONE;
+  sConfig.Offset = 0;
+  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC2_Init 2 */
+
+  /* USER CODE END ADC2_Init 2 */
 
 }
 
@@ -1254,9 +1306,9 @@ static void MX_TIM17_Init(void)
 
   /* USER CODE END TIM17_Init 1 */
   htim17.Instance = TIM17;
-  htim17.Init.Prescaler = 9-1;
+  htim17.Init.Prescaler = 17-1;
   htim17.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim17.Init.Period = 1000;
+  htim17.Init.Period = 500;
   htim17.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim17.Init.RepetitionCounter = 0;
   htim17.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
