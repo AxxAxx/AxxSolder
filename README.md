@@ -2,7 +2,6 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAxxAxx%2FAxxSolder&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 [AxxSolder Hardware repository](https://github.com/AxxAxx/AxxSolder_hw)  
-[AxxSolder Software repository](https://github.com/AxxAxx/AxxSolder_sw)
 
 # AxxSolder Overview
 AxxSolder is a STM32 based soldering iron controller for JBC C210 and C245 cartridges. 
