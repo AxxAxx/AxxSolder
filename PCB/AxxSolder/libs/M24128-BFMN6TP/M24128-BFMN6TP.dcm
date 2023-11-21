@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP M24128-BFMN6TP
-D STMicroelectronics 128 Kbit Serial I2C Bus EEPROM
-K
-F http://www.st.com/content/ccc/resource/technical/document/datasheet/59/05/c9/5b/7b/41/48/b6/CD00259167.pdf/files/CD00259167.pdf/jcr:content/translations/en.CD00259167.pdf
-$ENDCMP
-#
-#End Doc Library

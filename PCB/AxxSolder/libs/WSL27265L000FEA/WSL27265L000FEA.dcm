@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP WSL27265L000FEA
-D Res Metal Strip 2726 0.005 Ohm 1% 3W +/-75ppm/C Bare Metal SMD Automotive Embossed Plastic T/R
-K
-F https://componentsearchengine.com/Datasheets/1/WSL27265L000FEA.pdf
-$ENDCMP
-#
-#End Doc Library
