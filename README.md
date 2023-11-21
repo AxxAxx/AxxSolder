@@ -102,17 +102,17 @@ As the thermal mass of each cartridge differs the PID parameters should in theor
 	if(sensor_values.handle_sense > 0.5){
 		handle = T210;
 		max_power_watt = 60;
-		Kp = 20;
-		Ki = 60;
-		Kd = 0.5;
+		Kp = 10;
+		Ki = 30;
+		Kd = 0.25;
 	}
 	/* If the handle_sense is low -> T245 Handle */
 	else{
 		handle = T245;
-		max_power_watt = 120;
-		Kp = 30;
-		Ki = 60;
-		Kd = 1;
+		max_power_watt = 120; //120W
+		Kp = 15;
+		Ki = 30;
+		Kd = 0.5;
 	}
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
 ```
