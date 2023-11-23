@@ -37,10 +37,16 @@ extern SPI_HandleTypeDef hspi1;
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-typedef struct
-{
-  float numerical_flash_values[10];
-}ConfigurationMsg;
+/* Struct to hold flash_data values */
+typedef struct{
+	double startup_temperature;
+	double temperature_offset;
+	double standby_temp;
+	double standby_time;
+	double emergency_time;
+	double buzzer_enable;
+}Flash_values;
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

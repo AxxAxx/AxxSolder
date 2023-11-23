@@ -90,6 +90,12 @@ double Kp = 0;
 double Ki = 0;
 double Kd = 0;
 
+/* PID parameters */
+#define PID_MAX_OUTPUT 500
+#define PID_MIN_LIMIT -300
+#define PID_MAX_LIMIT 300
+#define PID_SAMPLE_TIME 50
+
 char buffer[40];								/* Buffer for UART print */
 uint8_t tx_done = 1;
 
@@ -118,7 +124,7 @@ uint16_t ADC_buffer[ADC_BUF_LEN];
 
 #define AMBIENT_TEMP_COMPENSATION 0.0008058608 /* Ambient temperature compensation constant 3.3/4095 */
 
-char *menu_names[10];
+
 
 /* Struct to hold sensor values */
 struct sensor_values_struct {
@@ -145,16 +151,25 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.previous_state = SLEEP,
 											.enc_button_status = 0.0};
 
-/* Struct to hold flash_data values */
-struct Flash_values {
-	double startup_temperature;
-	double temperature_offset;
-	double standby_temp;
-	double standby_time;
-	double emergency_time;
-	uint16_t buzzer_enable;
-};
-struct Flash_values flash_values;
+
+Flash_values flash_values;
+
+Flash_values default_flash_values = {.startup_temperature = 330,
+											.temperature_offset = 0,
+											.standby_temp = 150,
+											.standby_time = 10,
+											.emergency_time = 30,
+											.buzzer_enable = 1};
+
+char menu_names[10][20] = {"Startup Temp",
+							"Temp Offset",
+							"Standby Temp",
+							"Standby Time",
+							"EM Time",
+							"Buzzer Enable",
+							"-Load Default-",
+							"-Exit and Save-",
+							"-Exit no Save-"};
 
 double PID_output = 0.0;
 double PID_setpoint = 0.0;
@@ -220,9 +235,6 @@ static void MX_ADC2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-ConfigurationMsg user_saved_configurationMsg;
-ConfigurationMsg default_configurationMsg;
-
 PID_TypeDef TPID;
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
@@ -230,7 +242,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
 	tx_done = 1;
 }
 
-/* Returns the average of 100 readings of the index+4*n value in the ADC_buffer vector */
+/* Returns the average of 100 readings of the index+3*n value in the ADC_buffer vector */
 float get_mean_ADC_reading(uint8_t index){
 	ADC_filter_mean = 0;
 	for(int n=index;n<ADC_BUF_LEN;n=n+3){
@@ -240,8 +252,8 @@ float get_mean_ADC_reading(uint8_t index){
 }
 
 void get_bus_voltage(){
-	/* Index 3 is bus Voltage */
-	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading(3), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION; /* Moving average filter */
+	/* Index 2 is bus Voltage */
+	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading(2), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION; /* Moving average filter */
 }
 
 void get_actual_temperature(){
@@ -262,9 +274,9 @@ void get_actual_temperature(){
 }
 
 void get_ambient_temp(){
-	//Index 2 is PCB temp
+	//Index 1 is PCB temp
 	/* Moving average filter */
-	sensor_values.ambient_temperature = ((Moving_Average_Compute(get_mean_ADC_reading(2), &ambient_temperature_filter_struct)*AMBIENT_TEMP_COMPENSATION)-0.4)/0.0195;
+	sensor_values.ambient_temperature = ((Moving_Average_Compute(get_mean_ADC_reading(1), &ambient_temperature_filter_struct)*AMBIENT_TEMP_COMPENSATION)-0.4)/0.0195;
 	//• Positive slope sensor gain, offset (typical):
 	//– 19.5 mV/°C, 400 mV at 0°C (TMP236-Q1) From data sheet
 }
@@ -357,7 +369,7 @@ void update_OLED(){
 		Paint_DrawString_EN(116, 108, "Y", &Font16, 0x00, 0xff);
 	}
 	else{
-		Paint_DrawRectangle(116, 125-PID_output/10, 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+		Paint_DrawRectangle(116, 125-PID_output/(PID_MAX_OUTPUT/100), 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_FULL);
 	}
 	// Show image on page
 	OLED_1in5_Display(black_image);
@@ -585,29 +597,12 @@ int main(void)
 		get_enc_button_status();
 	}
 
-	default_configurationMsg.numerical_flash_values[0] = 330;
-	default_configurationMsg.numerical_flash_values[1] = 0;
-	default_configurationMsg.numerical_flash_values[2] = 150;
-	default_configurationMsg.numerical_flash_values[3] = 10;
-	default_configurationMsg.numerical_flash_values[4] = 30;
-	default_configurationMsg.numerical_flash_values[5] = 1;
-
-	menu_names[0] = "Startup Temp";
-	menu_names[1] = "Temp Offset ";
-	menu_names[2] = "Standby Temp";
-	menu_names[3] = "Standby Time";
-	menu_names[4] = "EM Time";
-	menu_names[5] = "Buzzer Enable";
-	menu_names[6] = "-Load Default-";
-	menu_names[7] = "-Exit and Save-";
-	menu_names[8] = "-Exit no Save-";
-
 	uint16_t menu_length = 8;
 
 	if(!FlashCheckCRC()){
-    	FlashWrite(&default_configurationMsg);
+    	FlashWrite(&default_flash_values);
 	}
-    FlashRead(&user_saved_configurationMsg);
+    FlashRead(&flash_values);
 
 	/* Set startup state */
 	active_state = SLEEP;
@@ -643,12 +638,12 @@ int main(void)
 				menu_cursor_position = (TIM3->CNT - 1000) / 2;
 			}
 			if (menue_level == 1){
-				user_saved_configurationMsg.numerical_flash_values[menu_cursor_position] = (float)old_value + (float)(TIM3->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
+				((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM3->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				if (menu_cursor_position == 5){
-					user_saved_configurationMsg.numerical_flash_values[menu_cursor_position] = round(fmod(abs(user_saved_configurationMsg.numerical_flash_values[menu_cursor_position]), 2));
+					((double*)&flash_values)[menu_cursor_position] = round(fmod(abs(((double*)&flash_values)[menu_cursor_position]), 2));
 				}
 				if(menu_cursor_position != 1){
-					user_saved_configurationMsg.numerical_flash_values[menu_cursor_position] = abs(user_saved_configurationMsg.numerical_flash_values[menu_cursor_position]);
+					((double*)&flash_values)[menu_cursor_position] = abs(((double*)&flash_values)[menu_cursor_position]);
 				}
 			}
 
@@ -664,7 +659,7 @@ int main(void)
 
 			if((HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0) && (menu_cursor_position < menu_length-2)){
 				if(menue_level == 0){
-					old_value = user_saved_configurationMsg.numerical_flash_values[menu_cursor_position];
+					old_value = ((double*)&flash_values)[menu_cursor_position];
 					old_menu_cursor_position = menu_cursor_position;
 				}
 				if(menue_level == 1){
@@ -679,16 +674,10 @@ int main(void)
 			}
 			else if((HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0) && (menu_cursor_position == menu_length-1)){
 				menu_active = 0;
-				FlashWrite(&user_saved_configurationMsg);
+				FlashWrite(&flash_values);
 			}
 			else if((HAL_GPIO_ReadPin (GPIOA, ENC_BUTTON_INP_Pin) == 0) && (menu_cursor_position == menu_length-2)){
-				user_saved_configurationMsg.numerical_flash_values[0] = default_configurationMsg.numerical_flash_values[0];
-				user_saved_configurationMsg.numerical_flash_values[1] = default_configurationMsg.numerical_flash_values[1];
-				user_saved_configurationMsg.numerical_flash_values[2] = default_configurationMsg.numerical_flash_values[2];
-				user_saved_configurationMsg.numerical_flash_values[3] = default_configurationMsg.numerical_flash_values[3];
-				user_saved_configurationMsg.numerical_flash_values[4] = default_configurationMsg.numerical_flash_values[4];
-				user_saved_configurationMsg.numerical_flash_values[5] = default_configurationMsg.numerical_flash_values[5];
-
+				flash_values = default_flash_values;
 			}
 
 			Paint_DrawString_EN(0, 0, "SETTINGS", &Font16, 0x00, 0xff);
@@ -709,7 +698,7 @@ int main(void)
 
 				char str[20];
 			  	memset(&str, '\0', sizeof(str));
-				sprintf(str, "%.0f", (user_saved_configurationMsg.numerical_flash_values[i]));
+				sprintf(str, "%.0f", (((double*)&flash_values)[i]));
 				if(i <= menu_length-3){
 					if((i == menu_cursor_position) && (menue_level == 1)){
 						Paint_DrawString_EN(100, 20+(i-menue_start)*12, str, &Font12, 0xff, 0x00);
@@ -724,13 +713,6 @@ int main(void)
 		}
 	}
 
-	flash_values.startup_temperature = user_saved_configurationMsg.numerical_flash_values[0];
-	flash_values.temperature_offset = user_saved_configurationMsg.numerical_flash_values[1];
-	flash_values.standby_temp = user_saved_configurationMsg.numerical_flash_values[2];
-	flash_values.standby_time = user_saved_configurationMsg.numerical_flash_values[3];
-	flash_values.emergency_time = user_saved_configurationMsg.numerical_flash_values[4];
-	flash_values.buzzer_enable = user_saved_configurationMsg.numerical_flash_values[5];
-
 	/* Set initial encoder timer value */
 	TIM3->CNT = flash_values.startup_temperature;
 
@@ -740,9 +722,9 @@ int main(void)
 	/* Initiate PID controller */
 	PID(&TPID, &sensor_values.actual_temperature, &PID_output, &PID_setpoint, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&TPID, 50);
-	PID_SetOutputLimits(&TPID, 0, 500); 	// Set max and min output limit
-	PID_SetILimits(&TPID, -300, 300); 		// Set max and min I limit
+	PID_SetSampleTime(&TPID, PID_SAMPLE_TIME);
+	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 	// Set max and min output limit
+	PID_SetILimits(&TPID, PID_MIN_LIMIT, PID_MAX_LIMIT); 		// Set max and min I limit
 
 	while (1){
 		get_stand_status();

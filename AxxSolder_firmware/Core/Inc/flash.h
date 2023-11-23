@@ -9,8 +9,8 @@
 uint32_t GetPage(uint32_t Addr);
 bool FlashCheckCRC();
 bool FlashReadToBuf();
-bool FlashRead(ConfigurationMsg *configurationMsg);
-bool FlashWrite(ConfigurationMsg *configurationMsg);
+bool FlashRead(Flash_values *flash_values);
+bool FlashWrite(Flash_values *flash_values);
 
 /* Definitions ---------------------------------------------------------------*/
 #define WindowLength 100

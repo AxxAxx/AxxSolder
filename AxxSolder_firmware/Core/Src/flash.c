@@ -11,8 +11,8 @@
 
 extern CRC_HandleTypeDef hcrc;
 uint8_t flashWriting = 0;
-unsigned char bufferFlash[sizeof(ConfigurationMsg)];
-static unsigned int bufLength = sizeof(ConfigurationMsg);
+unsigned char bufferFlash[sizeof(Flash_values)];
+static unsigned int bufLength = sizeof(Flash_values);
 
 /*Variable used for Erase procedure*/
 static FLASH_EraseInitTypeDef EraseInitStruct;
@@ -68,11 +68,11 @@ bool FlashReadToBuf()
 
 
 //__attribute__((__section__(".user_data"))) const uint8_t userConfig[64];
-bool FlashRead(ConfigurationMsg *configurationMsg)
+bool FlashRead(Flash_values *flash_values)
 {
 	if (FlashReadToBuf())
 	{
-		memcpy(configurationMsg, bufferFlash, sizeof(ConfigurationMsg));
+		memcpy(flash_values, bufferFlash, sizeof(Flash_values));
 		return true;
 	}
 	return false;
@@ -133,7 +133,7 @@ uint32_t Flash_Write_Data (uint32_t StartPageAddress, uint32_t *Data, uint16_t n
 
 
 
-bool FlashWrite(ConfigurationMsg *configurationMsg){
+bool FlashWrite(Flash_values *flash_values){
 	flashWriting = 1;
 	volatile uint64_t uwCRCValue = 0;
 	int i = 0;
@@ -147,7 +147,7 @@ bool FlashWrite(ConfigurationMsg *configurationMsg){
 		//configurationMsg->command = ConfigurationCommand_WriteMsgToFlash;
 	}
 
-	memcpy(bufferFlash, configurationMsg, sizeof(ConfigurationMsg));
+	memcpy(bufferFlash, flash_values, sizeof(Flash_values));
 
 	uwCRCValue = HAL_CRC_Calculate(&hcrc, (uint32_t*) bufferFlash, bufLength);
 
