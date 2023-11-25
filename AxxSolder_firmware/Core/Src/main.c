@@ -35,7 +35,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-#define version "2.2.3"
+#define version "2.2.4"
 
 enum handles {
 	T210,
@@ -109,7 +109,7 @@ uint16_t ADC_buffer[ADC_BUF_LEN];
 #define VOLTAGE_COMPENSATION 0.00648678945 		/* Constant for scaling input voltage ADC value*/
 
 #define MIN_SELECTABLE_TEMPERTURE 20
-#define MAX_SELECTABLE_TEMPERTURE 450
+#define MAX_SELECTABLE_TEMPERTURE 430
 
 /* TC Compensation constants */
 #define TC_COMPENSATION_X3_T210 -6.798689261365103e-09
