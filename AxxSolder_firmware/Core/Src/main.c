@@ -35,7 +35,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-#define version "2.2.3"
+#define version "2.2.4"
 
 enum handles {
 	T210,
@@ -105,11 +105,13 @@ float max_power_watt = 0.0; 					/* Sets the maximum output power */
 float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
 #define ADC_BUF_LEN 150
 uint16_t ADC_buffer[ADC_BUF_LEN];
+uint16_t ADC_buffer_current;
+
 
 #define VOLTAGE_COMPENSATION 0.00648678945 		/* Constant for scaling input voltage ADC value*/
 
 #define MIN_SELECTABLE_TEMPERTURE 20
-#define MAX_SELECTABLE_TEMPERTURE 450
+#define MAX_SELECTABLE_TEMPERTURE 430
 
 /* TC Compensation constants */
 #define TC_COMPENSATION_X3_T210 -6.798689261365103e-09
@@ -173,6 +175,8 @@ char menu_names[10][20] = {"Startup Temp",
 
 double PID_output = 0.0;
 double PID_setpoint = 0.0;
+
+uint8_t current_measurement_requested = 0;
 
 /* Moving average filters for sensor data */
 FilterTypeDef actual_temperature_filter_struct;
@@ -522,6 +526,24 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	}
 }
 
+// Callback: timer has rolled over
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
+{
+  // Check which version of the timer triggered this callback and toggle LED
+  if ((htim == &htim17) && (current_measurement_requested == 1) )
+  {
+	  HAL_GPIO_WritePin(GPIOF, DEBUG_SIGNAL_A_Pin, GPIO_PIN_SET);
+	  HAL_ADC_Start_IT(&hadc2);
+	  current_measurement_requested = 0;
+  }
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+	ADC_buffer_current = HAL_ADC_GetValue(&hadc2);
+  HAL_GPIO_WritePin(GPIOF, DEBUG_SIGNAL_A_Pin, GPIO_PIN_RESET);
+}
+
 /* Sets the duty cycle of timer controlling the heater */
 void set_heater_duty(uint16_t dutycycle){
 	TIM17->CCR1 = dutycycle;
@@ -569,7 +591,7 @@ int main(void)
   MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Encoder_Start_IT(&htim3, TIM_CHANNEL_ALL);
-	HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start_IT(&htim17, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_buffer, ADC_BUF_LEN);	//Start ADC DMA
