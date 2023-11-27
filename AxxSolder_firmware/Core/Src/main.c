@@ -35,7 +35,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-#define version "2.2.4"
+#define version "2.2.3"
 
 enum handles {
 	T210,
@@ -68,6 +68,10 @@ uint32_t previous_millis_left_stand = 0;
 uint32_t EMERGENCY_shutdown_temperature = 475;  //475 Deg C
 
 uint32_t previous_standby_millis = 0;
+
+uint32_t previous_check_for_valid_heater_update = 0;
+uint32_t interval_check_for_valid_heater = 500;
+
 
 /* states for runtime switch */
 typedef enum {
@@ -175,6 +179,7 @@ char menu_names[10][20] = {"Startup Temp",
 
 double PID_output = 0.0;
 double PID_setpoint = 0.0;
+double duty_cycle = 0.0;
 
 uint8_t current_measurement_requested = 0;
 
@@ -324,7 +329,7 @@ void update_OLED(){
 	Paint_DrawString_EN(3, 58, "Act temp", &Font16, 0x00, 0xff);
 	memset(&buffer, '\0', sizeof(buffer));
 
-	if(sensor_values.actual_temperature >= 500){
+	if(ADC_buffer_current == 0){
 		Paint_DrawString_EN(3, 70, "---", &Font24, 0x0, 0xff);
 	}
 	else{
@@ -526,28 +531,45 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	}
 }
 
+/* Sets the duty cycle of timer controlling the heater */
+void set_heater_duty(uint16_t dutycycle){
+	TIM17->CCR1 = dutycycle;
+}
+
 // Callback: timer has rolled over
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 {
   // Check which version of the timer triggered this callback and toggle LED
   if ((htim == &htim17) && (current_measurement_requested == 1) )
   {
-	  HAL_GPIO_WritePin(GPIOF, DEBUG_SIGNAL_A_Pin, GPIO_PIN_SET);
-	  HAL_ADC_Start_IT(&hadc2);
-	  current_measurement_requested = 0;
+	  HAL_TIM_Base_Start_IT(&htim16);
+	  set_heater_duty(duty_cycle); //Set duty cycle back to calculated
   }
 }
 
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+// Callback: timer has rolled over
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	ADC_buffer_current = HAL_ADC_GetValue(&hadc2);
-  HAL_GPIO_WritePin(GPIOF, DEBUG_SIGNAL_A_Pin, GPIO_PIN_RESET);
+  // Check which version of the timer triggered this callback and toggle LED
+  if (htim == &htim16 ){
+	  HAL_TIM_Base_Stop_IT(&htim16);
+	  HAL_GPIO_WritePin(GPIOF, DEBUG_SIGNAL_A_Pin, GPIO_PIN_SET);
+	  //HAL_ADC_Start_IT(&hadc2);
+	  HAL_ADCEx_InjectedStart_IT(&hadc2);
+
+  }
 }
 
-/* Sets the duty cycle of timer controlling the heater */
-void set_heater_duty(uint16_t dutycycle){
-	TIM17->CCR1 = dutycycle;
+void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+	if(current_measurement_requested == 1){
+		HAL_GPIO_WritePin(GPIOF, DEBUG_SIGNAL_A_Pin, GPIO_PIN_RESET);
+		ADC_buffer_current = HAL_ADCEx_InjectedGetValue(&hadc2,1);
+		current_measurement_requested = 0;
+	}
 }
+
+
 /* USER CODE END 0 */
 
 /**
@@ -796,7 +818,8 @@ int main(void)
 
 		/* Compute PID and set duty cycle */
 		PID_Compute(&TPID);
-		set_heater_duty(PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage));
+		duty_cycle = PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+		set_heater_duty(duty_cycle);
 
 		/* Send debug information over serial */
 		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
@@ -804,10 +827,17 @@ int main(void)
 			sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
 					sensor_values.actual_temperature, sensor_values.set_temperature,
 					PID_output/10, PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID)/10,
-					sensor_values.in_stand*50, sensor_values.handle_sense*50)
-					;
+					sensor_values.in_stand*50, sensor_values.handle_sense*50);
 			debugPrint(&huart2,buffer);
 			previous_millis_debug = HAL_GetTick();
+		}
+
+		if(HAL_GetTick() - previous_check_for_valid_heater_update >= interval_check_for_valid_heater){
+			if(duty_cycle < 400){
+				set_heater_duty(400);
+			}
+			current_measurement_requested = 1;
+			previous_check_for_valid_heater_update = HAL_GetTick();
 		}
 
 		/* Update display */
@@ -985,7 +1015,7 @@ static void MX_ADC2_Init(void)
 
   /* USER CODE END ADC2_Init 0 */
 
-  ADC_ChannelConfTypeDef sConfig = {0};
+  ADC_InjectionConfTypeDef sConfigInjected = {0};
 
   /* USER CODE BEGIN ADC2_Init 1 */
 
@@ -1004,8 +1034,6 @@ static void MX_ADC2_Init(void)
   hadc2.Init.ContinuousConvMode = DISABLE;
   hadc2.Init.NbrOfConversion = 1;
   hadc2.Init.DiscontinuousConvMode = DISABLE;
-  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc2.Init.DMAContinuousRequests = DISABLE;
   hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc2.Init.OversamplingMode = DISABLE;
@@ -1014,15 +1042,22 @@ static void MX_ADC2_Init(void)
     Error_Handler();
   }
 
-  /** Configure Regular Channel
+  /** Configure Injected Channel
   */
-  sConfig.Channel = ADC_CHANNEL_2;
-  sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
-  sConfig.SingleDiff = ADC_SINGLE_ENDED;
-  sConfig.OffsetNumber = ADC_OFFSET_NONE;
-  sConfig.Offset = 0;
-  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  sConfigInjected.InjectedChannel = ADC_CHANNEL_2;
+  sConfigInjected.InjectedRank = ADC_INJECTED_RANK_1;
+  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_247CYCLES_5;
+  sConfigInjected.InjectedSingleDiff = ADC_SINGLE_ENDED;
+  sConfigInjected.InjectedOffsetNumber = ADC_OFFSET_NONE;
+  sConfigInjected.InjectedOffset = 0;
+  sConfigInjected.InjectedNbrOfConversion = 1;
+  sConfigInjected.InjectedDiscontinuousConvMode = DISABLE;
+  sConfigInjected.AutoInjectedConv = DISABLE;
+  sConfigInjected.QueueInjectedContext = DISABLE;
+  sConfigInjected.ExternalTrigInjecConv = ADC_INJECTED_SOFTWARE_START;
+  sConfigInjected.ExternalTrigInjecConvEdge = ADC_EXTERNALTRIGINJECCONV_EDGE_NONE;
+  sConfigInjected.InjecOversamplingMode = DISABLE;
+  if (HAL_ADCEx_InjectedConfigChannel(&hadc2, &sConfigInjected) != HAL_OK)
   {
     Error_Handler();
   }
@@ -1275,9 +1310,9 @@ static void MX_TIM16_Init(void)
 
   /* USER CODE END TIM16_Init 1 */
   htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 16000-1;
+  htim16.Init.Prescaler = 170-1;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 10000;
+  htim16.Init.Period = 14;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
