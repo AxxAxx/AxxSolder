@@ -130,8 +130,6 @@ double max_selectable_temperature = 0;
 
 #define AMBIENT_TEMP_COMPENSATION 0.0008058608 /* Ambient temperature compensation constant 3.3/4095 */
 
-
-
 /* Struct to hold sensor values */
 struct sensor_values_struct {
 	double set_temperature;
@@ -392,7 +390,8 @@ void update_OLED(){
 
 /* Get encoder value (Set temp.) and limit is NOT heating_halted*/
 void get_set_temperature(){
-	sensor_values.set_temperature = clamp(TIM3->CNT, min_selectable_temperature, max_selectable_temperature);
+	TIM3->CNT = clamp(TIM3->CNT, min_selectable_temperature, max_selectable_temperature);
+	sensor_values.set_temperature = TIM3->CNT;
 }
 
 /* Beep the buzzer for beep_time_ms */
