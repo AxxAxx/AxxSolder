@@ -499,7 +499,7 @@ void get_handle_type(){
 	if(sensor_values.handle_sense > 0.5){
 		handle = T210;
 		max_power_watt = 60; //60W
-		max_selectable_temperature = 450;
+		max_selectable_temperature = 450; //450 deg C
 		Kp = 10;
 		Ki = 30;
 		Kd = 0.25;
@@ -508,7 +508,7 @@ void get_handle_type(){
 	else{
 		handle = T245;
 		max_power_watt = 120; //120W
-		max_selectable_temperature = 430;
+		max_selectable_temperature = 430; //430 deg C
 		Kp = 15;
 		Ki = 30;
 		Kd = 0.5;
