@@ -35,7 +35,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-#define version "2.2.4"
+#define version "2.2.5"
 
 enum handles {
 	T210,
@@ -108,8 +108,8 @@ uint16_t ADC_buffer[ADC_BUF_LEN];
 
 #define VOLTAGE_COMPENSATION 0.00648678945 		/* Constant for scaling input voltage ADC value*/
 
-#define MIN_SELECTABLE_TEMPERTURE 20
-#define MAX_SELECTABLE_TEMPERTURE 430
+double min_selectable_temperature = 20;
+double max_selectable_temperature = 0;
 
 /* TC Compensation constants */
 #define TC_COMPENSATION_X3_T210 -6.798689261365103e-09
@@ -173,6 +173,7 @@ char menu_names[10][20] = {"Startup Temp",
 
 double PID_output = 0.0;
 double PID_setpoint = 0.0;
+double duty_cycle = 0.0;
 
 /* Moving average filters for sensor data */
 FilterTypeDef actual_temperature_filter_struct;
@@ -240,6 +241,11 @@ PID_TypeDef TPID;
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
 	/* Set transmission flag: transfer complete */
 	tx_done = 1;
+}
+
+double clamp(double d, double min, double max) {
+  const double t = d < min ? min : d;
+  return t > max ? max : t;
 }
 
 /* Returns the average of 100 readings of the index+3*n value in the ADC_buffer vector */
@@ -378,9 +384,7 @@ void update_OLED(){
 
 /* Get encoder value (Set temp.) and limit is NOT heating_halted*/
 void get_set_temperature(){
-	if (TIM3->CNT <= MIN_SELECTABLE_TEMPERTURE) {TIM3->CNT = MIN_SELECTABLE_TEMPERTURE; }
-	if (TIM3->CNT >= MAX_SELECTABLE_TEMPERTURE) {TIM3->CNT = MAX_SELECTABLE_TEMPERTURE; }
-	sensor_values.set_temperature = TIM3->CNT;
+	sensor_values.set_temperature = clamp(TIM3->CNT, min_selectable_temperature, max_selectable_temperature);
 }
 
 /* Beep the buzzer for beep_time_ms */
@@ -495,6 +499,7 @@ void get_handle_type(){
 	if(sensor_values.handle_sense > 0.5){
 		handle = T210;
 		max_power_watt = 60; //60W
+		max_selectable_temperature = 450;
 		Kp = 10;
 		Ki = 30;
 		Kd = 0.25;
@@ -503,6 +508,7 @@ void get_handle_type(){
 	else{
 		handle = T245;
 		max_power_watt = 120; //120W
+		max_selectable_temperature = 430;
 		Kp = 15;
 		Ki = 30;
 		Kd = 0.5;
@@ -774,7 +780,8 @@ int main(void)
 
 		/* Compute PID and set duty cycle */
 		PID_Compute(&TPID);
-		set_heater_duty(PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage));
+		duty_cycle = PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+		set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 
 		/* Send debug information over serial */
 		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
