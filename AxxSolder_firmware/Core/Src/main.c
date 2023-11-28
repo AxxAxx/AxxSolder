@@ -65,7 +65,6 @@ uint32_t previous_millis_heating_halted_update = 0;
 uint32_t interval_heating_halted_update = 500;
 
 uint32_t previous_millis_left_stand = 0;
-uint32_t EMERGENCY_shutdown_temperature = 475;  //475 Deg C
 
 uint32_t previous_standby_millis = 0;
 
@@ -100,6 +99,8 @@ double Kd = 0;
 #define PID_MAX_LIMIT 300
 #define PID_SAMPLE_TIME 50
 
+#define DETECT_TIP_BY_CURRENT 0
+
 char buffer[40];								/* Buffer for UART print */
 uint8_t tx_done = 1;
 
@@ -109,8 +110,9 @@ float max_power_watt = 0.0; 					/* Sets the maximum output power */
 float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
 #define ADC_BUF_LEN 150
 uint16_t ADC_buffer[ADC_BUF_LEN];
-uint16_t ADC_buffer_current;
+uint16_t ADC_buffer_current = 1;
 
+#define EMERGENCY_SHUTDOWN_TEMPERATURE 475		/* Max allowed tip temperature */
 
 #define VOLTAGE_COMPENSATION 0.00648678945 		/* Constant for scaling input voltage ADC value*/
 
@@ -423,8 +425,8 @@ void check_emergency_shutdown(){
 	}
 	sensor_values.previous_state = active_state;
 
-	/* Function to set state to EMERGENCY_SLEEP if iron is over 500 deg C */
-	if((sensor_values.actual_temperature > EMERGENCY_shutdown_temperature) && (active_state == RUN)){
+	/* Function to set state to EMERGENCY_SLEEP if iron is over max allowed temp */
+	if((sensor_values.actual_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
 		active_state = EMERGENCY_SLEEP;
 		beep_requested = 1;
 	}
@@ -557,10 +559,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   // Check which version of the timer triggered this callback and toggle LED
   if (htim == &htim16 ){
 	  HAL_TIM_Base_Stop_IT(&htim16);
-	  HAL_GPIO_WritePin(GPIOF, DEBUG_SIGNAL_A_Pin, GPIO_PIN_SET);
 	  //HAL_ADC_Start_IT(&hadc2);
 	  HAL_ADCEx_InjectedStart_IT(&hadc2);
-
+	  HAL_GPIO_WritePin(GPIOF, DEBUG_SIGNAL_A_Pin, GPIO_PIN_SET);
   }
 }
 
@@ -831,17 +832,18 @@ int main(void)
 			sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
 					sensor_values.actual_temperature, sensor_values.set_temperature,
 					PID_output/10, PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID)/10,
-					sensor_values.in_stand*50, sensor_values.handle_sense*50);
+					sensor_values.in_stand*50, ADC_buffer_current*1.0);
 			debugPrint(&huart2,buffer);
 			previous_millis_debug = HAL_GetTick();
 		}
 
-		if(HAL_GetTick() - previous_check_for_valid_heater_update >= interval_check_for_valid_heater){
-			if(duty_cycle < 400){
-				set_heater_duty(400);
+		/* Detect if a tip is present by sending a short voltage pulse and sense current */
+		if(DETECT_TIP_BY_CURRENT){
+			if(HAL_GetTick() - previous_check_for_valid_heater_update >= interval_check_for_valid_heater){
+				set_heater_duty(PID_MAX_OUTPUT*0.8);
+				current_measurement_requested = 1;
+				previous_check_for_valid_heater_update = HAL_GetTick();
 			}
-			current_measurement_requested = 1;
-			previous_check_for_valid_heater_update = HAL_GetTick();
 		}
 
 		/* Update display */
@@ -1050,7 +1052,7 @@ static void MX_ADC2_Init(void)
   */
   sConfigInjected.InjectedChannel = ADC_CHANNEL_2;
   sConfigInjected.InjectedRank = ADC_INJECTED_RANK_1;
-  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_247CYCLES_5;
+  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_640CYCLES_5;
   sConfigInjected.InjectedSingleDiff = ADC_SINGLE_ENDED;
   sConfigInjected.InjectedOffsetNumber = ADC_OFFSET_NONE;
   sConfigInjected.InjectedOffset = 0;
