@@ -35,7 +35,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-#define version "2.2.4"
+#define version "2.2.5"
 
 enum handles {
 	T210,
@@ -65,9 +65,12 @@ uint32_t previous_millis_heating_halted_update = 0;
 uint32_t interval_heating_halted_update = 500;
 
 uint32_t previous_millis_left_stand = 0;
-uint32_t EMERGENCY_shutdown_temperature = 475;  //475 Deg C
 
 uint32_t previous_standby_millis = 0;
+
+uint32_t previous_check_for_valid_heater_update = 0;
+uint32_t interval_check_for_valid_heater = 500;
+
 
 /* states for runtime switch */
 typedef enum {
@@ -96,6 +99,8 @@ double Kd = 0;
 #define PID_MAX_LIMIT 300
 #define PID_SAMPLE_TIME 50
 
+#define DETECT_TIP_BY_CURRENT 0
+
 char buffer[40];								/* Buffer for UART print */
 uint8_t tx_done = 1;
 
@@ -105,11 +110,14 @@ float max_power_watt = 0.0; 					/* Sets the maximum output power */
 float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
 #define ADC_BUF_LEN 150
 uint16_t ADC_buffer[ADC_BUF_LEN];
+uint16_t ADC_buffer_current = 1;
+
+#define EMERGENCY_SHUTDOWN_TEMPERATURE 475		/* Max allowed tip temperature */
 
 #define VOLTAGE_COMPENSATION 0.00648678945 		/* Constant for scaling input voltage ADC value*/
 
-#define MIN_SELECTABLE_TEMPERTURE 20
-#define MAX_SELECTABLE_TEMPERTURE 430
+double min_selectable_temperature = 20;
+double max_selectable_temperature = 0;
 
 /* TC Compensation constants */
 #define TC_COMPENSATION_X3_T210 -6.798689261365103e-09
@@ -123,8 +131,6 @@ uint16_t ADC_buffer[ADC_BUF_LEN];
 #define TC_COMPENSATION_X0_T245 25.051871505499836
 
 #define AMBIENT_TEMP_COMPENSATION 0.0008058608 /* Ambient temperature compensation constant 3.3/4095 */
-
-
 
 /* Struct to hold sensor values */
 struct sensor_values_struct {
@@ -173,6 +179,9 @@ char menu_names[10][20] = {"Startup Temp",
 
 double PID_output = 0.0;
 double PID_setpoint = 0.0;
+double duty_cycle = 0.0;
+
+uint8_t current_measurement_requested = 0;
 
 /* Moving average filters for sensor data */
 FilterTypeDef actual_temperature_filter_struct;
@@ -240,6 +249,11 @@ PID_TypeDef TPID;
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
 	/* Set transmission flag: transfer complete */
 	tx_done = 1;
+}
+
+double clamp(double d, double min, double max) {
+  const double t = d < min ? min : d;
+  return t > max ? max : t;
 }
 
 /* Returns the average of 100 readings of the index+3*n value in the ADC_buffer vector */
@@ -320,7 +334,7 @@ void update_OLED(){
 	Paint_DrawString_EN(3, 58, "Act temp", &Font16, 0x00, 0xff);
 	memset(&buffer, '\0', sizeof(buffer));
 
-	if(sensor_values.actual_temperature >= 500){
+	if(ADC_buffer_current == 0){
 		Paint_DrawString_EN(3, 70, "---", &Font24, 0x0, 0xff);
 	}
 	else{
@@ -378,8 +392,7 @@ void update_OLED(){
 
 /* Get encoder value (Set temp.) and limit is NOT heating_halted*/
 void get_set_temperature(){
-	if (TIM3->CNT <= MIN_SELECTABLE_TEMPERTURE) {TIM3->CNT = MIN_SELECTABLE_TEMPERTURE; }
-	if (TIM3->CNT >= MAX_SELECTABLE_TEMPERTURE) {TIM3->CNT = MAX_SELECTABLE_TEMPERTURE; }
+	TIM3->CNT = clamp(TIM3->CNT, min_selectable_temperature, max_selectable_temperature);
 	sensor_values.set_temperature = TIM3->CNT;
 }
 
@@ -412,8 +425,8 @@ void check_emergency_shutdown(){
 	}
 	sensor_values.previous_state = active_state;
 
-	/* Function to set state to EMERGENCY_SLEEP if iron is over 500 deg C */
-	if((sensor_values.actual_temperature > EMERGENCY_shutdown_temperature) && (active_state == RUN)){
+	/* Function to set state to EMERGENCY_SLEEP if iron is over max allowed temp */
+	if((sensor_values.actual_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
 		active_state = EMERGENCY_SLEEP;
 		beep_requested = 1;
 	}
@@ -495,6 +508,7 @@ void get_handle_type(){
 	if(sensor_values.handle_sense > 0.5){
 		handle = T210;
 		max_power_watt = 60; //60W
+		max_selectable_temperature = 450; //450 deg C
 		Kp = 10;
 		Ki = 30;
 		Kd = 0.25;
@@ -503,6 +517,7 @@ void get_handle_type(){
 	else{
 		handle = T245;
 		max_power_watt = 120; //120W
+		max_selectable_temperature = 430; //430 deg C
 		Kp = 15;
 		Ki = 30;
 		Kd = 0.5;
@@ -526,6 +541,40 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 void set_heater_duty(uint16_t dutycycle){
 	TIM17->CCR1 = dutycycle;
 }
+
+// Callback: timer has rolled over
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
+{
+  // Check which version of the timer triggered this callback and toggle LED
+  if ((htim == &htim17) && (current_measurement_requested == 1) )
+  {
+	  HAL_TIM_Base_Start_IT(&htim16);
+	  set_heater_duty(duty_cycle); //Set duty cycle back to calculated
+  }
+}
+
+// Callback: timer has rolled over
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  // Check which version of the timer triggered this callback and toggle LED
+  if (htim == &htim16 ){
+	  HAL_TIM_Base_Stop_IT(&htim16);
+	  //HAL_ADC_Start_IT(&hadc2);
+	  HAL_ADCEx_InjectedStart_IT(&hadc2);
+	  HAL_GPIO_WritePin(GPIOF, DEBUG_SIGNAL_A_Pin, GPIO_PIN_SET);
+  }
+}
+
+void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+	if(current_measurement_requested == 1){
+		HAL_GPIO_WritePin(GPIOF, DEBUG_SIGNAL_A_Pin, GPIO_PIN_RESET);
+		ADC_buffer_current = HAL_ADCEx_InjectedGetValue(&hadc2,1);
+		current_measurement_requested = 0;
+	}
+}
+
+
 /* USER CODE END 0 */
 
 /**
@@ -569,7 +618,7 @@ int main(void)
   MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Encoder_Start_IT(&htim3, TIM_CHANNEL_ALL);
-	HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start_IT(&htim17, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_buffer, ADC_BUF_LEN);	//Start ADC DMA
@@ -774,7 +823,8 @@ int main(void)
 
 		/* Compute PID and set duty cycle */
 		PID_Compute(&TPID);
-		set_heater_duty(PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage));
+		duty_cycle = PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+		set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 
 		/* Send debug information over serial */
 		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
@@ -782,10 +832,18 @@ int main(void)
 			sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
 					sensor_values.actual_temperature, sensor_values.set_temperature,
 					PID_output/10, PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID)/10,
-					sensor_values.in_stand*50, sensor_values.handle_sense*50)
-					;
+					sensor_values.in_stand*50, ADC_buffer_current*1.0);
 			debugPrint(&huart2,buffer);
 			previous_millis_debug = HAL_GetTick();
+		}
+
+		/* Detect if a tip is present by sending a short voltage pulse and sense current */
+		if(DETECT_TIP_BY_CURRENT){
+			if(HAL_GetTick() - previous_check_for_valid_heater_update >= interval_check_for_valid_heater){
+				set_heater_duty(PID_MAX_OUTPUT*0.8);
+				current_measurement_requested = 1;
+				previous_check_for_valid_heater_update = HAL_GetTick();
+			}
 		}
 
 		/* Update display */
@@ -963,7 +1021,7 @@ static void MX_ADC2_Init(void)
 
   /* USER CODE END ADC2_Init 0 */
 
-  ADC_ChannelConfTypeDef sConfig = {0};
+  ADC_InjectionConfTypeDef sConfigInjected = {0};
 
   /* USER CODE BEGIN ADC2_Init 1 */
 
@@ -982,8 +1040,6 @@ static void MX_ADC2_Init(void)
   hadc2.Init.ContinuousConvMode = DISABLE;
   hadc2.Init.NbrOfConversion = 1;
   hadc2.Init.DiscontinuousConvMode = DISABLE;
-  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc2.Init.DMAContinuousRequests = DISABLE;
   hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc2.Init.OversamplingMode = DISABLE;
@@ -992,15 +1048,22 @@ static void MX_ADC2_Init(void)
     Error_Handler();
   }
 
-  /** Configure Regular Channel
+  /** Configure Injected Channel
   */
-  sConfig.Channel = ADC_CHANNEL_2;
-  sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
-  sConfig.SingleDiff = ADC_SINGLE_ENDED;
-  sConfig.OffsetNumber = ADC_OFFSET_NONE;
-  sConfig.Offset = 0;
-  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  sConfigInjected.InjectedChannel = ADC_CHANNEL_2;
+  sConfigInjected.InjectedRank = ADC_INJECTED_RANK_1;
+  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_640CYCLES_5;
+  sConfigInjected.InjectedSingleDiff = ADC_SINGLE_ENDED;
+  sConfigInjected.InjectedOffsetNumber = ADC_OFFSET_NONE;
+  sConfigInjected.InjectedOffset = 0;
+  sConfigInjected.InjectedNbrOfConversion = 1;
+  sConfigInjected.InjectedDiscontinuousConvMode = DISABLE;
+  sConfigInjected.AutoInjectedConv = DISABLE;
+  sConfigInjected.QueueInjectedContext = DISABLE;
+  sConfigInjected.ExternalTrigInjecConv = ADC_INJECTED_SOFTWARE_START;
+  sConfigInjected.ExternalTrigInjecConvEdge = ADC_EXTERNALTRIGINJECCONV_EDGE_NONE;
+  sConfigInjected.InjecOversamplingMode = DISABLE;
+  if (HAL_ADCEx_InjectedConfigChannel(&hadc2, &sConfigInjected) != HAL_OK)
   {
     Error_Handler();
   }
@@ -1253,9 +1316,9 @@ static void MX_TIM16_Init(void)
 
   /* USER CODE END TIM16_Init 1 */
   htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 16000-1;
+  htim16.Init.Prescaler = 170-1;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 10000;
+  htim16.Init.Period = 14;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
