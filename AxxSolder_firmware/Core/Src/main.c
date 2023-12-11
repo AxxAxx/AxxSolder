@@ -71,6 +71,8 @@ uint32_t previous_standby_millis = 0;
 uint32_t previous_check_for_valid_heater_update = 0;
 uint32_t interval_check_for_valid_heater = 500;
 
+uint32_t previous_sensor_PID_update = 0;
+uint32_t interval_sensor_update = 1;
 
 /* states for runtime switch */
 typedef enum {
@@ -97,7 +99,6 @@ double Kd = 0;
 #define PID_MAX_OUTPUT 500
 #define PID_MIN_LIMIT -300
 #define PID_MAX_LIMIT 300
-#define PID_SAMPLE_TIME 50
 
 #define DETECT_TIP_BY_CURRENT 0
 
@@ -625,11 +626,11 @@ int main(void)
 	HAL_ADC_Start_IT(&hadc2);	//Start ADC DMA
 
 	Moving_Average_Init(&actual_temperature_filter_struct,5);
-	Moving_Average_Init(&ambient_temperature_filter_struct,200);
-	Moving_Average_Init(&input_voltage_filterStruct,200);
-	Moving_Average_Init(&stand_sense_filterStruct,200);
-	Moving_Average_Init(&handle_sense_filterStruct,200);
-	Moving_Average_Init(&enc_button_sense_filterStruct,100);
+	Moving_Average_Init(&ambient_temperature_filter_struct,50);
+	Moving_Average_Init(&input_voltage_filterStruct,50);
+	Moving_Average_Init(&stand_sense_filterStruct,50);
+	Moving_Average_Init(&handle_sense_filterStruct,50);
+	Moving_Average_Init(&enc_button_sense_filterStruct,10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -771,18 +772,22 @@ int main(void)
 	/* Initiate PID controller */
 	PID(&TPID, &sensor_values.actual_temperature, &PID_output, &PID_setpoint, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&TPID, PID_SAMPLE_TIME);
+	PID_SetSampleTime(&TPID, 50); //Set PID sample time to 0 to make sure PID is calculated every time it is called
 	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 	// Set max and min output limit
 	PID_SetILimits(&TPID, PID_MIN_LIMIT, PID_MAX_LIMIT); 		// Set max and min I limit
 
 	while (1){
-		get_stand_status();
-		get_bus_voltage();
-		get_handle_type();
-		get_enc_button_status();
-		get_set_temperature();
 		check_beep();
 		check_emergency_shutdown();
+
+		if(HAL_GetTick() - previous_sensor_PID_update >= interval_sensor_update){
+			get_stand_status();
+			get_bus_voltage();
+			get_handle_type();
+			get_enc_button_status();
+			get_set_temperature();
+			previous_sensor_PID_update = HAL_GetTick();
+		}
 
 		/* switch */
 		switch (active_state) {
@@ -812,8 +817,14 @@ int main(void)
 			set_heater_duty(0);
 			HAL_Delay(5); // Wait to let the thermocouple voltage stabilize before taking measurement
 			get_actual_temperature();
+
 			previous_millis_PID_update = HAL_GetTick();
 		}
+
+		/* Compute PID and set duty cycle */
+					PID_Compute(&TPID);
+					duty_cycle = PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+					set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 
 		// TUNING - ONLY USED DURING MANUAL PID TUNING
 		// ----------------------------------------------
@@ -821,18 +832,13 @@ int main(void)
 		//sensor_values.set_temperature = temperature_custom;
 		// ----------------------------------------------
 
-		/* Compute PID and set duty cycle */
-		PID_Compute(&TPID);
-		duty_cycle = PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
-		set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
-
 		/* Send debug information over serial */
 		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
 			memset(&buffer, '\0', sizeof(buffer));
-			sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
+			sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.2f\t%3.2f\n",
 					sensor_values.actual_temperature, sensor_values.set_temperature,
-					PID_output/10, PID_GetPpart(&TPID)/10, PID_GetIpart(&TPID)/10, PID_GetDpart(&TPID)/10,
-					sensor_values.in_stand*50, ADC_buffer_current*1.0);
+					PID_output/10, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0,
+					sensor_values.in_stand, sensor_values.enc_button_status);
 			debugPrint(&huart2,buffer);
 			previous_millis_debug = HAL_GetTick();
 		}
