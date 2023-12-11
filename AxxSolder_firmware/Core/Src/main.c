@@ -822,9 +822,9 @@ int main(void)
 		}
 
 		/* Compute PID and set duty cycle */
-					PID_Compute(&TPID);
-					duty_cycle = PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
-					set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
+		PID_Compute(&TPID);
+		duty_cycle = PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+		set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 
 		// TUNING - ONLY USED DURING MANUAL PID TUNING
 		// ----------------------------------------------
