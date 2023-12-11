@@ -772,7 +772,7 @@ int main(void)
 	/* Initiate PID controller */
 	PID(&TPID, &sensor_values.actual_temperature, &PID_output, &PID_setpoint, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&TPID, 50); //Set PID sample time to 0 to make sure PID is calculated every time it is called
+	PID_SetSampleTime(&TPID, 1); //Set PID sample time to 1 to make sure PID is calculated every time it is called
 	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 	// Set max and min output limit
 	PID_SetILimits(&TPID, PID_MIN_LIMIT, PID_MAX_LIMIT); 		// Set max and min I limit
 
@@ -817,14 +817,15 @@ int main(void)
 			set_heater_duty(0);
 			HAL_Delay(5); // Wait to let the thermocouple voltage stabilize before taking measurement
 			get_actual_temperature();
-
+			
+			/* Compute PID and set duty cycle */
+			PID_Compute(&TPID);
+			duty_cycle = PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+			set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
+		
 			previous_millis_PID_update = HAL_GetTick();
 		}
 
-		/* Compute PID and set duty cycle */
-		PID_Compute(&TPID);
-		duty_cycle = PID_output*(max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
-		set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 
 		// TUNING - ONLY USED DURING MANUAL PID TUNING
 		// ----------------------------------------------
