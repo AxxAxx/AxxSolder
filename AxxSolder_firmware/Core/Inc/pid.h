@@ -196,6 +196,8 @@ typedef struct
 	uint32_t        LastTime;
 	uint32_t        SampleTime;
 
+	uint32_t        updateOnEveryCall;
+
 	double          DispKp;
 	double          DispKi;
 	double          DispKd;
@@ -260,7 +262,7 @@ void          PID_SetControllerDirection(PID_TypeDef *uPID, PIDCD_TypeDef Direct
 PIDCD_TypeDef PID_GetDirection(PID_TypeDef *uPID);
 
 /* ::::::::: PID Sampling :::::::::: */
-void PID_SetSampleTime(PID_TypeDef *uPID, int32_t NewSampleTime);
+void PID_SetSampleTime(PID_TypeDef *uPID, int32_t NewSampleTime, int32_t updateOnCall);
 
 /* ::::::: Get Tunings Param ::::::: */
 double PID_GetKp(PID_TypeDef *uPID);

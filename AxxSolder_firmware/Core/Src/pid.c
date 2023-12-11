@@ -86,7 +86,7 @@ uint8_t PID_Compute(PID_TypeDef *uPID)
 	now        = GetTime();
 	timeChange = (now - uPID->LastTime);
 
-	if (timeChange >= uPID->SampleTime)
+	if ((timeChange >= uPID->SampleTime) || (uPID->updateOnEveryCall))
 	{
 		/* ..... Compute all the working error variables ..... */
 		input   = *uPID->MyInput;
@@ -318,9 +318,12 @@ PIDCD_TypeDef PID_GetDirection(PID_TypeDef *uPID)
 }
 
 /* ~~~~~~~~~~~~~~~ PID Sampling ~~~~~~~~~~~~~~~~ */
-void PID_SetSampleTime(PID_TypeDef *uPID, int32_t NewSampleTime)
+void PID_SetSampleTime(PID_TypeDef *uPID, int32_t NewSampleTime, int32_t updateOnCall)
 {
-
+	if(updateOnCall > 0){
+		updateOnCall = 1;
+	}
+	uPID->updateOnEveryCall = updateOnCall;
 	double ratio;
 
 	/* ~~~~~~~~~~ Check value ~~~~~~~~~~ */
