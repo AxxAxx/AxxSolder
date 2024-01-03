@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP SD103AWS-E3-08
-D Vishay SD103AWS-E3-08, SMT Schottky Diode, 40V 350mA, 10ns, 2-Pin SOD-323
-K
-F http://www.vishay.com/docs/85682/sd103aws.pdf
-$ENDCMP
-#
-#End Doc Library

@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP BSC022N04LSATMA1
-D MOSFET N-Ch 40V 100A TDSON-8 OptiMOS 3
-K
-F https://www.infineon.com/dgdl/Infineon-BSC028N06LS3-DS-v02_02-en.pdf?fileId=db3a30431ddc9372011ebafa4c607f8c
-$ENDCMP
-#
-#End Doc Library

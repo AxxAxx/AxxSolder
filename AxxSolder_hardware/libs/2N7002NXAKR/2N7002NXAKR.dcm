@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP 2N7002NXAKR
-D NEXPERIA - 2N7002NXAKR - MOSFET Transistor, Trench, N Channel, 190 mA, 60 V, 3 ohm, 10 V, 1.6 V
-K
-F https://assets.nexperia.com/documents/data-sheet/2N7002NXAK.pdf
-$ENDCMP
-#
-#End Doc Library

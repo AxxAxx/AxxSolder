@@ -1,0 +1,3 @@
+[submodule "KiCad_scripts"]
+	path = KiCad_scripts
+	url = https://github.com/AxxAxx/KiCad_scripts

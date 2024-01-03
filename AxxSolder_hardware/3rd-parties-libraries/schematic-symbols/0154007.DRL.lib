@@ -1,0 +1,24 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model 0154007.DRL
+#/1167361/300009/2.50/2/3/Fuse
+DEF 0154007.DRL F 0 30 Y Y 1 F N
+F0 "F" 550 250 50 H V L CNN
+F1 "0154007.DRL" 550 150 50 H V L CNN
+F2 "0154100DR" 550 50 50 H I L CNN
+F3 "https://m.littelfuse.com/~/media/electronics/datasheets/fuses/littelfuse_fuse_154_154t_154l_154tl_datasheet.pdf.pdf" 550 -50 50 H I L CNN
+F4 "Fuse Chip Very Fast Acting 7A SMD Solder Pad 9.73 X 5.03 X 3.81mm T/R" 550 -150 50 H I L CNN "Description"
+F5 "3.81" 550 -250 50 H I L CNN "Height"
+F6 "576-0154007.DRL" 550 -350 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/Littelfuse/0154007.DRL?qs=tQeA2zcAjvUgVHfTrPW0Hg%3D%3D" 550 -450 50 H I L CNN "Mouser Price/Stock"
+F8 "LITTELFUSE" 550 -550 50 H I L CNN "Manufacturer_Name"
+F9 "0154007.DRL" 550 -650 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X ~ 1 0 0 200 R 50 50 0 0 P
+X ~ 2 700 0 200 L 50 50 0 0 P
+P 5 0 1 6 200 50 500 50 500 -50 200 -50 200 50 N
+P 2 0 1 6 200 0 500 0 N
+ENDDRAW
+ENDDEF
+#
+#End Library

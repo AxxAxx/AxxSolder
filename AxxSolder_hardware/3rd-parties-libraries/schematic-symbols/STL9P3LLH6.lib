@@ -1,0 +1,26 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model STL9P3LLH6
+#/1519645/300009/2.50/5/4/MOSFET (P-Channel)
+DEF STL9P3LLH6 Q 0 30 Y Y 1 F N
+F0 "Q" 750 300 50 H V L CNN
+F1 "STL9P3LLH6" 750 200 50 H V L CNN
+F2 "STL20N6F7" 750 100 50 H I L CNN
+F3 "https://www.st.com/resource/en/datasheet/stl9p3llh6.pdf" 750 0 50 H I L CNN
+F4 "MOSFET P-channel -30 V, 12 mOhm typ., -9 A STripFET H6 Power MOSFET in a PowerFLAT 3.3 x 3.3 package" 750 -100 50 H I L CNN "Description"
+F5 "" 750 -200 50 H I L CNN "Height"
+F6 "511-STL9P3LLH6" 750 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/STMicroelectronics/STL9P3LLH6?qs=mKNKSX85ZJeHtH1e81LEbQ%3D%3D" 750 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "STMicroelectronics" 750 -500 50 H I L CNN "Manufacturer_Name"
+F9 "STL9P3LLH6" 750 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X S_1 1 0 0 200 R 50 50 0 0 P
+X S_2 2 0 -100 200 R 50 50 0 0 P
+X S_3 3 0 -200 200 R 50 50 0 0 P
+X G 4 900 0 200 L 50 50 0 0 P
+X D 5 900 -100 200 L 50 50 0 0 P
+P 5 0 1 6 200 100 700 100 700 -300 200 -300 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library
