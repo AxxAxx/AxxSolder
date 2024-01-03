@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP MCP9600-E_MX
+D Board Mount Temperature Sensors Thermocouple to I2C converter
+K
+F https://datasheet.datasheetarchive.com/originals/distributors/DKDS41/DSANUWW0026539.pdf
+$ENDCMP
+#
+#End Doc Library

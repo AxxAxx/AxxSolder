@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TMUX1121DGKR
+D Analog Switch ICs 5-V, Low-Leakage-Current, 1:1 (SPST), 2-Channel Precision Switches (active high) 8-VSSOP -40 to 125
+K
+F https://www.ti.com/lit/gpn/TMUX1121
+$ENDCMP
+#
+#End Doc Library

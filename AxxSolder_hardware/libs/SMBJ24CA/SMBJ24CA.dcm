@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP SMBJ24CA
+D Littelfuse SMBJ24CA, Bi-Directional TVS Diode, 600W, 2-Pin DO-214AA
+K
+F https://m.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smbj_datasheet.pdf.pdf
+$ENDCMP
+#
+#End Doc Library

@@ -1,0 +1,38 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model 2N7002NXAKR
+#/2394372/241585/2.49/3/2/MOSFET (N-Channel)
+DEF 2N7002NXAKR Q 0 30 Y Y 1 F N
+F0 "Q" 450 150 50 H V L CNN
+F1 "2N7002NXAKR" 450 50 50 H V L CNN
+F2 "SOT95P230X110-3N" 450 -50 50 H I L CNN
+F3 "https://assets.nexperia.com/documents/data-sheet/2N7002NXAK.pdf" 450 -150 50 H I L CNN
+F4 "NEXPERIA - 2N7002NXAKR - MOSFET Transistor, Trench, N Channel, 190 mA, 60 V, 3 ohm, 10 V, 1.6 V" 450 -250 50 H I L CNN "Description"
+F5 "1.1" 450 -350 50 H I L CNN "Height"
+F6 "Nexperia" 450 -450 50 H I L CNN "Manufacturer_Name"
+F7 "2N7002NXAKR" 450 -550 50 H I L CNN "Manufacturer_Part_Number"
+F8 "771-2N7002NXAKR" 450 -650 50 H I L CNN "Mouser Part Number"
+F9 "https://www.mouser.co.uk/ProductDetail/Nexperia/2N7002NXAKR?qs=%252B6g0mu59x7JoAsZYPFXqhw%3D%3D" 450 -750 50 H I L CNN "Mouser Price/Stock"
+F10 "2N7002NXAKR" 450 -850 50 H I L CNN "Arrow Part Number"
+F11 "https://www.arrow.com/en/products/2n7002nxakr/nexperia?region=nac" 450 -950 50 H I L CNN "Arrow Price/Stock"
+F12 "" 450 -1050 50 H I L CNN "Mouser Testing Part Number"
+F13 "" 450 -1150 50 H I L CNN "Mouser Testing Price/Stock"
+DRAW
+X ~ 1 0 0 100 R 50 50 0 0 P
+X ~ 3 300 400 100 D 50 50 0 0 P
+X ~ 2 300 -200 100 U 50 50 0 0 P
+P 2 0 1 6 300 100 300 -100 N
+P 2 0 1 6 300 200 300 300 N
+P 3 0 1 6 100 0 200 0 200 200 N
+P 2 0 1 6 300 100 230 100 N
+P 2 0 1 6 300 200 230 200 N
+P 2 0 1 6 230 0 300 0 N
+P 2 0 1 6 230 220 230 180 N
+P 2 0 1 6 230 -20 230 20 N
+P 2 0 1 6 230 80 230 120 N
+C 250 100 150 0 1 10 N
+P 4 0 1 10 230 100 270 120 270 80 230 100 F
+ENDDRAW
+ENDDEF
+#
+#End Library

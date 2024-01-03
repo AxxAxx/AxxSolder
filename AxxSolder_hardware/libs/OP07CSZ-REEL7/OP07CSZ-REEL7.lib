@@ -1,0 +1,29 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model OP07CSZ-REEL7
+#/236987/241585/2.49/8/3/Integrated Circuit
+DEF OP07CSZ-REEL7 IC 0 30 Y Y 1 F N
+F0 "IC" 1550 300 50 H V L CNN
+F1 "OP07CSZ-REEL7" 1550 200 50 H V L CNN
+F2 "SOIC127P600X175-8N" 1550 100 50 H I L CNN
+F3 "https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-SFU1/DSASFU10005734.pdf" 1550 0 50 H I L CNN
+F4 "Precision Amplifiers Ultra Low Offset VTG" 1550 -100 50 H I L CNN "Description"
+F5 "1.75" 1550 -200 50 H I L CNN "Height"
+F6 "584-OP07CSZ-R7" 1550 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/Analog-Devices/OP07CSZ-REEL7?qs=WIvQP4zGangZT8LGnisnoQ%3D%3D" 1550 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "Analog Devices" 1550 -500 50 H I L CNN "Manufacturer_Name"
+F9 "OP07CSZ-REEL7" 1550 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X VOS_TRIM_1 1 0 0 200 R 50 50 0 0 P
+X -IN 2 0 -100 200 R 50 50 0 0 I
+X +IN 3 0 -200 200 R 50 50 0 0 I
+X V- 4 0 -300 200 R 50 50 0 0 P
+X VOS_TRIM_2 8 1700 0 200 L 50 50 0 0 P
+X V+ 7 1700 -100 200 L 50 50 0 0 P
+X OUT 6 1700 -200 200 L 50 50 0 0 O
+X NC 5 1700 -300 200 L 50 50 0 0 N
+P 5 0 1 6 200 100 1500 100 1500 -400 200 -400 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library
