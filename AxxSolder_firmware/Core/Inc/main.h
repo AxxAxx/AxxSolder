@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -27,25 +27,15 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32g4xx_hal.h"
+#include "stm32f3xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-extern I2C_HandleTypeDef hi2c1;
-extern SPI_HandleTypeDef hspi1;
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-/* Struct to hold flash_data values */
-typedef struct{
-	double startup_temperature;
-	double temperature_offset;
-	double standby_temp;
-	double standby_time;
-	double emergency_time;
-	double buzzer_enable;
-}Flash_values;
 
 /* USER CODE END ET */
 
@@ -69,38 +59,51 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define DEBUG_SIGNAL_A_Pin GPIO_PIN_0
-#define DEBUG_SIGNAL_A_GPIO_Port GPIOF
-#define DEBUG_SIGNAL_B_Pin GPIO_PIN_1
-#define DEBUG_SIGNAL_B_GPIO_Port GPIOF
-#define THERMOCOUPLE_Pin GPIO_PIN_0
-#define THERMOCOUPLE_GPIO_Port GPIOA
+#define USR_1_Pin GPIO_PIN_0
+#define USR_1_GPIO_Port GPIOA
 #define CURRENT_Pin GPIO_PIN_1
 #define CURRENT_GPIO_Port GPIOA
-#define AMBIENT_TEMP_Pin GPIO_PIN_3
-#define AMBIENT_TEMP_GPIO_Port GPIOA
-#define BUZZER_Pin GPIO_PIN_5
-#define BUZZER_GPIO_Port GPIOA
+#define TC_Pin GPIO_PIN_2
+#define TC_GPIO_Port GPIOA
+#define SPI1_DC_Pin GPIO_PIN_3
+#define SPI1_DC_GPIO_Port GPIOA
+#define SPI1_RST_Pin GPIO_PIN_4
+#define SPI1_RST_GPIO_Port GPIOA
+#define SPI1_CS_Pin GPIO_PIN_6
+#define SPI1_CS_GPIO_Port GPIOA
+#define SD_CS_Pin GPIO_PIN_0
+#define SD_CS_GPIO_Port GPIOB
+#define VBIT_0_Pin GPIO_PIN_1
+#define VBIT_0_GPIO_Port GPIOB
+#define VBIT_1_Pin GPIO_PIN_2
+#define VBIT_1_GPIO_Port GPIOB
+#define VBIT_2_Pin GPIO_PIN_10
+#define VBIT_2_GPIO_Port GPIOB
+#define VBIT_3_Pin GPIO_PIN_11
+#define VBIT_3_GPIO_Port GPIOB
+#define STAND_INP_Pin GPIO_PIN_12
+#define STAND_INP_GPIO_Port GPIOB
+#define V_INP_Pin GPIO_PIN_13
+#define V_INP_GPIO_Port GPIOB
+#define HANDLE_INP_2_Pin GPIO_PIN_14
+#define HANDLE_INP_2_GPIO_Port GPIOB
+#define HANDLE_INP_1_Pin GPIO_PIN_15
+#define HANDLE_INP_1_GPIO_Port GPIOB
+#define USR_2_Pin GPIO_PIN_8
+#define USR_2_GPIO_Port GPIOA
+#define ENC_B_Pin GPIO_PIN_15
+#define ENC_B_GPIO_Port GPIOA
+#define ENC_A_Pin GPIO_PIN_3
+#define ENC_A_GPIO_Port GPIOB
+#define SW_1_Pin GPIO_PIN_4
+#define SW_1_GPIO_Port GPIOB
+#define SW_2_Pin GPIO_PIN_5
+#define SW_2_GPIO_Port GPIOB
+#define SW_3_Pin GPIO_PIN_6
+#define SW_3_GPIO_Port GPIOB
 #define HEATER_Pin GPIO_PIN_7
-#define HEATER_GPIO_Port GPIOA
-#define BUSVOLTAGE_Pin GPIO_PIN_0
-#define BUSVOLTAGE_GPIO_Port GPIOB
-#define ENC_BUTTON_INP_Pin GPIO_PIN_9
-#define ENC_BUTTON_INP_GPIO_Port GPIOA
-#define HANDLE_INP_Pin GPIO_PIN_10
-#define HANDLE_INP_GPIO_Port GPIOA
-#define STAND_INP_Pin GPIO_PIN_11
-#define STAND_INP_GPIO_Port GPIOA
-#define SPI_DC_Pin GPIO_PIN_12
-#define SPI_DC_GPIO_Port GPIOA
-#define T_SWDIO_Pin GPIO_PIN_13
-#define T_SWDIO_GPIO_Port GPIOA
-#define T_SWCLK_Pin GPIO_PIN_14
-#define T_SWCLK_GPIO_Port GPIOA
-#define SPI_RST_Pin GPIO_PIN_4
-#define SPI_RST_GPIO_Port GPIOB
-#define SPI_CS_Pin GPIO_PIN_6
-#define SPI_CS_GPIO_Port GPIOB
+#define HEATER_GPIO_Port GPIOB
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
