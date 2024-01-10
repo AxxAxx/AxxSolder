@@ -29,7 +29,7 @@ Please use [GitHub Discussions](https://github.com/AxxAxx/AxxSolder/discussions)
 # Features
 - The tip temperature is set by a rotating encoder. Pressing the encoder puts AxxSolder into Sleep mode and heating is turned off, press again to wake up.  
 - AxxSolder is capable of driving C210 and C245 style cartridges from JBC. With the "Handle_sense" input AxxSolder can determine if the connected handle is either a T210 or T245 and adjust max output power accordingly.  
-- When the handle is put into the stand (connected to Stand_sense) AxxSolder goes into "Standby mode". On the portable version an aluminium plate is mounted and allows the AxxSolder to go into Standby mode when the cartridge or handle rests againts it. After 10 min in Standby mode AxxSolder goes into "Sleep mode" and turns heating completely off. This is similar to what JBC calls [Sleep and Hibernation](https://www.jbctools.com/intelligent-heat-management.html).  
+- When the handle is put into the stand (connected to Stand_sense) AxxSolder goes into "Standby mode". On the portable version an aluminium plate is mounted and allows the AxxSolder to go into Standby mode when the cartridge or handle rests against it. After 10 min in Standby mode AxxSolder goes into "Sleep mode" and turns heating completely off. This is similar to what JBC calls [Sleep and Hibernation](https://www.jbctools.com/intelligent-heat-management.html).  
 - If AxxSolder is left in normal running mode for longer than 30 min, the station automatically goes into sleep mode after 30 min as a safety feature.  
 - Should the temperature ever go higher than 475 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.  
 - The OLED display used in this project is a 1.5 inch 128 x 128 pixel SPI Display [WaveShare 1.5inch OLED Module](https://www.waveshare.com/wiki/1.5inch_OLED_Module) and shows information about:
@@ -84,7 +84,7 @@ Programming or updating the firmware the STM32 MCU is done by using a SWD progra
 4. If your SWD programmer *can not* supply 3.3V it is necessary to power the AxxSolder from an external supply.
 5. Start your programming software. [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) is used in this example.
 6. Connect to the target by selecting *ST-LINK* and click on *Connect*
-7. Load the latest AxxSolder.bin donwloaded in *Step 2* by clicking *Open file* and select the donwloaded binary file.
+7. Load the latest AxxSolder.bin downloaded in *Step 2* by clicking *Open file* and select the downloaded binary file.
 8. Write the firmware to the MCU by clicking *Download*.
 9. If you get the message *File download complete* everything succeded and the SWD programmer can be disconnected and power cycled once and AxxSolder should boot.
 <img src="./photos/AxxSolder_SWD_connection.png" width="400">
