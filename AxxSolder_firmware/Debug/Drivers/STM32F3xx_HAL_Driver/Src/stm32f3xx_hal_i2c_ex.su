@@ -1,0 +1,6 @@
+../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c:96:19:HAL_I2CEx_ConfigAnalogFilter	16	static
+../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c:140:19:HAL_I2CEx_ConfigDigitalFilter	24	static
+../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c:208:19:HAL_I2CEx_EnableWakeUp	16	static
+../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c:247:19:HAL_I2CEx_DisableWakeUp	16	static
+../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c:312:6:HAL_I2CEx_EnableFastModePlus	24	static
+../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c:339:6:HAL_I2CEx_DisableFastModePlus	24	static

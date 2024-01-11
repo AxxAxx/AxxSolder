@@ -1,7 +1,7 @@
 #ifndef __STUSB4500_H
 #define __STUSB4500_H
 
-#include "stm32f0xx_hal.h"
+#include "stm32f3xx_hal.h"
 
 #define STUSB4500_ADDR         0x28
 #define RDO_REG_STATUS         0x91

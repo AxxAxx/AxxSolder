@@ -1,0 +1,5 @@
+../Core/Src/stusb4500.c:13:26:read_register	1
+../Core/Src/stusb4500.c:18:26:write_register	1
+../Core/Src/stusb4500.c:23:19:stusb_read_rdo	1
+../Core/Src/stusb4500.c:30:19:stusb_update_pdo	6
+../Core/Src/stusb4500.c:61:19:stusb_set_valid_pdo	2

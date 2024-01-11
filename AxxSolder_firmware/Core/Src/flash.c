@@ -95,11 +95,11 @@ uint32_t Flash_Write_Data (uint32_t StartPageAddress, uint32_t *Data, uint16_t n
 	  uint32_t EndPage = GetPage(EndPageAdress);
 
 		 /* Clear OPTVERR bit set on virgin samples */
-		  __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR);
+		 // __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR);
 
 	   /* Fill EraseInit structure*/
 		EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGES;
-		EraseInitStruct.Page        = StartPage;
+		EraseInitStruct.PageAddress = StartPage;
 		EraseInitStruct.NbPages     = ((EndPage - StartPage)/FLASH_PAGE_SIZE) +1;
 
 	   if (HAL_FLASHEx_Erase(&EraseInitStruct, &PageError) != HAL_OK)
@@ -154,15 +154,15 @@ bool FlashWrite(Flash_values *flash_values){
 	HAL_FLASH_Unlock();
 
 	/* Clear OPTVERR bit set on virgin samples */
-	__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR);
+	//__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR);
 
 	/* Get the number of pages to erase from 1st page */
 	NbOfPages = GetPage(FLASH_USER_END_ADDR) - GetPage(FLASH_USER_START_ADDR) + 1;
 
 	/* Fill EraseInit structure*/
-	EraseInitStruct.Banks = FLASH_BANK_1;
+	//EraseInitStruct.Banks = FLASH_BANK_1;
 	EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
-	EraseInitStruct.Page = GetPage(FLASH_USER_START_ADDR);
+	EraseInitStruct.PageAddress = GetPage(FLASH_USER_START_ADDR);
 	EraseInitStruct.NbPages = NbOfPages;
 
 	if (HAL_FLASHEx_Erase(&EraseInitStruct, &PageError) == HAL_OK)

@@ -31,7 +31,15 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+/* Struct to hold flash_data values */
+typedef struct{
+	double startup_temperature;
+	double temperature_offset;
+	double standby_temp;
+	double standby_time;
+	double emergency_time;
+	double buzzer_enable;
+}Flash_values;
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -59,6 +67,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define BUZZER_Pin GPIO_PIN_13
+#define BUZZER_GPIO_Port GPIOC
 #define USR_1_Pin GPIO_PIN_0
 #define USR_1_GPIO_Port GPIOA
 #define CURRENT_Pin GPIO_PIN_1
