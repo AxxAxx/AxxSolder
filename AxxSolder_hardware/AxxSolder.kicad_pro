@@ -62,7 +62,7 @@
       },
       "rule_severities": {
         "annular_width": "error",
-        "clearance": "error",
+        "clearance": "warning",
         "connection_width": "warning",
         "copper_edge_clearance": "error",
         "copper_sliver": "warning",

@@ -18,16 +18,16 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "lcd.h"
 #include "string.h"
 #include "pid.h"
 #include "moving_average.h"
 #include "flash.h"
-#include "st7789.h"
 #include "stusb4500.h"
-//#include "usbd_cdc_if.h"
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
@@ -105,13 +105,13 @@ char buffer[40];								/* Buffer for UART print */
 float max_power_watt = 0.0; 					/* Sets the maximum output power */
 
 float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
-#define ADC_BUF_LEN 50
-uint16_t ADC_buffer[ADC_BUF_LEN];
+#define ADC_BUF_VIN_LEN 50
+uint16_t ADC_BUF_VIN[ADC_BUF_VIN_LEN];
 uint16_t ADC_buffer_current = 1;
 
 #define EMERGENCY_SHUTDOWN_TEMPERATURE 475		/* Max allowed tip temperature */
 
-#define VOLTAGE_COMPENSATION 0.00648678945 		/* Constant for scaling input voltage ADC value*/
+#define VOLTAGE_COMPENSATION 0.00741347365 		/* Constant for scaling input voltage ADC value*/
 
 double min_selectable_temperature = 20;
 double max_selectable_temperature = 0;
@@ -132,8 +132,6 @@ double max_selectable_temperature = 0;
 #define TC_COMPENSATION_X1_T245 0.11753371673595008
 #define TC_COMPENSATION_X0_T245 25.051871505499836
 
-#define AMBIENT_TEMP_COMPENSATION 0.0008058608 /* Ambient temperature compensation constant 3.3/4095 */
-
 /* Struct to hold sensor values */
 struct sensor_values_struct {
 	double set_temperature;
@@ -141,7 +139,6 @@ struct sensor_values_struct {
 	float bus_voltage;
 	float heater_current;
 	float pcb_temperature;
-	float ambient_temperature;
 	double in_stand;
 	double handle_sense;
 	mainstates previous_state;
@@ -153,7 +150,6 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.bus_voltage = 0.0,
 											.bus_voltage = 0.0,
 											.pcb_temperature = 0.0,
-											.ambient_temperature = 0.0,
 											.in_stand = 0.0,
 											.handle_sense  = 0.0,
 											.previous_state = SLEEP,
@@ -187,7 +183,6 @@ uint8_t current_measurement_requested = 0;
 
 /* Moving average filters for sensor data */
 FilterTypeDef actual_temperature_filter_struct;
-FilterTypeDef ambient_temperature_filter_struct;
 FilterTypeDef input_voltage_filterStruct;
 FilterTypeDef stand_sense_filterStruct;
 FilterTypeDef handle_sense_filterStruct;
@@ -219,6 +214,7 @@ DMA_HandleTypeDef hdma_spi1_tx;
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim16;
 
 /* USER CODE BEGIN PV */
@@ -238,6 +234,7 @@ static void MX_TIM2_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_CRC_Init(void);
 static void MX_TIM16_Init(void);
+static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -251,23 +248,37 @@ double clamp(double d, double min, double max) {
   return t > max ? max : t;
 }
 
+uint16_t RGB_to_BRG(uint16_t color){
+	return ((((color & 0b0000000000011111)  << 11) & 0b1111100000000000) | ((color & 0b1111111111100000) >> 5));
+}
+
 /* Returns the average of 100 readings of the index+3*n value in the ADC_buffer vector */
-float get_mean_ADC_reading(uint8_t index){
+float get_mean_ADC_reading_indexed(uint16_t *adc_buffer , uint8_t adc_buffer_len, uint8_t index){
 	ADC_filter_mean = 0;
-	for(int n=index;n<ADC_BUF_LEN;n=n+3){
-		ADC_filter_mean += ADC_buffer[n];
+	for(int n=index;n<adc_buffer_len;n=n+3){
+		ADC_filter_mean += adc_buffer[n];
 	}
-	return ADC_filter_mean/50.0;
+	return ADC_filter_mean/adc_buffer_len;
+}
+
+
+/* Returns the average ADC_buffer vector */
+float get_mean_ADC_reading(uint16_t *adc_buffer , uint8_t adc_buffer_len){
+	ADC_filter_mean = 0;
+	for(uint8_t n=index;n<adc_buffer_len;n=n+1){
+		ADC_filter_mean += adc_buffer[n];
+	}
+	return ADC_filter_mean/adc_buffer_len;
 }
 
 void get_bus_voltage(){
 	/* Index 0 is bus Voltage */
-	sensor_values.bus_voltage = Moving_Average_Compute(ADC_buffer[0], &input_voltage_filterStruct)*VOLTAGE_COMPENSATION; /* Moving average filter */
+	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading(ADC_BUF_VIN, ADC_BUF_VIN_LEN), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION; /* Moving average filter */
 }
 
 void get_actual_temperature(){
 	/* Index 0 is bus Voltage */
-	float TC_temperature_temp = Moving_Average_Compute(get_mean_ADC_reading(0), &actual_temperature_filter_struct); /* Moving average filter */
+	float TC_temperature_temp = Moving_Average_Compute(1111111, &actual_temperature_filter_struct); /* Moving average filter */
 	if(handle == T210){
 		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T210 +
 				pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T210 + TC_temperature_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
@@ -282,19 +293,35 @@ void get_actual_temperature(){
 	}
 }
 
-void get_ambient_temp(){
-	//Index 1 is PCB temp
-	/* Moving average filter */
-	sensor_values.ambient_temperature = ((Moving_Average_Compute(get_mean_ADC_reading(1), &ambient_temperature_filter_struct)*AMBIENT_TEMP_COMPENSATION)-0.4)/0.0195;
-	//• Positive slope sensor gain, offset (typical):
-	//– 19.5 mV/°C, 400 mV at 0°C (TMP236-Q1) From data sheet
-}
-
 void debugPrint(char _out[]){
 	//CDC_Transmit_FS((uint8_t *) _out, strlen(_out));
 }
 
-void update_OLED(){
+void update_display(){
+	memset(&buffer, '\0', sizeof(buffer));
+	sprintf(buffer, "%.f", sensor_values.set_temperature);
+	if(sensor_values.set_temperature<100){
+		buffer[2] = 32;
+		buffer[3] = 32;
+	}
+  	LCD_PutStr(10, 85, buffer, FONT_arial_49X57, RGB_to_BRG(C_WHITE), C_BLACK);
+
+	memset(&buffer, '\0', sizeof(buffer));
+	sprintf(buffer, "%.1f V", sensor_values.bus_voltage);
+	LCD_PutStr(100, 280, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
+
+
+	if(handle == T210){
+		LCD_PutStr(100, 280, "T210", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
+	}
+	else if(handle == T245){
+		LCD_PutStr(100, 260, "T245", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
+	}
+
+
+
+
+
 	/*
 	Paint_DrawString_EN(0, 0, " AxxSolder ", &Font16, 0x00, 0xff);
     Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
@@ -336,9 +363,6 @@ void update_OLED(){
 	sprintf(buffer, "%.1f", sensor_values.bus_voltage);
 	Paint_DrawString_EN(75, 109, buffer, &Font8, 0x0, 0xff);
 
-	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.1f", sensor_values.ambient_temperature);
-	Paint_DrawString_EN(45, 118, buffer, &Font8, 0x0, 0xff);
 
 	Paint_DrawRectangle(116, 25, 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
 	if(active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED){
@@ -372,19 +396,21 @@ void get_set_temperature(){
 	sensor_values.set_temperature = TIM2->CNT;
 }
 
-/* Beep the buzzer for beep_time_ms */
-void beep_ms(uint16_t beep_time_ms){
+/* Beep the buzzer */
+void beep(){
 	//if(flash_values.buzzer_enable){
 		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 50);
-		HAL_Delay(beep_time_ms);
-		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
+		  HAL_TIM_Base_Start_IT(&htim6);
+		  //HAL_TIM_OnePulse_Start_IT(&htim6, TIM_CHANNEL_1);
+		//HAL_Delay(beep_time_ms);
+		//__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
 	//}
 }
 
 /* Create a beep is beep is requested */
 void check_beep(){
 	if(beep_requested){
-		beep_ms(5);
+		beep();
 		beep_requested = 0;
 	}
 }
@@ -493,7 +519,7 @@ void get_handle_type(){
 	else{
 		handle = T245;
 		max_power_watt = 120; //120W
-		max_selectable_temperature = 430; //430 deg C
+		max_selectable_temperature = 450; //430 deg C
 		Kp = 15;
 		Ki = 30;
 		Kd = 0.5;
@@ -508,8 +534,8 @@ void get_handle_type(){
 
 /* Interrupts at every encoder increment */
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
-	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
-		beep_requested = 1;
+	if ((htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) || (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)) {
+		beep(5);
 	}
 }
 
@@ -538,6 +564,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	  //HAL_ADC_Start_IT(&hadc2);
 	  HAL_ADCEx_InjectedStart_IT(&hadc1);
 	  HAL_GPIO_WritePin(GPIOA, USR_1_Pin, GPIO_PIN_SET);
+  }
+  if (htim == &htim6){
+	  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
+	  HAL_TIM_Base_Stop_IT(&htim6);
+
   }
 }
 
@@ -589,22 +620,28 @@ int main(void)
   MX_TIM4_Init();
   MX_CRC_Init();
   MX_TIM16_Init();
+  MX_TIM6_Init();
+  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-  ST7789_Init();
-  HAL_TIM_Encoder_Start_IT(&htim2, TIM_CHANNEL_ALL);
-  	HAL_TIM_PWM_Start_IT(&htim4, TIM_CHANNEL_2);
-    HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+  //ST7789_Init();
+  LCD_init();
 
-  	HAL_ADCEx_Calibration_Start(&hadc3, ADC_SINGLE_ENDED);
-  	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)ADC_buffer, ADC_BUF_LEN);	//Start ADC DMA
-  	HAL_ADC_Start_IT(&hadc1);	//Start ADC DMA
 
-  	Moving_Average_Init(&actual_temperature_filter_struct,5);
-  	Moving_Average_Init(&ambient_temperature_filter_struct,50);
-  	Moving_Average_Init(&input_voltage_filterStruct,50);
-  	Moving_Average_Init(&stand_sense_filterStruct,50);
-  	Moving_Average_Init(&handle_sense_filterStruct,50);
-  	Moving_Average_Init(&enc_button_sense_filterStruct,10);
+	 HAL_TIM_Encoder_Start_IT(&htim2, TIM_CHANNEL_ALL);
+		HAL_TIM_PWM_Start_IT(&htim4, TIM_CHANNEL_2);
+	 HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+	
+
+		HAL_ADCEx_Calibration_Start(&hadc3, ADC_SINGLE_ENDED);
+		HAL_ADC_Start_DMA(&hadc3, (uint16_t*)ADC_BUF_VIN, ADC_BUF_VIN_LEN);	//Start ADC DMA
+
+        HAL_ADC_Start_IT(&hadc1);        //Start ADC DMA
+
+		Moving_Average_Init(&actual_temperature_filter_struct,5);
+		Moving_Average_Init(&input_voltage_filterStruct,50);
+		Moving_Average_Init(&stand_sense_filterStruct,50);
+		Moving_Average_Init(&handle_sense_filterStruct,50);
+		Moving_Average_Init(&enc_button_sense_filterStruct,10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -613,7 +650,6 @@ int main(void)
   		set_heater_duty(0);
   		for (int i = 0; i<200;i++){
   			get_bus_voltage();
-  			get_ambient_temp();
   			get_actual_temperature();
   			get_handle_type();
   			get_stand_status();
@@ -629,11 +665,6 @@ int main(void)
 */
   		/* Set startup state */
   		active_state = SLEEP;
-
-  		/* Start-up beep */
-  		beep_ms(10);
-  		HAL_Delay(100);
-  		beep_ms(10);
 
   		/* Initiate OLED display */
   		TIM2->CNT = 1000;
@@ -738,9 +769,6 @@ int main(void)
   		/* Set initial encoder timer value */
   		TIM2->CNT = flash_values.startup_temperature;
 
-  		/* Startup beep */
-  		beep_ms(10);
-
   		/* Initiate PID controller */
   		PID(&TPID, &sensor_values.actual_temperature, &PID_output, &PID_setpoint, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
   		PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
@@ -748,43 +776,71 @@ int main(void)
   		PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 	// Set max and min output limit
   		PID_SetILimits(&TPID, PID_MIN_LIMIT, PID_MAX_LIMIT); 		// Set max and min I limit
 
-  		//ST7789_Test();
 
-  		ST7789_WriteString(45, 10, "AxxSolder", Font_16x26, YELLOW, BLACK);
-  		ST7789_DrawLine(0,40,240,40,YELLOW);
-  		ST7789_DrawLine(0,41,240,41,YELLOW);
-  		ST7789_DrawLine(0,42,240,42,YELLOW);
+		UG_FillScreen(C_BLACK);
 
-  		ST7789_WriteString(5, 55, "Set temp", Font_16x26, WHITE, BLACK);
-  		ST7789_WriteString(5, 85, "123", Font_16x26, WHITE, BLACK);
-  		ST7789_DrawCircle(100, 90, 4, WHITE);
-  		ST7789_DrawCircle(100, 90, 3, WHITE);
-  		ST7789_WriteString(110, 85, "C", Font_16x26, WHITE, BLACK);
+		LCD_PutStr(55, 5, "AxxSolder", FONT_arial_29X35, RGB_to_BRG(C_YELLOW), C_BLACK);
+		LCD_DrawLine(0,40,240,40,RGB_to_BRG(C_YELLOW));
+		LCD_DrawLine(0,41,240,41,RGB_to_BRG(C_YELLOW));
+		LCD_DrawLine(0,42,240,42,RGB_to_BRG(C_YELLOW));
 
 
-  		ST7789_WriteString(5, 125, "Act temp", Font_16x26, WHITE, BLACK);
-  		ST7789_WriteString(5, 155, "123", Font_16x26, GREEN, BLACK);
-  		ST7789_DrawCircle(100, 170, 4, GREEN);
-  		ST7789_DrawCircle(100, 170, 3, GREEN);
-  		ST7789_WriteString(110, 155, "C", Font_16x26, GREEN, BLACK);
-
-  		ST7789_DrawRectangle(2, 121, 150, 185, WHITE);
-  		ST7789_DrawRectangle(1, 120, 151, 186, WHITE);
+		LCD_PutStr(10, 55, "Set temp", FONT_arial_25X28, RGB_to_BRG(C_WHITE), C_BLACK);
+		UG_DrawCircle(105, 95, 4, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(105, 95, 3, RGB_to_BRG(C_WHITE));
+		LCD_PutStr(115, 85, "C", FONT_arial_49X57, RGB_to_BRG(C_WHITE), C_BLACK);
 
 
-  		ST7789_WriteString(0, 240, "Handle:", Font_11x18, WHITE, BLACK);
-  		ST7789_WriteString(0, 260, "Input V:", Font_11x18, WHITE, BLACK);
-  		ST7789_WriteString(0, 280, "PCB temp:", Font_11x18, WHITE, BLACK);
-  		ST7789_WriteString(110, 300, "POWER ->", Font_11x18, WHITE, BLACK);
+		LCD_PutStr(10, 155, "Actual temp", FONT_arial_25X28, RGB_to_BRG(C_WHITE), C_BLACK);
+		UG_DrawCircle(105, 200, 4, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(105, 200, 3, RGB_to_BRG(C_WHITE));
+		LCD_PutStr(115, 185, "C", FONT_arial_49X57, RGB_to_BRG(C_WHITE), C_BLACK);
+
+		UG_DrawFrame(2, 151, 165, 245, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(1, 150, 166, 246, RGB_to_BRG(C_WHITE));
 
 
-  		ST7789_DrawRectangle(208, 53, 232, 319, WHITE);
-  		ST7789_DrawRectangle(209, 54, 231, 318, WHITE);
-  		ST7789_DrawFilledRectangle(210, 55, 20, 220, RED);
+		LCD_PutStr(0, 260, "Handle type:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
+		LCD_PutStr(0, 280, "Input voltage:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
+		LCD_PutStr(0, 300, "PCB temp:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
+		LCD_PutStr(125, 300, "POWER ->", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
 
 
+		UG_DrawFrame(208, 53, 232, 319, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(209, 54, 231, 318, RGB_to_BRG(C_WHITE));
+
+
+		UG_FillFrame(180, 60, 200, 80, RGB_to_BRG(C_RED));
+		UG_FillFrame(180, 80, 200, 100, RGB_to_BRG(C_GREEN));
+		UG_FillFrame(180, 100, 200, 120, RGB_to_BRG(C_BLUE));
+		UG_FillFrame(180, 120, 200, 140, RGB_to_BRG(C_ORANGE));
+		UG_FillFrame(180, 140, 200, 160, RGB_to_BRG(C_WHITE));
+		UG_FillFrame(180, 160, 200, 180, RGB_to_BRG(C_BLACK));
+		UG_FillFrame(180, 180, 200, 200, RGB_to_BRG(C_YELLOW));
+		UG_FillFrame(180, 200, 200, 220, RGB_to_BRG(C_DARK_GREEN));
+		UG_FillFrame(180, 220, 200, 240, RGB_to_BRG(C_LIGHT_SKY_BLUE));
+
+
+
+		double i = 0.0;
+
+  		/* Start-up beep */
+  		beep();
+  		HAL_Delay(200);
+  		beep();
+  		HAL_Delay(200);
+  		beep();
 
   		while (1){
+  			i = i+2;
+
+			if(i>400){
+				i=0.0;
+			}
+
+
+
+
   			check_beep();
   			check_emergency_shutdown();
 
@@ -862,9 +918,20 @@ int main(void)
 
   			/* Update display */
   			if(HAL_GetTick() - previous_millis_display >= interval_display){
-  				get_ambient_temp();
-  				update_OLED();
+  				update_display();
   				previous_millis_display = HAL_GetTick();
+
+
+  				memset(&buffer, '\0', sizeof(buffer));
+  				sprintf(buffer, "%.f", i);
+  				if(i<100){
+  					buffer[2] = 32;
+  					buffer[3] = 32;
+  				}
+  			  	LCD_PutStr(10, 185, buffer, FONT_arial_49X57, RGB_to_BRG(C_WHITE), C_BLACK);
+
+  	  			UG_FillFrame(210, 317-(i/PID_MAX_OUTPUT)*262, 230, 317, RGB_to_BRG(C_LIGHT_SKY_BLUE));
+  	  			UG_FillFrame(210, 55, 230, 317-(i/PID_MAX_OUTPUT)*262-1, RGB_to_BRG(C_BLACK));
   			}
     /* USER CODE END WHILE */
 
@@ -912,11 +979,13 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_TIM1
-                              |RCC_PERIPHCLK_ADC12|RCC_PERIPHCLK_ADC34;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB|RCC_PERIPHCLK_I2C1
+                              |RCC_PERIPHCLK_TIM1|RCC_PERIPHCLK_ADC12
+                              |RCC_PERIPHCLK_ADC34;
   PeriphClkInit.Adc12ClockSelection = RCC_ADC12PLLCLK_DIV1;
   PeriphClkInit.Adc34ClockSelection = RCC_ADC34PLLCLK_DIV1;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_HSI;
+  PeriphClkInit.USBClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
   PeriphClkInit.Tim1ClockSelection = RCC_TIM1CLK_HCLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
@@ -1043,7 +1112,7 @@ static void MX_ADC3_Init(void)
   sConfig.Channel = ADC_CHANNEL_5;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
-  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_7CYCLES_5;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
   if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
@@ -1155,7 +1224,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_1LINE;
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
   hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
@@ -1279,12 +1348,12 @@ static void MX_TIM2_Init(void)
   htim2.Init.Period = 4294967295;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
   sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
   sConfig.IC1Filter = 10;
-  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC2Polarity = TIM_ICPOLARITY_FALLING;
   sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
   sConfig.IC2Filter = 10;
@@ -1350,6 +1419,44 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 2 */
   HAL_TIM_MspPostInit(&htim4);
+
+}
+
+/**
+  * @brief TIM6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM6_Init(void)
+{
+
+  /* USER CODE BEGIN TIM6_Init 0 */
+
+  /* USER CODE END TIM6_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM6_Init 1 */
+
+  /* USER CODE END TIM6_Init 1 */
+  htim6.Instance = TIM6;
+  htim6.Init.Prescaler = 36000-1;
+  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim6.Init.Period = 4;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM6_Init 2 */
+
+  /* USER CODE END TIM6_Init 2 */
 
 }
 

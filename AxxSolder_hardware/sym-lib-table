@@ -30,4 +30,6 @@
   (lib (name "LM74670QDGKRQ1")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/LM74670QDGKRQ1.kicad_sym")(options "")(descr ""))
   (lib (name "STL10N3LLH5")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/STL10N3LLH5.kicad_sym")(options "")(descr ""))
   (lib (name "MAX16171ATA_VY+T")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/MAX16171ATA_VY+T.kicad_sym")(options "")(descr ""))
+  (lib (name "STM32G431CBT6")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/STM32G431CBT6.kicad_sym")(options "")(descr ""))
+  (lib (name "STM32G431CBU3")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/STM32G431CBU3.kicad_sym")(options "")(descr ""))
 )

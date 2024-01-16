@@ -4,7 +4,7 @@
   (tags "Schottky Diode")
   (attr smd)
   (fp_text reference "D**" (at 0 0) (layer "F.SilkS")
-      (effects (font (size 1.27 1.27) (thickness 0.254)))
+      (effects (font (size 0.8 0.8) (thickness 0.15) bold))
     (tstamp 73517a89-c003-43c3-a7eb-a8aad20aa612)
   )
   (fp_text value "SOT95P230X110-3N" (at 0 0) (layer "F.SilkS") hide

@@ -1,0 +1,4 @@
+../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pcd_ex.c:80:20:HAL_PCDEx_PMAConfig	32	static
+../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pcd_ex.c:125:13:HAL_PCDEx_SetConnectionState	16	static
+../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pcd_ex.c:142:13:HAL_PCDEx_LPM_Callback	16	static
+../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pcd_ex.c:159:13:HAL_PCDEx_BCD_Callback	16	static

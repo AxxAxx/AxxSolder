@@ -2,7 +2,7 @@
   (layer "F.Cu")
   (descr "PEC11J-9220F-S0015-1")
   (tags "Integrated Circuit")
-  (attr smd)
+  (attr through_hole)
   (fp_text reference "IC**" (at 0 0.6) (layer "F.SilkS")
       (effects (font (size 1.27 1.27) (thickness 0.254)))
     (tstamp 58b516fa-b5fd-45f2-8029-50ec24dadb2d)

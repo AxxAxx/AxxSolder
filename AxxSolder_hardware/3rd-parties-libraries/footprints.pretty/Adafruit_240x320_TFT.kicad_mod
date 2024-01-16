@@ -37,8 +37,6 @@
     (thermal_bridge_angle 90) (tstamp f0056b1d-d440-4ad3-adb2-b465482e9402))
   (pad "" np_thru_hole circle (at 15.24 -56.642 90) (size 1.5 1.5) (drill 2.5) (layers "F&B.Cu" "*.Mask")
     (thermal_bridge_angle 90) (tstamp 69fef719-614a-4ad1-a2c4-c5613e0fb3bb))
-  (pad "1" thru_hole circle (at -12.7 -2.54 90) (size 1.7 1.7) (drill 1) (layers "*.Cu" "*.Mask")
-    (thermal_bridge_angle 90) (tstamp 72aeb4ad-c4af-4737-a5ff-203bbc1d891a))
   (pad "2" thru_hole circle (at -10.16 -2.54 90) (size 1.7 1.7) (drill 1) (layers "*.Cu" "*.Mask")
     (thermal_bridge_angle 90) (tstamp 9fd12989-4ca2-409c-9bec-6723c1b04386))
   (pad "3" thru_hole circle (at -7.62 -2.54 90) (size 1.7 1.7) (drill 1) (layers "*.Cu" "*.Mask")
@@ -57,8 +55,6 @@
     (thermal_bridge_angle 90) (tstamp 4c9475b0-b60d-4ca1-b6af-29ae2666de65))
   (pad "10" thru_hole circle (at 10.16 -2.54 90) (size 1.7 1.7) (drill 1) (layers "*.Cu" "*.Mask")
     (thermal_bridge_angle 90) (tstamp dd7581df-7448-4e6d-b9ae-83dc1b5a3785))
-  (pad "11" thru_hole circle (at 12.7 -2.54 90) (size 1.7 1.7) (drill 1) (layers "*.Cu" "*.Mask")
-    (thermal_bridge_angle 90) (tstamp a460caa1-083c-47c4-97b5-c5aa02e5af50))
   (model "${KIPRJMOD}/3rd-parties-libraries/3D-models/4311 2in TFT IPS Display.step"
     (offset (xyz 17.78 0 4.0894))
     (scale (xyz 1 1 1))

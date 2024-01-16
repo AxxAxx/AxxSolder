@@ -1,0 +1,6 @@
+../Drivers/UGUI/ugui_image.c:10:11:UG_ImageCreate	2
+../Drivers/UGUI/ugui_image.c:46:11:UG_ImageDelete	1
+../Drivers/UGUI/ugui_image.c:51:11:UG_ImageShow	2
+../Drivers/UGUI/ugui_image.c:64:11:UG_ImageHide	2
+../Drivers/UGUI/ugui_image.c:77:11:UG_ImageSetBMP	2
+../Drivers/UGUI/ugui_image.c:93:13:_UG_ImageUpdate	8
