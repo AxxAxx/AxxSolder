@@ -43,8 +43,6 @@ enum handles {
 	T245
 } handle;
 
-uint8_t beep_requested = 0;							/* Bool to handle beep signal triggered by interrupt */
-
 /* Timing constants */
 uint32_t previous_millis_display = 0;
 uint32_t interval_display = 25;
@@ -249,6 +247,10 @@ double clamp(double d, double min, double max) {
 }
 
 uint16_t RGB_to_BRG(uint16_t color){
+	/*if(color ==C_BLACK){
+		color = 0b0010100100000101;
+	}*/
+
 	return ((((color & 0b0000000000011111)  << 11) & 0b1111100000000000) | ((color & 0b1111111111100000) >> 5));
 }
 
@@ -278,7 +280,7 @@ void get_bus_voltage(){
 
 void get_actual_temperature(){
 	/* Index 0 is bus Voltage */
-	float TC_temperature_temp = Moving_Average_Compute(1111111, &actual_temperature_filter_struct); /* Moving average filter */
+	float TC_temperature_temp = Moving_Average_Compute(100, &actual_temperature_filter_struct); /* Moving average filter */
 	if(handle == T210){
 		sensor_values.actual_temperature = pow(TC_temperature_temp, 3)*TC_COMPENSATION_X3_T210 +
 				pow(TC_temperature_temp, 2)*TC_COMPENSATION_X2_T210 + TC_temperature_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
@@ -304,90 +306,55 @@ void update_display(){
 		buffer[2] = 32;
 		buffer[3] = 32;
 	}
-  	LCD_PutStr(10, 85, buffer, FONT_arial_49X57, RGB_to_BRG(C_WHITE), C_BLACK);
+  	LCD_PutStr(10, 75, buffer, FONT_arial_49X57, RGB_to_BRG(C_GREEN), RGB_to_BRG(C_BLACK));
 
 	memset(&buffer, '\0', sizeof(buffer));
 	sprintf(buffer, "%.1f V", sensor_values.bus_voltage);
-	LCD_PutStr(100, 280, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
+	LCD_PutStr(100, 260, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 
 	if(handle == T210){
-		LCD_PutStr(100, 280, "T210", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
+		LCD_PutStr(100, 220, "T210", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else if(handle == T245){
-		LCD_PutStr(100, 260, "T245", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
+		LCD_PutStr(100, 240, "T245", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 
 
-
-
-
-	/*
-	Paint_DrawString_EN(0, 0, " AxxSolder ", &Font16, 0x00, 0xff);
-    Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
-
-	Paint_DrawString_EN(3, 20, "Set temp", &Font16, 0x00, 0xff);
-	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.f", sensor_values.set_temperature);
-	Paint_DrawString_EN(3, 32, buffer, &Font24,  0x0, 0xff);
-	Paint_DrawCircle(67, 37, 2, WHITE, 1, DRAW_FILL_EMPTY);
-	Paint_DrawString_EN(70, 32, "C", &Font24,  0x0, 0xff);
-
-	Paint_DrawString_EN(3, 58, "Act temp", &Font16, 0x00, 0xff);
-	memset(&buffer, '\0', sizeof(buffer));
-
-	if(ADC_buffer_current == 0){
-		Paint_DrawString_EN(3, 70, "---", &Font24, 0x0, 0xff);
-	}
-	else{
-		sprintf(buffer, "%.f", sensor_values.actual_temperature);
-		Paint_DrawString_EN(3, 70, buffer, &Font24, 0x0, 0xff);
-	}
-
-	Paint_DrawCircle(67, 75, 2, WHITE, 1, DRAW_FILL_EMPTY);
-	Paint_DrawString_EN(70, 70, "C", &Font24, 0x0, 0xff);
-	Paint_DrawRectangle(1, 56, 100, 93 , WHITE, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
-
-	Paint_DrawString_EN(0, 96, "HANDLE:", &Font12, 0x00, 0xff);
-	if(handle == T210){
-		Paint_DrawString_EN(60, 96, "T210", &Font12, 0x00, 0xff);
-	}
-	else if(handle == T245){
-		Paint_DrawString_EN(60, 96, "T245", &Font12, 0x00, 0xff);
-	}
-
-	Paint_DrawString_EN(0, 109, "INPUT VOLTAGE:", &Font8, 0x00, 0xff);
-	Paint_DrawString_EN(0, 118, "AMB TEMP:     POWER ->", &Font8, 0x00, 0xff);
-
-	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.1f", sensor_values.bus_voltage);
-	Paint_DrawString_EN(75, 109, buffer, &Font8, 0x0, 0xff);
-
-
-	Paint_DrawRectangle(116, 25, 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
 	if(active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED){
-		Paint_DrawString_EN(116, 30,  "Z", &Font16, 0x00, 0xff);
-		Paint_DrawString_EN(116, 50,  "z", &Font16, 0x00, 0xff);
-		Paint_DrawString_EN(116, 70,  "Z", &Font16, 0x00, 0xff);
-		Paint_DrawString_EN(116, 90,  "z", &Font16, 0x00, 0xff);
-		Paint_DrawString_EN(116, 110, "z", &Font16, 0x00, 0xff);
+		LCD_PutStr(214, 65, "Z", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(214, 121, "z", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(214, 177, "Z", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(214, 233, "z", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else if(active_state == STANDBY){
-		Paint_DrawString_EN(116, 30,  "S", &Font16, 0x00, 0xff);
-		Paint_DrawString_EN(116, 43,  "T", &Font16, 0x00, 0xff);
-		Paint_DrawString_EN(116, 56,  "A", &Font16, 0x00, 0xff);
-		Paint_DrawString_EN(116, 69,  "N", &Font16, 0x00, 0xff);
-		Paint_DrawString_EN(116, 82,  "D", &Font16, 0x00, 0xff);
-		Paint_DrawString_EN(116, 95,  "B", &Font16, 0x00, 0xff);
-		Paint_DrawString_EN(116, 108, "Y", &Font16, 0x00, 0xff);
+		LCD_PutStr(214, 65, "S", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(214, 121, "T", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(214, 177, "A", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(214, 233, "N", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(214, 289, "D", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(214, 253, "B", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(214, 279, "Y", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else{
-		Paint_DrawRectangle(116, 125-PID_output/(PID_MAX_OUTPUT/100), 128, 128, WHITE, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+		UG_FillFrame(210, 287-(PID_output/PID_MAX_OUTPUT)*262, 	230, 	287, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
+		UG_FillFrame(210, 55, 									230, 	287-(PID_output/PID_MAX_OUTPUT)*262-1, RGB_to_BRG(C_BLACK));
 	}
-	Show image on page
-	OLED_1in5_Display(black_image);
-	Paint_Clear(BLACK);
-	*/
+
+
+	if(ADC_buffer_current == 0){
+	  	LCD_PutStr(10, 185, "---", FONT_arial_49X57, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+	}
+	else{
+		memset(&buffer, '\0', sizeof(buffer));
+		sprintf(buffer, "%.f", sensor_values.actual_temperature);
+		if(sensor_values.actual_temperature < 100){
+			buffer[2] = 32;
+			buffer[3] = 32;
+		}
+	  	LCD_PutStr(10, 165, buffer, FONT_arial_49X57, RGB_to_BRG(C_GREEN), RGB_to_BRG(C_BLACK));
+	}
 }
 
 /* Get encoder value (Set temp.) and limit is NOT heating_halted*/
@@ -398,21 +365,8 @@ void get_set_temperature(){
 
 /* Beep the buzzer */
 void beep(){
-	//if(flash_values.buzzer_enable){
 		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 50);
 		  HAL_TIM_Base_Start_IT(&htim6);
-		  //HAL_TIM_OnePulse_Start_IT(&htim6, TIM_CHANNEL_1);
-		//HAL_Delay(beep_time_ms);
-		//__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
-	//}
-}
-
-/* Create a beep is beep is requested */
-void check_beep(){
-	if(beep_requested){
-		beep();
-		beep_requested = 0;
-	}
 }
 
 /* Function to set state to EMERGENCY_SLEEP */
@@ -423,21 +377,21 @@ void check_emergency_shutdown(){
 	}
 	if ((sensor_values.in_stand == 0) && (HAL_GetTick() - previous_millis_left_stand >= flash_values.emergency_time*60000) && active_state == RUN){
 		active_state = EMERGENCY_SLEEP;
-		beep_requested = 1;
+		beep();
 	}
 	sensor_values.previous_state = active_state;
 
 	/* Function to set state to EMERGENCY_SLEEP if iron is over max allowed temp */
 	if((sensor_values.actual_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
 		active_state = EMERGENCY_SLEEP;
-		beep_requested = 1;
+		beep();
 	}
 }
 
 /* Function to toggle between RUN and HALTED at each press of the encoder button */
 void get_enc_button_status(){
 	uint8_t button_status;
-	if(HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
+	if(HAL_GPIO_ReadPin (GPIOB, SW_2_Pin) == 1){
 		button_status = 1;
 	}
 	else{
@@ -447,7 +401,7 @@ void get_enc_button_status(){
 
 	/* If encoder button is pressed */
 	if((sensor_values.enc_button_status > 0.8) && (HAL_GetTick()-previous_millis_heating_halted_update >= interval_heating_halted_update)){
-		beep_requested = 1;
+		beep();
 		// toggle between RUN and HALTED
 		if ((active_state == RUN) || (active_state == STANDBY)){
 			active_state = HALTED;
@@ -535,7 +489,7 @@ void get_handle_type(){
 /* Interrupts at every encoder increment */
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	if ((htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) || (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)) {
-		beep(5);
+		beep();
 	}
 }
 
@@ -623,12 +577,10 @@ int main(void)
   MX_TIM6_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-  //ST7789_Init();
   LCD_init();
 
-
 	 HAL_TIM_Encoder_Start_IT(&htim2, TIM_CHANNEL_ALL);
-		HAL_TIM_PWM_Start_IT(&htim4, TIM_CHANNEL_2);
+	 HAL_TIM_PWM_Start_IT(&htim4, TIM_CHANNEL_2);
 	 HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
 	
 
@@ -676,11 +628,12 @@ int main(void)
   		float old_value = 0;
 
   		/* If button is pressed during startup - Show SETTINGS and allow to release button. */
-  		if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
-  			//Paint_DrawString_EN(0, 0, "SETTINGS" , &Font16, 0x00, 0xff);
-  			//Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
-  			//OLED_1in5_Display(black_image);
-  			//Paint_Clear(BLACK);
+  		if (HAL_GPIO_ReadPin (GPIOB, SW_2_Pin) == 1){
+  			LCD_PutStr(50, 5, "SETTINGS", FONT_arial_29X35, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+  			LCD_DrawLine(0,40,240,40,RGB_to_BRG(C_WHITE));
+  			LCD_DrawLine(0,41,240,41,RGB_to_BRG(C_WHITE));
+  			LCD_DrawLine(0,42,240,42,RGB_to_BRG(C_WHITE));
+
   			HAL_Delay(1000);
   			while(menu_active == 1){
   				if(menue_level == 0){
@@ -733,20 +686,17 @@ int main(void)
   					flash_values = default_flash_values;
   				}
 
-  				//Paint_DrawString_EN(0, 0, "SETTINGS", &Font16, 0x00, 0xff);
-  				//Paint_DrawLine(0, 16, 127, 16, WHITE , 2, LINE_STYLE_SOLID);
-  				//Paint_DrawString_EN(0, 110, "Version: ", &Font12, 0x00, 0xff);
-  				//Paint_DrawString_EN(60, 110, version, &Font12, 0x00, 0xff);
-
-  				//menuHandle();
+  	  			LCD_PutStr(0, 300, "Version:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+  	  			LCD_PutStr(150, 300, version, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
   				for(int i = menue_start;i<menue_start+6;i++){
 
   					if((i == menu_cursor_position) && (menue_level == 0)){
-  						//Paint_DrawString_EN(0, 20+(i-menue_start)*12, menu_names[i], &Font12, 0xff, 0x00);
+  		  	  			LCD_PutStr(5, 45+(i-menue_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
+
   					}
   					else{
-  						//Paint_DrawString_EN(0, 20+(i-menue_start)*12, menu_names[i], &Font12, 0x00, 0xff);
+  		  	  			LCD_PutStr(5, 45+(i-menue_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
   					}
 
   					char str[20];
@@ -754,15 +704,15 @@ int main(void)
   					sprintf(str, "%.0f", (((double*)&flash_values)[i]));
   					if(i <= menu_length-3){
   						if((i == menu_cursor_position) && (menue_level == 1)){
-  							//Paint_DrawString_EN(100, 20+(i-menue_start)*12, str, &Font12, 0xff, 0x00);
+  	  		  	  			LCD_PutStr(200, 45+(i-menue_start)*25, str, FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
+
   						}
   						else{
-  							//Paint_DrawString_EN(100, 20+(i-menue_start)*12, str, &Font12, 0x00, 0xff);
+  	  		  	  			LCD_PutStr(200, 45+(i-menue_start)*25, str, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
   						}
   					}
   				}
-  				//OLED_1in5_Display(black_image);
-  				//Paint_Clear(BLACK);
   			}
   		}
 
@@ -777,40 +727,44 @@ int main(void)
   		PID_SetILimits(&TPID, PID_MIN_LIMIT, PID_MAX_LIMIT); 		// Set max and min I limit
 
 
-		UG_FillScreen(C_BLACK);
+		UG_FillScreen(RGB_to_BRG(C_BLACK));
 
-		LCD_PutStr(55, 5, "AxxSolder", FONT_arial_29X35, RGB_to_BRG(C_YELLOW), C_BLACK);
+		LCD_PutStr(55, 5, "AxxSolder", FONT_arial_29X35, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
 		LCD_DrawLine(0,40,240,40,RGB_to_BRG(C_YELLOW));
 		LCD_DrawLine(0,41,240,41,RGB_to_BRG(C_YELLOW));
 		LCD_DrawLine(0,42,240,42,RGB_to_BRG(C_YELLOW));
 
 
-		LCD_PutStr(10, 55, "Set temp", FONT_arial_25X28, RGB_to_BRG(C_WHITE), C_BLACK);
-		UG_DrawCircle(105, 95, 4, RGB_to_BRG(C_WHITE));
-		UG_DrawCircle(105, 95, 3, RGB_to_BRG(C_WHITE));
-		LCD_PutStr(115, 85, "C", FONT_arial_49X57, RGB_to_BRG(C_WHITE), C_BLACK);
+		LCD_PutStr(10, 50, "Set temp", FONT_arial_25X28, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		UG_DrawCircle(105, 90, 4, RGB_to_BRG(C_GREEN));
+		UG_DrawCircle(105, 90, 3, RGB_to_BRG(C_GREEN));
+		LCD_PutStr(115, 75, "C", FONT_arial_49X57, RGB_to_BRG(C_GREEN), RGB_to_BRG(C_BLACK));
 
 
-		LCD_PutStr(10, 155, "Actual temp", FONT_arial_25X28, RGB_to_BRG(C_WHITE), C_BLACK);
-		UG_DrawCircle(105, 200, 4, RGB_to_BRG(C_WHITE));
-		UG_DrawCircle(105, 200, 3, RGB_to_BRG(C_WHITE));
-		LCD_PutStr(115, 185, "C", FONT_arial_49X57, RGB_to_BRG(C_WHITE), C_BLACK);
+		LCD_PutStr(10, 140, "Actual temp", FONT_arial_25X28, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		UG_DrawCircle(105, 185, 4, RGB_to_BRG(C_GREEN));
+		UG_DrawCircle(105, 185, 3, RGB_to_BRG(C_GREEN));
+		LCD_PutStr(115, 170, "C", FONT_arial_49X57, RGB_to_BRG(C_GREEN), RGB_to_BRG(C_BLACK));
 
-		UG_DrawFrame(2, 151, 165, 245, RGB_to_BRG(C_WHITE));
-		UG_DrawFrame(1, 150, 166, 246, RGB_to_BRG(C_WHITE));
-
-
-		LCD_PutStr(0, 260, "Handle type:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
-		LCD_PutStr(0, 280, "Input voltage:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
-		LCD_PutStr(0, 300, "PCB temp:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
-		LCD_PutStr(125, 300, "POWER ->", FONT_arial_16X18, RGB_to_BRG(C_WHITE), C_BLACK);
+		UG_DrawFrame(3, 136, 165, 225, RGB_to_BRG(C_GREEN));
+		UG_DrawFrame(2, 135, 166, 226, RGB_to_BRG(C_GREEN));
 
 
-		UG_DrawFrame(208, 53, 232, 319, RGB_to_BRG(C_WHITE));
-		UG_DrawFrame(209, 54, 231, 318, RGB_to_BRG(C_WHITE));
+		LCD_PutStr(2, 235, "Handle type:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(2, 255, "Input voltage:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(2, 275, "PCB temp:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(125, 275, "POWER ->", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+		UG_DrawLine(2, 298, 240, 298, RGB_to_BRG(C_YELLOW));
+		LCD_PutStr(2, 300, "PRESETS    ", FONT_arial_16X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(165, 300, "280", FONT_arial_16X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(205, 300, "330", FONT_arial_16X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+
+		UG_DrawFrame(208, 53, 232, 289, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(209, 54, 231, 288, RGB_to_BRG(C_WHITE));
 
 
-		UG_FillFrame(180, 60, 200, 80, RGB_to_BRG(C_RED));
+		/*UG_FillFrame(180, 60, 200, 80, RGB_to_BRG(C_RED));
 		UG_FillFrame(180, 80, 200, 100, RGB_to_BRG(C_GREEN));
 		UG_FillFrame(180, 100, 200, 120, RGB_to_BRG(C_BLUE));
 		UG_FillFrame(180, 120, 200, 140, RGB_to_BRG(C_ORANGE));
@@ -819,11 +773,7 @@ int main(void)
 		UG_FillFrame(180, 180, 200, 200, RGB_to_BRG(C_YELLOW));
 		UG_FillFrame(180, 200, 200, 220, RGB_to_BRG(C_DARK_GREEN));
 		UG_FillFrame(180, 220, 200, 240, RGB_to_BRG(C_LIGHT_SKY_BLUE));
-
-
-
-		double i = 0.0;
-
+*/
   		/* Start-up beep */
   		beep();
   		HAL_Delay(200);
@@ -831,17 +781,9 @@ int main(void)
   		HAL_Delay(200);
   		beep();
 
+
   		while (1){
-  			i = i+2;
 
-			if(i>400){
-				i=0.0;
-			}
-
-
-
-
-  			check_beep();
   			check_emergency_shutdown();
 
   			if(HAL_GetTick() - previous_sensor_PID_update >= interval_sensor_update){
@@ -920,18 +862,6 @@ int main(void)
   			if(HAL_GetTick() - previous_millis_display >= interval_display){
   				update_display();
   				previous_millis_display = HAL_GetTick();
-
-
-  				memset(&buffer, '\0', sizeof(buffer));
-  				sprintf(buffer, "%.f", i);
-  				if(i<100){
-  					buffer[2] = 32;
-  					buffer[3] = 32;
-  				}
-  			  	LCD_PutStr(10, 185, buffer, FONT_arial_49X57, RGB_to_BRG(C_WHITE), C_BLACK);
-
-  	  			UG_FillFrame(210, 317-(i/PID_MAX_OUTPUT)*262, 230, 317, RGB_to_BRG(C_LIGHT_SKY_BLUE));
-  	  			UG_FillFrame(210, 55, 230, 317-(i/PID_MAX_OUTPUT)*262-1, RGB_to_BRG(C_BLACK));
   			}
     /* USER CODE END WHILE */
 
@@ -1348,7 +1278,7 @@ static void MX_TIM2_Init(void)
   htim2.Init.Period = 4294967295;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
+  sConfig.EncoderMode = TIM_ENCODERMODE_TI2;
   sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;

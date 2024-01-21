@@ -46,7 +46,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.0
+          "min_clearance": 0.25
         }
       },
       "diff_pair_dimensions": [
@@ -62,7 +62,7 @@
       },
       "rule_severities": {
         "annular_width": "error",
-        "clearance": "warning",
+        "clearance": "error",
         "connection_width": "warning",
         "copper_edge_clearance": "error",
         "copper_sliver": "warning",
