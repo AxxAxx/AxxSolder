@@ -53,9 +53,9 @@
     (stroke (width 0.2) (type solid)) (layer "F.Fab") (tstamp 7056ab49-8d1e-43c8-864d-f2af7e32d4d8))
   (pad "1" smd rect (at -3.75 0 90) (size 2.5 3) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp fadb9afe-1a16-45d6-8620-f020ec2fe156))
   (pad "2" smd rect (at 4.25 0 90) (size 2.5 3) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 3171273a-6cef-43e6-a347-79a0159f502e))
-  (model "${KIPRJMOD}/3rd-parties-libraries/3D-models/CMI-9653S-SMT-TR.stp"
-    (offset (xyz 0 0 0))
+  (model "${KIPRJMOD}/3rd-parties-libraries/3D-models/CMI-9653S-SMT-TR.step"
+    (offset (xyz 0.25 0 4.6))
     (scale (xyz 1 1 1))
-    (rotate (xyz 0 0 0))
+    (rotate (xyz -90 0 -180))
   )
 )

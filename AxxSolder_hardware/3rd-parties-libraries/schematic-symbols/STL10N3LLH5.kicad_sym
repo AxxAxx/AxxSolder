@@ -1,5 +1,5 @@
 (kicad_symbol_lib (version 20220914) (generator kicad_symbol_editor)
-  (symbol "STL10N3LLH5" (in_bom yes) (on_board yes)
+  (symbol "STL10N3LLH5" (pin_names hide) (in_bom yes) (on_board yes)
     (property "Reference" "Q" (at 21.59 7.62 0)
       (effects (font (size 1.27 1.27)) (justify left top))
     )

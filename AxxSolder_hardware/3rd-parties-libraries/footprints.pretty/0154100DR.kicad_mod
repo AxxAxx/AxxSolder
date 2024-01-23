@@ -4,7 +4,7 @@
   (tags "Fuse")
   (attr smd)
   (fp_text reference "F**" (at 0 0.012) (layer "F.SilkS")
-      (effects (font (size 1.27 1.27) (thickness 0.254)))
+      (effects (font (size 0.8 0.8) (thickness 0.15) bold))
     (tstamp af3a8220-3234-4f89-b828-acda9f14400a)
   )
   (fp_text value "0154100DR" (at 0 0.012) (layer "F.SilkS") hide

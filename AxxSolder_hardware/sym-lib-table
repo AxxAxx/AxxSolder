@@ -37,4 +37,5 @@
   (lib (name "61300611821")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/61300611821.kicad_sym")(options "")(descr ""))
   (lib (name "0476001_MRSN")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/0476001_MRSN.kicad_sym")(options "")(descr ""))
   (lib (name "SF-2410FP100W-2")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/SF-2410FP100W-2.kicad_sym")(options "")(descr ""))
+  (lib (name "TSW-102-07-T-S")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/TSW-102-07-T-S.kicad_sym")(options "")(descr ""))
 )
