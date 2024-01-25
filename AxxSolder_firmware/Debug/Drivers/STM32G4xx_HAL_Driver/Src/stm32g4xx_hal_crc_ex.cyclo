@@ -1,0 +1,3 @@
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc_ex.c:89:19:HAL_CRCEx_Polynomial_Set	12
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc_ex.c:168:19:HAL_CRCEx_Input_Data_Reverse	1
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc_ex.c:194:19:HAL_CRCEx_Output_Data_Reverse	1

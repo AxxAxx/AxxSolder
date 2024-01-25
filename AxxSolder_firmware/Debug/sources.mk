@@ -25,11 +25,11 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/LCD \
-Drivers/STM32F3xx_HAL_Driver/Src \
+Drivers/STM32G4xx_HAL_Driver/Src \
 Drivers/UGUI/Fonts \
 Drivers/UGUI \
 Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src \
-USB_DEVICE/App \
-USB_DEVICE/Target \
+USB_Device/App \
+USB_Device/Target \
 

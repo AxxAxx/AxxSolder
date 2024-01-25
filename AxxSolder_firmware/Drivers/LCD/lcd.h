@@ -9,7 +9,7 @@
 #define DEMO_FLASH_KB 128
 
 /* choose a Hardware SPI port to use. */
-#define LCD_HANDLE            hspi1
+#define LCD_HANDLE            hspi2
 
 /* Pin connections. Use same names as in CubeMX */
 #define LCD_DC                SPI1_DC_Pin

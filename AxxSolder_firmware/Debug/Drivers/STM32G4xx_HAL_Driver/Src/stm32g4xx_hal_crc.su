@@ -1,0 +1,9 @@
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c:103:19:HAL_CRC_Init	16	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c:179:19:HAL_CRC_DeInit	16	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c:223:13:HAL_CRC_MspInit	16	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c:238:13:HAL_CRC_MspDeInit	16	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c:287:10:HAL_CRC_Accumulate	32	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c:339:10:HAL_CRC_Calculate	32	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c:406:22:HAL_CRC_GetState	16	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c:432:17:CRC_Handle_8	40	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_crc.c:483:17:CRC_Handle_16	32	static
