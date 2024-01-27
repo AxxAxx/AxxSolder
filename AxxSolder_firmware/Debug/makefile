@@ -67,8 +67,8 @@ all: main-build
 main-build: AxxSolder.elf secondary-outputs
 
 # Tool invocations
-AxxSolder.elf AxxSolder.map: $(OBJS) $(USER_OBJS) C:\Users\axelj\Desktop\AxxSolder\STM32G431CBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "AxxSolder.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\axelj\Desktop\AxxSolder\STM32G431CBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="AxxSolder.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+AxxSolder.elf AxxSolder.map: $(OBJS) $(USER_OBJS) C:\Users\axelj\ownCloud\2_Project\00_AxxProjects\AxxSolder\AxxSolder_firmware\STM32G431CBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "AxxSolder.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\axelj\ownCloud\2_Project\00_AxxProjects\AxxSolder\AxxSolder_firmware\STM32G431CBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="AxxSolder.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
