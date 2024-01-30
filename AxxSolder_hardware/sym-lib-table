@@ -21,7 +21,6 @@
   (lib (name "OPA2387DSGT")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/OPA2387DSGT.kicad_sym")(options "")(descr ""))
   (lib (name "2N7002NXAKR")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/2N7002NXAKR.kicad_sym")(options "")(descr ""))
   (lib (name "USB4110-GF-A")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/USB4110-GF-A.kicad_sym")(options "")(descr ""))
-  (lib (name "PEC11J-9220F-S0015")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/PEC11J-9220F-S0015.kicad_sym")(options "")(descr ""))
   (lib (name "ADTSM644KVTR")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/ADTSM644KVTR.kicad_sym")(options "")(descr ""))
   (lib (name "0154007_DRL")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/0154007_DRL.kicad_sym")(options "")(descr ""))
   (lib (name "STM32F303CCT6TR")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/STM32F303CCT6TR.kicad_sym")(options "")(descr ""))
@@ -38,4 +37,5 @@
   (lib (name "0476001_MRSN")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/0476001_MRSN.kicad_sym")(options "")(descr ""))
   (lib (name "SF-2410FP100W-2")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/SF-2410FP100W-2.kicad_sym")(options "")(descr ""))
   (lib (name "TSW-102-07-T-S")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/TSW-102-07-T-S.kicad_sym")(options "")(descr ""))
+  (lib (name "PEC11J-9215F-S0015")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/PEC11J-9215F-S0015.kicad_sym")(options "")(descr ""))
 )

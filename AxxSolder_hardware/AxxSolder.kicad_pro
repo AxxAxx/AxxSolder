@@ -488,7 +488,7 @@
       "idf": "",
       "netlist": "AxxSolder.net",
       "specctra_dsn": "",
-      "step": "../../../../../OneDrive/Skrivbord/AxxSolder.step",
+      "step": "board-dimensions/AxxSolder.step",
       "vrml": "board-dimensions/AxxSolder.wrl"
     },
     "page_layout_descr_file": ""
