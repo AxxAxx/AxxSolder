@@ -2,7 +2,7 @@
 /**
   ******************************************************************************
   * @file           : usb_device.c
-  * @version        : v2.0_Cube
+  * @version        : v3.0_Cube
   * @brief          : This file implements the USB Device
   ******************************************************************************
   * @attention
@@ -40,8 +40,10 @@
 
 /* USER CODE END PFP */
 
+extern void Error_Handler(void);
 /* USB Device Core handle declaration. */
 USBD_HandleTypeDef hUsbDeviceFS;
+extern USBD_DescriptorsTypeDef CDC_Desc;
 
 /*
  * -- Insert your variables declaration here --
@@ -61,33 +63,28 @@ USBD_HandleTypeDef hUsbDeviceFS;
   * Init USB device Library, add supported class and start the library
   * @retval None
   */
-void MX_USB_DEVICE_Init(void)
+void MX_USB_Device_Init(void)
 {
-  /* USER CODE BEGIN USB_DEVICE_Init_PreTreatment */
+  /* USER CODE BEGIN USB_Device_Init_PreTreatment */
 
-  /* USER CODE END USB_DEVICE_Init_PreTreatment */
+  /* USER CODE END USB_Device_Init_PreTreatment */
 
   /* Init Device Library, add supported class and start the library. */
-  if (USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS) != USBD_OK)
-  {
+  if (USBD_Init(&hUsbDeviceFS, &CDC_Desc, DEVICE_FS) != USBD_OK) {
     Error_Handler();
   }
-  if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_CDC) != USBD_OK)
-  {
+  if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_CDC) != USBD_OK) {
     Error_Handler();
   }
-  if (USBD_CDC_RegisterInterface(&hUsbDeviceFS, &USBD_Interface_fops_FS) != USBD_OK)
-  {
+  if (USBD_CDC_RegisterInterface(&hUsbDeviceFS, &USBD_Interface_fops_FS) != USBD_OK) {
     Error_Handler();
   }
-  if (USBD_Start(&hUsbDeviceFS) != USBD_OK)
-  {
+  if (USBD_Start(&hUsbDeviceFS) != USBD_OK) {
     Error_Handler();
   }
+  /* USER CODE BEGIN USB_Device_Init_PostTreatment */
 
-  /* USER CODE BEGIN USB_DEVICE_Init_PostTreatment */
-
-  /* USER CODE END USB_DEVICE_Init_PostTreatment */
+  /* USER CODE END USB_Device_Init_PostTreatment */
 }
 
 /**

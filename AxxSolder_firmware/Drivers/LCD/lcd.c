@@ -179,21 +179,21 @@ static void LCD_WriteCommand(uint8_t *cmd, uint8_t argc)
 {
   setSPI_Size(mode_8bit);
   //LCD_PIN(LCD_DC,RESET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_DC_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_DC_Pin, GPIO_PIN_RESET);
 
 #ifdef LCD_CS
   //LCD_PIN(LCD_CS,RESET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_CS_Pin, GPIO_PIN_RESET);
 #endif
   HAL_SPI_Transmit(&LCD_HANDLE, cmd, 1, HAL_MAX_DELAY);
   if(argc){
     //LCD_PIN(LCD_DC,SET);
-    HAL_GPIO_WritePin(GPIOC, SPI2_DC_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOB, SPI2_DC_Pin, GPIO_PIN_SET);
     HAL_SPI_Transmit(&LCD_HANDLE, (cmd+1), argc, HAL_MAX_DELAY);
   }
 #ifdef LCD_CS
   //LCD_PIN(LCD_CS,SET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_CS_Pin, GPIO_PIN_SET);
 #endif
 }
 
@@ -206,10 +206,10 @@ static void LCD_WriteCommand(uint8_t *cmd, uint8_t argc)
 static void LCD_WriteData(uint8_t *buff, size_t buff_size)
 {
   //LCD_PIN(LCD_DC,SET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_DC_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_DC_Pin, GPIO_PIN_SET);
 #ifdef LCD_CS
   //LCD_PIN(LCD_CS,RESET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_CS_Pin, GPIO_PIN_RESET);
 #endif
 
   // split data in small chunks because HAL can't send more than 64K at once
@@ -241,7 +241,7 @@ static void LCD_WriteData(uint8_t *buff, size_t buff_size)
   }
 #ifdef LCD_CS
   //LCD_PIN(LCD_CS,SET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_CS_Pin, GPIO_PIN_SET);
 #endif
 }
 
@@ -354,15 +354,15 @@ void LCD_DrawPixel(int16_t x, int16_t y, uint16_t color)
   LCD_SetAddressWindow(x, y, x, y);
 
   //LCD_PIN(LCD_DC,SET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_DC_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_DC_Pin, GPIO_PIN_SET);
 #ifdef LCD_CS
   //LCD_PIN(LCD_CS,RESET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_CS_Pin, GPIO_PIN_RESET);
 #endif
   HAL_SPI_Transmit(&LCD_HANDLE, data, sizeof(data), HAL_MAX_DELAY);
 #ifdef LCD_CS
   //LCD_PIN(LCD_CS,SET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_CS_Pin, GPIO_PIN_SET);
 #endif
 }
 
@@ -417,7 +417,7 @@ void(*LCD_FillArea(int16_t x0, int16_t y0, int16_t x1, int16_t y1))(uint32_t, ui
     setSPI_Size(mode_16bit);                                                          // Set SPI to 16 bit
 #endif
   //LCD_PIN(LCD_DC,SET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_DC_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_DC_Pin, GPIO_PIN_SET);
   return LCD_FillPixels;
 }
 
@@ -571,14 +571,14 @@ void LCD_init(void)
 {
 #ifdef LCD_CS
   //LCD_PIN(LCD_CS,SET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_CS_Pin, GPIO_PIN_SET);
 #endif
 #ifdef LCD_RST
   //LCD_PIN(LCD_RST,RESET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_RST_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_RST_Pin, GPIO_PIN_RESET);
   HAL_Delay(1);
   //LCD_PIN(LCD_RST,SET);
-  HAL_GPIO_WritePin(GPIOC, SPI2_RST_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, SPI2_RST_Pin, GPIO_PIN_SET);
   HAL_Delay(200);
 #endif
   UG_Init(&gui, &device);

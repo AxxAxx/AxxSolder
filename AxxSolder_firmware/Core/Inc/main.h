@@ -107,6 +107,7 @@ void Error_Handler(void);
 #define SPI2_CS_GPIO_Port GPIOB
 #define SW_2_Pin GPIO_PIN_10
 #define SW_2_GPIO_Port GPIOA
+#define SW_2_EXTI_IRQn EXTI15_10_IRQn
 #define ENC_B_Pin GPIO_PIN_3
 #define ENC_B_GPIO_Port GPIOB
 #define SW_1_Pin GPIO_PIN_5
@@ -115,6 +116,7 @@ void Error_Handler(void);
 #define BUZZER_GPIO_Port GPIOB
 #define SW_3_Pin GPIO_PIN_8
 #define SW_3_GPIO_Port GPIOB
+#define SW_3_EXTI_IRQn EXTI9_5_IRQn
 
 /* USER CODE BEGIN Private defines */
 

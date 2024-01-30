@@ -12,9 +12,9 @@
 #define LCD_HANDLE            hspi2
 
 /* Pin connections. Use same names as in CubeMX */
-#define LCD_DC                SPI1_DC_Pin
-#define LCD_RST               SPI1_RST_Pin /* Disable if your display has no RST pin */
-#define LCD_CS                SPI1_CS_Pin  /* Disable if your display has no CS pin */
+#define LCD_DC                SPI2_DC_Pin
+#define LCD_RST               SPI2_RST_Pin /* Disable if your display has no RST pin */
+#define LCD_CS                SPI2_CS_Pin  /* Disable if your display has no CS pin */
 //#define LCD_BL              LCD_BL  /* Enable if you need backlight control */
 
 #define USE_DMA                       /* Use DMA for transfers when possible */

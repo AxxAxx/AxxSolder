@@ -118,7 +118,7 @@ float current_raw = 0.0;
 
 #define EMERGENCY_SHUTDOWN_TEMPERATURE 475		/* Max allowed tip temperature */
 
-#define VOLTAGE_COMPENSATION 0.00741347365 		/* Constant for scaling input voltage ADC value*/
+#define VOLTAGE_COMPENSATION 0.00840442388 		/* Constant for scaling input voltage ADC value*/
 #define CURRENT_COMPENSATION 1.000 				/* Constant for scaling input voltage ADC value*/
 
 double min_selectable_temperature = 20;
@@ -225,6 +225,8 @@ TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim16;
 TIM_HandleTypeDef htim17;
 
+UART_HandleTypeDef huart1;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -243,6 +245,7 @@ static void MX_TIM16_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_TIM17_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -312,28 +315,40 @@ void update_display(){
 		buffer[2] = 32;
 		buffer[3] = 32;
 	}
-  	LCD_PutStr(10, 75, buffer, FONT_arial_29X35, RGB_to_BRG(C_GREEN), RGB_to_BRG(C_BLACK));
+  	LCD_PutStr(10, 75, buffer, FONT_arial_37X45_numbers_and_minus_and_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 	memset(&buffer, '\0', sizeof(buffer));
 	sprintf(buffer, "%.1f V", sensor_values.bus_voltage);
-	LCD_PutStr(100, 260, buffer, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+	LCD_PutStr(100, 260, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+	memset(&buffer, '\0', sizeof(buffer));
+	sprintf(buffer, "%.1f deg C", sensor_values.pcb_temperature);
+	LCD_PutStr(100, 275, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
 
 
 	if(handle == T210){
-		LCD_PutStr(100, 220, "T210", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(100, 240, "T210", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else if(handle == T245){
-		LCD_PutStr(100, 240, "T245", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(100, 240, "T245", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
+	else if(handle == T115){
+		LCD_PutStr(100, 240, "T115", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+	}
+
 
 
 	if(active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED){
+		UG_FillFrame(210,55,230,286, RGB_to_BRG(C_BLACK));
+
 		LCD_PutStr(214, 65, "Z", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		LCD_PutStr(214, 121, "z", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		LCD_PutStr(214, 177, "Z", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		LCD_PutStr(214, 233, "z", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else if(active_state == STANDBY){
+		UG_FillFrame(210, 55, 230,286, RGB_to_BRG(C_BLACK));
 		LCD_PutStr(214, 65, "S", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		LCD_PutStr(214, 121, "T", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		LCD_PutStr(214, 177, "A", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
@@ -343,13 +358,13 @@ void update_display(){
 		LCD_PutStr(214, 279, "Y", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else{
-		UG_FillFrame(210, 287-(PID_output/PID_MAX_OUTPUT)*262, 	230, 	287, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
-		UG_FillFrame(210, 55, 									230, 	287-(PID_output/PID_MAX_OUTPUT)*262-1, RGB_to_BRG(C_BLACK));
+		UG_FillFrame(210, 287-(PID_output/PID_MAX_OUTPUT)*232, 	230, 	287, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
+		UG_FillFrame(210, 55, 									230, 	287-(PID_output/PID_MAX_OUTPUT)*231-1, RGB_to_BRG(C_BLACK));
 	}
 
 
 	if(sensor_values.heater_current == 0){
-	  	LCD_PutStr(10, 185, "---", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+	  	LCD_PutStr(10, 165, "---", FONT_arial_37X45_numbers_and_minus_and_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 
 	else{
@@ -359,7 +374,7 @@ void update_display(){
 			buffer[2] = 32;
 			buffer[3] = 32;
 		}
-	  	LCD_PutStr(10, 165, buffer, FONT_arial_29X35, RGB_to_BRG(C_GREEN), RGB_to_BRG(C_BLACK));
+	  	LCD_PutStr(10, 165, buffer, FONT_arial_37X45_numbers_and_minus_and_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 }
 
@@ -398,7 +413,7 @@ void check_emergency_shutdown(){
 /* Function to toggle between RUN and HALTED at each press of the encoder button */
 void get_enc_button_status(){
 	uint8_t button_status;
-	if(HAL_GPIO_ReadPin (GPIOB, SW_2_Pin) == 1){
+	if(HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
 		button_status = 1;
 	}
 	else{
@@ -493,10 +508,25 @@ void get_handle_type(){
 //    //HAL_GPIO_TogglePin(GPIOF, DEBUG_SIGNAL_A_Pin);
 //}
 
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if(GPIO_Pin == SW_2_Pin) // If The INT Source Is EXTI Line9 (A9 Pin)
+    {
+    	TIM2->CNT = 280;
+		beep();
+    }
+    else if(GPIO_Pin == SW_3_Pin) // If The INT Source Is EXTI Line9 (A9 Pin)
+    {
+    	TIM2->CNT = 330;
+    	beep();
+    }
+}
+
 /* Interrupts at every encoder increment */
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
-	if ((htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) || (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)) {
-		//beep();
+	if ((htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) || (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) ) {
+		beep();
 	}
 }
 
@@ -588,8 +618,8 @@ int main(void)
   MX_I2C1_Init();
   MX_USB_Device_Init();
   MX_TIM17_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  LCD_init();
 
 	 HAL_TIM_Encoder_Start_IT(&htim2, TIM_CHANNEL_ALL);
 	 HAL_TIM_PWM_Start_IT(&htim4, TIM_CHANNEL_2);
@@ -610,6 +640,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+		LCD_init();
+
   	/* Init and fill filter structures with initial values */
   		set_heater_duty(0);
   		for (int i = 0; i<200;i++){
@@ -640,8 +672,8 @@ int main(void)
   		float old_value = 0;
 
   		/* If button is pressed during startup - Show SETTINGS and allow to release button. */
-  		if (HAL_GPIO_ReadPin (GPIOB, SW_2_Pin) == 1){
-  			LCD_PutStr(50, 5, "SETTINGS", FONT_arial_29X35, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+  		if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
+  			LCD_PutStr(50, 5, "SETTINGS", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
   			LCD_DrawLine(0,40,240,40,RGB_to_BRG(C_WHITE));
   			LCD_DrawLine(0,41,240,41,RGB_to_BRG(C_WHITE));
   			LCD_DrawLine(0,42,240,42,RGB_to_BRG(C_WHITE));
@@ -740,56 +772,41 @@ int main(void)
 
 		UG_FillScreen(RGB_to_BRG(C_BLACK));
 
-		LCD_PutStr(55, 5, "AxxSolder", FONT_arial_29X35, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(53, 10, "AxxSolder", FONT_arial_19X22, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
 		LCD_DrawLine(0,40,240,40,RGB_to_BRG(C_YELLOW));
 		LCD_DrawLine(0,41,240,41,RGB_to_BRG(C_YELLOW));
 		LCD_DrawLine(0,42,240,42,RGB_to_BRG(C_YELLOW));
 
 
-		LCD_PutStr(10, 50, "Set temp", FONT_arial_29X35, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		UG_DrawCircle(105, 90, 4, RGB_to_BRG(C_GREEN));
-		UG_DrawCircle(105, 90, 3, RGB_to_BRG(C_GREEN));
-		LCD_PutStr(115, 75, "C", FONT_arial_29X35, RGB_to_BRG(C_GREEN), RGB_to_BRG(C_BLACK)); //FONT_arial_49X57
+		LCD_PutStr(10, 50, "Set temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		UG_DrawCircle(105, 90, 4, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(105, 90, 3, RGB_to_BRG(C_WHITE));
+		LCD_PutStr(115, 75, "C", FONT_arial_37X45_numbers_and_minus_and_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 
-		LCD_PutStr(10, 140, "Actual temp", FONT_arial_29X35, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		UG_DrawCircle(105, 185, 4, RGB_to_BRG(C_GREEN));
-		UG_DrawCircle(105, 185, 3, RGB_to_BRG(C_GREEN));
-		LCD_PutStr(115, 170, "C", FONT_arial_29X35, RGB_to_BRG(C_GREEN), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(10, 140, "Actual temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		UG_DrawCircle(105, 185, 4, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(105, 185, 3, RGB_to_BRG(C_WHITE));
+		LCD_PutStr(115, 165, "C", FONT_arial_37X45_numbers_and_minus_and_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		UG_DrawFrame(3, 136, 165, 225, RGB_to_BRG(C_GREEN));
-		UG_DrawFrame(2, 135, 166, 226, RGB_to_BRG(C_GREEN));
+		UG_DrawFrame(3, 136, 165, 225, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(2, 135, 166, 226, RGB_to_BRG(C_WHITE));
 
+		LCD_PutStr(2, 235, "Handle type:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(2, 255, "Input voltage:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(2, 275, "PCB temp:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		LCD_PutStr(2, 235, "Handle type:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(2, 255, "Input voltage:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(2, 275, "PCB temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(125, 275, "POWER ->", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		UG_DrawLine(2, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
+		UG_DrawLine(2, 298, 240, 298, RGB_to_BRG(C_DARK_SEA_GREEN));
 
-		UG_DrawLine(2, 298, 240, 298, RGB_to_BRG(C_YELLOW));
-		LCD_PutStr(2, 300, "PRESETS    ", FONT_arial_20X23, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(165, 300, "280", FONT_arial_20X23, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(205, 300, "330", FONT_arial_20X23, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(2, 300, "PRESETS    ", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(130, 300, "280", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(190, 300, "330", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 
 		UG_DrawFrame(208, 53, 232, 289, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(209, 54, 231, 288, RGB_to_BRG(C_WHITE));
 
-
-		UG_FillFrame(180, 60, 200, 80, RGB_to_BRG(C_RED));
-		UG_FillFrame(180, 80, 200, 100, RGB_to_BRG(C_GREEN));
-		UG_FillFrame(180, 100, 200, 120, RGB_to_BRG(C_BLUE));
-		UG_FillFrame(180, 120, 200, 140, RGB_to_BRG(C_ORANGE));
-		UG_FillFrame(180, 140, 200, 160, RGB_to_BRG(C_WHITE));
-		UG_FillFrame(180, 160, 200, 180, RGB_to_BRG(C_BLACK));
-		UG_FillFrame(180, 180, 200, 200, RGB_to_BRG(C_YELLOW));
-		UG_FillFrame(180, 200, 200, 220, RGB_to_BRG(C_DARK_GREEN));
-		UG_FillFrame(180, 220, 200, 240, RGB_to_BRG(C_LIGHT_SKY_BLUE));
-
   		/* Start-up beep */
-  		beep();
-  		HAL_Delay(200);
-  		beep();
-  		HAL_Delay(200);
   		beep();
 
   		while (1){
@@ -1162,11 +1179,11 @@ static void MX_SPI2_Init(void)
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_1LINE;
-  hspi2.Init.DataSize = SPI_DATASIZE_4BIT;
-  hspi2.Init.CLKPolarity = SPI_POLARITY_HIGH;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi2.Init.NSS = SPI_NSS_SOFT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
   hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -1278,9 +1295,9 @@ static void MX_TIM2_Init(void)
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 4.294967295E9;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
-  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
   sConfig.IC1Filter = 10;
@@ -1323,7 +1340,7 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 8500-1;
+  htim4.Init.Prescaler = 10000-1;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim4.Init.Period = 10;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -1403,7 +1420,7 @@ static void MX_TIM17_Init(void)
   htim17.Instance = TIM17;
   htim17.Init.Prescaler = 17000-1;
   htim17.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim17.Init.Period = 99;
+  htim17.Init.Period = 49;
   htim17.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim17.Init.RepetitionCounter = 0;
   htim17.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
@@ -1418,6 +1435,54 @@ static void MX_TIM17_Init(void)
   /* USER CODE BEGIN TIM17_Init 2 */
 
   /* USER CODE END TIM17_Init 2 */
+
+}
+
+/**
+  * @brief USART1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART1_Init 0 */
+
+  /* USER CODE END USART1_Init 0 */
+
+  /* USER CODE BEGIN USART1_Init 1 */
+
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_HalfDuplex_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
+
+  /* USER CODE END USART1_Init 2 */
 
 }
 
@@ -1478,8 +1543,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(USR_1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : HANDLE_INP_1_Pin HANDLE_INP_2_Pin STAND_INP_Pin SW_2_Pin */
-  GPIO_InitStruct.Pin = HANDLE_INP_1_Pin|HANDLE_INP_2_Pin|STAND_INP_Pin|SW_2_Pin;
+  /*Configure GPIO pins : HANDLE_INP_1_Pin HANDLE_INP_2_Pin STAND_INP_Pin */
+  GPIO_InitStruct.Pin = HANDLE_INP_1_Pin|HANDLE_INP_2_Pin|STAND_INP_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -1493,11 +1558,30 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SW_1_Pin SW_3_Pin */
-  GPIO_InitStruct.Pin = SW_1_Pin|SW_3_Pin;
+  /*Configure GPIO pin : SW_2_Pin */
+  GPIO_InitStruct.Pin = SW_2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(SW_2_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SW_1_Pin */
+  GPIO_InitStruct.Pin = SW_1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(SW_1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SW_3_Pin */
+  GPIO_InitStruct.Pin = SW_3_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(SW_3_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
