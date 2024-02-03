@@ -1,5 +1,5 @@
-Drivers/UGUI/Fonts/arial_49X59_NUMBERS_and_C.o: \
- ../Drivers/UGUI/Fonts/arial_49X59_NUMBERS_and_C.c ../Drivers/UGUI/ugui.h \
+Drivers/UGUI/Fonts/arial_36X44_NUMBERS.o: \
+ ../Drivers/UGUI/Fonts/arial_36X44_NUMBERS.c ../Drivers/UGUI/ugui.h \
  ../Drivers/UGUI/ugui_config.h ../Drivers/UGUI/ugui_colors.h \
  ../Drivers/UGUI/ugui_theme.h ../Drivers/UGUI/ugui_button.h \
  ../Drivers/UGUI/ugui.h ../Drivers/UGUI/ugui_checkbox.h \

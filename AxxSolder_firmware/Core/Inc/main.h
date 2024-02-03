@@ -39,6 +39,8 @@ typedef struct{
 	double standby_time;
 	double emergency_time;
 	double buzzer_enable;
+	double preset_temp_1;
+	double preset_temp_2;
 }Flash_values;
 /* USER CODE END Includes */
 
@@ -112,6 +114,7 @@ void Error_Handler(void);
 #define ENC_B_GPIO_Port GPIOB
 #define SW_1_Pin GPIO_PIN_5
 #define SW_1_GPIO_Port GPIOB
+#define SW_1_EXTI_IRQn EXTI9_5_IRQn
 #define BUZZER_Pin GPIO_PIN_7
 #define BUZZER_GPIO_Port GPIOB
 #define SW_3_Pin GPIO_PIN_8

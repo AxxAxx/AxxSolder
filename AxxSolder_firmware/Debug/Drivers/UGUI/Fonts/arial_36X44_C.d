@@ -1,5 +1,4 @@
-Drivers/UGUI/Fonts/arial_37X45_numbers_and_minus_and_C.o: \
- ../Drivers/UGUI/Fonts/arial_37X45_numbers_and_minus_and_C.c \
+Drivers/UGUI/Fonts/arial_36X44_C.o: ../Drivers/UGUI/Fonts/arial_36X44_C.c \
  ../Drivers/UGUI/ugui.h ../Drivers/UGUI/ugui_config.h \
  ../Drivers/UGUI/ugui_colors.h ../Drivers/UGUI/ugui_theme.h \
  ../Drivers/UGUI/ugui_button.h ../Drivers/UGUI/ugui.h \

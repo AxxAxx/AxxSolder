@@ -111,14 +111,11 @@ extern UG_FONT FONT_arial_45X52[];
 #ifdef UGUI_USE_FONT_arial_49X57
 extern UG_FONT FONT_arial_49X57[];
 #endif
-#ifdef UGUI_USE_FONT_arial_49X57_NUMBERS_ONLY
-extern UG_FONT FONT_arial_49X57_NUMBERS_ONLY[];
+#ifdef UGUI_USE_FONT_arial_36X44_NUMBERS
+extern UG_FONT FONT_arial_36X44_NUMBERS[];
 #endif
-#ifdef UGUI_USE_FONT_arial_49X59_NUMBERS_and_C
-extern UG_FONT FONT_arial_49X59_NUMBERS_and_C[];
-#endif
-#ifdef UGUI_USE_FONT_arial_37X45_numbers_and_minus_and_C
-extern UG_FONT FONT_arial_37X45_numbers_and_minus_and_C[];
+#ifdef UGUI_USE_FONT_arial_36X44_C
+extern UG_FONT FONT_arial_36X44_C[];
 #endif
 
 #ifdef UGUI_USE_FONT_arial_19X22
