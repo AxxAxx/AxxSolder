@@ -52,7 +52,7 @@ uint32_t previous_millis_debug = 0;
 uint32_t interval_debug = 50;
 
 uint32_t previous_PID_update = 0;
-uint32_t interval_PID_update = 25;
+uint32_t interval_PID_update = 50;
 
 uint32_t previous_millis_HANDLE_update = 0;
 uint32_t interval_HANDLE_update = 200;
@@ -68,7 +68,7 @@ uint32_t previous_check_for_valid_heater_update = 0;
 uint32_t interval_check_for_valid_heater = 500;
 
 uint32_t previous_sensor_update = 0;
-uint32_t interval_sensor_update = 20;
+uint32_t interval_sensor_update = 10;
 
 uint8_t SW_ready = 1;
 uint8_t SW_1_pressed = 0;
@@ -85,7 +85,8 @@ typedef enum {
 } mainstates;
 mainstates active_state = SLEEP;
 
-uint8_t state_written_to_LCD = 0;
+uint8_t sleep_state_written_to_LCD = 0;
+uint8_t standby_state_written_to_LCD = 0;
 
 /* Custom tuning parameters */
 double Kp_custom = 0;
@@ -119,8 +120,9 @@ uint16_t ADC2_BUF_VIN[ADC2_BUF_VIN_LEN];
 #define ADC1_BUF_LEN 3
 uint16_t ADC1_BUF[ADC1_BUF_LEN];
 
-float thermocouple_temperature_raw = 0.0;
-float current_raw = 0.0;
+uint16_t thermocouple_temperature_raw = 0;
+uint16_t current_raw = 0;
+uint16_t mcu_temperature_raw = 0;
 
 #define EMERGENCY_SHUTDOWN_TEMPERATURE 480		/* Max allowed tip temperature */
 
@@ -210,10 +212,10 @@ uint8_t thermocouple_measurement_done = 1;
 
 /* Moving average filters for sensor data */
 FilterTypeDef thermocouple_temperature_filter_struct;
+FilterTypeDef mcu_temperature_filter_struct;
 FilterTypeDef input_voltage_filterStruct;
 FilterTypeDef stand_sense_filterStruct;
 FilterTypeDef handle_sense_filterStruct;
-FilterTypeDef enc_button_sense_filterStruct;
 
 /* USER CODE END PTD */
 
@@ -296,14 +298,14 @@ double power2(double x, double n) {
 }
 
 void get_mcu_temp(){
-	//Index 3 is MCU temp
-	sensor_values.mcu_temperature = ((666 * VSENSE) - V30) / Avg_Slope + 25; // formula from datasheet
+	sensor_values.mcu_temperature =	Moving_Average_Compute((((mcu_temperature_raw * VSENSE) - V30) / Avg_Slope + 25), &mcu_temperature_filter_struct);
 }
 
 uint16_t RGB_to_BRG(uint16_t color){
 	/*if(color ==C_BLACK){
 		color = 0b0010100100000101;
 	}*/
+	//return ((color & 0b0000000000011111)  << 11)    |    ((color & 0b1111100000000000) >> 5)   |    ((color  & 0b0000011111100000) >> 6);
 	return ((((color & 0b0000000000011111)  << 11) & 0b1111100000000000) | ((color & 0b1111111111100000) >> 5));
 }
 
@@ -480,11 +482,11 @@ void update_display(){
 	}
 
 	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.1f V", sensor_values.bus_voltage);
+	sprintf(buffer, "%.1f", sensor_values.bus_voltage);
 	LCD_PutStr(100, 255, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.1f deg C", sensor_values.mcu_temperature);
+	sprintf(buffer, "%.1f", sensor_values.mcu_temperature);
 	LCD_PutStr(100, 275, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 	if(handle == T210){
@@ -497,7 +499,7 @@ void update_display(){
 		LCD_PutStr(100, 235, "T115", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 
-	if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && state_written_to_LCD == 0){
+	if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
 		UG_FillFrame(210,55,230,286, RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 58,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(216, 92, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -506,11 +508,10 @@ void update_display(){
 		LCD_PutStr(214, 194, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(216, 228, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 262, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-
-		state_written_to_LCD = 1;
-
+		sleep_state_written_to_LCD = 1;
+		standby_state_written_to_LCD = 0;
 	}
-	else if((active_state == STANDBY) && state_written_to_LCD == 0){
+	else if((active_state == STANDBY) && !standby_state_written_to_LCD){
 		UG_FillFrame(210, 55, 230,286, RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 58,  "S", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 92,  "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -519,12 +520,14 @@ void update_display(){
 		LCD_PutStr(214, 194, "D", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 228, "B", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 262, "Y", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		state_written_to_LCD = 1;
+		standby_state_written_to_LCD = 1;
+		sleep_state_written_to_LCD = 0;
 	}
 	else if(active_state == RUN){
-		state_written_to_LCD = 0;
 		UG_FillFrame(210, 287-(PID_output/PID_MAX_OUTPUT)*232, 	230, 	287, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
 		UG_FillFrame(210, 55, 									230, 	287-(PID_output/PID_MAX_OUTPUT)*231-1, RGB_to_BRG(C_BLACK));
+		standby_state_written_to_LCD = 0;
+		sleep_state_written_to_LCD = 0;
 	}
 }
 
@@ -550,12 +553,12 @@ void LCD_draw_main_screen(){
 		UG_DrawCircle(120, 175, 3, RGB_to_BRG(C_WHITE));
 		LCD_PutStr(130, 165, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		UG_DrawFrame(4, 136, 179, 220, RGB_to_BRG(C_WHITE));
-		UG_DrawFrame(3, 135, 180, 221, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(4, 134, 182, 220, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(3, 133, 183, 221, RGB_to_BRG(C_WHITE));
 
 		LCD_PutStr(2, 235, "Handle type:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(2, 255, "Input voltage:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(2, 275, "MCU temp:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(2, 255, "Input voltage:         V", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(2, 275, "MCU temp:             deg C", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		UG_DrawLine(2, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
 		UG_DrawLine(2, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
@@ -579,7 +582,7 @@ void get_set_temperature(){
 	sensor_values.set_temperature = (uint16_t)(TIM2->CNT/2) * 2;
 }
 
-/* Beep the buzzer */
+/* Beep the beeper */
 void beep(){
 	if(flash_values.buzzer_enable == 1){
 		HAL_TIM_PWM_Start_IT(&htim4, TIM_CHANNEL_2);
@@ -643,7 +646,7 @@ void get_stand_status(){
 	sensor_values.in_stand = Moving_Average_Compute(stand_status, &stand_sense_filterStruct); /* Moving average filter */
 
 	/* If handle is in stand set state to STANDBY */
-	if(sensor_values.in_stand > 0.5){
+	if(sensor_values.in_stand > 0.9){
 		if(active_state == RUN){
 			change_state(STANDBY);
 			previous_standby_millis = HAL_GetTick();
@@ -742,6 +745,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
   if ((htim == &htim1) && (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3) && (thermocouple_measurement_requested)){
 	  thermocouple_measurement_done = 0;
 	  thermocouple_measurement_requested = 0;
+	  HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_SET);
 	  heater_off();
 	  HAL_TIM_Base_Start_IT(&htim16);
 
@@ -753,7 +757,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	/* Button Debounce timer (50 ms)*/
 	if (htim == &htim16){
 		HAL_TIM_Base_Stop_IT(&htim16);
-		HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_SET);
 		HAL_ADCEx_InjectedStart_IT(&hadc1);
 	}
 
@@ -792,8 +795,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	if(thermocouple_measurement_done == 0){
-		thermocouple_temperature_raw = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read The Injected Channel Result
 		HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_RESET);
+		thermocouple_temperature_raw = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read The Injected Channel Result
+		mcu_temperature_raw = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_3); // Read The Injected Channel Result
 		heater_on();
 		thermocouple_measurement_done = 1;
 	}
@@ -868,27 +872,17 @@ int main(void)
 	HAL_ADCEx_InjectedStart_IT(&hadc1);
 
 	/* initialize moving average functions */
-	Moving_Average_Init(&thermocouple_temperature_filter_struct,40);
-	Moving_Average_Init(&input_voltage_filterStruct,50);
+	Moving_Average_Init(&thermocouple_temperature_filter_struct,4);
+	Moving_Average_Init(&mcu_temperature_filter_struct,100);
+	Moving_Average_Init(&input_voltage_filterStruct,20);
 	Moving_Average_Init(&stand_sense_filterStruct,20);
 	Moving_Average_Init(&handle_sense_filterStruct,20);
-	Moving_Average_Init(&enc_button_sense_filterStruct,5);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	HAL_Delay(200);
 	LCD_init();
-
-	/* Init and fill filter structures with initial values */
-	for (int i = 0; i<200;i++){
-		get_bus_voltage();
-		get_thermocouple_temperature();
-		get_handle_type();
-		get_stand_status();
-		handle_button_status();
-		get_mcu_temp();
-	}
 
   		// Check if user data in flash is valid, if not - write default parameters
   		if(!FlashCheckCRC()){
@@ -916,6 +910,17 @@ int main(void)
   		/* Draw the main screen decoration */
   		LCD_draw_main_screen();
 
+  		/* Init and fill filter structures with initial values */
+  		for (int i = 0; i<100;i++){
+			thermocouple_measurement_requested = 1;
+  			get_bus_voltage();
+  			get_mcu_temp();
+  			get_thermocouple_temperature();
+  			get_handle_type();
+  			get_stand_status();
+  			handle_button_status();
+  		}
+
   		/* Start-up beep */
   		beep();
   		HAL_Delay(100);
@@ -926,6 +931,7 @@ int main(void)
   	  			check_emergency_shutdown();
   				get_stand_status();
   				get_bus_voltage();
+  				get_mcu_temp();
   				get_handle_type();
   				handle_button_status();
   				get_set_temperature();
@@ -1127,7 +1133,7 @@ static void MX_ADC1_Init(void)
   */
   sConfigInjected.InjectedChannel = ADC_CHANNEL_3;
   sConfigInjected.InjectedRank = ADC_INJECTED_RANK_1;
-  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_247CYCLES_5;
+  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_640CYCLES_5;
   sConfigInjected.InjectedSingleDiff = ADC_SINGLE_ENDED;
   sConfigInjected.InjectedOffsetNumber = ADC_OFFSET_NONE;
   sConfigInjected.InjectedOffset = 0;
@@ -1156,6 +1162,7 @@ static void MX_ADC1_Init(void)
   */
   sConfigInjected.InjectedChannel = ADC_CHANNEL_TEMPSENSOR_ADC1;
   sConfigInjected.InjectedRank = ADC_INJECTED_RANK_3;
+  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_247CYCLES_5;
   if (HAL_ADCEx_InjectedConfigChannel(&hadc1, &sConfigInjected) != HAL_OK)
   {
     Error_Handler();
@@ -1615,7 +1622,7 @@ static void MX_TIM16_Init(void)
   htim16.Instance = TIM16;
   htim16.Init.Prescaler = 17000-1;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim16.Init.Period = 4;
+  htim16.Init.Period = 49;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim16.Init.RepetitionCounter = 0;
   htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
