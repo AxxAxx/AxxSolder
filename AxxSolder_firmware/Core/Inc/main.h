@@ -41,6 +41,8 @@ typedef struct{
 	double buzzer_enable;
 	double preset_temp_1;
 	double preset_temp_2;
+	double GPIO4_ON_at_run;
+
 }Flash_values;
 /* USER CODE END Includes */
 
@@ -93,6 +95,9 @@ void Error_Handler(void);
 #define HANDLE_INP_2_GPIO_Port GPIOA
 #define STAND_INP_Pin GPIO_PIN_6
 #define STAND_INP_GPIO_Port GPIOA
+#define SW_2_Pin GPIO_PIN_7
+#define SW_2_GPIO_Port GPIOA
+#define SW_2_EXTI_IRQn EXTI9_5_IRQn
 #define USR_2_Pin GPIO_PIN_0
 #define USR_2_GPIO_Port GPIOB
 #define USR_3_Pin GPIO_PIN_1
@@ -107,9 +112,6 @@ void Error_Handler(void);
 #define SPI2_RST_GPIO_Port GPIOB
 #define SPI2_CS_Pin GPIO_PIN_14
 #define SPI2_CS_GPIO_Port GPIOB
-#define SW_2_Pin GPIO_PIN_10
-#define SW_2_GPIO_Port GPIOA
-#define SW_2_EXTI_IRQn EXTI15_10_IRQn
 #define ENC_B_Pin GPIO_PIN_3
 #define ENC_B_GPIO_Port GPIOB
 #define SW_1_Pin GPIO_PIN_5

@@ -1,6 +1,6 @@
 ../Core/Src/flash.c:20:10:GetPage	1
 ../Core/Src/flash.c:25:6:FlashCheckCRC	3
 ../Core/Src/flash.c:42:6:FlashReadToBuf	6
-../Core/Src/flash.c:71:6:FlashRead	3
+../Core/Src/flash.c:71:6:FlashRead	2
 ../Core/Src/flash.c:81:10:Flash_Write_Data	4
-../Core/Src/flash.c:136:6:FlashWrite	10
+../Core/Src/flash.c:136:6:FlashWrite	9

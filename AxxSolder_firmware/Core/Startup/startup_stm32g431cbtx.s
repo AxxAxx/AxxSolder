@@ -91,7 +91,6 @@ LoopCopyDataInit:
 FillZerobss:
   str  r3, [r2]
   adds r2, r2, #4
-
 LoopFillZerobss:
   cmp r2, r4
   bcc FillZerobss
