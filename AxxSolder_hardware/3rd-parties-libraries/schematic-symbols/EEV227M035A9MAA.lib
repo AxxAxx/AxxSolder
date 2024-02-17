@@ -1,0 +1,28 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model EEV227M035A9MAA
+#/1719727/300009/2.50/2/2/Capacitor Polarised
+DEF EEV227M035A9MAA C 0 30 Y Y 1 F N
+F0 "C" 350 250 50 H V L CNN
+F1 "EEV227M035A9MAA" 350 150 50 H V L CNN
+F2 "CAPAE830X1050N" 350 50 50 H I L CNN
+F3 "https://content.kemet.com/datasheets/KEM_A4002_EEV.pdf" 350 -50 50 H I L CNN
+F4 "EEV, Aluminum, Aluminum Electrolytic, 220 uF, 20%, 35 VDC, -55/+105C, 105C, -55C, 105C, 2,000 Hrs, 12 % , 160 mOhms, 0.42, 77 uA, 2, 3, 8mm, 10.2mm, 500" 350 -150 50 H I L CNN "Description"
+F5 "10.5" 350 -250 50 H I L CNN "Height"
+F6 "80-EEV227M035A9MAA" 350 -350 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/KEMET/EEV227M035A9MAA?qs=T9vdlufmP8ywqIZcgRBkMQ%3D%3D" 350 -450 50 H I L CNN "Mouser Price/Stock"
+F8 "KEMET" 350 -550 50 H I L CNN "Manufacturer_Name"
+F9 "EEV227M035A9MAA" 350 -650 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X ~ 1 0 0 100 R 50 50 0 0 P
+X ~ 2 500 0 100 L 50 50 0 0 P
+P 5 0 1 6 200 100 200 -100 230 -100 230 100 200 100 N
+P 2 0 1 6 180 50 140 50 N
+P 2 0 1 6 160 70 160 30 N
+P 2 0 1 6 100 0 200 0 N
+P 2 0 1 6 300 0 400 0 N
+P 5 0 1 10 300 100 300 -100 270 -100 270 100 300 100 F
+ENDDRAW
+ENDDEF
+#
+#End Library

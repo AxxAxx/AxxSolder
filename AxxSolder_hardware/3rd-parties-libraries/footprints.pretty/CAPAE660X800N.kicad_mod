@@ -4,7 +4,7 @@
   (tags "Capacitor Polarised")
   (attr smd)
   (fp_text reference "C**" (at 0 0) (layer "F.SilkS")
-      (effects (font (size 1.27 1.27) (thickness 0.254)))
+      (effects (font (size 0.8 0.8) (thickness 0.15) bold))
     (tstamp 85391abf-aa5b-43dc-9f62-d241045edd94)
   )
   (fp_text value "CAPAE660X800N" (at 0 0) (layer "F.SilkS") hide

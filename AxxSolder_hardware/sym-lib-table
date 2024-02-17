@@ -44,4 +44,5 @@
   (lib (name "TLV76733DRVR")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/TLV76733DRVR.kicad_sym")(options "")(descr ""))
   (lib (name "TPD4E1U06DBVR")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/TPD4E1U06DBVR.kicad_sym")(options "")(descr ""))
   (lib (name "SRP7028CC-150M")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/SRP7028CC-150M.kicad_sym")(options "")(descr ""))
+  (lib (name "EEV227M035A9MAA")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/EEV227M035A9MAA.kicad_sym")(options "")(descr ""))
 )
