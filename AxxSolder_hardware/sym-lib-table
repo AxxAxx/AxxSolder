@@ -46,4 +46,5 @@
   (lib (name "SRP7028CC-150M")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/SRP7028CC-150M.kicad_sym")(options "")(descr ""))
   (lib (name "EEV227M035A9MAA")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/EEV227M035A9MAA.kicad_sym")(options "")(descr ""))
   (lib (name "INA180A4IDBVT")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/INA180A4IDBVT.kicad_sym")(options "")(descr ""))
+  (lib (name "INA281A5QDBVRQ1")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/INA281A5QDBVRQ1.kicad_sym")(options "")(descr ""))
 )
