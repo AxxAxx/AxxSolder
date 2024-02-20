@@ -31,7 +31,8 @@ Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and genera
 - AxxSolder is capable of driving C115, C210 and C245 style cartridges from JBC. With the "Handle_sense_1" and "Handle_sense_2" inputs AxxSolder can determine if the connected handle is either a NT115, T210 or T245 and adjust max output power accordingly.  
 - When the handle is put into the stand (connected to Stand_sense) AxxSolder goes into "Standby mode". On the portable version an aluminium plate is mounted and allows the AxxSolder to go into Standby mode when the cartridge or handle rests againts it. After 10 min in Standby mode AxxSolder goes into "Sleep mode" and turns heating completely off. This is similar to what JBC calls [Sleep and Hibernation](https://www.jbctools.com/intelligent-heat-management.html).  
 - If AxxSolder is left in normal running mode for longer than 30 min, the station automatically goes into sleep mode after 30 min as a safety feature.  
-- Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.  
+- Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.
+- User settings are stored in non volatile flash and can be configured via a settings menue descrbied in [SETTINGS](#settings).
 - The TFT display used in this project is a 2 inch 320x240 Color TFT display [2.0" 320x240 Color IPS TFT Display](https://www.adafruit.com/product/4311) and shows information about:
   - Set temperature
   - Actual temperature
@@ -98,22 +99,29 @@ If the handle is detected correctly, the Standby function works and the display 
 If you are not 110% sure about your soldering/connections it is wise to be on the safe side and keep your soldering tip in a waterbath in over to prevent it from over-heating in an uncontrolled manner. During the development this method was used and saved a few of thoese expensive JBC cartridges..
 
 # PID control
-As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification the PID parameters are only different between the different handle types, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
+As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
 ```c
-	/* If the handle_sense is high -> T210 handle is detected */
-	if(sensor_values.handle_sense > 0.5){
-		handle = T210;
-		max_power_watt = 60;
-		Kp = 10;
-		Ki = 30;
+	/* Determine if NT115 handle is detected */
+	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
+		handle = NT115;
+		sensor_values.max_power_watt = 14; //60W
+		Kp = 3;
+		Ki = 1;
 		Kd = 0.25;
 	}
-	/* If the handle_sense is low -> T245 Handle */
+	/* Determine if T210 handle is detected */
+	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
+		handle = T210;
+		sensor_values.max_power_watt = 60; //60W
+		Kp = 5;
+		Ki = 5;
+		Kd = 0.5;
+	}
 	else{
 		handle = T245;
-		max_power_watt = 120; //120W
-		Kp = 15;
-		Ki = 30;
+		sensor_values.max_power_watt = 120; //120W
+		Kp = 8;
+		Ki = 3;
 		Kd = 0.5;
 	}
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
@@ -122,17 +130,19 @@ The PID parameters are adjusted to achieve a fast response with minimum overshoo
 
  ![AxxSolder_pid](./photos/PID_TUNING.png)
 # Temperature calibration
-The voltage from the thermocouple embedded inside the cartridge is amplified by an OPA2333 operational amplifier and then read by the ADC of the MCU. To correlate the measured ADC value to the cartridge temperature experiments were done. A constant power was applied to the heating element of the cartridge and the ADC value was read as well as the actual tip temperature. The tip temperature was measured by a "Soldering Tip Thermocouple" used in e.g. the Hakko FG-100.   
-The measured data was recorded and plotted for both the C210 and C245 cartridges. The specific cartridges used were the C210-007 and C245-945. The measured data were fitted to polynomial equations:  
-$Temp_{C210}[deg] =  -6.798e^{-9} * ADC^3 -6.084e^{-6} * ADC^2 + 0.271* ADC + 25.399$  
-$Temp_{C245}[deg] = 2.092e^9 * ADC^3 -1.213e^{-5} * ADC^2 + 0.118* ADC + 25.052$  
+The voltage from the thermocouple embedded inside the cartridge is amplified by an OPA2387 operational amplifier and then read by the ADC of the MCU. To correlate the measured ADC value to the cartridge temperature experiments were done. A constant power was applied to the heating element of the cartridge and the ADC value was read as well as the actual tip temperature. The tip temperature was measured by a "Soldering Tip Thermocouple" used in e.g. the Hakko FG-100.   
+The measured data was recorded and plotted for both the C115, C210 and C245 cartridges. The specific cartridges used were the C115112, C210-007 and C245-945. The measured data were fitted to polynomial equations:  
+$Temp_{C115}[deg] =  5.88e^{-5} * ADC^2 + 0.40* ADC + 24.07$  
+$Temp_{C210}[deg] =  8.44e^{-6} * ADC^2 + 0.31* ADC + 24.06$  
+$Temp_{C245}[deg] = -1.22e^{-7} * ADC^2 + 0.11* ADC + 25.53$  
 These are then used in the software to retrieve correct tip temperatures.
 
 ![Temp_calibration](./photos/Temp_calibration_data.png)
 # Temperature measurement
-As the thermocouple and heater element is connected in series inside the JBC cartridges and the thermocouple voltage measures over the same pins as the heating element we have to be careful when to do the temperature measurement. In order to not disturb the thermocouple measurement with heater element switching, the switching is turned off for 10 ms just before the temperature measurement is taken. The 10 ms delay ensures that the switching is turned off and the thermocouple signal is stabilized around a stable voltage.  
-The measured signal over the thermocouple is clamped to 3.3V with a BAT54S Schottky diode in order to protect the opamp OPA2333. The voltage measurement is taken by the internal ADC in DMA mode with a circular buffer. The buffer holds several measurements which are averaged and filtered in software.  
-The yellow curve in the image below (Channel 1) shows every time the circular buffer is filled. Just after the 10 ms delay time the measurements are taken from the buffer. In the image below the time period where the last thermocouple measurements are taken is indicated as a red rectangle. The green curve shows the amplified voltage between GREEN and RED wire in the JBC handle for at 330 degree C and 5% power and the purple 25 degree C and at 100% power (the tip held under water trying to heat up).
+As the thermocouple and heater element is connected in series inside the JBC cartridges and the thermocouple voltage measures over the same pins as the heating element we have to be careful when to do the temperature measurement. In order to not disturb the thermocouple measurement with heater element switching, the switching is turned off for 0.5 ms just before the temperature measurement is taken. The 0.5 ms delay ensures that the switching is turned off and the thermocouple signal is stabilized around a stable voltage.  
+The measured signal over the thermocouple is clamped to 3.3V with a BAV199 Schottky diode in order to protect the opamp OPA2387. The voltage measurement is taken by the internal ADC in DMA mode with a circular buffer. The buffer holds several measurements which are averaged and filtered in software.  
+The yellow curve in the image below (Channel 1) shows the PWM signal driving the gate of the mosfet. The green curve shows the amplified voltage between GREEN and RED wire in the JBC handle for at 330 degree C and 5% power and the purple 25 degree C and at 80% power (the tip held under water trying to heat up).
+The blue pulse indicates the wait time of 0.5 ms and the purple pulse is where the ADC is sampled.
 ![Oscilloscope_image_PWM](./photos/Temp_sensing_oscilloscope.png)
 
 
