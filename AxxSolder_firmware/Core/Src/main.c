@@ -120,7 +120,7 @@ float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
 #define ADC2_BUF_LEN 10
 uint16_t ADC2_BUF[ADC2_BUF_LEN];
 
-#define ADC1_BUF_LEN 60 //3*20
+#define ADC1_BUF_LEN 57 //3*19
 uint16_t ADC1_BUF[ADC1_BUF_LEN];
 
 uint16_t mcu_temperature_raw = 0;
@@ -133,6 +133,8 @@ uint16_t current_raw = 0;
 
 double min_selectable_temperature = 20;
 double max_selectable_temperature = 450;
+
+uint8_t custom_temperature_on = 0;
 
 /* TC Compensation constants */
 #define TC_COMPENSATION_X2_NT115 5.8885900235610466e-05
@@ -571,10 +573,28 @@ void LCD_draw_main_screen(){
 		UG_DrawFrame(209, 54, 231, 288, RGB_to_BRG(C_WHITE));
 }
 
+void LCD_draw_earth_fault_popup(){
+	UG_FillFrame(10, 50, 205, 205, RGB_to_BRG(C_ORANGE));
+	UG_FillFrame(15, 55, 200, 200, RGB_to_BRG(C_WHITE));
+	LCD_PutStr(20, 60, "GROUNDING", FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
+	LCD_PutStr(20, 80, "ERROR", FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
+
+	LCD_PutStr(20, 120, "CHECK", FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
+	LCD_PutStr(20, 140, "CONNECTIONS", FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
+	LCD_PutStr(20, 160, "AND REBOOT", FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
+
+	heater_off();
+	Error_Handler();
+
+}
+
+
 /* Get encoder value (Set temp.) and limit is NOT heating_halted*/
 void get_set_temperature(){
-	TIM2->CNT = clamp(TIM2->CNT, min_selectable_temperature, max_selectable_temperature);
-	sensor_values.set_temperature = (uint16_t)(TIM2->CNT/2) * 2;
+	if(custom_temperature_on == 0){
+		TIM2->CNT = clamp(TIM2->CNT, min_selectable_temperature, max_selectable_temperature);
+		sensor_values.set_temperature = (uint16_t)(TIM2->CNT/2) * 2;
+	}
 }
 
 /* Beep the beeper */
@@ -759,7 +779,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	}
 
 	if (htim == &htim7){
-		HAL_GPIO_WritePin(GPIOB, USR_3_Pin, GPIO_PIN_SET);
 		HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
 		}
 
@@ -794,7 +813,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	if ((hadc->Instance == ADC1) && (thermocouple_measurement_done == 0)){
-		HAL_GPIO_WritePin(GPIOB, USR_3_Pin, GPIO_PIN_RESET);
 		get_thermocouple_temperature();
 		heater_on();
 		/* Compute PID */
@@ -803,16 +821,17 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		thermocouple_measurement_done = 1;
 	}
 	if ((hadc->Instance == ADC2)){
-		HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_RESET);
 		sensor_values.heater_current = HAL_ADC_GetValue(&hadc2);
 		heater_on();
 		current_measurement_done = 1;
 	}
-
-
-
 }
+
+// For DEBUG
+//HAL_GPIO_WritePin(USR_1_GPIO_Port, USR_1_Pin, GPIO_PIN_SET);
+//HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_RESET);
+//HAL_GPIO_WritePin(GPIOB, USR_3_Pin, GPIO_PIN_RESET);
+//HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_RESET);
 
 /* USER CODE END 0 */
 
@@ -878,7 +897,7 @@ int main(void)
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
 
 	/* initialize moving average functions */
-	Moving_Average_Init(&thermocouple_temperature_filter_struct,40);
+	Moving_Average_Init(&thermocouple_temperature_filter_struct,30);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
 	Moving_Average_Init(&stand_sense_filterStruct,20);
@@ -969,18 +988,17 @@ int main(void)
 
   			// TUNING - ONLY USED DURING MANUAL PID TUNING
   			// ----------------------------------------------
+  			//custom_temperature_on = 1;
   			//PID_SetTunings(&TPID, Kp_custom, Ki_custom, Kd_custom);
   			//sensor_values.set_temperature = temperature_custom;
   			// ----------------------------------------------
-
-
 
   			/* Send debug information */
   			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
   				memset(&buffer, '\0', sizeof(buffer));
   				sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
   						sensor_values.thermocouple_temperature, sensor_values.set_temperature,
-  						PID_output/10, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0);
+  						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0);
   				CDC_Transmit_FS((uint8_t *) buffer, strlen(buffer)); //Print string over USB virtual COM port
   				previous_millis_debug = HAL_GetTick();
   			}
@@ -1419,16 +1437,16 @@ static void MX_TIM2_Init(void)
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 4.294967295E9;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
-  sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
+  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 10;
+  sConfig.IC1Filter = 0;
   sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = 10;
+  sConfig.IC2Filter = 0;
   if (HAL_TIM_Encoder_Init(&htim2, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -1550,7 +1568,7 @@ static void MX_TIM7_Init(void)
 
   /* USER CODE END TIM7_Init 1 */
   htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 17000-1;
+  htim7.Init.Prescaler = 8500-1;
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim7.Init.Period = 9;
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
