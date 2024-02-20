@@ -3,12 +3,12 @@
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
 # AxxSolder Overview
-AxxSolder is a STM32 based soldering iron controller for JBC C210 and C245 cartridges. 
-Two different versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-24V.  The software is written for the [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html) and implements a PID for temperature control, LCD driver and a sleep function when the handle is at rest. Enclosures for both station and portable versions are 3D printed and design files are availible under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the AxxSolder station can be found under [DEMO](#demo). A *bill of materials* (BOM) with individual component prices can be found under [/bom](https://github.com/AxxAxx/AxxSolder/tree/main/PCB/AxxSolder/bom).  
+AxxSolder is a STM32 based soldering iron controller for JBC C115, C210 and C245 cartridges. 
+Two different versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-24V OR a USB-C Power Delivery source.  The software is written for the [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html) and implements a PID for temperature control, TFT display driver, sleep function when the handle is at rest and functions for read/write user settings to flash. Enclosures for both station and portable versions are 3D printed and design files are availible under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the AxxSolder station can be found under [DEMO](#demo). A *bill of materials* (BOM) with individual component prices can be found under [/bom](https://github.com/AxxAxx/AxxSolder/tree/main/PCB/AxxSolder/bom).  
 ![coverphoto](./photos/AxxSolder_cover.jpg)
 
 # Questions and support
-Please use [GitHub Discussions](https://github.com/AxxAxx/AxxSolder/discussions) for build related and general questions. That way others can benefit from already answered questions. 
+Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and general questions.
 
 # Table of Contents
 - [AxxSolder Overview](#axxsolder-overview)
@@ -28,26 +28,26 @@ Please use [GitHub Discussions](https://github.com/AxxAxx/AxxSolder/discussions)
 
 # Features
 - The tip temperature is set by a rotating encoder. Pressing the encoder puts AxxSolder into Sleep mode and heating is turned off, press again to wake up.  
-- AxxSolder is capable of driving C210 and C245 style cartridges from JBC. With the "Handle_sense" input AxxSolder can determine if the connected handle is either a T210 or T245 and adjust max output power accordingly.  
+- AxxSolder is capable of driving C115, C210 and C245 style cartridges from JBC. With the "Handle_sense_1" and "Handle_sense_2" inputs AxxSolder can determine if the connected handle is either a NT115, T210 or T245 and adjust max output power accordingly.  
 - When the handle is put into the stand (connected to Stand_sense) AxxSolder goes into "Standby mode". On the portable version an aluminium plate is mounted and allows the AxxSolder to go into Standby mode when the cartridge or handle rests againts it. After 10 min in Standby mode AxxSolder goes into "Sleep mode" and turns heating completely off. This is similar to what JBC calls [Sleep and Hibernation](https://www.jbctools.com/intelligent-heat-management.html).  
 - If AxxSolder is left in normal running mode for longer than 30 min, the station automatically goes into sleep mode after 30 min as a safety feature.  
-- Should the temperature ever go higher than 475 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.  
-- The OLED display used in this project is a 1.5 inch 128 x 128 pixel SPI Display [WaveShare 1.5inch OLED Module](https://www.waveshare.com/wiki/1.5inch_OLED_Module) and shows information about:
+- Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.  
+- The TFT display used in this project is a 2 inch 320x240 Color TFT display [2.0" 320x240 Color IPS TFT Display](https://www.adafruit.com/product/4311) and shows information about:
   - Set temperature
   - Actual temperature
   - Current power as a bar graph
   - In case of sleep mode, the power bar shows "ZzZzZz"
   - In case of Standby mode, the power bar shows "STANDBY"
   - Input voltage
-  - Ambient temperature
+  - MCU temperature
   - Current detected handle type
 
 # Cartridge differences
 Cartridges from JBC do all contain a thermocouple element to read the tip temperature and a resistive heater element. The configuration of thermocouple and heater element differ slightly between cartridge models. In order to determine the internal configuration of the cartridges two cross secions were done. These show clearly how the C210 and C245 cartridges are constructed internally. The images can be seen here: [https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller](https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller/msg5124267/#msg5124267).
-As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. This is done automatically be the input "Handle_sense" This can be done thanks to the design of the handle connector. For the JCB T210 handle pin 5 and 6 is connected internaly in the connector. This allows AxxSolder to sense which handle is connected and assign correct thermocouple correction, PID parameters and max output power.
+As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. This is done automatically be the inputs "Handle_sense_1" and "Handle_sense_2" This can be done thanks to the design of the handle connector. For the JCB T210 handle pin 5 and 6 is connected internaly in the connector. This allows AxxSolder to sense which handle is connected and assign correct thermocouple correction, PID parameters and max output power.
 
 # Schematic
-The schematic for AxxSolder is shown below. Both station and portable versions use the same PCB and software. The MCU is a [STM32G431KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g431kb.html) and the PCB footprint allows for either UFQFPN32 or LQFP32 package. 
+The schematic for AxxSolder is shown below. Both station and portable versions use the same PCB and software. The MCU is a [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html). 
 ![AxxSolder_station](./photos/AxxSolder_Schematic.png)
 A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown below. 
 ![AxxSolder_station](./photos/PCB_3D.jpg)
