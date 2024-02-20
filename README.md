@@ -104,7 +104,7 @@ As the thermal mass of each cartridge differs the PID parameters should in theor
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
 		handle = NT115;
-		sensor_values.max_power_watt = 14; //60W
+		sensor_values.max_power_watt = 20; //20W
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
