@@ -139,6 +139,9 @@ uint16_t current_raw = 0;
 #define VOLTAGE_COMPENSATION 0.00840442388
 #define CURRENT_COMPENSATION 1.000
 
+/* Min allowed bus voltage */
+#define MIN_BUSVOLTAGE 8.0
+
 /* MinMax selectable values */
 double min_selectable_temperature = 20;
 double max_selectable_temperature = 450;
@@ -634,6 +637,10 @@ void handle_emergency_shutdown(){
 	if((sensor_values.thermocouple_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
 		change_state(EMERGENCY_SLEEP);
 		beep();
+	}
+	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
+	if(sensor_values.bus_voltage <= MIN_BUSVOLTAGE){
+		change_state(EMERGENCY_SLEEP);
 	}
 }
 
