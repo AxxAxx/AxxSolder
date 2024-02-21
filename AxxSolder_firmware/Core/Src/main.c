@@ -73,6 +73,7 @@ uint32_t interval_sensor_update_high_update = 10;
 uint32_t previous_sensor_update_low_update = 0;
 uint32_t interval_sensor_update_low_update = 100;
 
+/* Button flags */
 uint8_t SW_ready = 1;
 uint8_t SW_1_pressed = 0;
 uint8_t SW_2_pressed = 0;
@@ -110,30 +111,39 @@ double Kd = 0;
 /* Function to detect tip presence by a periodic voltage and measure the current */
 #define DETECT_TIP_BY_CURRENT
 
-char buffer[40];								/* Buffer for UART print */
+/* Buffer for UART print */
+char buffer[40];
 #define CHAR_BUFF_SIZE 40
 
-#define POWER_REDUCTION_FACTOR 0.131 			/* Converts power in W to correct duty cycle */
+/* Converts power in W to correct duty cycle */
+#define POWER_REDUCTION_FACTOR 0.131
 
-float ADC_filter_mean = 0.0; 					/* Filtered ADC reading value */
+/* Filtered ADC reading value */
+float ADC_filter_mean = 0.0;
 
+/* ADC Buffers */
 #define ADC2_BUF_LEN 10
 uint16_t ADC2_BUF[ADC2_BUF_LEN];
 
 #define ADC1_BUF_LEN 57 //3*19
 uint16_t ADC1_BUF[ADC1_BUF_LEN];
 
+/* RAW ADC data */
 uint16_t mcu_temperature_raw = 0;
 uint16_t current_raw = 0;
 
-#define EMERGENCY_SHUTDOWN_TEMPERATURE 480		/* Max allowed tip temperature */
+/* Max allowed tip temperature */
+#define EMERGENCY_SHUTDOWN_TEMPERATURE 480
 
-#define VOLTAGE_COMPENSATION 0.00840442388 		/* Constant for scaling input voltage ADC value*/
-#define CURRENT_COMPENSATION 1.000 				/* Constant for scaling input voltage ADC value*/
+/* Constants for scaling input voltage ADC value*/
+#define VOLTAGE_COMPENSATION 0.00840442388
+#define CURRENT_COMPENSATION 1.000
 
+/* MinMax selectable values */
 double min_selectable_temperature = 20;
 double max_selectable_temperature = 450;
 
+/* Allow use of custom temperatue, used for tuning */
 uint8_t custom_temperature_on = 0;
 
 /* TC Compensation constants */
@@ -149,6 +159,7 @@ uint8_t custom_temperature_on = 0;
 #define TC_COMPENSATION_X1_T245 0.11554972949386498
 #define TC_COMPENSATION_X0_T245 26.149539283041307
 
+/* Constants for internal MCU temperture */
 #define V30 0.76 			// from datasheet
 #define VSENSE 3.3/4096.0 	// VSENSE value
 #define Avg_Slope 0.0025 	// 2.5mV from datasheet
@@ -181,7 +192,7 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.enc_button_status = 0.0,
 											.max_power_watt = 0};
 
-
+/* Struct to hold flash values */
 Flash_values flash_values;
 Flash_values default_flash_values = {.startup_temperature = 330,
 											.temperature_offset = 0,
@@ -193,6 +204,7 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.preset_temp_2 = 430,
 											.GPIO4_ON_at_run = 0};
 
+/* List of names for settings menue */
 #define menu_length 12
 char menu_names[menu_length][20] = { "Startup Temp",
 							"Temp Offset",
@@ -207,12 +219,12 @@ char menu_names[menu_length][20] = { "Startup Temp",
 							"-Exit and Save-",
 							"-Exit no Save-"};
 
-
-
+/* PID data */
 double PID_output = 0.0;
 double PID_setpoint = 0.0;
 double duty_cycle = 0.0;
 
+/* Flags for temp asn current measurements */
 uint8_t current_measurement_requested = 0;
 uint8_t current_measurement_done = 1;
 uint8_t thermocouple_measurement_requested = 0;
@@ -706,7 +718,7 @@ void get_handle_type(){
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
 		handle = NT115;
-		sensor_values.max_power_watt = 14; //60W
+		sensor_values.max_power_watt = 20; //20W
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
