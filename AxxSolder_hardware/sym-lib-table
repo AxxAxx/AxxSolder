@@ -22,7 +22,6 @@
   (lib (name "2N7002NXAKR")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/2N7002NXAKR.kicad_sym")(options "")(descr ""))
   (lib (name "USB4110-GF-A")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/USB4110-GF-A.kicad_sym")(options "")(descr ""))
   (lib (name "ADTSM644KVTR")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/ADTSM644KVTR.kicad_sym")(options "")(descr ""))
-  (lib (name "0154007_DRL")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/0154007_DRL.kicad_sym")(options "")(descr ""))
   (lib (name "STM32F303CCT6TR")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/STM32F303CCT6TR.kicad_sym")(options "")(descr ""))
   (lib (name "NX2016SA-32M-EXS00A-CS06465")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/NX2016SA-32M-EXS00A-CS06465.kicad_sym")(options "")(descr ""))
   (lib (name "EMZR500ARA331MJA0G")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/EMZR500ARA331MJA0G.kicad_sym")(options "")(descr ""))
@@ -47,4 +46,5 @@
   (lib (name "EEV227M035A9MAA")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/EEV227M035A9MAA.kicad_sym")(options "")(descr ""))
   (lib (name "INA180A4IDBVT")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/INA180A4IDBVT.kicad_sym")(options "")(descr ""))
   (lib (name "INA281A5QDBVRQ1")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/INA281A5QDBVRQ1.kicad_sym")(options "")(descr ""))
+  (lib (name "0154007_DR")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/0154007_DR.kicad_sym")(options "")(descr ""))
 )
