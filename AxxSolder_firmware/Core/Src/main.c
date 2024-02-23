@@ -102,11 +102,10 @@ double temperature_custom = 100;
 double Kp = 0;
 double Ki = 0;
 double Kd = 0;
+double PID_MAX_I_LIMIT = 150;
 
 /* PID parameters */
 #define PID_MAX_OUTPUT 500
-#define PID_MIN_LIMIT -150
-#define PID_MAX_LIMIT 150
 
 /* Function to detect tip presence by a periodic voltage and measure the current */
 #define DETECT_TIP_BY_CURRENT
@@ -729,6 +728,7 @@ void get_handle_type(){
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
+		PID_MAX_I_LIMIT = 20;
 	}
 	/* Determine if T210 handle is detected */
 	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
@@ -737,6 +737,7 @@ void get_handle_type(){
 		Kp = 5;
 		Ki = 5;
 		Kd = 0.5;
+		PID_MAX_I_LIMIT = 50;
 	}
 	else{
 		handle = T245;
@@ -744,8 +745,11 @@ void get_handle_type(){
 		Kp = 8;
 		Ki = 3;
 		Kd = 0.5;
+		PID_MAX_I_LIMIT = 150;
 	}
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
+	PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT); 	// Set max and min I limit
+
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -951,7 +955,7 @@ int main(void)
   		PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
   		PID_SetSampleTime(&TPID, interval_PID_update, 0); 		//Set PID sample time to "interval_PID_update" to make sure PID is calculated every time it is called
   		PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
-  		PID_SetILimits(&TPID, PID_MIN_LIMIT, PID_MAX_LIMIT); 	// Set max and min I limit
+  		PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT); 	// Set max and min I limit
 
   		/* Draw the main screen decoration */
   		LCD_draw_main_screen();
