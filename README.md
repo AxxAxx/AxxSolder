@@ -145,10 +145,7 @@ The yellow curve in the image below (Channel 1) shows the PWM signal driving the
 The blue pulse indicates the wait time of 0.5 ms and the purple pulse is where the ADC is sampled.
 ![Oscilloscope_image_PWM](./photos/temperature_measurement.png)
 # Current measurement
-As the thermocouple and heater element is connected in series inside the JBC cartridges and the thermocouple voltage measures over the same pins as the heating element we have to be careful when to do the temperature measurement. In order to not disturb the thermocouple measurement with heater element switching, the switching is turned off for 0.5 ms just before the temperature measurement is taken. The 0.5 ms delay ensures that the switching is turned off and the thermocouple signal is stabilized around a stable voltage.  
-The measured signal over the thermocouple is clamped to 3.3V with a BAV199 Schottky diode in order to protect the opamp OPA2387. The voltage measurement is taken by the internal ADC in DMA mode with a circular buffer. The buffer holds several measurements which are averaged and filtered in software.  
-The yellow curve in the image below (Channel 1) shows the PWM signal driving the gate of the mosfet. The green curve shows the amplified voltage between GREEN and RED wire in the JBC handle for at 330 degree C and 5% power and the purple 25 degree C and at 80% power (the tip held under water trying to heat up).
-The blue pulse indicates the wait time of 0.5 ms and the purple pulse is where the ADC is sampled.
+The current is sampled two times per second by a 30 us current pulse through the heater. This is done both to check if there is a functioning tip in the handle (otherwise the display shows "---" at current temp) and to be able to calculate the power drawn by the heater. By knowing how mych the heater draws in ampere the actual power can be calculated by knowing the bus voltage and pulse duty cycle. to measure the current the gate to the MOSFET is turned on, 10 us later the voltage over the current shunt is sampled byu the ADC and the result is converted. This is showin the the image below.
 ![Oscilloscope_image_PWM](./photos/current_measurement.png)
 
 
