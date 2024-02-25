@@ -121,7 +121,7 @@ char buffer[40];
 float ADC_filter_mean = 0.0;
 
 /* ADC Buffers */
-#define ADC2_BUF_LEN 10
+#define ADC2_BUF_LEN 2
 uint16_t ADC2_BUF[ADC2_BUF_LEN];
 
 #define ADC1_BUF_LEN 57 //3*19
@@ -173,6 +173,7 @@ struct sensor_values_struct {
 	double thermocouple_temperature;
 	float bus_voltage;
 	uint16_t heater_current;
+	uint16_t leak_current;
 	float mcu_temperature;
 	double in_stand;
 	double handle1_sense;
@@ -186,6 +187,7 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
         									.thermocouple_temperature = 0.0,
 											.bus_voltage = 0.0,
 											.heater_current = 0,
+											.leak_current = 0,
 											.mcu_temperature = 0.0,
 											.in_stand = 0.0,
 											.handle1_sense  = 0.0,
@@ -255,6 +257,7 @@ FilterTypeDef handle2_sense_filterStruct;
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
 DMA_HandleTypeDef hdma_adc1;
+DMA_HandleTypeDef hdma_adc2;
 
 CRC_HandleTypeDef hcrc;
 
@@ -357,6 +360,23 @@ void get_thermocouple_temperature(){
 	}
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
 	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,999); // Clamp
+}
+
+/* Sets the duty cycle of timer controlling the heater */
+void set_heater_duty(uint16_t dutycycle){
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, dutycycle);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dutycycle*0.3);
+}
+
+/* Update the duty cycle of timer controlling the heater PWM */
+void heater_on(){
+	duty_cycle = PID_output*(sensor_values.max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+	set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
+}
+
+/* Disable the duty cycle of timer controlling the heater PWM*/
+void heater_off(){
+	set_heater_duty(0);
 }
 
 void settings_menue(){
@@ -599,7 +619,6 @@ void LCD_draw_earth_fault_popup(){
 
 	heater_off();
 	Error_Handler();
-
 }
 
 
@@ -752,6 +771,7 @@ void get_handle_type(){
 
 }
 
+/* Interrupts at button press */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if(((GPIO_Pin == SW_1_Pin) || (GPIO_Pin == SW_2_Pin) || (GPIO_Pin == SW_3_Pin)) && (SW_ready == 1)){ //A button is pressed
@@ -765,23 +785,6 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	if ((htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) || (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) ) {
 		beep();
 	}
-}
-
-/* Sets the duty cycle of timer controlling the heater */
-void set_heater_duty(uint16_t dutycycle){
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, dutycycle);
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dutycycle*0.3);
-}
-
-/* Update the duty cycle of timer controlling the heater PWM */
-void heater_on(){
-	duty_cycle = PID_output*(sensor_values.max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
-	set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
-}
-
-/* Disable the duty cycle of timer controlling the heater PWM*/
-void heater_off(){
-	set_heater_duty(0);
 }
 
 // Callback:
@@ -833,7 +836,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		}
 	}
 }
-
+/* ADC conversion completed Callbacks */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	if ((hadc->Instance == ADC1) && (thermocouple_measurement_done == 0)){
 		get_thermocouple_temperature();
@@ -844,11 +847,17 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		thermocouple_measurement_done = 1;
 	}
 	if ((hadc->Instance == ADC2)){
-		sensor_values.heater_current = HAL_ADC_GetValue(&hadc2);
+		sensor_values.heater_current = ADC2_BUF[1];
 		heater_on();
 		current_measurement_done = 1;
 	}
 }
+
+/* ADC watchdog Callback */
+void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* hadc){
+	LCD_draw_earth_fault_popup();
+}
+
 
 // For DEBUG
 //HAL_GPIO_WritePin(USR_1_GPIO_Port, USR_1_Pin, GPIO_PIN_SET);
@@ -915,6 +924,7 @@ int main(void)
 	__HAL_TIM_ENABLE_IT(&htim7, TIM_IT_UPDATE);
 
 	HAL_ADCEx_Calibration_Start(&hadc2, ADC_SINGLE_ENDED);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC2_BUF, (uint32_t)ADC2_BUF_LEN);	//Start ADC DMA mode
 
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
@@ -1195,6 +1205,7 @@ static void MX_ADC2_Init(void)
 
   /* USER CODE END ADC2_Init 0 */
 
+  ADC_AnalogWDGConfTypeDef AnalogWDGConfig = {0};
   ADC_ChannelConfTypeDef sConfig = {0};
 
   /* USER CODE BEGIN ADC2_Init 1 */
@@ -1208,15 +1219,15 @@ static void MX_ADC2_Init(void)
   hadc2.Init.Resolution = ADC_RESOLUTION_12B;
   hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc2.Init.GainCompensation = 0;
-  hadc2.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc2.Init.ScanConvMode = ADC_SCAN_ENABLE;
   hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc2.Init.LowPowerAutoWait = DISABLE;
-  hadc2.Init.ContinuousConvMode = DISABLE;
-  hadc2.Init.NbrOfConversion = 1;
+  hadc2.Init.ContinuousConvMode = ENABLE;
+  hadc2.Init.NbrOfConversion = 2;
   hadc2.Init.DiscontinuousConvMode = DISABLE;
   hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc2.Init.DMAContinuousRequests = DISABLE;
+  hadc2.Init.DMAContinuousRequests = ENABLE;
   hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc2.Init.OversamplingMode = DISABLE;
   if (HAL_ADC_Init(&hadc2) != HAL_OK)
@@ -1224,14 +1235,37 @@ static void MX_ADC2_Init(void)
     Error_Handler();
   }
 
+  /** Configure Analog WatchDog 1
+  */
+  AnalogWDGConfig.WatchdogNumber = ADC_ANALOGWATCHDOG_1;
+  AnalogWDGConfig.WatchdogMode = ADC_ANALOGWATCHDOG_SINGLE_REG;
+  AnalogWDGConfig.Channel = ADC_CHANNEL_2;
+  AnalogWDGConfig.ITMode = ENABLE;
+  AnalogWDGConfig.HighThreshold = 2000;
+  AnalogWDGConfig.LowThreshold = 0;
+  AnalogWDGConfig.FilteringConfig = ADC_AWD_FILTERING_NONE;
+  if (HAL_ADC_AnalogWDGConfig(&hadc2, &AnalogWDGConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_10;
+  sConfig.Channel = ADC_CHANNEL_2;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_247CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
+  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_10;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
   if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -1786,6 +1820,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  /* DMA1_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
   /* DMA1_Channel3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
@@ -1810,24 +1847,17 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(USR_1_GPIO_Port, USR_1_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, USR_2_Pin|USR_3_Pin|USR_4_Pin|SPI2_SD_CS_Pin
                           |SPI2_DC_Pin|SPI2_RST_Pin|SPI2_CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(USR_1_GPIO_Port, USR_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : VERSION_BIT_1_Pin VERSION_BIT_2_Pin VERSION_BIT_3_Pin */
   GPIO_InitStruct.Pin = VERSION_BIT_1_Pin|VERSION_BIT_2_Pin|VERSION_BIT_3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : USR_1_Pin */
-  GPIO_InitStruct.Pin = USR_1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(USR_1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : HANDLE_INP_1_Pin HANDLE_INP_2_Pin STAND_INP_Pin */
   GPIO_InitStruct.Pin = HANDLE_INP_1_Pin|HANDLE_INP_2_Pin|STAND_INP_Pin;
@@ -1849,6 +1879,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : USR_1_Pin */
+  GPIO_InitStruct.Pin = USR_1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(USR_1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SW_1_Pin SW_3_Pin */
   GPIO_InitStruct.Pin = SW_1_Pin|SW_3_Pin;
