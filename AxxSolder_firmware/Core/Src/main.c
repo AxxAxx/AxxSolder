@@ -120,10 +120,7 @@ char buffer[40];
 /* Filtered ADC reading value */
 float ADC_filter_mean = 0.0;
 
-/* ADC Buffers */
-#define ADC2_BUF_LEN 2
-uint16_t ADC2_BUF[ADC2_BUF_LEN];
-
+/* ADC Buffer */
 #define ADC1_BUF_LEN 57 //3*19
 uint16_t ADC1_BUF[ADC1_BUF_LEN];
 
@@ -257,7 +254,6 @@ FilterTypeDef handle2_sense_filterStruct;
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
 DMA_HandleTypeDef hdma_adc1;
-DMA_HandleTypeDef hdma_adc2;
 
 CRC_HandleTypeDef hcrc;
 
@@ -497,9 +493,9 @@ void update_display(){
 		buffer[2] = 32;
 		buffer[3] = 32;
 	}
-  	LCD_PutStr(10, 75, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+  	LCD_PutStr(14, 75, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-	if(sensor_values.heater_current < 10){
+	if(sensor_values.heater_current < 500){ //NT115 at 9V draws 810
 	  	LCD_PutStr(10, 165, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else{
@@ -509,7 +505,7 @@ void update_display(){
 			buffer[2] = 32;
 			buffer[3] = 32;
 		}
-	  	LCD_PutStr(10, 165, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+	  	LCD_PutStr(14, 165, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 
 	memset(&buffer, '\0', sizeof(buffer));
@@ -571,31 +567,31 @@ void LCD_draw_main_screen(){
 		LCD_DrawLine(0,42,240,42,RGB_to_BRG(C_YELLOW));
 
 
-		LCD_PutStr(10, 50, "Set temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(14, 50, "Set temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		UG_DrawCircle(120, 85, 5, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(120, 85, 4, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(120, 85, 3, RGB_to_BRG(C_WHITE));
 		LCD_PutStr(130, 75, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 
-		LCD_PutStr(10, 140, "Actual temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(14, 140, "Actual temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		UG_DrawCircle(120, 175, 5, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(120, 175, 4, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(120, 175, 3, RGB_to_BRG(C_WHITE));
 		LCD_PutStr(130, 165, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		UG_DrawFrame(4, 134, 182, 220, RGB_to_BRG(C_WHITE));
-		UG_DrawFrame(3, 133, 183, 221, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(6, 134, 182, 220, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(5, 133, 183, 221, RGB_to_BRG(C_WHITE));
 
-		LCD_PutStr(2, 235, "Handle type:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(2, 255, "Input voltage:           V", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(2, 275, "MCU temp:              deg C", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(6, 235, "Handle type:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(6, 255, "Input voltage:           V", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(6, 275, "MCU temp:              deg C", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		UG_DrawLine(2, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
 		UG_DrawLine(2, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
 
 
-		LCD_PutStr(2, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(6, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		memset(&buffer, '\0', sizeof(buffer));
 		sprintf(buffer, "%.0f", flash_values.preset_temp_1);
 		LCD_PutStr(130, 301, buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
@@ -608,6 +604,8 @@ void LCD_draw_main_screen(){
 }
 
 void LCD_draw_earth_fault_popup(){
+	heater_off();
+
 	UG_FillFrame(10, 50, 205, 205, RGB_to_BRG(C_ORANGE));
 	UG_FillFrame(15, 55, 200, 200, RGB_to_BRG(C_WHITE));
 	LCD_PutStr(20, 60, "GROUNDING", FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
@@ -617,7 +615,6 @@ void LCD_draw_earth_fault_popup(){
 	LCD_PutStr(20, 140, "CONNECTIONS", FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
 	LCD_PutStr(20, 160, "AND REBOOT", FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
 
-	heater_off();
 	Error_Handler();
 }
 
@@ -747,7 +744,7 @@ void get_handle_type(){
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
-		PID_MAX_I_LIMIT = 20;
+		PID_MAX_I_LIMIT = 100;
 	}
 	/* Determine if T210 handle is detected */
 	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
@@ -756,7 +753,7 @@ void get_handle_type(){
 		Kp = 5;
 		Ki = 5;
 		Kd = 0.5;
-		PID_MAX_I_LIMIT = 50;
+		PID_MAX_I_LIMIT = 125;
 	}
 	else{
 		handle = T245;
@@ -791,6 +788,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
 	if (((htim == &htim1) && (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)) && (current_measurement_requested == 1)){
 		current_measurement_requested = 0;
+		current_measurement_done = 0;
 		HAL_ADC_Start_IT(&hadc2);
 	}
 }
@@ -799,8 +797,8 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	/* take thermocouple measurement every 25 ms */
 	if (htim == &htim6){
-		thermocouple_measurement_done = 0;
 		heater_off();
+		thermocouple_measurement_done = 0;
 		__HAL_TIM_ENABLE(&htim7);
 	}
 
@@ -846,8 +844,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		HAL_ADC_Stop_DMA(&hadc1);
 		thermocouple_measurement_done = 1;
 	}
-	if ((hadc->Instance == ADC2)){
-		sensor_values.heater_current = ADC2_BUF[1];
+	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
+		sensor_values.leak_current = HAL_ADC_GetValue(&hadc2);
+		sensor_values.heater_current = HAL_ADC_GetValue(&hadc2);
 		heater_on();
 		current_measurement_done = 1;
 	}
@@ -855,7 +854,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 
 /* ADC watchdog Callback */
 void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* hadc){
-	LCD_draw_earth_fault_popup();
+		LCD_draw_earth_fault_popup();
+
 }
 
 
@@ -924,7 +924,6 @@ int main(void)
 	__HAL_TIM_ENABLE_IT(&htim7, TIM_IT_UPDATE);
 
 	HAL_ADCEx_Calibration_Start(&hadc2, ADC_SINGLE_ENDED);
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC2_BUF, (uint32_t)ADC2_BUF_LEN);	//Start ADC DMA mode
 
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
@@ -1029,9 +1028,9 @@ int main(void)
   			/* Send debug information */
   			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
   				memset(&buffer, '\0', sizeof(buffer));
-  				sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
+  				sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
   						sensor_values.thermocouple_temperature, sensor_values.set_temperature,
-  						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0);
+  						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current*1.0);
   				CDC_Transmit_FS((uint8_t *) buffer, strlen(buffer)); //Print string over USB virtual COM port
   				previous_millis_debug = HAL_GetTick();
   			}
@@ -1222,12 +1221,12 @@ static void MX_ADC2_Init(void)
   hadc2.Init.ScanConvMode = ADC_SCAN_ENABLE;
   hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc2.Init.LowPowerAutoWait = DISABLE;
-  hadc2.Init.ContinuousConvMode = ENABLE;
+  hadc2.Init.ContinuousConvMode = DISABLE;
   hadc2.Init.NbrOfConversion = 2;
   hadc2.Init.DiscontinuousConvMode = DISABLE;
   hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc2.Init.DMAContinuousRequests = ENABLE;
+  hadc2.Init.DMAContinuousRequests = DISABLE;
   hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc2.Init.OversamplingMode = DISABLE;
   if (HAL_ADC_Init(&hadc2) != HAL_OK)
@@ -1496,7 +1495,7 @@ static void MX_TIM2_Init(void)
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
-  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+  sConfig.IC1Polarity = TIM_ICPOLARITY_FALLING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
   sConfig.IC1Filter = 0;
@@ -1820,9 +1819,6 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
-  /* DMA1_Channel2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
   /* DMA1_Channel3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
