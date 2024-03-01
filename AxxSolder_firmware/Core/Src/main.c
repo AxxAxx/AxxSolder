@@ -65,7 +65,7 @@ uint32_t previous_millis_left_stand = 0;
 uint32_t previous_standby_millis = 0;
 
 uint32_t previous_measure_current_update = 0;
-uint32_t interval_measure_current = 500;
+uint32_t interval_measure_current = 250;
 
 uint32_t previous_sensor_update_high_update = 0;
 uint32_t interval_sensor_update_high_update = 10;
