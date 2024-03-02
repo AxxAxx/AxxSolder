@@ -76,8 +76,6 @@ Click on the gif to get to YouTube and see the demo in full resolution.
 [![AxxSolder DEMO](./photos/AxxSolder_DEMO.gif)](https://www.youtube.com/watch?v=-3MtJyTwZFQ)
 # AxxSolder Station
 ![AxxSolder_station](./photos/AxxSolder_station.jpg)
-[//]: # The connections from the station to the PCB throught the BINDER 99 0624 00 07 connector is shown below. The Stand_sense input on AxxSolder is connected to both pin 4 and 5. These are in turn connected in the stand to the tip changer and the iron holder respectively. The yellow wire is connected to pin 2 and is used to determine which handle is connected.
-[//]: # ![AxxSolder_station](./photos/Station_connections.jpg)
 # AxxSolder Portable
 It is often nice to have a compact and portable soldering iron controller for when you are away from your comfortable desk. A neat powerful package with the same capabilities as your main soldering station. This is why AxxSolder Portable was designed. The only difference between AxxSolder station and Portable is the enclosure. As AxxSolder accepts an input of 9-24 V it is compatible with a range of battery options. The author usually use a battery pack consisting of 12 Samsung INR18650 35E in a 3S4P configuration which works very well. The portable version has an aluminium tab on the enclosure connected to the same input on the PCB as the "handle rest" on the station version. This allows the user to rest the iron onto the aluminium tab and automatically enter sleep mode.   
 ![AxxSolder_portable](./photos/AxxSolder_portable.jpg)
