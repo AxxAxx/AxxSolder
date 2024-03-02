@@ -112,6 +112,7 @@ As the thermal mass of each cartridge differs the PID parameters should in theor
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
+		PID_MAX_I_LIMIT = 100;
 	}
 	/* Determine if T210 handle is detected */
 	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
@@ -120,6 +121,7 @@ As the thermal mass of each cartridge differs the PID parameters should in theor
 		Kp = 5;
 		Ki = 5;
 		Kd = 0.5;
+		PID_MAX_I_LIMIT = 125;
 	}
 	else{
 		handle = T245;
@@ -127,8 +129,10 @@ As the thermal mass of each cartridge differs the PID parameters should in theor
 		Kp = 8;
 		Ki = 3;
 		Kd = 0.5;
+		PID_MAX_I_LIMIT = 150;
 	}
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
+	PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT); 	// Set max and min I limit
 ```
 The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-007 cartridge.  
 
