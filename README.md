@@ -23,6 +23,7 @@ Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and genera
 - [AxxSolder Portable](#axxsolder-portable)
 - [Firmware update](#firmware-update)
 - [First start up after build](#first-start-up-after-build)
+- [Settings](#settings)
 - [PID control](#pid-control)
 - [Temperature calibration](#temperature-calibration)
 - [Temperature measurement](#temperature-measurement)
@@ -102,6 +103,23 @@ The first start up after you have built your AxxSolder can be intense. Double ch
 The first thing to do after you have double-checked everything is to follow the steps under [Firmware update](#firmware-update). It is wise to do the first programming of AxxSolder without any handle piece and with only 3.3 V, not VDD. After the programming is done you can now power up AxxSolder again via either with 3.3 V, this time you can attach your handle. This allows you to test that your handle type is detected correctly (the detected handle type NT115/T210/T245 is shown in the display). The Standby feature can also be tested by touching the stand (STAND Input).  
 If the handle is detected correctly, the Standby function works and the display works you proceed to test the 7.35V DC/DC. This is done by once again disconnect the handle, but this time apply current limited 9-24 V VDD. 100 mA at 24 V is enough to check that the display starts and that you can measure the 3 bus voltages; 3.3V, 7.35V and VDD. If the the bus voltages looks good and the display shows the main screen you are ready to apply full VDD power and attach the soldering handle.  
 If you are not 110% sure about your soldering/connections it is wise to be on the safe side and keep your soldering tip in a waterbath in over to prevent it from over-heating in an uncontrolled manner. During the development this method was used and saved a few of thoese expensive JBC cartridges..
+
+# Settings
+To acces the user settings you hold down the encoder button at start-up. You are then presented with a SETTINGS text and you can release the button. While in the settings there are several settings parameters availible.
+| Setting | Desciption  | Unit |
+|---------|------|----------------------|
+|Startup Temp|Default temperature selected after boot|deg C|
+|Temp Offset|Temperature offset applied to measured temperature|deg C|
+|Standby Temp|Temperature to go to after handle is set in stand|deg C|
+|Standby Time|Time for which standby temperature is held before cooling down|minutes|
+|EM Time|Time that the iron can be ON before cooling down (safety feature)|minutes|
+|Buzzer Enable|Enable or Disable the buzzer|ON/OFF|
+|Preset Temp 1|Preset temperature for button 1|deg C|
+|Preset Temp 2|Preset temperature for button 2|deg C|
+|GPIO4 ON at run|Enable 3.3V output on GPIO4 when the iron is in run mode|ON/OFF|
+|-Load Default-|Load default parameters|N/A|
+|-Exit and Save-|Exit and Save|N/A|
+|-Exit no Save-|Exit without Save|N/A|
 
 # PID control
 As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
