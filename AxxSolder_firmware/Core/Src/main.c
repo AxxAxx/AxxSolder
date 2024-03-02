@@ -207,18 +207,18 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 
 /* List of names for settings menue */
 #define menu_length 12
-char menu_names[menu_length][20] = { "Startup Temp",
-							"Temp Offset",
-							"Standby Temp",
-							"Standby Time",
-							"EM Time",
-							"Buzzer Enable",
-							"Preset Temp 1",
-							"Preset Temp 2",
+char menu_names[menu_length][20] = { "Startup Temp  ",
+							"Temp Offset    ",
+							"Standby Temp   ",
+							"Standby Time   ",
+							"EM Time          ",
+							"Buzzer Enable    ",
+							"Preset Temp 1     ",
+							"Preset Temp 2     ",
 							"GPIO4 ON at run",
-							"-Load Default-",
-							"-Exit and Save-",
-							"-Exit no Save-"};
+							"-Load Default-     ",
+							"-Exit and Save-   ",
+							"-Exit no Save-    "};
 
 /* PID data */
 double PID_output = 0.0;

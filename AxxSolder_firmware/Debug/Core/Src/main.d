@@ -40,9 +40,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
- ../USB_Device/App/usb_device.h \
+ ../USB_DEVICE/App/usb_device.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
- ../USB_Device/Target/usbd_conf.h ../Drivers/LCD/lcd.h \
+ ../USB_DEVICE/Target/usbd_conf.h ../Drivers/LCD/lcd.h \
  ../Drivers/LCD/images.h ../Drivers/UGUI/ugui.h \
  ../Drivers/UGUI/ugui_config.h ../Drivers/UGUI/ugui_colors.h \
  ../Drivers/UGUI/ugui_theme.h ../Drivers/UGUI/ugui_button.h \
@@ -51,7 +51,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/UGUI/ugui_progress.h ../Drivers/UGUI/ugui_textbox.h \
  ../Core/Inc/pid.h ../Core/Inc/main.h ../Core/Inc/moving_average.h \
  ../Core/Inc/flash.h ../Core/Inc/stusb4500.h \
- ../USB_Device/App/usbd_cdc_if.h \
+ ../USB_DEVICE/App/usbd_cdc_if.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
@@ -100,9 +100,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
-../USB_Device/App/usb_device.h:
+../USB_DEVICE/App/usb_device.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h:
-../USB_Device/Target/usbd_conf.h:
+../USB_DEVICE/Target/usbd_conf.h:
 ../Drivers/LCD/lcd.h:
 ../Drivers/LCD/images.h:
 ../Drivers/UGUI/ugui.h:
@@ -121,7 +121,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/moving_average.h:
 ../Core/Inc/flash.h:
 ../Core/Inc/stusb4500.h:
-../USB_Device/App/usbd_cdc_if.h:
+../USB_DEVICE/App/usbd_cdc_if.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h:

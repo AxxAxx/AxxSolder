@@ -9638,651 +9638,651 @@ Discarded input sections
  .debug_macro   0x0000000000000000      0x306 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
  .debug_macro   0x0000000000000000       0x5f ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
  .debug_macro   0x0000000000000000      0x1ef ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usb_device.o
- .text          0x0000000000000000        0x0 ./USB_Device/App/usb_device.o
- .data          0x0000000000000000        0x0 ./USB_Device/App/usb_device.o
- .bss           0x0000000000000000        0x0 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0xaa8 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x2e ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x28 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x22 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x8e ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x51 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x103 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x6a ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x1df ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x1c ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x22 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0xfb ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000     0x1011 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x11f ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000    0x11350 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x6d ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x179 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000     0x354d ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x174 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x5c ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000     0x141d ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x535 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x1b6 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x288 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x41d ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x18b ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x23d ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000     0x1112 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x72e ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x391 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0xc7 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x4c ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x211 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x401 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x107 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x22c ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x61 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0xa5 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x73 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x22d ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x122 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x3d1 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x2fe ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0xbda ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x47e ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x693 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0xa6 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x306 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x61 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x2a ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x34 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x35 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x369 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x10 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x34 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x10 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x58 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x8e ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x1c ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x177 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x147 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x29 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x20 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x5f ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000      0x1ef ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000000000       0x95 ./USB_Device/App/usb_device.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_cdc_if.o
- .text          0x0000000000000000        0x0 ./USB_Device/App/usbd_cdc_if.o
- .data          0x0000000000000000        0x0 ./USB_Device/App/usbd_cdc_if.o
- .bss           0x0000000000000000        0x0 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0xaa8 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x22 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x5b ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x2a ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x94 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x34 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x57 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x97 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x369 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0xfd ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x10 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x34 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x10 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x58 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x8e ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x1c ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x177 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x147 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x35 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x29 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x20 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x2e ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x28 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x103 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x6a ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x1df ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x1c ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x22 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0xfb ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000     0x1011 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x11f ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000    0x11350 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x6d ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x179 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000     0x354d ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x56 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000     0x141d ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x535 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x1b6 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x288 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x41d ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x18b ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x23d ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000     0x1112 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x72e ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x391 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0xc7 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x4c ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x211 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x401 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x107 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x22c ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x61 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0xa5 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x73 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x22d ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x122 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x3d1 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x2fe ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0xbda ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x47e ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x693 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0xa6 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x306 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x5f ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000      0x1ef ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x95 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x0000000000000000       0x10 ./USB_Device/App/usbd_cdc_if.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/App/usbd_desc.o
- .text          0x0000000000000000        0x0 ./USB_Device/App/usbd_desc.o
- .data          0x0000000000000000        0x0 ./USB_Device/App/usbd_desc.o
- .bss           0x0000000000000000        0x0 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0xaa8 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x22 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x5b ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x2a ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x94 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x34 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x57 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x97 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x369 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0xfd ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x10 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x34 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x10 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x58 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x8e ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x1c ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x177 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x147 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x35 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x29 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x20 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x2e ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x28 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x103 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x6a ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x1df ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x1c ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x22 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0xfb ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000     0x1011 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x11f ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000    0x11350 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x6d ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x179 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000     0x354d ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x56 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000     0x141d ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x535 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x1b6 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x288 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x41d ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x18b ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x23d ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000     0x1112 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x72e ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x391 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0xc7 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x4c ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x211 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x401 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x107 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x22c ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x61 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0xa5 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x73 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x22d ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x122 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x3d1 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x2fe ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0xbda ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x47e ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x693 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0xa6 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x306 ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000       0x5f ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000000000      0x1f5 ./USB_Device/App/usbd_desc.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .group         0x0000000000000000        0xc ./USB_Device/Target/usbd_conf.o
- .text          0x0000000000000000        0x0 ./USB_Device/Target/usbd_conf.o
- .data          0x0000000000000000        0x0 ./USB_Device/Target/usbd_conf.o
- .bss           0x0000000000000000        0x0 ./USB_Device/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usb_device.o
+ .text          0x0000000000000000        0x0 ./USB_DEVICE/App/usb_device.o
+ .data          0x0000000000000000        0x0 ./USB_DEVICE/App/usb_device.o
+ .bss           0x0000000000000000        0x0 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0xaa8 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x2e ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x28 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x22 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x8e ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x51 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x103 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x6a ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x1df ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x1c ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x22 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0xfb ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000     0x1011 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x11f ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000    0x11350 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x6d ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x179 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000     0x354d ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x174 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x5c ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000     0x141d ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x535 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x1b6 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x288 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x41d ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x18b ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x23d ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000     0x1112 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x72e ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x391 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0xc7 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x4c ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x211 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x401 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x107 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x22c ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x61 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0xa5 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x73 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x22d ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x122 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x3d1 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x2fe ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0xbda ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x47e ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x693 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0xa6 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x306 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x61 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x2a ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x34 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x35 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x369 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x10 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x34 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x10 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x58 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x8e ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x1c ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x177 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x147 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x29 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x20 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x5f ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000      0x1ef ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000000000       0x95 ./USB_DEVICE/App/usb_device.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_cdc_if.o
+ .text          0x0000000000000000        0x0 ./USB_DEVICE/App/usbd_cdc_if.o
+ .data          0x0000000000000000        0x0 ./USB_DEVICE/App/usbd_cdc_if.o
+ .bss           0x0000000000000000        0x0 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0xaa8 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x22 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x5b ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x2a ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x94 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x34 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x57 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x97 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x369 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0xfd ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x10 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x34 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x10 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x58 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x8e ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x1c ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x177 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x147 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x35 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x29 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x20 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x2e ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x28 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x103 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x6a ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x1df ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x1c ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x22 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0xfb ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000     0x1011 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x11f ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000    0x11350 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x6d ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x179 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000     0x354d ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x56 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000     0x141d ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x535 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x1b6 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x288 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x41d ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x18b ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x23d ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000     0x1112 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x72e ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x391 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0xc7 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x4c ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x211 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x401 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x107 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x22c ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x61 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0xa5 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x73 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x22d ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x122 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x3d1 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x2fe ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0xbda ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x47e ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x693 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0xa6 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x306 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x5f ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000      0x1ef ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x95 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x0000000000000000       0x10 ./USB_DEVICE/App/usbd_cdc_if.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/App/usbd_desc.o
+ .text          0x0000000000000000        0x0 ./USB_DEVICE/App/usbd_desc.o
+ .data          0x0000000000000000        0x0 ./USB_DEVICE/App/usbd_desc.o
+ .bss           0x0000000000000000        0x0 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0xaa8 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x22 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x5b ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x2a ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x94 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x34 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x57 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x97 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x369 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0xfd ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x10 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x34 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x10 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x58 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x8e ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x1c ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x177 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x147 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x35 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x29 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x20 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x2e ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x28 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x103 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x6a ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x1df ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x1c ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x22 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0xfb ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000     0x1011 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x11f ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000    0x11350 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x6d ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x179 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000     0x354d ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x56 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000     0x141d ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x535 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x1b6 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x288 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x41d ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x18b ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x23d ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000     0x1112 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x72e ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x391 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0xc7 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x4c ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x211 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x401 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x107 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x22c ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x61 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0xa5 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x73 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x22d ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x122 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x3d1 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x2fe ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0xbda ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x47e ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x693 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0xa6 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x306 ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000       0x5f ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000000000      0x1f5 ./USB_DEVICE/App/usbd_desc.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .group         0x0000000000000000        0xc ./USB_DEVICE/Target/usbd_conf.o
+ .text          0x0000000000000000        0x0 ./USB_DEVICE/Target/usbd_conf.o
+ .data          0x0000000000000000        0x0 ./USB_DEVICE/Target/usbd_conf.o
+ .bss           0x0000000000000000        0x0 ./USB_DEVICE/Target/usbd_conf.o
  .text.HAL_PCD_MspDeInit
-                0x0000000000000000       0x34 ./USB_Device/Target/usbd_conf.o
+                0x0000000000000000       0x34 ./USB_DEVICE/Target/usbd_conf.o
  .text.HAL_PCD_ISOOUTIncompleteCallback
-                0x0000000000000000       0x24 ./USB_Device/Target/usbd_conf.o
+                0x0000000000000000       0x24 ./USB_DEVICE/Target/usbd_conf.o
  .text.HAL_PCD_ISOINIncompleteCallback
-                0x0000000000000000       0x24 ./USB_Device/Target/usbd_conf.o
+                0x0000000000000000       0x24 ./USB_DEVICE/Target/usbd_conf.o
  .text.HAL_PCD_ConnectCallback
-                0x0000000000000000       0x1c ./USB_Device/Target/usbd_conf.o
+                0x0000000000000000       0x1c ./USB_DEVICE/Target/usbd_conf.o
  .text.HAL_PCD_DisconnectCallback
-                0x0000000000000000       0x1c ./USB_Device/Target/usbd_conf.o
+                0x0000000000000000       0x1c ./USB_DEVICE/Target/usbd_conf.o
  .text.USBD_LL_DeInit
-                0x0000000000000000       0x36 ./USB_Device/Target/usbd_conf.o
+                0x0000000000000000       0x36 ./USB_DEVICE/Target/usbd_conf.o
  .text.USBD_LL_Stop
-                0x0000000000000000       0x36 ./USB_Device/Target/usbd_conf.o
+                0x0000000000000000       0x36 ./USB_DEVICE/Target/usbd_conf.o
  .text.USBD_LL_FlushEP
-                0x0000000000000000       0x3e ./USB_Device/Target/usbd_conf.o
+                0x0000000000000000       0x3e ./USB_DEVICE/Target/usbd_conf.o
  .text.USBD_LL_Delay
-                0x0000000000000000       0x16 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0xaa8 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x2e ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x28 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x22 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x8e ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x51 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x103 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x6a ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x1df ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x1c ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x22 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0xfb ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000     0x1011 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x11f ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000    0x11350 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x6d ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x179 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000     0x354d ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x174 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x5c ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000     0x141d ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x535 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x1b6 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x288 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x41d ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x18b ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x23d ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000     0x1112 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x72e ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x391 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0xc7 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x4c ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x211 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x401 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x107 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x22c ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x61 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0xa5 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x73 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x22d ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x122 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x3d1 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x2fe ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0xbda ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x47e ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x693 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0xa6 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x306 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x61 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x2a ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x34 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x35 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x369 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x10 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x43 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x34 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x10 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x58 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x8e ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x1c ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x177 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x147 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x29 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x16 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x20 ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x5f ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000      0x1ef ./USB_Device/Target/usbd_conf.o
- .debug_macro   0x0000000000000000       0x95 ./USB_Device/Target/usbd_conf.o
+                0x0000000000000000       0x16 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0xaa8 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x2e ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x28 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x22 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x8e ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x51 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x103 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x6a ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x1df ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x1c ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x22 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0xfb ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000     0x1011 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x11f ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000    0x11350 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x6d ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x179 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000     0x354d ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x174 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x5c ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000     0x141d ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x535 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x1b6 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x288 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x41d ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x18b ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x23d ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000     0x1112 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x72e ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x391 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0xc7 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x4c ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x211 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x401 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x107 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x22c ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x61 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0xa5 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x73 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x22d ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x122 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x3d1 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x2fe ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0xbda ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x47e ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x693 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0xa6 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x306 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x61 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x2a ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x34 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x35 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x369 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x10 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x43 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x34 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x10 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x58 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x8e ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x1c ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x177 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x147 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x29 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x16 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x20 ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x5f ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000      0x1ef ./USB_DEVICE/Target/usbd_conf.o
+ .debug_macro   0x0000000000000000       0x95 ./USB_DEVICE/Target/usbd_conf.o
  .text          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-exit.o)
  .data          0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-exit.o)
  .bss           0x0000000000000000        0x0 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-exit.o)
@@ -10711,10 +10711,10 @@ LOAD ./Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o
 LOAD ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
 LOAD ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
 LOAD ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
-LOAD ./USB_Device/App/usb_device.o
-LOAD ./USB_Device/App/usbd_cdc_if.o
-LOAD ./USB_Device/App/usbd_desc.o
-LOAD ./USB_Device/Target/usbd_conf.o
+LOAD ./USB_DEVICE/App/usb_device.o
+LOAD ./USB_DEVICE/App/usbd_cdc_if.o
+LOAD ./USB_DEVICE/App/usbd_desc.o
+LOAD ./USB_DEVICE/Target/usbd_conf.o
 START GROUP
 LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a
 LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a
@@ -11979,119 +11979,119 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                 0x00000000080155f8                USBD_CtlReceiveStatus
  *fill*         0x000000000801561e        0x2 
  .text.MX_USB_Device_Init
-                0x0000000008015620       0x60 ./USB_Device/App/usb_device.o
+                0x0000000008015620       0x60 ./USB_DEVICE/App/usb_device.o
                 0x0000000008015620                MX_USB_Device_Init
  .text.CDC_Init_FS
-                0x0000000008015680       0x28 ./USB_Device/App/usbd_cdc_if.o
+                0x0000000008015680       0x28 ./USB_DEVICE/App/usbd_cdc_if.o
  .text.CDC_DeInit_FS
-                0x00000000080156a8       0x10 ./USB_Device/App/usbd_cdc_if.o
+                0x00000000080156a8       0x10 ./USB_DEVICE/App/usbd_cdc_if.o
  .text.CDC_Control_FS
-                0x00000000080156b8       0xbc ./USB_Device/App/usbd_cdc_if.o
+                0x00000000080156b8       0xbc ./USB_DEVICE/App/usbd_cdc_if.o
  .text.CDC_Receive_FS
-                0x0000000008015774       0x28 ./USB_Device/App/usbd_cdc_if.o
+                0x0000000008015774       0x28 ./USB_DEVICE/App/usbd_cdc_if.o
  .text.CDC_Transmit_FS
-                0x000000000801579c       0x4c ./USB_Device/App/usbd_cdc_if.o
+                0x000000000801579c       0x4c ./USB_DEVICE/App/usbd_cdc_if.o
                 0x000000000801579c                CDC_Transmit_FS
  .text.CDC_TransmitCplt_FS
-                0x00000000080157e8       0x22 ./USB_Device/App/usbd_cdc_if.o
+                0x00000000080157e8       0x22 ./USB_DEVICE/App/usbd_cdc_if.o
  *fill*         0x000000000801580a        0x2 
  .text.USBD_CDC_DeviceDescriptor
-                0x000000000801580c       0x24 ./USB_Device/App/usbd_desc.o
+                0x000000000801580c       0x24 ./USB_DEVICE/App/usbd_desc.o
                 0x000000000801580c                USBD_CDC_DeviceDescriptor
  .text.USBD_CDC_LangIDStrDescriptor
-                0x0000000008015830       0x24 ./USB_Device/App/usbd_desc.o
+                0x0000000008015830       0x24 ./USB_DEVICE/App/usbd_desc.o
                 0x0000000008015830                USBD_CDC_LangIDStrDescriptor
  .text.USBD_CDC_ProductStrDescriptor
-                0x0000000008015854       0x3c ./USB_Device/App/usbd_desc.o
+                0x0000000008015854       0x3c ./USB_DEVICE/App/usbd_desc.o
                 0x0000000008015854                USBD_CDC_ProductStrDescriptor
  .text.USBD_CDC_ManufacturerStrDescriptor
-                0x0000000008015890       0x28 ./USB_Device/App/usbd_desc.o
+                0x0000000008015890       0x28 ./USB_DEVICE/App/usbd_desc.o
                 0x0000000008015890                USBD_CDC_ManufacturerStrDescriptor
  .text.USBD_CDC_SerialStrDescriptor
-                0x00000000080158b8       0x24 ./USB_Device/App/usbd_desc.o
+                0x00000000080158b8       0x24 ./USB_DEVICE/App/usbd_desc.o
                 0x00000000080158b8                USBD_CDC_SerialStrDescriptor
  .text.USBD_CDC_ConfigStrDescriptor
-                0x00000000080158dc       0x3c ./USB_Device/App/usbd_desc.o
+                0x00000000080158dc       0x3c ./USB_DEVICE/App/usbd_desc.o
                 0x00000000080158dc                USBD_CDC_ConfigStrDescriptor
  .text.USBD_CDC_InterfaceStrDescriptor
-                0x0000000008015918       0x3c ./USB_Device/App/usbd_desc.o
+                0x0000000008015918       0x3c ./USB_DEVICE/App/usbd_desc.o
                 0x0000000008015918                USBD_CDC_InterfaceStrDescriptor
  .text.Get_SerialNum
-                0x0000000008015954       0x58 ./USB_Device/App/usbd_desc.o
+                0x0000000008015954       0x58 ./USB_DEVICE/App/usbd_desc.o
  .text.IntToUnicode
-                0x00000000080159ac       0x7e ./USB_Device/App/usbd_desc.o
+                0x00000000080159ac       0x7e ./USB_DEVICE/App/usbd_desc.o
  *fill*         0x0000000008015a2a        0x2 
  .text.HAL_PCD_MspInit
-                0x0000000008015a2c       0x78 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015a2c       0x78 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015a2c                HAL_PCD_MspInit
  .text.HAL_PCD_SetupStageCallback
-                0x0000000008015aa4       0x24 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015aa4       0x24 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015aa4                HAL_PCD_SetupStageCallback
  .text.HAL_PCD_DataOutStageCallback
-                0x0000000008015ac8       0x36 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015ac8       0x36 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015ac8                HAL_PCD_DataOutStageCallback
  .text.HAL_PCD_DataInStageCallback
-                0x0000000008015afe       0x34 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015afe       0x34 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015afe                HAL_PCD_DataInStageCallback
  .text.HAL_PCD_SOFCallback
-                0x0000000008015b32       0x1c ./USB_Device/Target/usbd_conf.o
+                0x0000000008015b32       0x1c ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015b32                HAL_PCD_SOFCallback
  .text.HAL_PCD_ResetCallback
-                0x0000000008015b4e       0x3c ./USB_Device/Target/usbd_conf.o
+                0x0000000008015b4e       0x3c ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015b4e                HAL_PCD_ResetCallback
  *fill*         0x0000000008015b8a        0x2 
  .text.HAL_PCD_SuspendCallback
-                0x0000000008015b8c       0x34 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015b8c       0x34 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015b8c                HAL_PCD_SuspendCallback
  .text.HAL_PCD_ResumeCallback
-                0x0000000008015bc0       0x38 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015bc0       0x38 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015bc0                HAL_PCD_ResumeCallback
  .text.USBD_LL_Init
-                0x0000000008015bf8       0xc0 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015bf8       0xc0 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015bf8                USBD_LL_Init
  .text.USBD_LL_Start
-                0x0000000008015cb8       0x36 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015cb8       0x36 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015cb8                USBD_LL_Start
  .text.USBD_LL_OpenEP
-                0x0000000008015cee       0x4c ./USB_Device/Target/usbd_conf.o
+                0x0000000008015cee       0x4c ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015cee                USBD_LL_OpenEP
  .text.USBD_LL_CloseEP
-                0x0000000008015d3a       0x3e ./USB_Device/Target/usbd_conf.o
+                0x0000000008015d3a       0x3e ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015d3a                USBD_LL_CloseEP
  .text.USBD_LL_StallEP
-                0x0000000008015d78       0x3e ./USB_Device/Target/usbd_conf.o
+                0x0000000008015d78       0x3e ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015d78                USBD_LL_StallEP
  .text.USBD_LL_ClearStallEP
-                0x0000000008015db6       0x3e ./USB_Device/Target/usbd_conf.o
+                0x0000000008015db6       0x3e ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015db6                USBD_LL_ClearStallEP
  .text.USBD_LL_IsStallEP
-                0x0000000008015df4       0x58 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015df4       0x58 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015df4                USBD_LL_IsStallEP
  .text.USBD_LL_SetUSBAddress
-                0x0000000008015e4c       0x3e ./USB_Device/Target/usbd_conf.o
+                0x0000000008015e4c       0x3e ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015e4c                USBD_LL_SetUSBAddress
  .text.USBD_LL_Transmit
-                0x0000000008015e8a       0x42 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015e8a       0x42 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015e8a                USBD_LL_Transmit
  .text.USBD_LL_PrepareReceive
-                0x0000000008015ecc       0x42 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015ecc       0x42 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015ecc                USBD_LL_PrepareReceive
  .text.USBD_LL_GetRxDataSize
-                0x0000000008015f0e       0x26 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015f0e       0x26 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015f0e                USBD_LL_GetRxDataSize
  .text.HAL_PCDEx_LPM_Callback
-                0x0000000008015f34       0x6c ./USB_Device/Target/usbd_conf.o
+                0x0000000008015f34       0x6c ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015f34                HAL_PCDEx_LPM_Callback
  .text.USBD_static_malloc
-                0x0000000008015fa0       0x1c ./USB_Device/Target/usbd_conf.o
+                0x0000000008015fa0       0x1c ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015fa0                USBD_static_malloc
  .text.USBD_static_free
-                0x0000000008015fbc       0x14 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015fbc       0x14 ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000008015fbc                USBD_static_free
  .text.SystemClockConfig_Resume
-                0x0000000008015fd0        0xc ./USB_Device/Target/usbd_conf.o
+                0x0000000008015fd0        0xc ./USB_DEVICE/Target/usbd_conf.o
  .text.USBD_Get_USB_Status
-                0x0000000008015fdc       0x58 ./USB_Device/Target/usbd_conf.o
+                0x0000000008015fdc       0x58 ./USB_DEVICE/Target/usbd_conf.o
  .text.__cvt    0x0000000008016034       0xc4 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_float.o)
                 0x0000000008016034                __cvt
  .text.__exponent
@@ -12384,12 +12384,12 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
 .iplt           0x000000000801ab00        0x0
  .iplt          0x000000000801ab00        0x0 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtbegin.o
 
-.rodata         0x000000000801ab00     0x2d98
+.rodata         0x000000000801ab00     0x2e10
                 0x000000000801ab00                . = ALIGN (0x4)
  *(.rodata)
  .rodata        0x000000000801ab00      0x15b ./Core/Src/main.o
  *fill*         0x000000000801ac5b        0x1 
- .rodata        0x000000000801ac5c       0x46 ./USB_Device/App/usbd_desc.o
+ .rodata        0x000000000801ac5c       0x46 ./USB_DEVICE/App/usbd_desc.o
  *(.rodata*)
  *fill*         0x000000000801aca2        0x2 
  .rodata.AHBPrescTable
@@ -12416,115 +12416,115 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                 0x000000000801bacc                FONT_arial_19X22
  *fill*         0x000000000801bcfe        0x2 
  .rodata.FONT_arial_20X23
-                0x000000000801bd00      0xe98 ./Drivers/UGUI/Fonts/arial_20X23.o
+                0x000000000801bd00      0xf10 ./Drivers/UGUI/Fonts/arial_20X23.o
                 0x000000000801bd00                FONT_arial_20X23
  .rodata.FONT_arial_36X44_C
-                0x000000000801cb98       0xdf ./Drivers/UGUI/Fonts/arial_36X44_C.o
-                0x000000000801cb98                FONT_arial_36X44_C
- *fill*         0x000000000801cc77        0x1 
+                0x000000000801cc10       0xdf ./Drivers/UGUI/Fonts/arial_36X44_C.o
+                0x000000000801cc10                FONT_arial_36X44_C
+ *fill*         0x000000000801ccef        0x1 
  .rodata.FONT_arial_36X44_NUMBERS
-                0x000000000801cc78      0x7ce ./Drivers/UGUI/Fonts/arial_36X44_NUMBERS.o
-                0x000000000801cc78                FONT_arial_36X44_NUMBERS
- *fill*         0x000000000801d446        0x2 
+                0x000000000801ccf0      0x7ce ./Drivers/UGUI/Fonts/arial_36X44_NUMBERS.o
+                0x000000000801ccf0                FONT_arial_36X44_NUMBERS
+ *fill*         0x000000000801d4be        0x2 
  .rodata.pal_window
-                0x000000000801d448       0x18 ./Drivers/UGUI/ugui.o
+                0x000000000801d4c0       0x18 ./Drivers/UGUI/ugui.o
  .rodata._printf_float.str1.1
-                0x000000000801d460       0x12 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_float.o)
+                0x000000000801d4d8       0x12 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_float.o)
  .rodata._printf_i.str1.1
-                0x000000000801d472       0x22 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_i.o)
+                0x000000000801d4ea       0x22 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_i.o)
  .rodata._scanf_float.str1.1
-                0x000000000801d494        0x5 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfscanf_float.o)
+                0x000000000801d50c        0x5 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfscanf_float.o)
                                           0x6 (size before relaxing)
  .rodata._dtoa_r.str1.1
-                0x000000000801d499       0x8d C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-dtoa.o)
+                0x000000000801d511       0x8d C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-dtoa.o)
                                          0x8f (size before relaxing)
  .rodata._Balloc.str1.1
-                0x000000000801d526       0x59 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
+                0x000000000801d59e       0x59 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
                                          0x70 (size before relaxing)
  .rodata.__multadd.str1.1
-                0x000000000801d57f       0x11 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
- *fill*         0x000000000801d57f        0x1 
+                0x000000000801d5f7       0x11 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
+ *fill*         0x000000000801d5f7        0x1 
  .rodata.__mprec_bigtens
-                0x000000000801d580       0x28 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
-                0x000000000801d580                __mprec_bigtens
+                0x000000000801d5f8       0x28 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
+                0x000000000801d5f8                __mprec_bigtens
  .rodata.__mprec_tens
-                0x000000000801d5a8       0xc8 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
-                0x000000000801d5a8                __mprec_tens
- .rodata.p05.0  0x000000000801d670        0xc C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
+                0x000000000801d620       0xc8 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
+                0x000000000801d620                __mprec_tens
+ .rodata.p05.0  0x000000000801d6e8        0xc C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-mprec.o)
  .rodata._strtod_l.str1.1
-                0x000000000801d67c        0x2 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strtod.o)
+                0x000000000801d6f4        0x2 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strtod.o)
                                           0xf (size before relaxing)
- *fill*         0x000000000801d67e        0x2 
- .rodata.fpi.1  0x000000000801d680       0x14 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strtod.o)
+ *fill*         0x000000000801d6f6        0x2 
+ .rodata.fpi.1  0x000000000801d6f8       0x14 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strtod.o)
  .rodata.fpinan.0
-                0x000000000801d694       0x14 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strtod.o)
+                0x000000000801d70c       0x14 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strtod.o)
  .rodata.tinytens
-                0x000000000801d6a8       0x28 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strtod.o)
+                0x000000000801d720       0x28 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-strtod.o)
  .rodata._ctype_
-                0x000000000801d6d0      0x101 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-ctype_.o)
-                0x000000000801d6d0                _ctype_
+                0x000000000801d748      0x101 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-ctype_.o)
+                0x000000000801d748                _ctype_
  .rodata._svfprintf_r.str1.1
-                0x000000000801d7d1       0x11 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-svfprintf.o)
+                0x000000000801d849       0x11 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-svfprintf.o)
  .rodata._setlocale_r.str1.1
-                0x000000000801d7e2        0x8 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-locale.o)
+                0x000000000801d85a        0x8 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-locale.o)
                                           0x9 (size before relaxing)
  .rodata.str1.1
-                0x000000000801d7ea        0x2 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-locale.o)
+                0x000000000801d862        0x2 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-locale.o)
  .rodata.__assert_func.str1.1
-                0x000000000801d7ea       0x3c C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-assert.o)
+                0x000000000801d862       0x3c C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-assert.o)
                                          0x3d (size before relaxing)
  .rodata.__gethex.str1.1
-                0x000000000801d826       0x60 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-gdtoa-gethex.o)
+                0x000000000801d89e       0x60 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-gdtoa-gethex.o)
                                          0x73 (size before relaxing)
  .rodata._vfprintf_r.str1.1
-                0x000000000801d886       0x11 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf.o)
- *fill*         0x000000000801d886        0x2 
- .rodata.Zero   0x000000000801d888       0x10 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-e_fmod.o)
-                0x000000000801d898                . = ALIGN (0x4)
+                0x000000000801d8fe       0x11 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf.o)
+ *fill*         0x000000000801d8fe        0x2 
+ .rodata.Zero   0x000000000801d900       0x10 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libm.a(libm_a-e_fmod.o)
+                0x000000000801d910                . = ALIGN (0x4)
 
-.ARM.extab      0x000000000801d898        0x0
-                0x000000000801d898                . = ALIGN (0x4)
+.ARM.extab      0x000000000801d910        0x0
+                0x000000000801d910                . = ALIGN (0x4)
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x000000000801d898                . = ALIGN (0x4)
+                0x000000000801d910                . = ALIGN (0x4)
 
-.ARM            0x000000000801d898        0x8
-                0x000000000801d898                . = ALIGN (0x4)
-                0x000000000801d898                __exidx_start = .
+.ARM            0x000000000801d910        0x8
+                0x000000000801d910                . = ALIGN (0x4)
+                0x000000000801d910                __exidx_start = .
  *(.ARM.exidx*)
- .ARM.exidx     0x000000000801d898        0x8 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
-                0x000000000801d8a0                __exidx_end = .
-                0x000000000801d8a0                . = ALIGN (0x4)
+ .ARM.exidx     0x000000000801d910        0x8 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard\libgcc.a(_udivmoddi4.o)
+                0x000000000801d918                __exidx_end = .
+                0x000000000801d918                . = ALIGN (0x4)
 
-.rel.dyn        0x000000000801d8a0        0x0
- .rel.iplt      0x000000000801d8a0        0x0 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+.rel.dyn        0x000000000801d918        0x0
+ .rel.iplt      0x000000000801d918        0x0 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtbegin.o
 
-.preinit_array  0x000000000801d8a0        0x0
-                0x000000000801d8a0                . = ALIGN (0x4)
-                0x000000000801d8a0                PROVIDE (__preinit_array_start = .)
+.preinit_array  0x000000000801d918        0x0
+                0x000000000801d918                . = ALIGN (0x4)
+                0x000000000801d918                PROVIDE (__preinit_array_start = .)
  *(.preinit_array*)
-                0x000000000801d8a0                PROVIDE (__preinit_array_end = .)
-                0x000000000801d8a0                . = ALIGN (0x4)
+                0x000000000801d918                PROVIDE (__preinit_array_end = .)
+                0x000000000801d918                . = ALIGN (0x4)
 
-.init_array     0x000000000801d8a0        0x4
-                0x000000000801d8a0                . = ALIGN (0x4)
-                0x000000000801d8a0                PROVIDE (__init_array_start = .)
+.init_array     0x000000000801d918        0x4
+                0x000000000801d918                . = ALIGN (0x4)
+                0x000000000801d918                PROVIDE (__init_array_start = .)
  *(SORT_BY_NAME(.init_array.*))
  *(.init_array*)
- .init_array    0x000000000801d8a0        0x4 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtbegin.o
-                0x000000000801d8a4                PROVIDE (__init_array_end = .)
-                0x000000000801d8a4                . = ALIGN (0x4)
+ .init_array    0x000000000801d918        0x4 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+                0x000000000801d91c                PROVIDE (__init_array_end = .)
+                0x000000000801d91c                . = ALIGN (0x4)
 
-.fini_array     0x000000000801d8a4        0x4
-                0x000000000801d8a4                . = ALIGN (0x4)
+.fini_array     0x000000000801d91c        0x4
+                0x000000000801d91c                . = ALIGN (0x4)
                 [!provide]                        PROVIDE (__fini_array_start = .)
  *(SORT_BY_NAME(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x000000000801d8a4        0x4 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .fini_array    0x000000000801d91c        0x4 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtbegin.o
                 [!provide]                        PROVIDE (__fini_array_end = .)
-                0x000000000801d8a8                . = ALIGN (0x4)
-                0x000000000801d8a8                _sidata = LOADADDR (.data)
+                0x000000000801d920                . = ALIGN (0x4)
+                0x000000000801d920                _sidata = LOADADDR (.data)
 
-.data           0x0000000020000000      0x540 load address 0x000000000801d8a8
+.data           0x0000000020000000      0x540 load address 0x000000000801d920
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sdata = .
  *(.data)
@@ -12612,20 +12612,20 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                 0x00000000200002cc       0x43 ./Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o
  *fill*         0x000000002000030f        0x1 
  .data.USBD_Interface_fops_FS
-                0x0000000020000310       0x14 ./USB_Device/App/usbd_cdc_if.o
+                0x0000000020000310       0x14 ./USB_DEVICE/App/usbd_cdc_if.o
                 0x0000000020000310                USBD_Interface_fops_FS
  .data.CDC_Desc
-                0x0000000020000324       0x20 ./USB_Device/App/usbd_desc.o
+                0x0000000020000324       0x20 ./USB_DEVICE/App/usbd_desc.o
                 0x0000000020000324                CDC_Desc
  .data.USBD_CDC_DeviceDesc
-                0x0000000020000344       0x12 ./USB_Device/App/usbd_desc.o
+                0x0000000020000344       0x12 ./USB_DEVICE/App/usbd_desc.o
                 0x0000000020000344                USBD_CDC_DeviceDesc
  *fill*         0x0000000020000356        0x2 
  .data.USBD_LangIDDesc
-                0x0000000020000358        0x4 ./USB_Device/App/usbd_desc.o
+                0x0000000020000358        0x4 ./USB_DEVICE/App/usbd_desc.o
                 0x0000000020000358                USBD_LangIDDesc
  .data.USBD_StringSerial
-                0x000000002000035c       0x1a ./USB_Device/App/usbd_desc.o
+                0x000000002000035c       0x1a ./USB_DEVICE/App/usbd_desc.o
                 0x000000002000035c                USBD_StringSerial
  *fill*         0x0000000020000376        0x2 
  .data.__sglue  0x0000000020000378        0xc C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-findfp.o)
@@ -12644,11 +12644,11 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                 0x0000000020000540                . = ALIGN (0x4)
                 0x0000000020000540                _edata = .
 
-.igot.plt       0x0000000020000540        0x0 load address 0x000000000801dde8
+.igot.plt       0x0000000020000540        0x0 load address 0x000000000801de60
  .igot.plt      0x0000000020000540        0x0 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v7e-m+fp/hard/crtbegin.o
                 0x0000000020000540                . = ALIGN (0x4)
 
-.bss            0x0000000020000540     0x2e88 load address 0x000000000801dde8
+.bss            0x0000000020000540     0x2e88 load address 0x000000000801de60
                 0x0000000020000540                _sbss = .
                 0x0000000020000540                __bss_start__ = _sbss
  *(.bss)
@@ -12815,21 +12815,21 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .bss.cfgidx.0  0x00000000200020ac        0x1 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
  *fill*         0x00000000200020ad        0x3 
  .bss.hUsbDeviceFS
-                0x00000000200020b0      0x2d0 ./USB_Device/App/usb_device.o
+                0x00000000200020b0      0x2d0 ./USB_DEVICE/App/usb_device.o
                 0x00000000200020b0                hUsbDeviceFS
  .bss.UserRxBufferFS
-                0x0000000020002380      0x400 ./USB_Device/App/usbd_cdc_if.o
+                0x0000000020002380      0x400 ./USB_DEVICE/App/usbd_cdc_if.o
                 0x0000000020002380                UserRxBufferFS
  .bss.UserTxBufferFS
-                0x0000000020002780      0x400 ./USB_Device/App/usbd_cdc_if.o
+                0x0000000020002780      0x400 ./USB_DEVICE/App/usbd_cdc_if.o
                 0x0000000020002780                UserTxBufferFS
  .bss.USBD_StrDesc
-                0x0000000020002b80      0x200 ./USB_Device/App/usbd_desc.o
+                0x0000000020002b80      0x200 ./USB_DEVICE/App/usbd_desc.o
                 0x0000000020002b80                USBD_StrDesc
  .bss.hpcd_USB_FS
-                0x0000000020002d80      0x2dc ./USB_Device/Target/usbd_conf.o
+                0x0000000020002d80      0x2dc ./USB_DEVICE/Target/usbd_conf.o
                 0x0000000020002d80                hpcd_USB_FS
- .bss.mem.0     0x000000002000305c      0x220 ./USB_Device/Target/usbd_conf.o
+ .bss.mem.0     0x000000002000305c      0x220 ./USB_DEVICE/Target/usbd_conf.o
  .bss.__sf      0x000000002000327c      0x138 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-findfp.o)
                 0x000000002000327c                __sf
  .bss.__stdio_exit_handler
@@ -12856,7 +12856,7 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                 0x00000000200033c8                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x00000000200033c8      0x600 load address 0x000000000801dde8
+                0x00000000200033c8      0x600 load address 0x000000000801de60
                 0x00000000200033c8                . = ALIGN (0x8)
                 [!provide]                        PROVIDE (end = .)
                 0x00000000200033c8                PROVIDE (_end = .)
@@ -12967,13 +12967,13 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .ARM.attributes
                 0x00000000000008fb       0x34 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
  .ARM.attributes
-                0x000000000000092f       0x34 ./USB_Device/App/usb_device.o
+                0x000000000000092f       0x34 ./USB_DEVICE/App/usb_device.o
  .ARM.attributes
-                0x0000000000000963       0x34 ./USB_Device/App/usbd_cdc_if.o
+                0x0000000000000963       0x34 ./USB_DEVICE/App/usbd_cdc_if.o
  .ARM.attributes
-                0x0000000000000997       0x34 ./USB_Device/App/usbd_desc.o
+                0x0000000000000997       0x34 ./USB_DEVICE/App/usbd_desc.o
  .ARM.attributes
-                0x00000000000009cb       0x34 ./USB_Device/Target/usbd_conf.o
+                0x00000000000009cb       0x34 ./USB_DEVICE/Target/usbd_conf.o
  .ARM.attributes
                 0x00000000000009ff       0x34 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_float.o)
  .ARM.attributes
@@ -13170,10 +13170,10 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .comment       0x0000000000000043       0x44 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
  .comment       0x0000000000000043       0x44 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
  .comment       0x0000000000000043       0x44 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
- .comment       0x0000000000000043       0x44 ./USB_Device/App/usb_device.o
- .comment       0x0000000000000043       0x44 ./USB_Device/App/usbd_cdc_if.o
- .comment       0x0000000000000043       0x44 ./USB_Device/App/usbd_desc.o
- .comment       0x0000000000000043       0x44 ./USB_Device/Target/usbd_conf.o
+ .comment       0x0000000000000043       0x44 ./USB_DEVICE/App/usb_device.o
+ .comment       0x0000000000000043       0x44 ./USB_DEVICE/App/usbd_cdc_if.o
+ .comment       0x0000000000000043       0x44 ./USB_DEVICE/App/usbd_desc.o
+ .comment       0x0000000000000043       0x44 ./USB_DEVICE/Target/usbd_conf.o
 
 .debug_info     0x0000000000000000    0x2f5a5
  .debug_info    0x0000000000000000      0x75d ./Core/Src/flash.o
@@ -13220,10 +13220,10 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_info    0x000000000002a863      0xb1b ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
  .debug_info    0x000000000002b37e      0xa57 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
  .debug_info    0x000000000002bdd5      0x720 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
- .debug_info    0x000000000002c4f5      0x6d7 ./USB_Device/App/usb_device.o
- .debug_info    0x000000000002cbcc      0x8be ./USB_Device/App/usbd_cdc_if.o
- .debug_info    0x000000000002d48a      0x45f ./USB_Device/App/usbd_desc.o
- .debug_info    0x000000000002d8e9     0x1cbc ./USB_Device/Target/usbd_conf.o
+ .debug_info    0x000000000002c4f5      0x6d7 ./USB_DEVICE/App/usb_device.o
+ .debug_info    0x000000000002cbcc      0x8be ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_info    0x000000000002d48a      0x45f ./USB_DEVICE/App/usbd_desc.o
+ .debug_info    0x000000000002d8e9     0x1cbc ./USB_DEVICE/Target/usbd_conf.o
 
 .debug_abbrev   0x0000000000000000     0x65b2
  .debug_abbrev  0x0000000000000000      0x1ed ./Core/Src/flash.o
@@ -13270,10 +13270,10 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_abbrev  0x00000000000055b1      0x24f ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
  .debug_abbrev  0x0000000000005800      0x27e ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
  .debug_abbrev  0x0000000000005a7e      0x1a9 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
- .debug_abbrev  0x0000000000005c27      0x1a4 ./USB_Device/App/usb_device.o
- .debug_abbrev  0x0000000000005dcb      0x2ad ./USB_Device/App/usbd_cdc_if.o
- .debug_abbrev  0x0000000000006078      0x20e ./USB_Device/App/usbd_desc.o
- .debug_abbrev  0x0000000000006286      0x32c ./USB_Device/Target/usbd_conf.o
+ .debug_abbrev  0x0000000000005c27      0x1a4 ./USB_DEVICE/App/usb_device.o
+ .debug_abbrev  0x0000000000005dcb      0x2ad ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_abbrev  0x0000000000006078      0x20e ./USB_DEVICE/App/usbd_desc.o
+ .debug_abbrev  0x0000000000006286      0x32c ./USB_DEVICE/Target/usbd_conf.o
 
 .debug_aranges  0x0000000000000000     0x2998
  .debug_aranges
@@ -13365,13 +13365,13 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_aranges
                 0x0000000000002760       0x50 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
  .debug_aranges
-                0x00000000000027b0       0x20 ./USB_Device/App/usb_device.o
+                0x00000000000027b0       0x20 ./USB_DEVICE/App/usb_device.o
  .debug_aranges
-                0x00000000000027d0       0x48 ./USB_Device/App/usbd_cdc_if.o
+                0x00000000000027d0       0x48 ./USB_DEVICE/App/usbd_cdc_if.o
  .debug_aranges
-                0x0000000000002818       0x60 ./USB_Device/App/usbd_desc.o
+                0x0000000000002818       0x60 ./USB_DEVICE/App/usbd_desc.o
  .debug_aranges
-                0x0000000000002878      0x120 ./USB_Device/Target/usbd_conf.o
+                0x0000000000002878      0x120 ./USB_DEVICE/Target/usbd_conf.o
 
 .debug_rnglists
                 0x0000000000000000     0x1fe4
@@ -13454,13 +13454,13 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_rnglists
                 0x0000000000001e51       0x37 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
  .debug_rnglists
-                0x0000000000001e88       0x13 ./USB_Device/App/usb_device.o
+                0x0000000000001e88       0x13 ./USB_DEVICE/App/usb_device.o
  .debug_rnglists
-                0x0000000000001e9b       0x32 ./USB_Device/App/usbd_cdc_if.o
+                0x0000000000001e9b       0x32 ./USB_DEVICE/App/usbd_cdc_if.o
  .debug_rnglists
-                0x0000000000001ecd       0x43 ./USB_Device/App/usbd_desc.o
+                0x0000000000001ecd       0x43 ./USB_DEVICE/App/usbd_desc.o
  .debug_rnglists
-                0x0000000000001f10       0xd4 ./USB_Device/Target/usbd_conf.o
+                0x0000000000001f10       0xd4 ./USB_DEVICE/Target/usbd_conf.o
 
 .debug_macro    0x0000000000000000    0x28961
  .debug_macro   0x0000000000000000      0x350 ./Core/Src/flash.o
@@ -13629,13 +13629,13 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_macro   0x0000000000026f77      0x1f5 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
  .debug_macro   0x000000000002716c      0x3d7 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
  .debug_macro   0x0000000000027543      0x3d3 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
- .debug_macro   0x0000000000027916      0x40c ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000027d22       0x22 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000027d44       0x16 ./USB_Device/App/usb_device.o
- .debug_macro   0x0000000000027d5a      0x3f1 ./USB_Device/App/usbd_cdc_if.o
- .debug_macro   0x000000000002814b      0x40a ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000028555       0x1c ./USB_Device/App/usbd_desc.o
- .debug_macro   0x0000000000028571      0x3f0 ./USB_Device/Target/usbd_conf.o
+ .debug_macro   0x0000000000027916      0x40c ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000027d22       0x22 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000027d44       0x16 ./USB_DEVICE/App/usb_device.o
+ .debug_macro   0x0000000000027d5a      0x3f1 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_macro   0x000000000002814b      0x40a ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000028555       0x1c ./USB_DEVICE/App/usbd_desc.o
+ .debug_macro   0x0000000000028571      0x3f0 ./USB_DEVICE/Target/usbd_conf.o
 
 .debug_line     0x0000000000000000    0x355aa
  .debug_line    0x0000000000000000      0xc0a ./Core/Src/flash.o
@@ -13682,10 +13682,10 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_line    0x000000000002f5fe      0xf43 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
  .debug_line    0x0000000000030541     0x11fb ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
  .debug_line    0x000000000003173c      0xb9a ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
- .debug_line    0x00000000000322d6      0xb56 ./USB_Device/App/usb_device.o
- .debug_line    0x0000000000032e2c      0xbb9 ./USB_Device/App/usbd_cdc_if.o
- .debug_line    0x00000000000339e5      0xc1f ./USB_Device/App/usbd_desc.o
- .debug_line    0x0000000000034604      0xfa6 ./USB_Device/Target/usbd_conf.o
+ .debug_line    0x00000000000322d6      0xb56 ./USB_DEVICE/App/usb_device.o
+ .debug_line    0x0000000000032e2c      0xbb9 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_line    0x00000000000339e5      0xc1f ./USB_DEVICE/App/usbd_desc.o
+ .debug_line    0x0000000000034604      0xfa6 ./USB_DEVICE/Target/usbd_conf.o
 
 .debug_str      0x0000000000000000    0xee788
  .debug_str     0x0000000000000000    0xdc1a1 ./Core/Src/flash.o
@@ -13776,13 +13776,13 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                                       0xdc992 (size before relaxing)
  .debug_str     0x00000000000ee311       0x51 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
                                       0xdc887 (size before relaxing)
- .debug_str     0x00000000000ee362       0xc7 ./USB_Device/App/usb_device.o
+ .debug_str     0x00000000000ee362       0xc7 ./USB_DEVICE/App/usb_device.o
                                       0xdcc3b (size before relaxing)
- .debug_str     0x00000000000ee429       0x8a ./USB_Device/App/usbd_cdc_if.o
+ .debug_str     0x00000000000ee429       0x8a ./USB_DEVICE/App/usbd_cdc_if.o
                                       0xdcc7a (size before relaxing)
- .debug_str     0x00000000000ee4b3      0x254 ./USB_Device/App/usbd_desc.o
+ .debug_str     0x00000000000ee4b3      0x254 ./USB_DEVICE/App/usbd_desc.o
                                       0xdc791 (size before relaxing)
- .debug_str     0x00000000000ee707       0x81 ./USB_Device/Target/usbd_conf.o
+ .debug_str     0x00000000000ee707       0x81 ./USB_DEVICE/Target/usbd_conf.o
                                       0xddafa (size before relaxing)
 
 .debug_frame    0x0000000000000000     0xc6f4
@@ -13824,10 +13824,10 @@ LOAD C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_frame   0x000000000000a2ec      0x2f4 ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
  .debug_frame   0x000000000000a5e0      0x23c ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
  .debug_frame   0x000000000000a81c      0x10c ./Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
- .debug_frame   0x000000000000a928       0x2c ./USB_Device/App/usb_device.o
- .debug_frame   0x000000000000a954       0xe4 ./USB_Device/App/usbd_cdc_if.o
- .debug_frame   0x000000000000aa38      0x160 ./USB_Device/App/usbd_desc.o
- .debug_frame   0x000000000000ab98      0x4bc ./USB_Device/Target/usbd_conf.o
+ .debug_frame   0x000000000000a928       0x2c ./USB_DEVICE/App/usb_device.o
+ .debug_frame   0x000000000000a954       0xe4 ./USB_DEVICE/App/usbd_cdc_if.o
+ .debug_frame   0x000000000000aa38      0x160 ./USB_DEVICE/App/usbd_desc.o
+ .debug_frame   0x000000000000ab98      0x4bc ./USB_DEVICE/Target/usbd_conf.o
  .debug_frame   0x000000000000b054       0xa0 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_float.o)
  .debug_frame   0x000000000000b0f4       0x60 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfprintf_i.o)
  .debug_frame   0x000000000000b154       0x40 C:/ST/STM32CubeIDE_1.14.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.11.3.rel1.win32_1.1.100.202309141235/tools/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\libc_nano.a(libc_a-nano-vfscanf_float.o)
