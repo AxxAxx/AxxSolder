@@ -106,20 +106,20 @@ If you are not 110% sure about your soldering/connections it is wise to be on th
 
 # Settings
 To acces the user settings you hold down the encoder button at start-up. You are then presented with a SETTINGS text and you can release the button. While in the settings there are several settings parameters availible.
-| Setting | Desciption  | Unit |
+| Setting | Desciption  | Unit | Default |
 |---------|------|----------------------|
-|Startup Temp|Default temperature selected after boot|deg C|
-|Temp Offset|Temperature offset applied to measured temperature|deg C|
-|Standby Temp|Temperature to go to after handle is set in stand|deg C|
-|Standby Time|Time for which standby temperature is held before cooling down|minutes|
-|EM Time|Time that the iron can be ON before cooling down (safety feature)|minutes|
-|Buzzer Enable|Enable or Disable the buzzer|ON/OFF|
-|Preset Temp 1|Preset temperature for button 1|deg C|
-|Preset Temp 2|Preset temperature for button 2|deg C|
-|GPIO4 ON at run|Enable 3.3V output on GPIO4 when the iron is in run mode|ON/OFF|
-|-Load Default-|Load default parameters|N/A|
-|-Exit and Save-|Exit and Save|N/A|
-|-Exit no Save-|Exit without Save|N/A|
+|Startup Temp|Default temperature selected after boot|deg C|330|
+|Temp Offset|Temperature offset applied to measured temperature|deg C|0|
+|Standby Temp|Temperature to go to after handle is set in stand|deg C|150|
+|Standby Time|Time for which standby temperature is held before cooling down|minutes|10|
+|EM Time|Time that the iron can be ON before cooling down (safety feature)|minutes|30|
+|Buzzer Enable|Enable or Disable the buzzer|ON/OFF|ON|
+|Preset Temp 1|Preset temperature for button 1|deg C|330|
+|Preset Temp 2|Preset temperature for button 2|deg C|430|
+|GPIO4 ON at run|Enable 3.3V output on GPIO4 when the iron is in run mode|ON/OFF|OFF|
+|-Load Default-|Load default parameters|N/A|N/A|
+|-Exit and Save-|Exit and Save|N/A|N/A|
+|-Exit no Save-|Exit without Save|N/A|N/A|
 
 # PID control
 As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
