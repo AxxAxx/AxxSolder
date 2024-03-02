@@ -91,7 +91,7 @@ Programming or updating the firmware the STM32 MCU is done by using a SWD progra
 4. If your SWD programmer *can not* supply 3.3V it is necessary to power the AxxSolder from an external supply.
 5. Start your programming software. [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) is used in this example.
 6. Connect to the target by selecting *ST-LINK* and click on *Connect*
-7. Load the latest AxxSolder.bin donwloaded in *Step 2* by clicking *Open file* and select the donwloaded binary file.
+7. Load the latest AxxSolder.bin downloaded in *Step 2* by clicking *Open file* and select the downloaded binary file.
 8. Write the firmware to the MCU by clicking *Download*.
 9. If you get the message *File download complete* everything succeded and the SWD programmer can be disconnected and power cycled once and AxxSolder should boot.
 <img src="./photos/AxxSolder_SWD_connection.png" width="400">
