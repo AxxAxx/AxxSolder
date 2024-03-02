@@ -107,7 +107,7 @@ If you are not 110% sure about your soldering/connections it is wise to be on th
 # Settings
 To acces the user settings you hold down the encoder button at start-up. You are then presented with a SETTINGS text and you can release the button. While in the settings there are several settings parameters availible.
 | Setting | Desciption  | Unit | Default |
-|---------|------|----------------------|
+|---------|------|----------------------|----------------------|
 |Startup Temp|Default temperature selected after boot|deg C|330|
 |Temp Offset|Temperature offset applied to measured temperature|deg C|0|
 |Standby Temp|Temperature to go to after handle is set in stand|deg C|150|
