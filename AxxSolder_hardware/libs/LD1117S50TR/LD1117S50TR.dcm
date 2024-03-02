@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP LD1117S50TR
-D LDO Voltage Regulators 5.0V 0.8A Positive
-K
-F https://datasheet.lcsc.com/szlcsc/STMicroelectronics-LD1117S50TR_C134077.pdf
-$ENDCMP
-#
-#End Doc Library

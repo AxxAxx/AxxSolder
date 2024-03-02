@@ -1,0 +1,30 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model MAX16171ATA_VY+T
+#/13379145/300009/2.50/9/2/Integrated Circuit
+DEF MAX16171ATA_VY+T IC 0 30 Y Y 1 F N
+F0 "IC" 1050 300 50 H V L CNN
+F1 "MAX16171ATA_VY+T" 1050 200 50 H V L CNN
+F2 "SON50P300X200X80-9N" 1050 100 50 H I L CNN
+F3 "https://datasheets.maximintegrated.com/en/ds/MAX16171.pdf" 1050 0 50 H I L CNN
+F4 "Ideal Diode Controller with Reverse-Current Protection, 8 TDFN-CU" 1050 -100 50 H I L CNN "Description"
+F5 "0.8" 1050 -200 50 H I L CNN "Height"
+F6 "700-MAX16171ATA/VY+T" 1050 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/Maxim-Integrated/MAX16171ATA-VY%2bT?qs=zW32dvEIR3uJUsRKfY9NHQ%3D%3D" 1050 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "Analog Devices" 1050 -500 50 H I L CNN "Manufacturer_Name"
+F9 "MAX16171ATA/VY+T" 1050 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X GATE 1 0 0 200 R 50 50 0 0 P
+X SRC 2 0 -100 200 R 50 50 0 0 P
+X IN 3 0 -200 200 R 50 50 0 0 P
+X EN 4 0 -300 200 R 50 50 0 0 P
+X EP 9 600 -800 200 U 50 50 0 0 P
+X OUT 8 1200 0 200 L 50 50 0 0 P
+X N.C._2 7 1200 -100 200 L 50 50 0 0 P
+X N.C._1 6 1200 -200 200 L 50 50 0 0 P
+X GND 5 1200 -300 200 L 50 50 0 0 P
+P 5 0 1 6 200 100 1000 100 1000 -600 200 -600 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library

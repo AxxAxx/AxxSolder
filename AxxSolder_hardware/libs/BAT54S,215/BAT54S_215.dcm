@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP BAT54S,215
-D Schottky barrier diode,BAT54S 0.2A 30V NXP BAT54S,215, Dual SMT Schottky Diode, Series, 30V 200mA, 5ns, 3-Pin TO-236AB
-K
-F https://assets.nexperia.com/documents/data-sheet/BAT54S.pdf
-$ENDCMP
-#
-#End Doc Library

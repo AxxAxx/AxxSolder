@@ -1,0 +1,6 @@
+../USB_Device/App/usbd_cdc_if.c:152:15:CDC_Init_FS	1
+../USB_Device/App/usbd_cdc_if.c:166:15:CDC_DeInit_FS	1
+../USB_Device/App/usbd_cdc_if.c:180:15:CDC_Control_FS	1
+../USB_Device/App/usbd_cdc_if.c:261:15:CDC_Receive_FS	1
+../USB_Device/App/usbd_cdc_if.c:281:9:CDC_Transmit_FS	2
+../USB_Device/App/usbd_cdc_if.c:307:15:CDC_TransmitCplt_FS	1

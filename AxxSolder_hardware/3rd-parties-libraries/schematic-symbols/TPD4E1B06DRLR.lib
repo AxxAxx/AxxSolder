@@ -1,0 +1,27 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model TPD4E1B06DRLR
+#/755183/300009/2.50/6/3/Integrated Circuit
+DEF TPD4E1B06DRLR IC 0 30 Y Y 1 F N
+F0 "IC" 850 300 50 H V L CNN
+F1 "TPD4E1B06DRLR" 850 200 50 H V L CNN
+F2 "SOTFL50P160X60-6N" 850 100 50 H I L CNN
+F3 "http://www.ti.com/lit/ds/symlink/tpd4e1b06.pdf" 850 0 50 H I L CNN
+F4 "Bidirectional Quad-Channel High-Speed ESD Protection Device" 850 -100 50 H I L CNN "Description"
+F5 "0.6" 850 -200 50 H I L CNN "Height"
+F6 "595-TPD4E1B06DRLR" 850 -300 50 H I L CNN "Mouser Part Number"
+F7 "https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TPD4E1B06DRLR?qs=1MXlzafEN387aRSX0e2MEQ%3D%3D" 850 -400 50 H I L CNN "Mouser Price/Stock"
+F8 "Texas Instruments" 850 -500 50 H I L CNN "Manufacturer_Name"
+F9 "TPD4E1B06DRLR" 850 -600 50 H I L CNN "Manufacturer_Part_Number"
+DRAW
+X IO1 1 0 0 200 R 50 50 0 0 P
+X GND 2 0 -100 200 R 50 50 0 0 P
+X IO2 3 0 -200 200 R 50 50 0 0 P
+X IO3 4 1000 0 200 L 50 50 0 0 P
+X NC 5 1000 -100 200 L 50 50 0 0 N
+X IO4 6 1000 -200 200 L 50 50 0 0 P
+P 5 0 1 6 200 100 800 100 800 -300 200 -300 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library

@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP TMUX1136DGSR
-D 5-V low-leakage-current, 2:1, 2-channel precision analog switch
-K
-F http://www.ti.com/lit/gpn/TMUX1136
-$ENDCMP
-#
-#End Doc Library

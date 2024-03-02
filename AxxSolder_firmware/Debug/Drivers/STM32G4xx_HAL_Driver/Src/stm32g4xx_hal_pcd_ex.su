@@ -1,0 +1,8 @@
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pcd_ex.c:80:20:HAL_PCDEx_PMAConfig	32	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pcd_ex.c:122:19:HAL_PCDEx_ActivateBCD	24	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pcd_ex.c:143:19:HAL_PCDEx_DeActivateBCD	24	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pcd_ex.c:159:6:HAL_PCDEx_BCD_VBUSDetect	24	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pcd_ex.c:251:19:HAL_PCDEx_ActivateLPM	24	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pcd_ex.c:269:19:HAL_PCDEx_DeActivateLPM	24	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pcd_ex.c:289:13:HAL_PCDEx_LPM_Callback	16	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pcd_ex.c:306:13:HAL_PCDEx_BCD_Callback	16	static
