@@ -4,7 +4,7 @@
 
 <code style="color : red">Interested in purchasing a AxxSolder 3.0?
 I components for a few boards in stock. The rest of the boards has a lead time of ~2-3 weeks.
-The price per assembled and tested board is 140 Euro plus shipping. You get what is on this image [image](https://github.com/AxxAxx/AxxSolder/blob/main/photos/PCB_image.jpg) (one PCB) plus encoder knob.
+The price per assembled and tested board is 140 Euro plus shipping. You get what is on this [image](https://github.com/AxxAxx/AxxSolder/blob/main/photos/PCB_image.jpg) (one PCB) plus encoder knob.
 Send me an email at axeljohansson@duck.com to order. Payment is via PayPal</code>
 
 
