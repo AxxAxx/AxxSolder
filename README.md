@@ -90,7 +90,9 @@ It is often nice to have a compact and portable soldering iron controller for wh
 The connections from the handle to the PCB throught the Hirose RPC1-12RB-6P(71) connector is shown below. The blue wire in the portable version is connected to the aluminium plate which tells the AxxSolder to go into sleep mode when in contact with the soldering iron. The yellow wire is connected to pin 6 and is used to determine which handle is connected.
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
 # Firmware update
-Programming or updating the firmware the STM32 MCU is done by using a SWD programmer. These come in a variety of models and are availible from several different places online. In the below eaxample a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is is used. The MCU is programmed by the following steps:
+Programming or updating the firmware the STM32 MCU can be donw in two ways, by using a SWD programmer or directly via USB. 
+## SWD programmer
+These come in a variety of models and are availible from several different places online. In the below eaxample a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is is used. The MCU is programmed by the following steps:
 1. Disconnect any soldering iron handles from AxxSolder during the firmware update processs.
 2. Download the latest AxxSolder.bin file from [Releases](https://github.com/AxxAxx/AxxSolder/releases)
 3. Connect your SWD programmer to the target MCU with GND, 3.3V, (N)RST, SWCLK, SWDIO
@@ -99,10 +101,22 @@ Programming or updating the firmware the STM32 MCU is done by using a SWD progra
 6. Connect to the target by selecting *ST-LINK* and click on *Connect*
 7. Load the latest AxxSolder.bin downloaded in *Step 2* by clicking *Open file* and select the downloaded binary file.
 8. Write the firmware to the MCU by clicking *Download*.
-9. If you get the message *File download complete* everything succeded and the SWD programmer can be disconnected and power cycled once and AxxSolder should boot.
+9. If you get the message *File download complete* everything succeded and the SWD programmer can be disconnected and AxxSolder power cycled once and AxxSolder should boot.
 <img src="./photos/AxxSolder_SWD_connection.png" width="400">
 
 ![AxxSolder_SWD_programming](./photos/AxxSolder_SWD_programming.png)
+## USB (DFU mode)
+1. Disconnect any soldering iron handles from AxxSolder during the firmware update processs.
+2. Download the latest AxxSolder.bin file from [Releases](https://github.com/AxxAxx/AxxSolder/releases)
+3. Connect AxxSolder via USB to a computer that runs [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html).
+4. Hold down the most right button while powering on AxxSolder to enter DFU mode.
+5. Connect to the target by selecting *USB* and click on *Connect*
+6. Load the latest AxxSolder.bin downloaded in *Step 2* by clicking *Open file* and select the downloaded binary file.
+7. Write the firmware to the MCU by clicking *Download*.
+8. If you get the message *File download complete* everything succeded and the USB cable can be disconnected.
+9. Power cycle once and AxxSolder should boot.
+
+
 
 # First start up after build
 The first start up after you have built your AxxSolder can be intense. Double check all solder connections under a loupe/microscope. Especially the OPA2387, LTC4440 and the STM32G431 are small packages with tight pad spacing and can have solder bridges. Do also double check the connections to the soldering iron/stand which are shown in this document under [AxxSolder Station](#axxsolder-station) and [AxxSolder Portable](#axxsolder-portable).  
