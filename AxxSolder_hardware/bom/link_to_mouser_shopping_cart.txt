@@ -1,0 +1,5 @@
+https://eu.mouser.com/ProjectManager/ProjectDetail.aspx?AccessID=a3be267faf
+
+Note that this is components for the PCB + caps for tactile switches and rotary encoder. 
+
+You might need to purchase components other than these, eg. power connectors, connectors for the soldering iron and screws. See BOM for a complete list.
