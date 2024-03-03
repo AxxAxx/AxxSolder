@@ -105,7 +105,7 @@ If the handle is detected correctly, the Standby function works and the display 
 If you are not 110% sure about your soldering/connections it is wise to be on the safe side and keep your soldering tip in a waterbath in over to prevent it from over-heating in an uncontrolled manner. During the development this method was used and saved a few of thoese expensive JBC cartridges..
 
 # Settings
-To acces the user settings you hold down the encoder button at start-up. You are then presented with a SETTINGS text and you can release the button. While in the settings there are several settings parameters availible.
+To acces the user settings the user holds down the encoder button at start-up. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters availible.
 | Setting | Desciption  | Unit | Default |
 |---------|------|----------------------|----------------------|
 |Startup Temp|Default temperature selected after boot|deg C|330|
