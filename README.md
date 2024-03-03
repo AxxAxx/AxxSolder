@@ -3,7 +3,7 @@
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
 $\color{green}{\textsf{Interested in purchasing a AxxSolder 3.0?}}$
-$\color{green}{\textsf{I components for a few boards in stock. The rest of the boards has a lead time of ~2-3 weeks.}}$
+$\color{green}{\textsf{I have components for a few boards in stock. The rest of the boards has a lead time of ~2-3 weeks.}}$
 $\color{green}{\textsf{The price per assembled and tested board is 140 Euro plus shipping. You get what is on this}}$
 [image](https://github.com/AxxAxx/AxxSolder/blob/main/photos/PCB_image.jpg)
 $\color{green}{\textsf{(one PCB) plus encoder knob.}}$  
