@@ -25,3 +25,6 @@ fp-info-cache
 # Autorouter files (exported from Pcbnew)
 *.dsn
 *.ses
+
+
+BOM_AxxSolder_V3_0_Private_Use.xlsx
