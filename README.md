@@ -61,7 +61,7 @@ The schematic for AxxSolder is shown below. Both station and portable versions u
 ![AxxSolder_station](./photos/AxxSolder_Schematic.png)
 
 # PCB
-The PCBs are designed in KiCad and manufactured by PCBWay. PCBWay has sponsored this project with PCBs and stencils. As usual the quality of the PCBs is great. As some components have a rather fine pitch (0,5 mm as of the LQFP-48 package of the STM32) and some packages are "no lead" with a bottom thermal pad e.g. the WSON-8 package of the OPA2387 it is suggested to use a stencil to apply solder paste and then reflow the board using either a reflow oven or hot-plate. The boards on the image below was reflowed on a hot-plate (a home made AxxPlate). A microscope is also recommended and helpful during assembly.
+The PCBs are designed in KiCad and manufactured by [PCBWay](https://www.pcbway.com/). PCBWay has sponsored this project with PCBs and stencils. As usual the quality of the PCBs is great. As some components have a rather fine pitch (0,5 mm as of the LQFP-48 package of the STM32) and some packages are "no lead" with a bottom thermal pad e.g. the WSON-8 package of the OPA2387 it is suggested to use a stencil to apply solder paste and then reflow the board using either a reflow oven or hot-plate. The boards on the image below was reflowed on a hot-plate (a home made AxxPlate). A microscope is also recommended and helpful during assembly.
 Printed Circuit Boards with assembled componented is shown in the image below.
 ![PCB_image](./photos/PCB_image.jpg)
 A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown below. 
