@@ -235,6 +235,7 @@ uint8_t thermocouple_measurement_done = 1;
 FilterTypeDef thermocouple_temperature_filter_struct;
 FilterTypeDef mcu_temperature_filter_struct;
 FilterTypeDef input_voltage_filterStruct;
+FilterTypeDef current_filterStruct;
 FilterTypeDef stand_sense_filterStruct;
 FilterTypeDef handle1_sense_filterStruct;
 FilterTypeDef handle2_sense_filterStruct;
@@ -340,6 +341,10 @@ void change_state(mainstates new_state){
 
 void get_bus_voltage(){
 	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading_indexed(0), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION;
+}
+
+void get_heater_current(){
+	sensor_values.heater_current = Moving_Average_Compute(current_raw, &current_filterStruct)*CURRENT_COMPENSATION;
 }
 
 void get_thermocouple_temperature(){
@@ -495,7 +500,7 @@ void update_display(){
 	}
   	LCD_PutStr(14, 75, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-	if(sensor_values.heater_current < 500){ //NT115 at 9V draws 810
+	if(sensor_values.heater_current < 300){ //NT115 at 9V draws 810
 	  	LCD_PutStr(10, 165, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else{
@@ -846,7 +851,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	}
 	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
 		sensor_values.leak_current = HAL_ADC_GetValue(&hadc2);
-		sensor_values.heater_current = HAL_ADC_GetValue(&hadc2);
+		current_raw = HAL_ADC_GetValue(&hadc2);
 		heater_on();
 		current_measurement_done = 1;
 	}
@@ -932,6 +937,7 @@ int main(void)
 	Moving_Average_Init(&thermocouple_temperature_filter_struct,30);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
+	Moving_Average_Init(&current_filterStruct,3);
 	Moving_Average_Init(&stand_sense_filterStruct,20);
 	Moving_Average_Init(&handle1_sense_filterStruct,20);
 	Moving_Average_Init(&handle2_sense_filterStruct,20);
@@ -972,6 +978,7 @@ int main(void)
   		/* Init and fill filter structures with initial values */
   		for (int i = 0; i<200;i++){
   			get_bus_voltage();
+  			get_heater_current();
   			get_mcu_temp();
   			get_thermocouple_temperature();
   			get_handle_type();
@@ -996,6 +1003,7 @@ int main(void)
 
   			if(HAL_GetTick() - previous_sensor_update_low_update >= interval_sensor_update_low_update){
   				get_bus_voltage();
+  				get_heater_current();
   				get_mcu_temp();
   				previous_sensor_update_low_update = HAL_GetTick();
   			}

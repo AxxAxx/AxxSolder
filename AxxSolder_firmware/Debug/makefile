@@ -59,6 +59,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 AxxSolder.list \
 
+OBJCOPY_BIN += \
+AxxSolder.bin \
+
 
 # All Target
 all: main-build
@@ -82,12 +85,17 @@ AxxSolder.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+AxxSolder.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "AxxSolder.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) AxxSolder.elf AxxSolder.list AxxSolder.map default.size.stdout
+	-$(RM) AxxSolder.bin AxxSolder.elf AxxSolder.list AxxSolder.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
