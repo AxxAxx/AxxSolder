@@ -1046,7 +1046,7 @@ int main(void)
  			/* Detect if a tip is present by sending a short voltage pulse and sense current */
 			#ifdef DETECT_TIP_BY_CURRENT
   				if(HAL_GetTick() - previous_measure_current_update >= interval_measure_current){
-  					if(thermocouple_measurement_done == 1){
+  					if(thermocouple_measurement_done == 1){ //Only take current measurement if thermocouple measurement is not ongoing
 						current_measurement_done = 0;
 						set_heater_duty(PID_MAX_OUTPUT/2);
 						current_measurement_requested = 1;
