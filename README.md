@@ -2,6 +2,13 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAxxAxx%2FAxxSolder&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
+$\color{green}{\textsf{Interested in purchasing a AxxSolder 3.0?}}$
+$\color{green}{\textsf{I have components for a few boards in stock. The rest of the boards has a lead time of ~2-3 weeks.}}$
+$\color{green}{\textsf{The price per assembled and tested board is 140 Euro plus shipping. You get what is on this}}$
+[image](https://github.com/AxxAxx/AxxSolder/blob/main/photos/PCB_image.jpg)
+$\color{green}{\textsf{(one PCB) plus encoder knob.}}$  
+$\color{green}{\textsf{Send me an email at axeljohansson(at)duck.com to order. Payment is via PayPal.}}$
+
 # AxxSolder Overview
 AxxSolder is a STM32 based soldering iron controller for JBC C115, C210 and C245 cartridges. 
 Two different versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-24V OR a USB-C Power Delivery source.  The software is written for the [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html) and implements a PID for temperature control, TFT display driver, sleep function when the handle is at rest and functions for read/write user settings to flash. Enclosures for both station and portable versions are 3D printed and design files are availible under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the AxxSolder station can be found under [DEMO](#demo). A *bill of materials* (BOM) with individual component prices can be found under [/bom](https://github.com/AxxAxx/AxxSolder/tree/main/AxxSolder_hardware/bom).  
@@ -54,7 +61,7 @@ The schematic for AxxSolder is shown below. Both station and portable versions u
 ![AxxSolder_station](./photos/AxxSolder_Schematic.png)
 
 # PCB
-The PCBs are designed in KiCad and manufactured by PCBWay. PCBWay has sponsored this project with PCBs and stencils. As usual the quality of the PCBs is great. As some components have a rather fine pitch (0,5 mm as of the LQFP-48 package of the STM32) and some packages are "no lead" with a bottom thermal pad e.g. the WSON-8 package of the OPA2387 it is suggested to use a stencil to apply solder paste and then reflow the board using either a reflow oven or hot-plate. The boards on the image below was reflowed on a hot-plate (a home made AxxPlate). A microscope is also recommended and helpful during assembly.
+The PCBs are designed in KiCad and manufactured by [PCBWay](https://www.pcbway.com/). PCBWay has sponsored this project with PCBs and stencils. As usual the quality of the PCBs is great. As some components have a rather fine pitch (0,5 mm as of the LQFP-48 package of the STM32) and some packages are "no lead" with a bottom thermal pad e.g. the WSON-8 package of the OPA2387 it is suggested to use a stencil to apply solder paste and then reflow the board using either a reflow oven or hot-plate. The boards on the image below was reflowed on a hot-plate (a home made AxxPlate). A microscope is also recommended and helpful during assembly.
 Printed Circuit Boards with assembled componented is shown in the image below.
 ![PCB_image](./photos/PCB_image.jpg)
 A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown below. 
@@ -84,7 +91,9 @@ It is often nice to have a compact and portable soldering iron controller for wh
 The connections from the handle to the PCB throught the Hirose RPC1-12RB-6P(71) connector is shown below. The blue wire in the portable version is connected to the aluminium plate which tells the AxxSolder to go into sleep mode when in contact with the soldering iron. The yellow wire is connected to pin 6 and is used to determine which handle is connected.
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
 # Firmware update
-Programming or updating the firmware the STM32 MCU is done by using a SWD programmer. These come in a variety of models and are availible from several different places online. In the below eaxample a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is is used. The MCU is programmed by the following steps:
+Programming or updating the firmware the STM32 MCU can be donw in two ways, by using a SWD programmer or directly via USB. 
+## SWD programmer
+These come in a variety of models and are availible from several different places online. In the below eaxample a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is is used. The MCU is programmed by the following steps:
 1. Disconnect any soldering iron handles from AxxSolder during the firmware update processs.
 2. Download the latest AxxSolder.bin file from [Releases](https://github.com/AxxAxx/AxxSolder/releases)
 3. Connect your SWD programmer to the target MCU with GND, 3.3V, (N)RST, SWCLK, SWDIO
@@ -93,10 +102,22 @@ Programming or updating the firmware the STM32 MCU is done by using a SWD progra
 6. Connect to the target by selecting *ST-LINK* and click on *Connect*
 7. Load the latest AxxSolder.bin downloaded in *Step 2* by clicking *Open file* and select the downloaded binary file.
 8. Write the firmware to the MCU by clicking *Download*.
-9. If you get the message *File download complete* everything succeded and the SWD programmer can be disconnected and power cycled once and AxxSolder should boot.
+9. If you get the message *File download complete* everything succeded and the SWD programmer can be disconnected and AxxSolder power cycled once and AxxSolder should boot.
 <img src="./photos/AxxSolder_SWD_connection.png" width="400">
 
 ![AxxSolder_SWD_programming](./photos/AxxSolder_SWD_programming.png)
+## USB (DFU mode)
+1. Disconnect any soldering iron handles from AxxSolder during the firmware update processs.
+2. Download the latest AxxSolder.bin file from [Releases](https://github.com/AxxAxx/AxxSolder/releases)
+3. Connect AxxSolder via USB to a computer that runs [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html).
+4. Hold down the most right button while powering on AxxSolder to enter DFU mode.
+5. Connect to the target by selecting *USB* and click on *Connect*
+6. Load the latest AxxSolder.bin downloaded in *Step 2* by clicking *Open file* and select the downloaded binary file.
+7. Write the firmware to the MCU by clicking *Download*.
+8. If you get the message *File download complete* everything succeded and the USB cable can be disconnected.
+9. Power cycle once and AxxSolder should boot.
+
+
 
 # First start up after build
 The first start up after you have built your AxxSolder can be intense. Double check all solder connections under a loupe/microscope. Especially the OPA2387, LTC4440 and the STM32G431 are small packages with tight pad spacing and can have solder bridges. Do also double check the connections to the soldering iron/stand which are shown in this document under [AxxSolder Station](#axxsolder-station) and [AxxSolder Portable](#axxsolder-portable).  
