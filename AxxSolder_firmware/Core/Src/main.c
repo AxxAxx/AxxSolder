@@ -133,7 +133,7 @@ uint16_t current_raw = 0;
 
 /* Constants for scaling input voltage ADC value*/
 #define VOLTAGE_COMPENSATION 0.00840442388
-#define CURRENT_COMPENSATION 1.000
+#define CURRENT_COMPENSATION 0.1
 
 /* Min allowed bus voltage */
 #define MIN_BUSVOLTAGE 8.0
@@ -169,7 +169,7 @@ struct sensor_values_struct {
 	double set_temperature;
 	double thermocouple_temperature;
 	float bus_voltage;
-	uint16_t heater_current;
+	float heater_current;
 	uint16_t leak_current;
 	float mcu_temperature;
 	double in_stand;
@@ -500,7 +500,7 @@ void update_display(){
 	}
   	LCD_PutStr(14, 75, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-	if(sensor_values.heater_current < 300){ //NT115 at 9V draws 810
+	if(sensor_values.heater_current < 30){ //NT115 at 9V draws 81
 	  	LCD_PutStr(10, 165, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else{
@@ -860,7 +860,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 /* ADC watchdog Callback */
 void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* hadc){
 		LCD_draw_earth_fault_popup();
-
 }
 
 
@@ -1038,7 +1037,7 @@ int main(void)
   				memset(&buffer, '\0', sizeof(buffer));
   				sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
   						sensor_values.thermocouple_temperature, sensor_values.set_temperature,
-  						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current*1.0);
+  						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
   				CDC_Transmit_FS((uint8_t *) buffer, strlen(buffer)); //Print string over USB virtual COM port
   				previous_millis_debug = HAL_GetTick();
   			}
