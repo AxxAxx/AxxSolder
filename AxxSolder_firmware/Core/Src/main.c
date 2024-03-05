@@ -36,7 +36,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define version "3.0.0"
+#define version "3.0.1"
 
 enum handles {
 	NT115,
