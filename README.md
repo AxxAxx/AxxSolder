@@ -7,8 +7,8 @@ $\color{green}{\textsf{I have components for a few boards in stock. The rest of 
 $\color{green}{\textsf{The price per assembled and tested board is 140 Euro plus shipping. You get what is on this}}$
 [image](https://github.com/AxxAxx/AxxSolder/blob/main/photos/PCB_image.jpg)
 $\color{green}{\textsf{(one PCB) plus encoder knob.}}$  
-$\color{green}{\textsf{Send me an email at axeljohansson(at)duck.com to order. Payment is via PayPal.}}$
-![5 assembled AxxSolder 3.0](./photos/PCB_image_x5.jpg)
+$\color{green}{\textsf{Send me an email at axeljohansson(at)duck.com to order. Payment is via PayPal.}}$  
+![5assembledAxxSolder3](./photos/PCB_image_x5.jpg)
 
 # AxxSolder Overview
 AxxSolder is a STM32 based soldering iron controller for JBC C115, C210 and C245 cartridges. 
