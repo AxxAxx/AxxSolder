@@ -57,7 +57,7 @@ Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and genera
 
 # Cartridge differences
 Cartridges from JBC do all contain a thermocouple element to read the tip temperature and a resistive heater element. The configuration of thermocouple and heater element differ slightly between cartridge models. In order to determine the internal configuration of the cartridges two cross secions were done. These show clearly how the C210 and C245 cartridges are constructed internally. The images can be seen here: [https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller](https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller/msg5124267/#msg5124267).
-As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. This is done automatically be the inputs "Handle_sense_1" and "Handle_sense_2" This can be done thanks to the design of the handle connector. For the JCB T210 handle pin 5 and 6 is connected internaly in the connector. This allows AxxSolder to sense which handle is connected and assign correct thermocouple correction, PID parameters and max output power.
+As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. This is done automatically be the inputs "Handle_sense_1" and "Handle_sense_2" This can be done thanks to the design of the handle connector. For the JCB T210 handle pin 5 and 6 are connected internaly in the connector. This allows AxxSolder to sense which handle is connected and assign correct thermocouple correction, PID parameters and max output power.
 
 # Schematic
 The schematic for AxxSolder is shown below. Both station and portable versions use the same PCB and software. The MCU is a [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html). 
@@ -94,10 +94,8 @@ It is often nice to have a compact and portable soldering iron controller for wh
 The connections from the handle to the PCB throught the Hirose RPC1-12RB-6P(71) connector is shown below. The blue wire in the portable version is connected to the aluminium plate which tells the AxxSolder to go into sleep mode when in contact with the soldering iron. The yellow wire is connected to pin 6 and is used to determine which handle is connected.
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
 # Handle identification and connections
-In order for AxxSolder to know which type of handle (NT115, T210, T245) is connected specific pins must be connected withing the handle connector. By default in original JBC handle T245 NO pins are connected while in original T210 pin 5 and 6 is connected. The original NT115 handle has a different connector from JBC. If the user changes the connector or uses a non-genuine handle it is important to make sure that pin 5 and 3 is connected within the connector. All the neccesary connections is shown in the image below.   
+In order for AxxSolder to know which type of handle (NT115, T210, T245) is connected specific pins must be connected withing the handle connector. By default in original JBC handle T245 NO pins are connected while in original T210 pin 5 and 6 are connected. The original NT115 handle has a different connector from JBC. If the user changes the connector or uses a non-genuine handle it is important to make sure that pin 5 and 3 is connected within the connector. All the neccesary connections is shown in the image below. While powering on AxxSolder fir the first time after doing these connections within the handle connector or connections to AxxSolder it is wise to attach a handle without it's cartridge and ensure that AxxSolder shows the correct handle type on the display. Failing to detect the handle type will cause damage to your tip as the thermal calibration will be wrong.  
 ![Handle_connections](./photos/handle_connectors.jpg)
-
-
 
 # Firmware update
 Programming or updating the firmware the STM32 MCU can be donw in two ways, by using a SWD programmer or directly via USB. 
