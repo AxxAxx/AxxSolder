@@ -2,12 +2,13 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAxxAxx%2FAxxSolder&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
-$\color{green}{\textsf{Interested in purchasing an AxxSolder 3.0?}}$
-$\color{green}{\textsf{I have components for a few boards in stock. The rest of the boards has a lead time of ~2-3 weeks.}}$
-$\color{green}{\textsf{The price per assembled and tested board is 140 Euro plus shipping. You get what is on this}}$
+Interested in purchasing an AxxSolder 3.0?  
+I have components for a few boards in stock. The rest of the boards has a lead time of ~2-3 weeks.
+The price per assembled and tested board is 140 Euro plus shipping. You get what is on this
 [image](https://github.com/AxxAxx/AxxSolder/blob/main/photos/PCB_image.jpg)
-$\color{green}{\textsf{(one PCB) plus encoder knob.}}$  
-$\color{green}{\textsf{Send me an email at axeljohansson(at)duck.com to order. Payment is via PayPal.}}$  
+(one PCB) plus encoder knob.
+Send me an email at axeljohansson(at)duck.com to order. Payment is via PayPal.
+
 ![5assembledAxxSolder3](./photos/PCB_image_x5.jpg)
 
 # AxxSolder Overview
@@ -29,6 +30,7 @@ Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and genera
 - [DEMO](#demo)
 - [AxxSolder Station](#axxsolder-station)
 - [AxxSolder Portable](#axxsolder-portable)
+- [Handle identification and connections](#handle-identification-and-connections)
 - [Firmware update](#firmware-update)
 - [First start up after build](#first-start-up-after-build)
 - [Settings](#settings)
@@ -91,6 +93,12 @@ It is often nice to have a compact and portable soldering iron controller for wh
 ![AxxSolder_portable](./photos/AxxSolder_portable.jpg)
 The connections from the handle to the PCB throught the Hirose RPC1-12RB-6P(71) connector is shown below. The blue wire in the portable version is connected to the aluminium plate which tells the AxxSolder to go into sleep mode when in contact with the soldering iron. The yellow wire is connected to pin 6 and is used to determine which handle is connected.
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
+# Handle identification and connections
+In order for AxxSolder to know which type of handle (NT115, T210, T245) is connected specific pins must be connected withing the handle connector. By default in original JBC handle T245 NO pins are connected while in original T210 pin 5 and 6 is connected. The original NT115 handle has a different connector from JBC. If the user changes the connector or uses a non-genuine handle it is important to make sure that pin 5 and 3 is connected within the connector. All the neccesary connections is shown in the image below.   
+![Handle_connections](./photos/handle_connectors.jpg)
+
+
+
 # Firmware update
 Programming or updating the firmware the STM32 MCU can be donw in two ways, by using a SWD programmer or directly via USB. 
 ## SWD programmer
