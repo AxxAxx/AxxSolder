@@ -131,6 +131,8 @@
     #elif (LCD_ROTATION == 1) || (LCD_ROTATION == 3)
       #define LCD_WIDTH  320
       #define LCD_HEIGHT 240
+      #define LCD_X_SHIFT 0
+      #define LCD_Y_SHIFT 0
     #endif
 
   #endif

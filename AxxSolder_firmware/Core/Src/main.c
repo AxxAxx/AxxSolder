@@ -360,7 +360,6 @@ void get_thermocouple_temperature(){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_NT115 + TC_temp*TC_COMPENSATION_X1_NT115 + TC_COMPENSATION_X0_NT115;
 	}
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
-	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,999); // Clamp
 }
 
 /* Sets the duty cycle of timer controlling the heater */
@@ -378,6 +377,16 @@ void heater_on(){
 /* Disable the duty cycle of timer controlling the heater PWM*/
 void heater_off(){
 	set_heater_duty(0);
+}
+
+void show_popup(char * text[80]){
+	UG_FillFrame(10, 150, 225, 205, RGB_to_BRG(C_ORANGE));
+	UG_FillFrame(15, 155, 220, 200, RGB_to_BRG(C_WHITE));
+	LCD_PutStr(20, 150, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
+	HAL_Delay(2000);
+	LCD_draw_main_screen();
+	standby_state_written_to_LCD = 0;
+	sleep_state_written_to_LCD = 0;
 }
 
 void settings_menue(){
@@ -655,11 +664,13 @@ void handle_emergency_shutdown(){
 
 	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
 	if((sensor_values.thermocouple_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
+		show_popup("\n\n  NO tip detected");
 		change_state(EMERGENCY_SLEEP);
 		beep();
 	}
 	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
-	if(sensor_values.bus_voltage <= MIN_BUSVOLTAGE){
+	if((sensor_values.bus_voltage <= MIN_BUSVOLTAGE) && (active_state == RUN)){
+		show_popup("\n\n  Too Low voltage");
 		change_state(EMERGENCY_SLEEP);
 	}
 }
