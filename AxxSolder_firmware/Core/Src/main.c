@@ -360,6 +360,7 @@ void get_thermocouple_temperature(){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_NT115 + TC_temp*TC_COMPENSATION_X1_NT115 + TC_COMPENSATION_X0_NT115;
 	}
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
+	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,999); // Clamp
 }
 
 /* Sets the duty cycle of timer controlling the heater */
