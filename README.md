@@ -30,6 +30,7 @@ Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and genera
 - [DEMO](#demo)
 - [AxxSolder Station](#axxsolder-station)
 - [AxxSolder Portable](#axxsolder-portable)
+- [Recommended power supply](#recommended-power-supply)
 - [Handle identification and connections](#handle-identification-and-connections)
 - [Firmware update](#firmware-update)
 - [First start up after build](#first-start-up-after-build)
@@ -93,6 +94,9 @@ It is often nice to have a compact and portable soldering iron controller for wh
 ![AxxSolder_portable](./photos/AxxSolder_portable.jpg)
 The connections from the handle to the PCB throught the Hirose RPC1-12RB-6P(71) connector is shown below. The blue wire in the portable version is connected to the aluminium plate which tells the AxxSolder to go into sleep mode when in contact with the soldering iron. The yellow wire is connected to pin 6 and is used to determine which handle is connected.
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
+# Recommended power supply
+A well suited power supply with isolated output (SELV) is the Meanwell LRS-150-24. It is rated for 156 W at 24 V. A cover protecting the terminals for this power supply can be found under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD).
+
 # Handle identification and connections
 In order for AxxSolder to know which type of handle (NT115, T210, T245) is connected specific pins must be connected within the handle connector. By default the original JBC handle T245 has NO pins connected while in the original T210 pins 5 and 6 are connected. The original NT115 handle has a different connector from JBC and must be modified. If the user changes the connector or uses a non-genuine handle it is important to make sure that pin 5 and 3 is connected within the connector. All the neccesary connections are shown in the image below. While powering on AxxSolder fir the first time after doing these connections within the handle connector or connections to AxxSolder it is wise to attach a handle without it's cartridge and ensure that AxxSolder shows the correct handle type on the display. Failing to detect the handle type type will cause damage to the tip as the thermal calibration and max power allowed will be wrong.  
 ![Handle_connections](./photos/handle_connectors.jpg)
