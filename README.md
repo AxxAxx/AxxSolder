@@ -85,6 +85,7 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown
 |[v2.1.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.0)|Oct 7, 2023|V2.*|
 
 # DEMO
+(This shows AxxSolder 2 and not the latest AxxSolder 3)  
 Click on the gif to get to YouTube and see the demo in full resolution.  
 [![AxxSolder DEMO](./photos/AxxSolder_DEMO.gif)](https://www.youtube.com/watch?v=-3MtJyTwZFQ)
 # AxxSolder Station
