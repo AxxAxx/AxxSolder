@@ -193,11 +193,10 @@ The PID parameters are adjusted to achieve a fast response with minimum overshoo
 # Temperature calibration
 The voltage from the thermocouple embedded inside the cartridge is amplified by an OPA2387 operational amplifier and then read by the ADC of the MCU. To correlate the measured ADC value to the cartridge temperature experiments were done. A constant power was applied to the heating element of the cartridge and the ADC value was read as well as the actual tip temperature. The tip temperature was measured by a "Soldering Tip Thermocouple" used in e.g. the Hakko FG-100.   
 The measured data was recorded and plotted for both the C115, C210 and C245 cartridges. The specific cartridges used were the C115112, C210-007 and C245-945. The measured data were fitted to polynomial equations:  
-$Temp_{C115}[deg] =  5.88e^{-5} * ADC^2 + 0.40* ADC + 24.07$  
-$Temp_{C210}[deg] =  8.44e^{-6} * ADC^2 + 0.31* ADC + 24.06$  
-$Temp_{C245}[deg] = -1.22e^{-7} * ADC^2 + 0.11* ADC + 25.53$  
+$Temp_{C115}[deg] =  5.10e^{-5} * ADC^2 + 0.42* ADC + 20.15$  
+$Temp_{C210}[deg] =  4.22e^{-6} * ADC^2 + 0.32* ADC + 20.97$  
+$Temp_{C245}[deg] = -4.73e^{-7} * ADC^2 + 0.12* ADC + 23.78$  
 These are then used in the software to retrieve correct tip temperatures.
-
 ![Temp_calibration](./photos/Temp_calibration_data.png)
 # Temperature measurement
 As the thermocouple and heater element is connected in series inside the JBC cartridges and the thermocouple voltage measures over the same pins as the heating element we have to be careful when to do the temperature measurement. In order to not disturb the thermocouple measurement with heater element switching, the switching is turned off for 0.5 ms just before the temperature measurement is taken. The 0.5 ms delay ensures that the switching is turned off and the thermocouple signal is stabilized around a stable voltage.  
