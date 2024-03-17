@@ -208,5 +208,6 @@ The blue pulse indicates the wait time of 0.5 ms and the purple pulse is where t
 # Current measurement
 The current is sampled four times per second by a 30 us current pulse through the heater. This is done both to check if there is a functioning tip in the handle (otherwise the display shows "---" at current temp) and to be able to calculate the power drawn by the heater. By knowing how mych the heater draws in ampere the actual power can be calculated by knowing the bus voltage and pulse duty cycle. to measure the current the gate to the MOSFET is turned on, 10 us later the voltage over the current shunt is sampled byu the ADC and the result is converted. This is showin the the image below.
 ![Oscilloscope_image_PWM](./photos/current_measurement.png)
-
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/AxxAxx/AxxSolder.svg?variant=adaptive)](https://starchart.cc/AxxAxx/AxxSolder)
 
