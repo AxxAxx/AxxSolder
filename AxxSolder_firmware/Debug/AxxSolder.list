@@ -2301,24 +2301,24 @@ void get_thermocouple_temperature(){
  80017a2:	3708      	adds	r7, #8
  80017a4:	46bd      	mov	sp, r7
  80017a6:	bdb0      	pop	{r4, r5, r7, pc}
- 80017a8:	92e63abf 	.word	0x92e63abf
- 80017ac:	3ee1b6ee 	.word	0x3ee1b6ee
- 80017b0:	1a8bcf67 	.word	0x1a8bcf67
- 80017b4:	3fd3ea38 	.word	0x3fd3ea38
- 80017b8:	ef80bf90 	.word	0xef80bf90
- 80017bc:	403810db 	.word	0x403810db
- 80017c0:	82fead10 	.word	0x82fead10
- 80017c4:	3ea7dc92 	.word	0x3ea7dc92
- 80017c8:	c53ce03f 	.word	0xc53ce03f
- 80017cc:	3fbd94aa 	.word	0x3fbd94aa
- 80017d0:	34da2134 	.word	0x34da2134
- 80017d4:	403a2648 	.word	0x403a2648
- 80017d8:	202b3c5a 	.word	0x202b3c5a
- 80017dc:	3f0edf88 	.word	0x3f0edf88
- 80017e0:	15fb4706 	.word	0x15fb4706
- 80017e4:	3fda2f75 	.word	0x3fda2f75
- 80017e8:	53430524 	.word	0x53430524
- 80017ec:	40381413 	.word	0x40381413
+ 80017a8:	82211f02 	.word	0x82211f02
+ 80017ac:	3ed1b769 	.word	0x3ed1b769
+ 80017b0:	7d232337 	.word	0x7d232337
+ 80017b4:	3fd46490 	.word	0x3fd46490
+ 80017b8:	11588fd7 	.word	0x11588fd7
+ 80017bc:	4034f7d1 	.word	0x4034f7d1
+ 80017c0:	a66d5482 	.word	0xa66d5482
+ 80017c4:	be9fc6dc 	.word	0xbe9fc6dc
+ 80017c8:	56fa2c99 	.word	0x56fa2c99
+ 80017cc:	3fbe8eac 	.word	0x3fbe8eac
+ 80017d0:	aef84767 	.word	0xaef84767
+ 80017d4:	4037c703 	.word	0x4037c703
+ 80017d8:	e0057d0c 	.word	0xe0057d0c
+ 80017dc:	3f0ac0ae 	.word	0x3f0ac0ae
+ 80017e0:	859db92b 	.word	0x859db92b
+ 80017e4:	3fdae99a 	.word	0x3fdae99a
+ 80017e8:	027d19fb 	.word	0x027d19fb
+ 80017ec:	40342538 	.word	0x40342538
  80017f0:	00000000 	.word	0x00000000
  80017f4:	408f3800 	.word	0x408f3800
 	...
