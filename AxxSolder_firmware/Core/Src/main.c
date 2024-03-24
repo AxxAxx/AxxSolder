@@ -203,10 +203,11 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.buzzer_enable = 1,
 											.preset_temp_1 = 330,
 											.preset_temp_2 = 430,
-											.GPIO4_ON_at_run = 0};
+											.GPIO4_ON_at_run = 0,
+											.screen_rotation = 2};
 
 /* List of names for settings menue */
-#define menu_length 12
+#define menu_length 13
 char menu_names[menu_length][20] = { "Startup Temp  ",
 							"Temp Offset    ",
 							"Standby Temp   ",
@@ -216,6 +217,7 @@ char menu_names[menu_length][20] = { "Startup Temp  ",
 							"Preset Temp 1     ",
 							"Preset Temp 2     ",
 							"GPIO4 ON at run",
+							"Screen rotation   ",
 							"-Load Default-     ",
 							"-Exit and Save-   ",
 							"-Exit no Save-    "};
@@ -383,8 +385,15 @@ void heater_off(){
 void settings_menue(){
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
-		LCD_PutStr(0, 300, "Version:", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(150, 300, version, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+		if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
+			LCD_PutStr(0, 300, "Version:", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(150, 300, version, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(0, 220, "Version:", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(150, 220, version, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+		}
+
 
 		TIM2->CNT = 1000;
 		uint16_t menu_cursor_position = 0;
@@ -392,6 +401,7 @@ void settings_menue(){
 		uint16_t menue_start = 0;
 		uint16_t menue_level = 0;
 		uint16_t menu_active = 1;
+		uint16_t menue_items_to_show = 0;
 		float old_value = 0;
 
 		LCD_PutStr(60, 12, "SETTINGS", FONT_arial_20X23, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
@@ -449,8 +459,13 @@ void settings_menue(){
 			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-3)){
 				flash_values = default_flash_values;
 			}
-
-			for(int i = menue_start;i<=menue_start+7;i++){
+			if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
+				menue_items_to_show = 7;
+			}
+			else{
+				menue_items_to_show = 5;
+			}
+			for(int i = menue_start;i<=menue_start+menue_items_to_show;i++){
 
 				if((i == menu_cursor_position) && (menue_level == 0)){
 					LCD_PutStr(5, 45+(i-menue_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
@@ -946,7 +961,6 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	HAL_Delay(200);
-	LCD_init();
 
   		// Check if user data in flash is valid, if not - write default parameters
   		if(!FlashCheckCRC()){
@@ -955,6 +969,19 @@ int main(void)
 
   		/* Read flash data */
   	    FlashRead(&flash_values);
+
+  	    /* Set screen rotation */
+  	    if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
+		  #define LCD_WIDTH  240
+		  #define LCD_HEIGHT 320
+  	    }
+  	    if((flash_values.screen_rotation == 1) || (flash_values.screen_rotation == 3)){
+		  #define LCD_WIDTH  240
+		  #define LCD_HEIGHT 320
+		}
+
+  	    LCD_init();
+  	  	LCD_SetRotation(flash_values.screen_rotation);
 
   		/* Set startup state */
   	    change_state(HALTED);
