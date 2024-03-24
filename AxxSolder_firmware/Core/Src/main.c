@@ -390,8 +390,8 @@ void settings_menue(){
 			LCD_PutStr(150, 300, version, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
 		}
 		else{
-			LCD_PutStr(0, 220, "Version:", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
-			LCD_PutStr(150, 220, version, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(0, 215, "Version:", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(150, 215, version, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
 		}
 
 
@@ -401,7 +401,6 @@ void settings_menue(){
 		uint16_t menue_start = 0;
 		uint16_t menue_level = 0;
 		uint16_t menu_active = 1;
-		uint16_t menue_items_to_show = 0;
 		float old_value = 0;
 
 		LCD_PutStr(60, 12, "SETTINGS", FONT_arial_20X23, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
@@ -430,8 +429,8 @@ void settings_menue(){
 							TIM2->CNT = 1000 + (menu_length-1)*2;
 			}
 
-			if(menu_cursor_position >= 7){
-				menue_start = menu_cursor_position-7;
+			if(menu_cursor_position >= 6){
+				menue_start = menu_cursor_position-6;
 			}
 			else{
 				menue_start = 0;
@@ -459,13 +458,8 @@ void settings_menue(){
 			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-3)){
 				flash_values = default_flash_values;
 			}
-			if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
-				menue_items_to_show = 7;
-			}
-			else{
-				menue_items_to_show = 5;
-			}
-			for(int i = menue_start;i<=menue_start+menue_items_to_show;i++){
+
+			for(int i = menue_start;i<=menue_start+6;i++){
 
 				if((i == menu_cursor_position) && (menue_level == 0)){
 					LCD_PutStr(5, 45+(i-menue_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
@@ -507,78 +501,153 @@ void settings_menue(){
 }
 
 void update_display(){
-	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.f", sensor_values.set_temperature);
-	if(sensor_values.set_temperature < 99.5){
-		buffer[2] = 32;
-		buffer[3] = 32;
-	}
-  	LCD_PutStr(14, 75, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-
-	if(sensor_values.heater_current < 30){ //NT115 at 9V draws 81
-	  	LCD_PutStr(10, 165, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-	}
-	else{
+	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.f", sensor_values.thermocouple_temperature);
-		if(sensor_values.thermocouple_temperature < 99.5){
+		sprintf(buffer, "%.f", sensor_values.set_temperature);
+		if(sensor_values.set_temperature < 99.5){
 			buffer[2] = 32;
 			buffer[3] = 32;
 		}
-	  	LCD_PutStr(14, 165, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-	}
+		LCD_PutStr(14, 75, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.1f", sensor_values.bus_voltage);
-	LCD_PutStr(100, 255, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(sensor_values.heater_current < 30){ //NT115 at 9V draws 81
+			LCD_PutStr(10, 165, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			memset(&buffer, '\0', sizeof(buffer));
+			sprintf(buffer, "%.f", sensor_values.thermocouple_temperature);
+			if(sensor_values.thermocouple_temperature < 99.5){
+				buffer[2] = 32;
+				buffer[3] = 32;
+			}
+			LCD_PutStr(14, 165, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
 
-	memset(&buffer, '\0', sizeof(buffer));
-	sprintf(buffer, "%.1f", sensor_values.mcu_temperature);
-	LCD_PutStr(100, 275, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		memset(&buffer, '\0', sizeof(buffer));
+		sprintf(buffer, "%.1f", sensor_values.bus_voltage);
+		LCD_PutStr(100, 255, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-	if(handle == T210){
-		LCD_PutStr(100, 235, "T210   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-	}
-	else if(handle == T245){
-		LCD_PutStr(100, 235, "T245   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-	}
-	else if(handle == NT115){
-		LCD_PutStr(100, 235, "NT115", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-	}
+		memset(&buffer, '\0', sizeof(buffer));
+		sprintf(buffer, "%.1f", sensor_values.mcu_temperature);
+		LCD_PutStr(100, 275, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-	if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
-		UG_FillFrame(210,55,230,286, RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 58,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(216, 92, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 126, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(216, 161, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 194, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(216, 228, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 262, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		sleep_state_written_to_LCD = 1;
-		standby_state_written_to_LCD = 0;
+		if(handle == T210){
+			LCD_PutStr(100, 235, "T210   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else if(handle == T245){
+			LCD_PutStr(100, 235, "T245   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else if(handle == NT115){
+			LCD_PutStr(100, 235, "NT115", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+
+		if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
+			UG_FillFrame(210,55,230,286, RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 58,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(216, 92, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 126, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(216, 161, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 194, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(216, 228, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 262, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			sleep_state_written_to_LCD = 1;
+			standby_state_written_to_LCD = 0;
+		}
+		else if((active_state == STANDBY) && !standby_state_written_to_LCD){
+			UG_FillFrame(210, 55, 230,286, RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 58,  "S", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 92,  "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 126, "A", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 161, "N", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 194, "D", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 228, "B", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 262, "Y", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			standby_state_written_to_LCD = 1;
+			sleep_state_written_to_LCD = 0;
+		}
+		else if(active_state == RUN){
+			UG_FillFrame(210, 287-(PID_output/PID_MAX_OUTPUT)*232, 	230, 	287, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(210, 55, 									230, 	287-(PID_output/PID_MAX_OUTPUT)*231-1, RGB_to_BRG(C_BLACK));
+			standby_state_written_to_LCD = 0;
+			sleep_state_written_to_LCD = 0;
+		}
 	}
-	else if((active_state == STANDBY) && !standby_state_written_to_LCD){
-		UG_FillFrame(210, 55, 230,286, RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 58,  "S", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 92,  "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 126, "A", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 161, "N", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 194, "D", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 228, "B", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		LCD_PutStr(214, 262, "Y", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-		standby_state_written_to_LCD = 1;
-		sleep_state_written_to_LCD = 0;
-	}
-	else if(active_state == RUN){
-		UG_FillFrame(210, 287-(PID_output/PID_MAX_OUTPUT)*232, 	230, 	287, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
-		UG_FillFrame(210, 55, 									230, 	287-(PID_output/PID_MAX_OUTPUT)*231-1, RGB_to_BRG(C_BLACK));
-		standby_state_written_to_LCD = 0;
-		sleep_state_written_to_LCD = 0;
+	else{
+		memset(&buffer, '\0', sizeof(buffer));
+		sprintf(buffer, "%.f", sensor_values.set_temperature);
+		if(sensor_values.set_temperature < 99.5){
+			buffer[2] = 32;
+			buffer[3] = 32;
+		}
+		LCD_PutStr(14, 30, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+		if(sensor_values.heater_current < 30){ //NT115 at 9V draws 81
+			LCD_PutStr(10, 120, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			memset(&buffer, '\0', sizeof(buffer));
+			sprintf(buffer, "%.f", sensor_values.thermocouple_temperature);
+			if(sensor_values.thermocouple_temperature < 99.5){
+				buffer[2] = 32;
+				buffer[3] = 32;
+			}
+			LCD_PutStr(14, 120, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+
+		memset(&buffer, '\0', sizeof(buffer));
+		sprintf(buffer, "%.1f", sensor_values.bus_voltage);
+		LCD_PutStr(100, 195, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+		memset(&buffer, '\0', sizeof(buffer));
+		sprintf(buffer, "%.1f", sensor_values.mcu_temperature);
+		LCD_PutStr(100, 210, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+		if(handle == T210){
+			LCD_PutStr(100, 180, "T210   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else if(handle == T245){
+			LCD_PutStr(100, 180, "T245   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else if(handle == NT115){
+			LCD_PutStr(100, 180, "NT115", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+
+		if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
+			UG_FillFrame(290,5,310,226, RGB_to_BRG(C_ORANGE));
+
+			LCD_PutStr(294, 3,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(296, 38, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(294, 73, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(296, 108, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(294, 143, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(296, 178, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			sleep_state_written_to_LCD = 1;
+			standby_state_written_to_LCD = 0;
+		}
+		else if((active_state == STANDBY) && !standby_state_written_to_LCD){
+			UG_FillFrame(290,5,310,226, RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(294, 3,  "S", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(294, 32,  "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(294, 61, "A", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(294, 90, "N", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(294, 119, "D", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(294, 148, "B", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(294, 177, "Y", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			standby_state_written_to_LCD = 1;
+			sleep_state_written_to_LCD = 0;
+		}
+		else if(active_state == RUN){
+			UG_FillFrame(290, 226-(PID_output/PID_MAX_OUTPUT)*221, 	310, 	226, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(290, 5, 									310, 	226-(PID_output/PID_MAX_OUTPUT)*211-1, RGB_to_BRG(C_BLACK));
+			standby_state_written_to_LCD = 0;
+			sleep_state_written_to_LCD = 0;
+		}
 	}
 }
 
+
 void LCD_draw_main_screen(){
+	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		UG_FillScreen(RGB_to_BRG(C_BLACK));
 
 		LCD_PutStr(53, 12, "AxxSolder", FONT_arial_19X22, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
@@ -621,6 +690,46 @@ void LCD_draw_main_screen(){
 
 		UG_DrawFrame(208, 53, 232, 289, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(209, 54, 231, 288, RGB_to_BRG(C_WHITE));
+	}
+	else{
+		UG_FillScreen(RGB_to_BRG(C_BLACK));
+
+		LCD_PutStr(14, 5, "Set temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		UG_DrawCircle(120, 40, 5, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(120, 40, 4, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(120, 40, 3, RGB_to_BRG(C_WHITE));
+		LCD_PutStr(130, 30, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+
+		LCD_PutStr(14, 95, "Actual temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		UG_DrawCircle(120, 130, 5, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(120, 130, 4, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(120, 130, 3, RGB_to_BRG(C_WHITE));
+		LCD_PutStr(130, 120, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+		UG_DrawFrame(6, 89, 182,175, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(5, 88, 183, 176, RGB_to_BRG(C_WHITE));
+
+		LCD_PutStr(6, 180, "Handle type:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(6, 195, "Input voltage:           V", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(6, 210, "MCU temp:              deg C", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+		/*
+		UG_DrawLine(20, 0, 20, 220, RGB_to_BRG(C_DARK_SEA_GREEN));
+		UG_DrawLine(21, 0, 21, 220, RGB_to_BRG(C_DARK_SEA_GREEN));
+
+		LCD_PutStr(6, 271, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		memset(&buffer, '\0', sizeof(buffer));
+		sprintf(buffer, "%.0f", flash_values.preset_temp_1);
+		LCD_PutStr(130, 301, buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		memset(&buffer, '\0', sizeof(buffer));
+		sprintf(buffer, "%.0f", flash_values.preset_temp_2);
+		LCD_PutStr(190, 271, buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+*/
+		UG_DrawFrame(288, 3, 312, 228, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(289, 4, 311, 227, RGB_to_BRG(C_WHITE));
+
+	}
 }
 
 void LCD_draw_earth_fault_popup(){
