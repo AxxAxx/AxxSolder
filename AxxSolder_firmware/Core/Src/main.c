@@ -217,7 +217,7 @@ char menu_names[menu_length][20] = { "Startup Temp  ",
 							"Preset Temp 1     ",
 							"Preset Temp 2     ",
 							"GPIO4 ON at run",
-							"Screen rotation   ",
+							"Screen rotation    ",
 							"-Load Default-     ",
 							"-Exit and Save-   ",
 							"-Exit no Save-    "};
@@ -498,7 +498,6 @@ void settings_menue(){
 					}
 					else{
 						LCD_PutStr(200, 45+(i-menue_start)*25, str, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-
 					}
 				}
 				if(i >= menu_length-3){
