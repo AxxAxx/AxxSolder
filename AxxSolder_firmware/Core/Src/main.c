@@ -667,7 +667,6 @@ void handle_emergency_shutdown(){
 	if((sensor_values.thermocouple_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
 		show_popup("\n\n  NO tip detected");
 		change_state(EMERGENCY_SLEEP);
-		beep();
 	}
 	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
 	if((sensor_values.bus_voltage <= MIN_BUSVOLTAGE) && (active_state == RUN)){
