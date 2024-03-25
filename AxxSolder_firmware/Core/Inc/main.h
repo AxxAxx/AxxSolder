@@ -42,6 +42,7 @@ typedef struct{
 	double preset_temp_1;
 	double preset_temp_2;
 	double GPIO4_ON_at_run;
+	double screen_rotation;
 
 }Flash_values;
 /* USER CODE END Includes */

@@ -48,7 +48,12 @@ const uint8_t init_cmd[] = {
     0,  CMD_INVON,
     0,  CMD_NORON
 };
+
+
+
 #endif
+
+
 
 char str[32];
 
