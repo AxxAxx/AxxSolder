@@ -146,17 +146,17 @@ double max_selectable_temperature = 450;
 uint8_t custom_temperature_on = 0;
 
 /* TC Compensation constants */
-#define TC_COMPENSATION_X2_NT115 5.8885900235610466e-05
-#define TC_COMPENSATION_X1_NT115 0.40914656778942093
-#define TC_COMPENSATION_X0_NT115 24.078419879782032
+#define TC_COMPENSATION_X2_NT115 5.1026665462522864e-05
+#define TC_COMPENSATION_X1_NT115 0.42050803230712813
+#define TC_COMPENSATION_X0_NT115 20.14538589052425
 
-#define TC_COMPENSATION_X2_T210 8.446968959655518e-06
-#define TC_COMPENSATION_X1_T210 0.31117060272594305
-#define TC_COMPENSATION_X0_T210 24.065855950291336
+#define TC_COMPENSATION_X2_T210 4.223931712905644e-06
+#define TC_COMPENSATION_X1_T210 0.31863796444354214
+#define TC_COMPENSATION_X0_T210 20.968033870812942
 
-#define TC_COMPENSATION_X2_T245 7.111314115257063e-07
-#define TC_COMPENSATION_X1_T245 0.11554972949386498
-#define TC_COMPENSATION_X0_T245 26.149539283041307
+#define TC_COMPENSATION_X2_T245 -4.735112838956741e-07
+#define TC_COMPENSATION_X1_T245 0.11936452029674384
+#define TC_COMPENSATION_X0_T245 23.777399955382318
 
 /* Constants for internal MCU temperture */
 #define V30 0.76 			// from datasheet
@@ -380,6 +380,16 @@ void heater_on(){
 /* Disable the duty cycle of timer controlling the heater PWM*/
 void heater_off(){
 	set_heater_duty(0);
+}
+
+void show_popup(char * text[80]){
+	UG_FillFrame(10, 150, 225, 205, RGB_to_BRG(C_ORANGE));
+	UG_FillFrame(15, 155, 220, 200, RGB_to_BRG(C_WHITE));
+	LCD_PutStr(20, 150, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
+	HAL_Delay(2000);
+	LCD_draw_main_screen();
+	standby_state_written_to_LCD = 0;
+	sleep_state_written_to_LCD = 0;
 }
 
 void settings_menue(){
@@ -779,11 +789,13 @@ void handle_emergency_shutdown(){
 
 	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
 	if((sensor_values.thermocouple_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
+		show_popup("\n\n  NO tip detected");
 		change_state(EMERGENCY_SLEEP);
 		beep();
 	}
 	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
-	if(sensor_values.bus_voltage <= MIN_BUSVOLTAGE){
+	if((sensor_values.bus_voltage <= MIN_BUSVOLTAGE) && (active_state == RUN)){
+		show_popup("\n\n  Too Low voltage");
 		change_state(EMERGENCY_SLEEP);
 	}
 }

@@ -3,7 +3,7 @@
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
 Interested in purchasing an AxxSolder 3.0?  
-I have components for a few boards in stock. The rest of the boards has a lead time of ~2-3 weeks.
+I have couple of boards in stock for immediate shipping.
 The price per assembled and tested board is 140 Euro plus shipping. You get what is on this
 [image](https://github.com/AxxAxx/AxxSolder/blob/main/photos/PCB_image.jpg)
 (one PCB) plus encoder knob.
@@ -30,6 +30,7 @@ Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and genera
 - [DEMO](#demo)
 - [AxxSolder Station](#axxsolder-station)
 - [AxxSolder Portable](#axxsolder-portable)
+- [Recommended power supply](#recommended-power-supply)
 - [Handle identification and connections](#handle-identification-and-connections)
 - [Firmware update](#firmware-update)
 - [First start up after build](#first-start-up-after-build)
@@ -84,6 +85,7 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown
 |[v2.1.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.0)|Oct 7, 2023|V2.*|
 
 # DEMO
+(This shows AxxSolder 2 and not the latest AxxSolder 3)  
 Click on the gif to get to YouTube and see the demo in full resolution.  
 [![AxxSolder DEMO](./photos/AxxSolder_DEMO.gif)](https://www.youtube.com/watch?v=-3MtJyTwZFQ)
 # AxxSolder Station
@@ -93,6 +95,10 @@ It is often nice to have a compact and portable soldering iron controller for wh
 ![AxxSolder_portable](./photos/AxxSolder_portable.jpg)
 The connections from the handle to the PCB throught the Hirose RPC1-12RB-6P(71) connector is shown below. The blue wire in the portable version is connected to the aluminium plate which tells the AxxSolder to go into sleep mode when in contact with the soldering iron. The yellow wire is connected to pin 6 and is used to determine which handle is connected.
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
+# Recommended power supply
+A well suited power supply with isolated output (SELV) is the Meanwell LRS-150-24. It is rated for 156 W at 24 V. A cover protecting the terminals for this power supply can be found under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD).  
+![LRS-150-24](./photos/LRS-150-24.jpg)
+
 # Handle identification and connections
 In order for AxxSolder to know which type of handle (NT115, T210, T245) is connected specific pins must be connected within the handle connector. By default the original JBC handle T245 has NO pins connected while in the original T210 pins 5 and 6 are connected. The original NT115 handle has a different connector from JBC and must be modified. If the user changes the connector or uses a non-genuine handle it is important to make sure that pin 5 and 3 is connected within the connector. All the neccesary connections are shown in the image below. While powering on AxxSolder fir the first time after doing these connections within the handle connector or connections to AxxSolder it is wise to attach a handle without it's cartridge and ensure that AxxSolder shows the correct handle type on the display. Failing to detect the handle type type will cause damage to the tip as the thermal calibration and max power allowed will be wrong.  
 ![Handle_connections](./photos/handle_connectors.jpg)
@@ -187,11 +193,10 @@ The PID parameters are adjusted to achieve a fast response with minimum overshoo
 # Temperature calibration
 The voltage from the thermocouple embedded inside the cartridge is amplified by an OPA2387 operational amplifier and then read by the ADC of the MCU. To correlate the measured ADC value to the cartridge temperature experiments were done. A constant power was applied to the heating element of the cartridge and the ADC value was read as well as the actual tip temperature. The tip temperature was measured by a "Soldering Tip Thermocouple" used in e.g. the Hakko FG-100.   
 The measured data was recorded and plotted for both the C115, C210 and C245 cartridges. The specific cartridges used were the C115112, C210-007 and C245-945. The measured data were fitted to polynomial equations:  
-$Temp_{C115}[deg] =  5.88e^{-5} * ADC^2 + 0.40* ADC + 24.07$  
-$Temp_{C210}[deg] =  8.44e^{-6} * ADC^2 + 0.31* ADC + 24.06$  
-$Temp_{C245}[deg] = -1.22e^{-7} * ADC^2 + 0.11* ADC + 25.53$  
+$Temp_{C115}[deg] =  5.10e^{-5} * ADC^2 + 0.42* ADC + 20.15$  
+$Temp_{C210}[deg] =  4.22e^{-6} * ADC^2 + 0.32* ADC + 20.97$  
+$Temp_{C245}[deg] = -4.73e^{-7} * ADC^2 + 0.12* ADC + 23.78$  
 These are then used in the software to retrieve correct tip temperatures.
-
 ![Temp_calibration](./photos/Temp_calibration_data.png)
 # Temperature measurement
 As the thermocouple and heater element is connected in series inside the JBC cartridges and the thermocouple voltage measures over the same pins as the heating element we have to be careful when to do the temperature measurement. In order to not disturb the thermocouple measurement with heater element switching, the switching is turned off for 0.5 ms just before the temperature measurement is taken. The 0.5 ms delay ensures that the switching is turned off and the thermocouple signal is stabilized around a stable voltage.  
@@ -202,5 +207,6 @@ The blue pulse indicates the wait time of 0.5 ms and the purple pulse is where t
 # Current measurement
 The current is sampled four times per second by a 30 us current pulse through the heater. This is done both to check if there is a functioning tip in the handle (otherwise the display shows "---" at current temp) and to be able to calculate the power drawn by the heater. By knowing how mych the heater draws in ampere the actual power can be calculated by knowing the bus voltage and pulse duty cycle. to measure the current the gate to the MOSFET is turned on, 10 us later the voltage over the current shunt is sampled byu the ADC and the result is converted. This is showin the the image below.
 ![Oscilloscope_image_PWM](./photos/current_measurement.png)
-
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/AxxAxx/AxxSolder.svg?variant=adaptive)](https://starchart.cc/AxxAxx/AxxSolder)
 
