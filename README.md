@@ -46,6 +46,7 @@ Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and genera
 - If AxxSolder is left in normal running mode for longer than 30 min, the station automatically goes into sleep mode after 30 min as a safety feature.  
 - Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.
 - User settings are stored in non volatile flash and can be configured via a settings menue descrbied in [SETTINGS](#settings).
+- The two buttons are used to store temperature presets, eg. 330 deg C and 430 deg C. Both preset temperatures are configurable in the settings menue.
 - The TFT display used in this project is a 2 inch 320x240 Color TFT display [2.0" 320x240 Color IPS TFT Display](https://www.adafruit.com/product/4311) and shows information about:
   - Set temperature
   - Actual temperature
