@@ -3,7 +3,6 @@
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
 Interested in purchasing an AxxSolder 3.0?  
-I have couple of boards in stock for immediate shipping.
 The price per assembled and tested board is 140 Euro plus shipping. You get what is on this
 [image](https://github.com/AxxAxx/AxxSolder/blob/main/photos/PCB_image.jpg)
 (one PCB) plus encoder knob.
