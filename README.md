@@ -40,7 +40,7 @@ Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and genera
 
 # Features
 - The tip temperature is set by a rotary encoder. Pressing the encoder puts AxxSolder into Sleep mode and heating is turned off, press again to wake up.  
-- AxxSolder is capable of driving C115, C210 and C245 style cartridges from JBC. With the "Handle_sense_1" and "Handle_sense_2" inputs AxxSolder can determine if the connected handle is either a NT115, T210 or T245 and adjust max output power accordingly. The max power output is limited in software to 120W for T245, 60W for T210 and 20W for NT115 handles.
+- AxxSolder is capable of driving C115, C210 and C245 style cartridges from JBC. With the "H_sense1" and "H_sense2" inputs AxxSolder can determine if the connected handle is either a NT115, T210 or T245 and adjust max output power accordingly. The max power output is limited in software to 120W for T245, 60W for T210 and 20W for NT115 handles.
 - When the handle is put into the stand (connected to Stand_sense) AxxSolder goes into "Standby mode". On the portable version an aluminium plate is mounted and allows the AxxSolder to go into Standby mode when the cartridge or handle rests againts it. After 10 min in Standby mode AxxSolder goes into "Sleep mode" and turns heating completely off. This is similar to what JBC calls [Sleep and Hibernation](https://www.jbctools.com/intelligent-heat-management.html).  
 - If AxxSolder is left in normal running mode for longer than 30 min, the station automatically goes into sleep mode after 30 min as a safety feature.  
 - Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.
