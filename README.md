@@ -74,6 +74,7 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown
 # Software Version History and Hardware Compability
 | Version | Date  | Hardware Compability |
 |---------|------|----------------------|
+|[v3.0.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Mar 26, 2024|V3.*|
 |[v3.0.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.0)|Mar 02, 2024|V3.*|
 |[v2.2.4](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.2)|Dec 11, 2023|V2.*|
 |[v2.2.4](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.2)|Nov 28, 2023|V2.*|
