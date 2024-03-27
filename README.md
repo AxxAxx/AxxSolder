@@ -3,7 +3,6 @@
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
 Interested in purchasing an AxxSolder 3.0?  
-I have couple of boards in stock for immediate shipping.
 The price per assembled and tested board is 140 Euro plus shipping. You get what is on this
 [image](https://github.com/AxxAxx/AxxSolder/blob/main/photos/PCB_image.jpg)
 (one PCB) plus encoder knob.
@@ -40,12 +39,13 @@ Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and genera
 - [Temperature measurement](#temperature-measurement)
 
 # Features
-- The tip temperature is set by a rotating encoder. Pressing the encoder puts AxxSolder into Sleep mode and heating is turned off, press again to wake up.  
-- AxxSolder is capable of driving C115, C210 and C245 style cartridges from JBC. With the "Handle_sense_1" and "Handle_sense_2" inputs AxxSolder can determine if the connected handle is either a NT115, T210 or T245 and adjust max output power accordingly.  
+- The tip temperature is set by a rotary encoder. Pressing the encoder puts AxxSolder into Sleep mode and heating is turned off, press again to wake up.  
+- AxxSolder is capable of driving C115, C210 and C245 style cartridges from JBC. With the "H_sense1" and "H_sense2" inputs AxxSolder can determine if the connected handle is either a NT115, T210 or T245 and adjust max output power accordingly. The max power output is limited in software to 120W for T245, 60W for T210 and 20W for NT115 handles.
 - When the handle is put into the stand (connected to Stand_sense) AxxSolder goes into "Standby mode". On the portable version an aluminium plate is mounted and allows the AxxSolder to go into Standby mode when the cartridge or handle rests againts it. After 10 min in Standby mode AxxSolder goes into "Sleep mode" and turns heating completely off. This is similar to what JBC calls [Sleep and Hibernation](https://www.jbctools.com/intelligent-heat-management.html).  
 - If AxxSolder is left in normal running mode for longer than 30 min, the station automatically goes into sleep mode after 30 min as a safety feature.  
 - Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.
 - User settings are stored in non volatile flash and can be configured via a settings menue descrbied in [SETTINGS](#settings).
+- The two buttons are used to store temperature presets, eg. 330 deg C and 430 deg C. Both preset temperatures are configurable in the settings menue.
 - The TFT display used in this project is a 2 inch 320x240 Color TFT display [2.0" 320x240 Color IPS TFT Display](https://www.adafruit.com/product/4311) and shows information about:
   - Set temperature
   - Actual temperature
@@ -58,7 +58,7 @@ Please use [Discord](https://discord.gg/VPZyf4GYUQ) for build related and genera
 
 # Cartridge differences
 Cartridges from JBC do all contain a thermocouple element to read the tip temperature and a resistive heater element. The configuration of thermocouple and heater element differ slightly between cartridge models. In order to determine the internal configuration of the cartridges two cross secions were done. These show clearly how the C210 and C245 cartridges are constructed internally. The images can be seen here: [https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller](https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller/msg5124267/#msg5124267).
-As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. This is done automatically be the inputs "Handle_sense_1" and "Handle_sense_2" This can be done thanks to the design of the handle connector. For the JCB T210 handle pin 5 and 6 are connected internaly in the connector. This allows AxxSolder to sense which handle is connected and assign correct thermocouple correction, PID parameters and max output power.
+As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. This is done automatically be the inputs "Handle_sense_1" and "Handle_sense_2" This can be done thanks to the design of the handle connector. For the JCB T210 handle pin 5 and 6 are connected internaly in the connector and for NT115 pin 3 and 5 should be connected. This allows AxxSolder to sense which handle is connected and assign correct thermocouple correction, PID parameters and max output power.
 
 # Schematic
 The schematic for AxxSolder is shown below. Both station and portable versions use the same PCB and software. The MCU is a [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html). 
@@ -74,6 +74,7 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown
 # Software Version History and Hardware Compability
 | Version | Date  | Hardware Compability |
 |---------|------|----------------------|
+|[v3.0.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Mar 26, 2024|V3.*|
 |[v3.0.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.0)|Mar 02, 2024|V3.*|
 |[v2.2.4](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.2)|Dec 11, 2023|V2.*|
 |[v2.2.4](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.2)|Nov 28, 2023|V2.*|
@@ -104,7 +105,7 @@ In order for AxxSolder to know which type of handle (NT115, T210, T245) is conne
 ![Handle_connections](./photos/handle_connectors.jpg)
 
 # Firmware update
-Programming or updating the firmware the STM32 MCU can be donw in two ways, by using a SWD programmer or directly via USB. 
+Programming or updating the firmware the STM32 MCU can be done in two ways, by using a SWD programmer or directly via USB. 
 ## SWD programmer
 These come in a variety of models and are availible from several different places online. In the below eaxample a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is is used. The MCU is programmed by the following steps:
 1. Disconnect any soldering iron handles from AxxSolder during the firmware update processs.
@@ -151,6 +152,7 @@ To acces the user settings the user holds down the encoder button at start-up. A
 |Preset Temp 1|Preset temperature for button 1|deg C|330|
 |Preset Temp 2|Preset temperature for button 2|deg C|430|
 |GPIO4 ON at run|Enable 3.3V output on GPIO4 when the iron is in run mode|ON/OFF|OFF|
+|Screen rotation|Rotate the screen|"0"=-180 deg, "1"=-90 deg, "2"=0 deg, "3"=90 deg|2|
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Exit and Save-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
