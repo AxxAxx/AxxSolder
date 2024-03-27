@@ -382,16 +382,6 @@ void heater_off(){
 	set_heater_duty(0);
 }
 
-void show_popup(char * text[80]){
-	UG_FillFrame(10, 150, 225, 205, RGB_to_BRG(C_ORANGE));
-	UG_FillFrame(15, 155, 220, 200, RGB_to_BRG(C_WHITE));
-	LCD_PutStr(20, 150, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
-	HAL_Delay(2000);
-	LCD_draw_main_screen();
-	standby_state_written_to_LCD = 0;
-	sleep_state_written_to_LCD = 0;
-}
-
 void settings_menue(){
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
@@ -654,7 +644,6 @@ void update_display(){
 	}
 }
 
-
 void LCD_draw_main_screen(){
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		UG_FillScreen(RGB_to_BRG(C_BLACK));
@@ -739,6 +728,16 @@ void LCD_draw_main_screen(){
 		UG_DrawFrame(289, 4, 311, 227, RGB_to_BRG(C_WHITE));
 
 	}
+}
+
+void show_popup(char * text[20]){
+	UG_FillFrame(10, 150, 225, 205, RGB_to_BRG(C_ORANGE));
+	UG_FillFrame(15, 155, 220, 200, RGB_to_BRG(C_WHITE));
+	LCD_PutStr(20, 150, &text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
+	HAL_Delay(2000);
+	LCD_draw_main_screen();
+	standby_state_written_to_LCD = 0;
+	sleep_state_written_to_LCD = 0;
 }
 
 void LCD_draw_earth_fault_popup(){
