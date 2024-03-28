@@ -102,7 +102,6 @@ double temperature_custom = 100;
 double Kp = 0;
 double Ki = 0;
 double Kd = 0;
-double PID_MAX_I_LIMIT = 150;
 
 /* PID parameters */
 #define PID_MAX_OUTPUT 500
@@ -382,16 +381,6 @@ void heater_off(){
 	set_heater_duty(0);
 }
 
-void show_popup(char * text[80]){
-	UG_FillFrame(10, 150, 225, 205, RGB_to_BRG(C_ORANGE));
-	UG_FillFrame(15, 155, 220, 200, RGB_to_BRG(C_WHITE));
-	LCD_PutStr(20, 150, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
-	HAL_Delay(2000);
-	LCD_draw_main_screen();
-	standby_state_written_to_LCD = 0;
-	sleep_state_written_to_LCD = 0;
-}
-
 void settings_menue(){
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
@@ -654,7 +643,6 @@ void update_display(){
 	}
 }
 
-
 void LCD_draw_main_screen(){
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		UG_FillScreen(RGB_to_BRG(C_BLACK));
@@ -739,6 +727,16 @@ void LCD_draw_main_screen(){
 		UG_DrawFrame(289, 4, 311, 227, RGB_to_BRG(C_WHITE));
 
 	}
+}
+
+void show_popup(char * text[20]){
+	UG_FillFrame(10, 150, 225, 205, RGB_to_BRG(C_ORANGE));
+	UG_FillFrame(15, 155, 220, 200, RGB_to_BRG(C_WHITE));
+	LCD_PutStr(20, 150, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
+	HAL_Delay(2000);
+	LCD_draw_main_screen();
+	standby_state_written_to_LCD = 0;
+	sleep_state_written_to_LCD = 0;
 }
 
 void LCD_draw_earth_fault_popup(){
@@ -883,16 +881,14 @@ void get_handle_type(){
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
-		PID_MAX_I_LIMIT = 100;
 	}
 	/* Determine if T210 handle is detected */
 	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
 		handle = T210;
 		sensor_values.max_power_watt = 60; //60W
-		Kp = 5;
+		Kp = 6;
 		Ki = 5;
 		Kd = 0.5;
-		PID_MAX_I_LIMIT = 125;
 	}
 	else{
 		handle = T245;
@@ -900,11 +896,8 @@ void get_handle_type(){
 		Kp = 8;
 		Ki = 3;
 		Kd = 0.5;
-		PID_MAX_I_LIMIT = 150;
 	}
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
-	PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT); 	// Set max and min I limit
-
 }
 
 /* Interrupts at button press */
@@ -1111,11 +1104,10 @@ int main(void)
   		TIM2->CNT = flash_values.startup_temperature;
 
   		/* Initiate PID controller */
-  		PID(&TPID, &sensor_values.thermocouple_temperature, &PID_output, &PID_setpoint, Kp, Ki, Kd, _PID_P_ON_E, _PID_CD_DIRECT);
+  		PID(&TPID, &sensor_values.thermocouple_temperature, &PID_output, &PID_setpoint, Kp, Ki, Kd, _PID_CD_DIRECT);
   		PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
   		PID_SetSampleTime(&TPID, interval_PID_update, 0); 		//Set PID sample time to "interval_PID_update" to make sure PID is calculated every time it is called
   		PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
-  		PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT); 	// Set max and min I limit
 
   		/* Draw the main screen decoration */
   		LCD_draw_main_screen();
@@ -1182,7 +1174,7 @@ int main(void)
   			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
   				memset(&buffer, '\0', sizeof(buffer));
   				sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
-  						sensor_values.thermocouple_temperature, sensor_values.set_temperature,
+  						sensor_values.thermocouple_temperature, PID_setpoint,
   						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
   				CDC_Transmit_FS((uint8_t *) buffer, strlen(buffer)); //Print string over USB virtual COM port
   				previous_millis_debug = HAL_GetTick();
