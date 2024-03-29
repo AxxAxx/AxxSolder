@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -31,7 +30,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
-#include "usbd_cdc_if.h"
+//#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -111,7 +110,7 @@ double Kd = 0;
 
 /* Buffer for UART print */
 char buffer[40];
-#define CHAR_BUFF_SIZE 40
+uint8_t tx_done = 1;
 
 /* Converts power in W to correct duty cycle */
 #define POWER_REDUCTION_FACTOR 0.131
@@ -340,6 +339,17 @@ void change_state(mainstates new_state){
 	}
 }
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
+	/* Set transmission flag: transfer complete */
+	tx_done = 1;
+}
+
+void debugPrint(UART_HandleTypeDef *huart, char _out[]){
+    tx_done = 0;
+	HAL_UART_Transmit_IT(huart, (uint8_t *) _out, strlen(_out));
+	while(!tx_done);
+}
+
 void get_bus_voltage(){
 	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading_indexed(0), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION;
 }
@@ -392,7 +402,6 @@ void settings_menue(){
 			LCD_PutStr(0, 215, "Version:", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
 			LCD_PutStr(150, 215, version, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
 		}
-
 
 		TIM2->CNT = 1000;
 		uint16_t menu_cursor_position = 0;
@@ -1035,7 +1044,6 @@ int main(void)
   MX_TIM4_Init();
   MX_SPI2_Init();
   MX_I2C1_Init();
-  MX_USB_Device_Init();
   MX_TIM17_Init();
   MX_USART1_UART_Init();
   MX_TIM7_Init();
@@ -1176,7 +1184,8 @@ int main(void)
   				sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
   						sensor_values.thermocouple_temperature, PID_setpoint,
   						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
-  				CDC_Transmit_FS((uint8_t *) buffer, strlen(buffer)); //Print string over USB virtual COM port
+  				//CDC_Transmit_FS((uint8_t *) buffer, strlen(buffer)); //Print string over USB virtual COM port
+  				debugPrint(&huart1,buffer);
   				previous_millis_debug = HAL_GetTick();
   			}
 
@@ -1220,10 +1229,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSI48;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV4;

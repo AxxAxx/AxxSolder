@@ -1,7 +1,0 @@
-../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c:87:20:USBD_CtlSendData	1
-../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c:114:20:USBD_CtlContinueSendData	1
-../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c:131:20:USBD_CtlPrepareRx	1
-../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c:158:20:USBD_CtlContinueRx	1
-../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c:172:20:USBD_CtlSendStatus	1
-../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c:189:20:USBD_CtlReceiveStatus	1
-../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c:207:10:USBD_GetRxCount	1
