@@ -110,7 +110,6 @@ double Kd = 0;
 
 /* Buffer for UART print */
 char buffer[40];
-uint8_t tx_done = 1;
 
 /* Converts power in W to correct duty cycle */
 #define POWER_REDUCTION_FACTOR 0.131
@@ -337,17 +336,6 @@ void change_state(mainstates new_state){
 	else{
 		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_RESET);
 	}
-}
-
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle){
-	/* Set transmission flag: transfer complete */
-	tx_done = 1;
-}
-
-void debugPrint(UART_HandleTypeDef *huart, char _out[]){
-    tx_done = 0;
-	HAL_UART_Transmit_IT(huart, (uint8_t *) _out, strlen(_out));
-	while(!tx_done);
 }
 
 void get_bus_voltage(){
@@ -1185,7 +1173,7 @@ int main(void)
   						sensor_values.thermocouple_temperature, PID_setpoint,
   						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
   				//CDC_Transmit_FS((uint8_t *) buffer, strlen(buffer)); //Print string over USB virtual COM port
-  				debugPrint(&huart1,buffer);
+  			    HAL_UART_Transmit_IT(&huart1, (uint8_t *) buffer, strlen(buffer));
   				previous_millis_debug = HAL_GetTick();
   			}
 
