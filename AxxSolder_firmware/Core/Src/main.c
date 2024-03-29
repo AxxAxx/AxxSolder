@@ -727,9 +727,9 @@ void LCD_draw_main_screen(){
 }
 
 void show_popup(char * text[20]){
-	UG_FillFrame(10, 150, 225, 205, RGB_to_BRG(C_ORANGE));
-	UG_FillFrame(15, 155, 220, 200, RGB_to_BRG(C_WHITE));
-	LCD_PutStr(20, 150, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
+	UG_FillFrame(10, 50, 225, 105, RGB_to_BRG(C_ORANGE));
+	UG_FillFrame(15, 55, 220, 100, RGB_to_BRG(C_WHITE));
+	LCD_PutStr(20, 70, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
 	HAL_Delay(2000);
 	LCD_draw_main_screen();
 	standby_state_written_to_LCD = 0;
@@ -777,18 +777,22 @@ void handle_emergency_shutdown(){
 
 	/* Set state to EMERGENCY_SLEEP if iron ON for longer time than emergency_time */
 	if ((sensor_values.in_stand == 0) && (HAL_GetTick() - previous_millis_left_stand >= flash_values.emergency_time*60000) && active_state == RUN){
-		change_state(EMERGENCY_SLEEP);
-		beep();
-	}
-
-	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
-	if((sensor_values.thermocouple_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
-		show_popup("\n\n  NO tip detected");
+		show_popup("Standby timeout");
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
 	if((sensor_values.bus_voltage <= MIN_BUSVOLTAGE) && (active_state == RUN)){
-		show_popup("\n\n  Too Low voltage");
+		show_popup("Too Low voltage");
+		change_state(EMERGENCY_SLEEP);
+	}
+	/* Set state to EMERGENCY_SLEEP if no tip detected (no current draw) */
+	else if((sensor_values.heater_current < 30) && (active_state == RUN)){ //NT115 at 9V draws 81
+		show_popup("NO tip detected");
+		change_state(EMERGENCY_SLEEP);
+	}
+	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
+	else if((sensor_values.thermocouple_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
+		show_popup("Too high Temperature");
 		change_state(EMERGENCY_SLEEP);
 	}
 }
