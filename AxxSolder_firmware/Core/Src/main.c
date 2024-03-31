@@ -92,15 +92,17 @@ uint8_t sleep_state_written_to_LCD = 0;
 uint8_t standby_state_written_to_LCD = 0;
 
 /* Custom tuning parameters */
-double Kp_custom = 0;
-double Ki_custom = 0;
-double Kd_custom = 0;
-double temperature_custom = 100;
+double Kp_tuning = 0;
+double Ki_tuning = 0;
+double Kd_tuning = 0;
+double temperature_tuning = 100;
+double PID_MAX_I_LIMIT_tuning = 0;
 
 /* PID tuning parameters */
 double Kp = 0;
 double Ki = 0;
 double Kd = 0;
+double PID_MAX_I_LIMIT = 150;
 
 /* PID parameters */
 #define PID_MAX_OUTPUT 500
@@ -126,7 +128,7 @@ uint16_t mcu_temperature_raw = 0;
 uint16_t current_raw = 0;
 
 /* Max allowed tip temperature */
-#define EMERGENCY_SHUTDOWN_TEMPERATURE 480
+#define EMERGENCY_SHUTDOWN_TEMPERATURE 490
 
 /* Constants for scaling input voltage ADC value*/
 #define VOLTAGE_COMPENSATION 0.00840442388
@@ -719,7 +721,7 @@ void LCD_draw_main_screen(){
 		memset(&buffer, '\0', sizeof(buffer));
 		sprintf(buffer, "%.0f", flash_values.preset_temp_2);
 		LCD_PutStr(190, 271, buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-*/
+		 */
 		UG_DrawFrame(288, 3, 312, 228, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(289, 4, 311, 227, RGB_to_BRG(C_WHITE));
 
@@ -751,7 +753,6 @@ void LCD_draw_earth_fault_popup(){
 	Error_Handler();
 }
 
-
 /* Get encoder value (Set temp.) and limit is NOT heating_halted*/
 void get_set_temperature(){
 	if(custom_temperature_on == 0){
@@ -774,7 +775,6 @@ void handle_emergency_shutdown(){
 	if(!sensor_values.previous_state == RUN  && active_state == RUN){
 		previous_millis_left_stand = HAL_GetTick();
 	}
-
 	/* Set state to EMERGENCY_SLEEP if iron ON for longer time than emergency_time */
 	if ((sensor_values.in_stand == 0) && (HAL_GetTick() - previous_millis_left_stand >= flash_values.emergency_time*60000) && active_state == RUN){
 		show_popup("Standby timeout");
@@ -882,14 +882,16 @@ void get_handle_type(){
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
+		PID_MAX_I_LIMIT = 100;
 	}
 	/* Determine if T210 handle is detected */
 	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
 		handle = T210;
 		sensor_values.max_power_watt = 60; //60W
-		Kp = 6;
+		Kp = 5;
 		Ki = 5;
 		Kd = 0.5;
+		PID_MAX_I_LIMIT = 125;
 	}
 	else{
 		handle = T245;
@@ -897,8 +899,10 @@ void get_handle_type(){
 		Kp = 8;
 		Ki = 3;
 		Kd = 0.5;
+		PID_MAX_I_LIMIT = 150;
 	}
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
+	PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT); 	// Set max and min I limit
 }
 
 /* Interrupts at button press */
@@ -1060,10 +1064,10 @@ int main(void)
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
 
 	/* initialize moving average functions */
-	Moving_Average_Init(&thermocouple_temperature_filter_struct,30);
+	Moving_Average_Init(&thermocouple_temperature_filter_struct,20);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
-	Moving_Average_Init(&current_filterStruct,3);
+	Moving_Average_Init(&current_filterStruct,10);
 	Moving_Average_Init(&stand_sense_filterStruct,20);
 	Moving_Average_Init(&handle1_sense_filterStruct,20);
 	Moving_Average_Init(&handle2_sense_filterStruct,20);
@@ -1105,9 +1109,9 @@ int main(void)
 
   		/* Initiate PID controller */
   		PID(&TPID, &sensor_values.thermocouple_temperature, &PID_output, &PID_setpoint, Kp, Ki, Kd, _PID_CD_DIRECT);
-  		PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
   		PID_SetSampleTime(&TPID, interval_PID_update, 0); 		//Set PID sample time to "interval_PID_update" to make sure PID is calculated every time it is called
   		PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
+        PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT);         // Set max and min I limit
 
   		/* Draw the main screen decoration */
   		LCD_draw_main_screen();
@@ -1166,8 +1170,9 @@ int main(void)
   			// TUNING - ONLY USED DURING MANUAL PID TUNING
   			// ----------------------------------------------
   			//custom_temperature_on = 1;
-  			//PID_SetTunings(&TPID, Kp_custom, Ki_custom, Kd_custom);
-  			//sensor_values.set_temperature = temperature_custom;
+  			//PID_SetTunings(&TPID, Kp_tuning, Ki_tuning, Kd_tuning/10.0);
+  			//PID_SetILimits(&TPID, -PID_MAX_I_LIMIT_tuning, PID_MAX_I_LIMIT_tuning); 	// Set max and min I limit
+  			//sensor_values.set_temperature = temperature_tuning;
   			// ----------------------------------------------
 
   			/* Send debug information */
@@ -1175,7 +1180,7 @@ int main(void)
   				memset(&buffer, '\0', sizeof(buffer));
   				sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
   						sensor_values.thermocouple_temperature, PID_setpoint,
-  						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
+						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
   				//CDC_Transmit_FS((uint8_t *) buffer, strlen(buffer)); //Print string over USB virtual COM port
   			    HAL_UART_Transmit_IT(&huart1, (uint8_t *) buffer, strlen(buffer));
   				previous_millis_debug = HAL_GetTick();

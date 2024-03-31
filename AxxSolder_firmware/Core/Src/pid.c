@@ -7,15 +7,7 @@ void PID_Init(PID_TypeDef *uPID)
 	uPID->OutputSum = *uPID->MyOutput;
 	uPID->LastInput = *uPID->MyInput;
 
-	if (uPID->OutputSum > uPID->OutMax)
-	{
-		uPID->OutputSum = uPID->OutMax;
-	}
-	else if (uPID->OutputSum < uPID->OutMin)
-	{
-		uPID->OutputSum = uPID->OutMin;
-	}
-	else { }
+	uPID->OutputSum = double_clamp(uPID->OutputSum, uPID->OutMin, uPID->OutMax);
 }
 
 void PID(PID_TypeDef *uPID, double *Input, double *Output, double *Setpoint, double Kp, double Ki, double Kd, PIDCD_TypeDef ControllerDirection)
@@ -24,21 +16,30 @@ void PID(PID_TypeDef *uPID, double *Input, double *Output, double *Setpoint, dou
 	uPID->MyOutput   = Output;
 	uPID->MyInput    = Input;
 	uPID->MySetpoint = Setpoint;
-	uPID->InAuto     = (PIDMode_TypeDef)_FALSE;
 
-	PID_SetOutputLimits(uPID, 0, _PID_8BIT_PWM_MAX);
-
-	uPID->SampleTime = _PID_SAMPLE_TIME_MS_DEF;
+	PID_SetOutputLimits(uPID, 0, DEFAULT_PWM_MAX);
+	uPID->SampleTime = DEFAULT_SAMPLE_TIME_MS;
 
 	PID_SetControllerDirection(uPID, ControllerDirection);
-	PID_SetTunings2(uPID, Kp, Ki, Kd);
+	PID_SetTunings(uPID, Kp, Ki, Kd);
 
 	uPID->LastTime = HAL_GetTick() - uPID->SampleTime;
 }
 
-void PID2(PID_TypeDef *uPID, double *Input, double *Output, double *Setpoint, double Kp, double Ki, double Kd, PIDCD_TypeDef ControllerDirection)
-{
-	PID(uPID, Input, Output, Setpoint, Kp, Ki, Kd, ControllerDirection);
+/* Function to clamp d between the limits min and max */
+double double_clamp(double d, double min, double max) {
+	  const double t = d < min ? min : d;
+	  return t > max ? max : t;
+}
+
+/* Function to check if clamping will occur */
+uint8_t check_clamping(double d, double min, double max) {
+	  if(d > max || d < min){
+		  return 1;
+	  }
+	  else{
+		  return 0;
+	  }
 }
 
 /* Compute  */
@@ -51,12 +52,6 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 	double dInput;
 	double output;
 
-	/* Check PID mode */
-	if (!uPID->InAuto)
-	{
-		return _FALSE;
-	}
-
 	/* Calculate time */
 	now        = HAL_GetTick();
 	timeChange = (now - uPID->LastTime);
@@ -68,22 +63,26 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 		error   = *uPID->MySetpoint - input;
 		dInput  = (input - uPID->LastInput);
 
-
 		/* Calculate Proportional on Error */
 		output = uPID->Kp * error;
 		uPID->DispKp_part = output;
 
-		/* ..... Calculate Derivative term and sum */
-		output -= uPID->Kd * dInput;
-		uPID->DispKd_part = - uPID->Kd * dInput;
+		/* Calculate Derivative term and subtract from output sum */
+		output -= (uPID->Kd / (timeChange/1000.0)) * dInput;
+		uPID->DispKd_part = - (uPID->Kd / (timeChange/1000.0)) * dInput;
 
 		/* Conditional integration as anti-windup (clamping) */
-		if((((output + uPID->Ki * error) > uPID->OutMax || (output + uPID->Ki * error) < uPID->OutMin)) && (error*(output + uPID->OutputSum + uPID->Ki * error) > 0)){
+		if(check_clamping(output + uPID->Ki * error  * (timeChange/1000.0), uPID->OutMin, uPID->OutMax) && (error*(output + uPID->OutputSum) > 0)){
+		//if((error > proportional_band_max) || (error < proportional_band_min)){
 			uPID->OutputSum     += 0;
 		}
 		else{
-			uPID->OutputSum     += (uPID->Ki * error);
+			uPID->OutputSum     += (uPID->Ki * error * (timeChange/1000.0));
 		}
+
+		/* Clamp Integral part */
+		uPID->OutputSum = double_clamp(uPID->OutputSum, uPID->IMin, uPID->IMax);
+
 		/* If Setpoint is set to 0, zero integral part */
 		if(*uPID->MySetpoint == 0){
 			uPID->OutputSum = 0;
@@ -94,43 +93,19 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 		output += uPID->OutputSum;
 
 		/* Clamp output */
-		if (output > uPID->OutMax){
-			output = uPID->OutMax;
-		}
-		else if (output < uPID->OutMin){
-			output = uPID->OutMin;
-		}
+		output = double_clamp(output, uPID->OutMin, uPID->OutMax);
 
 		*uPID->MyOutput = output;
-
 
 		/* Remember some variables for next time */
 		uPID->LastInput = input;
 		uPID->LastTime = now;
 
-		return _TRUE;
-
+		return 1;
 	}
-	else
-	{
-		return _FALSE;
+	else{
+		return 0;
 	}
-
-}
-
-/* PID Mode */
-void PID_SetMode(PID_TypeDef *uPID, PIDMode_TypeDef Mode){
-	uint8_t newAuto = (Mode == _PID_MODE_AUTOMATIC);
-
-	/* Initialize the PID */
-	if (newAuto && !uPID->InAuto){
-		PID_Init(uPID);
-	}
-	uPID->InAuto = (PIDMode_TypeDef)newAuto;
-}
-
-PIDMode_TypeDef PID_GetMode(PID_TypeDef *uPID){
-	return uPID->InAuto ? _PID_MODE_AUTOMATIC : _PID_MODE_MANUAL;
 }
 
 /* PID Limits */
@@ -143,37 +118,27 @@ void PID_SetOutputLimits(PID_TypeDef *uPID, double Min, double Max){
 	uPID->OutMin = Min;
 	uPID->OutMax = Max;
 
-	/* Check PID Mode */
-	if (uPID->InAuto){
+	/* Check value */
+	*uPID->MyOutput = double_clamp(*uPID->MyOutput, uPID->OutMin, uPID->OutMax);
 
-		/* Check value */
-		if (*uPID->MyOutput > uPID->OutMax){
-			*uPID->MyOutput = uPID->OutMax;
-		}
-		else if (*uPID->MyOutput < uPID->OutMin){
-			*uPID->MyOutput = uPID->OutMin;
-		}
-		else { }
+	/* Check out value */
+	uPID->OutputSum = double_clamp(uPID->OutputSum, uPID->OutMin, uPID->OutMax);
 
-		/* Check out value */
-		if (uPID->OutputSum > uPID->OutMax){
-			uPID->OutputSum = uPID->OutMax;
-		}
-		else if (uPID->OutputSum < uPID->OutMin){
-			uPID->OutputSum = uPID->OutMin;
-		}
-		else { }
+}
+
+/* PID I-windup Limits */
+void PID_SetILimits(PID_TypeDef *uPID, double Min, double Max){
+	/* Check value */
+	if (Min >= Max){
+		return;
 	}
+
+	uPID->IMin = Min;
+	uPID->IMax = Max;
 }
 
 /* PID Tunings */
 void PID_SetTunings(PID_TypeDef *uPID, double Kp, double Ki, double Kd){
-	PID_SetTunings2(uPID, Kp, Ki, Kd);
-}
-
-void PID_SetTunings2(PID_TypeDef *uPID, double Kp, double Ki, double Kd){
-	double SampleTimeInSec;
-
 	/* Check value */
 	if (Kp < 0 || Ki < 0 || Kd < 0){
 		return;
@@ -183,12 +148,9 @@ void PID_SetTunings2(PID_TypeDef *uPID, double Kp, double Ki, double Kd){
 	uPID->DispKi = Ki;
 	uPID->DispKd = Kd;
 
-	/* Calculate time */
-	SampleTimeInSec = ((double)uPID->SampleTime) / 1000;
-
 	uPID->Kp = Kp;
-	uPID->Ki = Ki * SampleTimeInSec;
-	uPID->Kd = Kd / SampleTimeInSec;
+	uPID->Ki = Ki;
+	uPID->Kd = Kd;
 
 	/* Check direction */
 	if (uPID->ControllerDirection == _PID_CD_REVERSE){
@@ -202,7 +164,7 @@ void PID_SetTunings2(PID_TypeDef *uPID, double Kp, double Ki, double Kd){
 /* PID Direction */
 void PID_SetControllerDirection(PID_TypeDef *uPID, PIDCD_TypeDef Direction){
 	/* Check parameters */
-	if ((uPID->InAuto) && (Direction !=uPID->ControllerDirection)){
+	if (Direction !=uPID->ControllerDirection){
 		uPID->Kp = (0 - uPID->Kp);
 		uPID->Ki = (0 - uPID->Ki);
 		uPID->Kd = (0 - uPID->Kd);
@@ -225,7 +187,6 @@ void PID_SetSampleTime(PID_TypeDef *uPID, int32_t NewSampleTime, int32_t updateO
 
 	/* Check value */
 	if (NewSampleTime > 0){
-
 		ratio = (double)NewSampleTime / (double)uPID->SampleTime;
 
 		uPID->Ki *= ratio;

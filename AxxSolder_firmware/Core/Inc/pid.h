@@ -4,22 +4,8 @@
 #include "main.h"
 #include "stm32g4xx_hal.h"       /* Import HAL library */
 
-#define _PID_SAMPLE_TIME_MS_DEF 100
-#define _PID_8BIT_PWM_MAX 100
-
-#ifndef _FALSE
-	#define _FALSE 0
-#endif
-
-#ifndef _TRUE
-	#define _TRUE 1
-#endif
-
-/* PID Mode */
-typedef enum{
-	_PID_MODE_MANUAL    = 0,
-	_PID_MODE_AUTOMATIC = 1
-}PIDMode_TypeDef;
+#define DEFAULT_SAMPLE_TIME_MS 100
+#define DEFAULT_PWM_MAX 100
 
 /* PID Control direction */
 typedef enum{
@@ -30,7 +16,6 @@ typedef enum{
 /* PID Structure */
 typedef struct{
 
-	PIDMode_TypeDef InAuto;
 	PIDCD_TypeDef   ControllerDirection;
 
 	uint32_t        LastTime;
@@ -59,27 +44,34 @@ typedef struct{
 
 	double          OutMin;
 	double          OutMax;
+
+	double          IMin;
+	double          IMax;
+
 }PID_TypeDef;
 
 /* Init */
 void PID_Init(PID_TypeDef *uPID);
 
 void PID(PID_TypeDef *uPID, double *Input, double *Output, double *Setpoint, double Kp, double Ki, double Kd, PIDCD_TypeDef ControllerDirection);
-void PID2(PID_TypeDef *uPID, double *Input, double *Output, double *Setpoint, double Kp, double Ki, double Kd, PIDCD_TypeDef ControllerDirection);
+
+/* Function to clamp d between the limits min and max */
+double double_clamp(double d, double min, double max);
+
+/* Function to check if clamping will occur */
+uint8_t check_clamping(double d, double min, double max);
 
 /* Computing */
 uint8_t PID_Compute(PID_TypeDef *uPID);
 
-/* PID Mode */
-void            PID_SetMode(PID_TypeDef *uPID, PIDMode_TypeDef Mode);
-PIDMode_TypeDef PID_GetMode(PID_TypeDef *uPID);
-
 /* PID Limits */
 void PID_SetOutputLimits(PID_TypeDef *uPID, double Min, double Max);
 
+/* PID I-windup Limits */
+void PID_SetILimits(PID_TypeDef *uPID, double Min, double Max);
+
 /* PID Tunings */
 void PID_SetTunings(PID_TypeDef *uPID, double Kp, double Ki, double Kd);
-void PID_SetTunings2(PID_TypeDef *uPID, double Kp, double Ki, double Kd);
 
 /* PID Direction */
 void          PID_SetControllerDirection(PID_TypeDef *uPID, PIDCD_TypeDef Direction);
