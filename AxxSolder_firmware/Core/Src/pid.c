@@ -46,6 +46,7 @@ uint8_t check_clamping(double d, double min, double max) {
 uint8_t PID_Compute(PID_TypeDef *uPID){
 	uint32_t now;
 	uint32_t timeChange;
+	double timeChange_in_seconds;
 
 	double input;
 	double error;
@@ -58,26 +59,27 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 
 	if ((timeChange >= uPID->SampleTime) || (uPID->updateOnEveryCall))
 	{
+		timeChange_in_seconds = timeChange/1000.0;
 		/* Compute all the working error variables */
 		input   = *uPID->MyInput;
 		error   = *uPID->MySetpoint - input;
 		dInput  = (input - uPID->LastInput);
 
 		/* Calculate Proportional on Error */
-		output = uPID->Kp * error;
-		uPID->DispKp_part = output;
+		uPID->DispKp_part = uPID->Kp * error;
+		output = uPID->DispKp_part;
 
-		/* Calculate Derivative term and subtract from output sum */
-		output -= (uPID->Kd / (timeChange/1000.0)) * dInput;
-		uPID->DispKd_part = - (uPID->Kd / (timeChange/1000.0)) * dInput;
+		/* Calculate Derivative term and add to output sum */
+		uPID->DispKd_part = - (uPID->Kd / timeChange_in_seconds) * dInput;
+		output += uPID->DispKd_part;
 
 		/* Conditional integration as anti-windup (clamping) */
-		if(check_clamping(output + uPID->Ki * error  * (timeChange/1000.0), uPID->OutMin, uPID->OutMax) && (error*(output + uPID->OutputSum) > 0)){
+		if(check_clamping(output + uPID->Ki * error  * timeChange_in_seconds, uPID->OutMin, uPID->OutMax) && (error*(output + uPID->OutputSum) > 0)){
 		//if((error > proportional_band_max) || (error < proportional_band_min)){
 			uPID->OutputSum     += 0;
 		}
 		else{
-			uPID->OutputSum     += (uPID->Ki * error * (timeChange/1000.0));
+			uPID->OutputSum     += (uPID->Ki * error * timeChange_in_seconds);
 		}
 
 		/* Clamp Integral part */

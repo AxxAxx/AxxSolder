@@ -29,13 +29,14 @@
 #include "stusb4500.h"
 #include <math.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 //#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define version "3.0.1"
+#define version "3.0.2"
 
 enum handles {
 	NT115,
@@ -728,7 +729,7 @@ void LCD_draw_main_screen(){
 	}
 }
 
-void show_popup(char * text[20]){
+void show_popup(char * text){
 	UG_FillFrame(10, 50, 225, 105, RGB_to_BRG(C_ORANGE));
 	UG_FillFrame(15, 55, 220, 100, RGB_to_BRG(C_WHITE));
 	LCD_PutStr(20, 70, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
@@ -889,7 +890,7 @@ void get_handle_type(){
 		handle = T210;
 		sensor_values.max_power_watt = 60; //60W
 		Kp = 5;
-		Ki = 5;
+		Ki = 6;
 		Kd = 0.5;
 		PID_MAX_I_LIMIT = 125;
 	}
@@ -897,8 +898,8 @@ void get_handle_type(){
 		handle = T245;
 		sensor_values.max_power_watt = 120; //120W
 		Kp = 8;
-		Ki = 3;
-		Kd = 0.5;
+		Ki = 5;
+		Kd = 1;
 		PID_MAX_I_LIMIT = 150;
 	}
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
