@@ -29,7 +29,6 @@
 #include "stusb4500.h"
 #include <math.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 //#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
@@ -729,7 +728,7 @@ void LCD_draw_main_screen(){
 	}
 }
 
-void show_popup(char * text){
+void show_popup(char * text[20]){
 	UG_FillFrame(10, 50, 225, 105, RGB_to_BRG(C_ORANGE));
 	UG_FillFrame(15, 55, 220, 100, RGB_to_BRG(C_WHITE));
 	LCD_PutStr(20, 70, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));

@@ -29,23 +29,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  12 .comment      00000043  00000000  00000000  00030414  2**0
                   CONTENTS, READONLY
- 13 .debug_info   0002601c  00000000  00000000  00030457  2**0
+ 13 .debug_info   000260a8  00000000  00000000  00030457  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 00004b4b  00000000  00000000  00056473  2**0
+ 14 .debug_abbrev 00004b60  00000000  00000000  000564ff  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00002330  00000000  00000000  0005afc0  2**3
+ 15 .debug_aranges 00002330  00000000  00000000  0005b060  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 00001b2a  00000000  00000000  0005d2f0  2**0
+ 16 .debug_rnglists 00001b2a  00000000  00000000  0005d390  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  0002551d  00000000  00000000  0005ee1a  2**0
+ 17 .debug_macro  000254cd  00000000  00000000  0005eeba  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0002afb1  00000000  00000000  00084337  2**0
+ 18 .debug_line   0002afa7  00000000  00000000  00084387  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000e989e  00000000  00000000  000af2e8  2**0
+ 19 .debug_str    000e989e  00000000  00000000  000af32e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  0000ad00  00000000  00000000  00198b88  2**2
+ 20 .debug_frame  0000ad00  00000000  00000000  00198bcc  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000007c  00000000  00000000  001a3888  2**0
+ 21 .debug_line_str 0000007c  00000000  00000000  001a38cc  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -3883,7 +3883,7 @@ void update_display(){
  8002596:	4b86      	ldr	r3, [pc, #536]	; (80027b0 <update_display+0x828>)
  8002598:	2200      	movs	r2, #0
  800259a:	701a      	strb	r2, [r3, #0]
-		if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
+	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
  800259c:	e301      	b.n	8002ba2 <update_display+0xc1a>
  800259e:	e300      	b.n	8002ba2 <update_display+0xc1a>
 		}
@@ -4529,7 +4529,7 @@ void update_display(){
 	}
 }
  8002ba0:	e000      	b.n	8002ba4 <update_display+0xc1c>
-		if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
+	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
  8002ba2:	bf00      	nop
 }
  8002ba4:	bf00      	nop
@@ -4914,6 +4914,7 @@ void LCD_draw_main_screen(){
  8002f3a:	2136      	movs	r1, #54	; 0x36
  8002f3c:	20d1      	movs	r0, #209	; 0xd1
  8002f3e:	f00c fc51 	bl	800f7e4 <UG_DrawFrame>
+	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
  8002f42:	e113      	b.n	800316c <LCD_draw_main_screen+0x590>
  8002f44:	20000558 	.word	0x20000558
  8002f48:	08016dac 	.word	0x08016dac
@@ -5161,7 +5162,7 @@ void LCD_draw_main_screen(){
 
 08003198 <show_popup>:
 
-void show_popup(char * text){
+void show_popup(char * text[20]){
  8003198:	b590      	push	{r4, r7, lr}
  800319a:	b085      	sub	sp, #20
  800319c:	af02      	add	r7, sp, #8
