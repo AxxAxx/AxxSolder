@@ -12,7 +12,7 @@ Send me an email at axeljohansson(at)duck.com to order. Payment is via PayPal.
 
 # AxxSolder Overview
 AxxSolder is a STM32 based soldering iron controller for JBC C115, C210 and C245 cartridges. 
-Two different versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-24V OR a USB-C Power Delivery source. The recommended power supply is a Meanwell [LRS-150-24](#recommended-power-supply) which can power all compatible JBC irons at full power. If a 65W, 20V USB-PD supply is used NT115 and T210 handles can be powered at full power and T245 at limited power. The software is written for the [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html) and implements a PID for temperature control, TFT display driver, sleep function when the handle is at rest and functions for read/write user settings to flash. Enclosures for both station and portable versions are 3D printed and design files are availible under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the AxxSolder station can be found under [DEMO](#demo). A *bill of materials* (BOM) with individual component prices can be found under [/bom](https://github.com/AxxAxx/AxxSolder/tree/main/AxxSolder_hardware/bom).  
+Two different versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-24V OR a USB-C Power Delivery source. The recommended power supply is a Meanwell [LRS-150-24](#recommended-power-supply) which can power all compatible JBC irons at full power. If a 65W, 20V USB-PD supply is used then NT115 and T210 handles can be powered at full power and T245 at limited power. The software is written for the [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html) and implements a PID for temperature control, TFT display driver, sleep function when the handle is at rest and functions for read/write user settings to flash. Enclosures for both station and portable versions are 3D printed and design files are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the AxxSolder station can be found under [DEMO](#demo). A *bill of materials* (BOM) with individual component prices can be found under [/bom](https://github.com/AxxAxx/AxxSolder/tree/main/AxxSolder_hardware/bom).  
 ![coverphoto](./photos/AxxSolder_cover.jpg)
 
 # Questions and support
@@ -25,7 +25,7 @@ Please use [Discord](https://discord.gg/xvb4fTaJ) for build related and general 
 - [Cartridge differences](#cartridge-differences)
 - [Schematic](#schematic)
 - [PCB](#pcb)
-- [Software Version History and Hardware Compability](#software-version-history-and-hardware-compability)
+- [Software Version History and Hardware Compatibility](#software-version-history-and-hardware-compatibility)
 - [DEMO](#demo)
 - [AxxSolder Station](#axxsolder-station)
 - [AxxSolder Portable](#axxsolder-portable)
@@ -41,11 +41,11 @@ Please use [Discord](https://discord.gg/xvb4fTaJ) for build related and general 
 # Features
 - The tip temperature is set by a rotary encoder. Pressing the encoder puts AxxSolder into Sleep mode and heating is turned off, press again to wake up.  
 - AxxSolder is capable of driving C115, C210 and C245 style cartridges from JBC. With the "H_sense1" and "H_sense2" inputs AxxSolder can determine if the connected handle is either a NT115, T210 or T245 and adjust max output power accordingly. The max power output is limited in software to 120W for T245, 60W for T210 and 20W for NT115 handles.
-- When the handle is put into the stand (connected to Stand_sense) AxxSolder goes into "Standby mode". On the portable version an aluminium plate is mounted and allows the AxxSolder to go into Standby mode when the cartridge or handle rests againts it. After 10 min in Standby mode AxxSolder goes into "Sleep mode" and turns heating completely off. This is similar to what JBC calls [Sleep and Hibernation](https://www.jbctools.com/intelligent-heat-management.html).  
+- When the handle is put into the stand (connected to Stand_sense) AxxSolder goes into "Standby mode". On the portable version an aluminium plate is mounted and allows the AxxSolder to go into Standby mode when the cartridge or handle rests against it. After 10 min in Standby mode AxxSolder goes into "Sleep mode" and turns heating completely off. This is similar to what JBC calls [Sleep and Hibernation](https://www.jbctools.com/intelligent-heat-management.html).  
 - If AxxSolder is left in normal running mode for longer than 30 min, the station automatically goes into sleep mode after 30 min as a safety feature.  
 - Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.
-- User settings are stored in non volatile flash and can be configured via a settings menue descrbied in [SETTINGS](#settings).
-- The two buttons are used to store temperature presets, eg. 330 deg C and 430 deg C. Both preset temperatures are configurable in the settings menue.
+- User settings are stored in non volatile flash and can be configured via a settings menu described in [SETTINGS](#settings).
+- The two buttons are used to store temperature presets, e.g. 330 deg C and 430 deg C. Both preset temperatures are configurable in the settings menu.
 - The TFT display used in this project is a 2 inch 320x240 Color TFT display [2.0" 320x240 Color IPS TFT Display](https://www.adafruit.com/product/4311) and shows information about:
   - Set temperature
   - Actual temperature
@@ -57,22 +57,22 @@ Please use [Discord](https://discord.gg/xvb4fTaJ) for build related and general 
   - Current detected handle type
 
 # Cartridge differences
-Cartridges from JBC do all contain a thermocouple element to read the tip temperature and a resistive heater element. The configuration of thermocouple and heater element differ slightly between cartridge models. In order to determine the internal configuration of the cartridges two cross secions were done. These show clearly how the C210 and C245 cartridges are constructed internally. The images can be seen here: [https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller](https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller/msg5124267/#msg5124267).
-As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. This is done automatically be the inputs "Handle_sense_1" and "Handle_sense_2" This can be done thanks to the design of the handle connector. For the JCB T210 handle pin 5 and 6 are connected internaly in the connector and for NT115 pin 3 and 5 should be connected. This allows AxxSolder to sense which handle is connected and assign correct thermocouple correction, PID parameters and max output power.
+Cartridges from JBC do all contain a thermocouple element to read the tip temperature and a resistive heater element. The configuration of thermocouple and heater element differ slightly between cartridge models. In order to determine the internal configuration of the cartridges two cross sections were done. These show clearly how the C210 and C245 cartridges are constructed internally. The images can be seen here: [https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller](https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller/msg5124267/#msg5124267).
+As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. This is done automatically be the inputs "Handle_sense_1" and "Handle_sense_2" This can be done thanks to the design of the handle connector. For the JCB T210 handle pin 5 and 6 are connected internally in the connector and for NT115 pin 3 and 5 should be connected. This allows AxxSolder to sense which handle is connected and assign correct thermocouple correction, PID parameters and max output power.
 
 # Schematic
 The schematic for AxxSolder is shown below. Both station and portable versions use the same PCB and software. The MCU is a [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html). 
 ![AxxSolder_station](./photos/AxxSolder_Schematic.png)
 
 # PCB
-The PCBs are designed in KiCad and manufactured by [PCBWay](https://www.pcbway.com/). PCBWay has sponsored this project with PCBs and stencils. As usual the quality of the PCBs is great. As some components have a rather fine pitch (0,5 mm as of the LQFP-48 package of the STM32) and some packages are "no lead" with a bottom thermal pad e.g. the WSON-8 package of the OPA2387 it is suggested to use a stencil to apply solder paste and then reflow the board using either a reflow oven or hot-plate. The boards on the image below was reflowed on a hot-plate (a home made AxxPlate). A microscope is also recommended and helpful during assembly.
-Printed Circuit Boards with assembled componented is shown in the image below.
+The PCBs are designed in KiCad and manufactured by [PCBWay](https://www.pcbway.com/). PCBWay has sponsored this project with PCBs and stencils. As usual the quality of the PCBs is great. As some components have a rather fine pitch (0,5 mm as of the LQFP-48 package of the STM32) and some packages are "no lead" with a bottom thermal pad e.g. the WSON-8 package of the OPA2387 it is suggested to use a stencil to apply solder paste and then reflow the board using either a reflow oven or hot-plate. The boards on the image below were reflowed on a hot-plate (a homemade AxxPlate). A microscope is also recommended and helpful during assembly.
+Printed Circuit Boards with assembled components are shown in the image below.
 ![PCB_image](./photos/PCB_image.jpg)
-A 3D view (from and back) of the AxxSolder PCB is generated with KiCAD and shown below. 
+A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown below. 
 ![PCB_3D](./photos/PCB_3D.jpg)
 
-# Software Version History and Hardware Compability
-| Version | Date  | Hardware Compability |
+# Software Version History and Hardware Compatibility
+| Version | Date  | Hardware Compatibility |
 |---------|------|----------------------|
 |[v3.0.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Mar 26, 2024|V3.*|
 |[v3.0.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.0)|Mar 02, 2024|V3.*|
@@ -94,21 +94,21 @@ Click on the gif to get to YouTube and see the demo in full resolution.
 # AxxSolder Portable
 It is often nice to have a compact and portable soldering iron controller for when you are away from your comfortable desk. A neat powerful package with the same capabilities as your main soldering station. This is why AxxSolder Portable was designed. The only difference between AxxSolder station and Portable is the enclosure. As AxxSolder accepts an input of 9-24 V it is compatible with a range of battery options. The author usually use a battery pack consisting of 12 Samsung INR18650 35E in a 3S4P configuration which works very well. The portable version has an aluminium tab on the enclosure connected to the same input on the PCB as the "handle rest" on the station version. This allows the user to rest the iron onto the aluminium tab and automatically enter sleep mode.   
 ![AxxSolder_portable](./photos/AxxSolder_portable.jpg)
-The connections from the handle to the PCB throught the Hirose RPC1-12RB-6P(71) connector is shown below. The blue wire in the portable version is connected to the aluminium plate which tells the AxxSolder to go into sleep mode when in contact with the soldering iron. The yellow wire is connected to pin 6 and is used to determine which handle is connected.
+The connections from the handle to the PCB through the Hirose RPC1-12RB-6P(71) connector is shown below. The blue wire in the portable version is connected to the aluminium plate which tells the AxxSolder to go into sleep mode when in contact with the soldering iron. The yellow wire is connected to pin 6 and is used to determine which handle is connected.
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
 # Recommended power supply
-A well suited power supply with isolated output (SELV) is the Meanwell LRS-150-24. It is rated for 156 W at 24 V. A cover protecting the terminals for this power supply can be found under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD).  
+A well-suited power supply with isolated output (SELV) is the Meanwell LRS-150-24. It is rated for 156 W at 24 V. A cover protecting the terminals for this power supply can be found under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD).  
 ![LRS-150-24](./photos/LRS-150-24.jpg)
 
 # Handle identification and connections
-In order for AxxSolder to know which type of handle (NT115, T210, T245) is connected specific pins must be connected within the handle connector. By default the original JBC handle T245 has NO pins connected while in the original T210 pins 5 and 6 are connected. The original NT115 handle has a different connector from JBC and must be modified. If the user changes the connector or uses a non-genuine handle it is important to make sure that pin 5 and 3 is connected within the connector. All the neccesary connections are shown in the image below. While powering on AxxSolder fir the first time after doing these connections within the handle connector or connections to AxxSolder it is wise to attach a handle without it's cartridge and ensure that AxxSolder shows the correct handle type on the display. Failing to detect the handle type type will cause damage to the tip as the thermal calibration and max power allowed will be wrong.  
+In order for AxxSolder to know which type of handle (NT115, T210, T245) is connected specific pins must be connected within the handle connector. By default, the original JBC handle T245 has NO pins connected while in the original T210 pins 5 and 6 are connected. The original NT115 handle has a different connector from JBC and must be modified. If the user changes the connector or uses a non-genuine handle it is important to make sure that pin 5 and 3 is connected within the connector. All the necessary connections are shown in the image below. While powering on AxxSolder fir the first time after doing these connections within the handle connector or connections to AxxSolder it is wise to attach a handle without its cartridge and ensure that AxxSolder shows the correct handle type on the display. Failing to detect the handle type will cause damage to the tip as the thermal calibration and max power allowed will be wrong.  
 ![Handle_connections](./photos/handle_connectors.jpg)
 
 # Firmware update
 Programming or updating the firmware the STM32 MCU can be done in two ways, by using a SWD programmer or directly via USB. 
 ## SWD programmer
-These come in a variety of models and are availible from several different places online. In the below eaxample a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is is used. The MCU is programmed by the following steps:
-1. Disconnect any soldering iron handles from AxxSolder during the firmware update processs.
+These come in a variety of models and are available from several different places online. In the below example a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is used. The MCU is programmed by the following steps:
+1. Disconnect any soldering iron handles from AxxSolder during the firmware update process.
 2. Download the latest AxxSolder.bin file from [Releases](https://github.com/AxxAxx/AxxSolder/releases)
 3. Connect your SWD programmer to the target MCU with GND, 3.3V, (N)RST, SWCLK, SWDIO
 4. If your SWD programmer *can not* supply 3.3V it is necessary to power the AxxSolder from an external supply.
@@ -116,19 +116,19 @@ These come in a variety of models and are availible from several different place
 6. Connect to the target by selecting *ST-LINK* and click on *Connect*
 7. Load the latest AxxSolder.bin downloaded in *Step 2* by clicking *Open file* and select the downloaded binary file.
 8. Write the firmware to the MCU by clicking *Download*.
-9. If you get the message *File download complete* everything succeded and the SWD programmer can be disconnected and AxxSolder power cycled once and AxxSolder should boot.
+9. If you get the message *File download complete* everything succeeded and the SWD programmer can be disconnected and AxxSolder power cycled once and AxxSolder should boot.
 <img src="./photos/AxxSolder_SWD_connection.png" width="400">
 
 ![AxxSolder_SWD_programming](./photos/AxxSolder_SWD_programming.png)
 ## USB (DFU mode)
-1. Disconnect any soldering iron handles from AxxSolder during the firmware update processs.
+1. Disconnect any soldering iron handles from AxxSolder during the firmware update process.
 2. Download the latest AxxSolder.bin file from [Releases](https://github.com/AxxAxx/AxxSolder/releases)
 3. Connect AxxSolder via USB to a computer that runs [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html).
 4. Hold down the most right button while powering on AxxSolder to enter DFU mode.
 5. Connect to the target by selecting *USB* and click on *Connect*
 6. Load the latest AxxSolder.bin downloaded in *Step 2* by clicking *Open file* and select the downloaded binary file.
 7. Write the firmware to the MCU by clicking *Download*.
-8. If you get the message *File download complete* everything succeded and the USB cable can be disconnected.
+8. If you get the message *File download complete* everything succeeded and the USB cable can be disconnected.
 9. Power cycle once and AxxSolder should boot.
 
 
@@ -136,11 +136,11 @@ These come in a variety of models and are availible from several different place
 # First start up after build
 The first start up after you have built your AxxSolder can be intense. Double check all solder connections under a loupe/microscope. Especially the OPA2387, LTC4440 and the STM32G431 are small packages with tight pad spacing and can have solder bridges. Do also double check the connections to the soldering iron/stand which are shown in this document under [AxxSolder Station](#axxsolder-station) and [AxxSolder Portable](#axxsolder-portable).  
 The first thing to do after you have double-checked everything is to follow the steps under [Firmware update](#firmware-update). It is wise to do the first programming of AxxSolder without any handle piece and with only 3.3 V, not VDD. After the programming is done you can now power up AxxSolder again via either with 3.3 V, this time you can attach your handle. This allows you to test that your handle type is detected correctly (the detected handle type NT115/T210/T245 is shown in the display). The Standby feature can also be tested by touching the stand (STAND Input).  
-If the handle is detected correctly, the Standby function works and the display works you proceed to test the 7.35V DC/DC. This is done by once again disconnect the handle, but this time apply current limited 9-24 V VDD. 100 mA at 24 V is enough to check that the display starts and that you can measure the 3 bus voltages; 3.3V, 7.35V and VDD. If the the bus voltages looks good and the display shows the main screen you are ready to apply full VDD power and attach the soldering handle.  
-If you are not 110% sure about your soldering/connections it is wise to be on the safe side and keep your soldering tip in a waterbath in over to prevent it from over-heating in an uncontrolled manner. During the development this method was used and saved a few of thoese expensive JBC cartridges..
+If the handle is detected correctly, the Standby function works and the display works you proceed to test the 7.35V DC/DC. This is done by once again disconnect the handle, but this time apply current limited 9-24 V VDD. 100 mA at 24 V is enough to check that the display starts and that you can measure the 3 bus voltages; 3.3V, 7.35V and VDD. If the bus voltages look good and the display shows the main screen you are ready to apply full VDD power and attach the soldering handle.  
+If you are not 110% sure about your soldering/connections it is wise to be on the safe side and keep your soldering tip in a water bath in over to prevent it from over-heating in an uncontrolled manner. During the development this method was used and saved a few of those expensive JBC cartridges..
 
 # Settings
-To acces the user settings the user holds down the encoder button at start-up. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters availible.
+To access the user settings the user holds down the encoder button at start-up. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters available.
 | Setting | Desciption  | Unit | Default |
 |---------|------|----------------------|----------------------|
 |Startup Temp|Default temperature selected after boot|deg C|330|
@@ -158,7 +158,7 @@ To acces the user settings the user holds down the encoder button at start-up. A
 |-Exit no Save-|Exit without Save|N/A|N/A|
 
 # PID control
-As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
+As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
 ```c
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
@@ -202,12 +202,12 @@ These are then used in the software to retrieve correct tip temperatures.
 ![Temp_calibration](./photos/Temp_calibration_data.png)
 # Temperature measurement
 As the thermocouple and heater element is connected in series inside the JBC cartridges and the thermocouple voltage measures over the same pins as the heating element we have to be careful when to do the temperature measurement. In order to not disturb the thermocouple measurement with heater element switching, the switching is turned off for 0.5 ms just before the temperature measurement is taken. The 0.5 ms delay ensures that the switching is turned off and the thermocouple signal is stabilized around a stable voltage.  
-The measured signal over the thermocouple is clamped to 3.3V with a BAV199 Schottky diode in order to protect the opamp OPA2387. The voltage measurement is taken by the internal ADC in DMA mode with a circular buffer. The buffer holds several measurements which are averaged and filtered in software.  
-The yellow curve in the image below (Channel 1) shows the PWM signal driving the gate of the mosfet. The green curve shows the amplified voltage between GREEN and RED wire in the JBC handle for at 330 degree C and 5% power and the purple 25 degree C and at 80% power (the tip held under water trying to heat up).
+The measured signal over the thermocouple is clamped to 3.3V with a BAV199 Schottky diode in order to protect the op-amp OPA2387. The voltage measurement is taken by the internal ADC in DMA mode with a circular buffer. The buffer holds several measurements which are averaged and filtered in software.  
+The yellow curve in the image below (Channel 1) shows the PWM signal driving the gate of the MOSFET. The green curve shows the amplified voltage between GREEN and RED wire in the JBC handle for at 330 degree C and 5% power and the purple 25 degree C and at 80% power (the tip held under water trying to heat up).
 The blue pulse indicates the wait time of 0.5 ms and the purple pulse is where the ADC is sampled.
 ![Oscilloscope_image_PWM](./photos/temperature_measurement.png)
 # Current measurement
-The current is sampled four times per second by a 30 us current pulse through the heater. This is done both to check if there is a functioning tip in the handle (otherwise the display shows "---" at current temp) and to be able to calculate the power drawn by the heater. By knowing how mych the heater draws in ampere the actual power can be calculated by knowing the bus voltage and pulse duty cycle. to measure the current the gate to the MOSFET is turned on, 10 us later the voltage over the current shunt is sampled byu the ADC and the result is converted. This is showin the the image below.
+The current is sampled four times per second by a 30 us current pulse through the heater. This is done both to check if there is a functioning tip in the handle (otherwise the display shows "---" at current temp) and to be able to calculate the power drawn by the heater. By knowing how much the heater draws in ampere the actual power can be calculated by knowing the bus voltage and pulse duty cycle. to measure the current the gate to the MOSFET is turned on, 10 us later the voltage over the current shunt is sampled by the ADC and the result is converted. This is shown the image below.
 ![Oscilloscope_image_PWM](./photos/current_measurement.png)
 ## Stargazers over time
 [![Stargazers over time](https://starchart.cc/AxxAxx/AxxSolder.svg?variant=adaptive)](https://starchart.cc/AxxAxx/AxxSolder)
