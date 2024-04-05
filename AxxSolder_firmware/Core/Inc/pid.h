@@ -7,6 +7,12 @@
 #define DEFAULT_SAMPLE_TIME_MS 100
 #define DEFAULT_PWM_MAX 100
 
+/* PID Mode */
+typedef enum{
+	_PID_MODE_MANUAL    = 0,
+	_PID_MODE_AUTOMATIC = 1
+}PIDMode_TypeDef;
+
 /* PID Control direction */
 typedef enum{
 	_PID_CD_DIRECT  = 0,
@@ -16,6 +22,7 @@ typedef enum{
 /* PID Structure */
 typedef struct{
 
+	PIDMode_TypeDef InAuto;
 	PIDCD_TypeDef   ControllerDirection;
 
 	uint32_t        LastTime;

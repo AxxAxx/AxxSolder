@@ -16,6 +16,7 @@ void PID(PID_TypeDef *uPID, double *Input, double *Output, double *Setpoint, dou
 	uPID->MyOutput   = Output;
 	uPID->MyInput    = Input;
 	uPID->MySetpoint = Setpoint;
+	uPID->InAuto     = (PIDMode_TypeDef)0;
 
 	PID_SetOutputLimits(uPID, 0, DEFAULT_PWM_MAX);
 	uPID->SampleTime = DEFAULT_SAMPLE_TIME_MS;
@@ -52,6 +53,11 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 	double error;
 	double dInput;
 	double output;
+
+	/* Check PID mode */
+	if (!uPID->InAuto){
+		return 0;
+	}
 
 	/* Calculate time */
 	now        = HAL_GetTick();
@@ -110,6 +116,20 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 	}
 }
 
+void PID_SetMode(PID_TypeDef *uPID, PIDMode_TypeDef Mode){
+	uint8_t newAuto = (Mode == _PID_MODE_AUTOMATIC);
+
+	/* Initialize the PID */
+	if (newAuto && !uPID->InAuto){
+		PID_Init(uPID);
+	}
+	uPID->InAuto = (PIDMode_TypeDef)newAuto;
+}
+
+PIDMode_TypeDef PID_GetMode(PID_TypeDef *uPID){
+	return uPID->InAuto ? _PID_MODE_AUTOMATIC : _PID_MODE_MANUAL;
+}
+
 /* PID Limits */
 void PID_SetOutputLimits(PID_TypeDef *uPID, double Min, double Max){
 	/* Check value */
@@ -120,12 +140,13 @@ void PID_SetOutputLimits(PID_TypeDef *uPID, double Min, double Max){
 	uPID->OutMin = Min;
 	uPID->OutMax = Max;
 
-	/* Check value */
-	*uPID->MyOutput = double_clamp(*uPID->MyOutput, uPID->OutMin, uPID->OutMax);
+	if (uPID->InAuto){
+		/* Check value */
+		*uPID->MyOutput = double_clamp(*uPID->MyOutput, uPID->OutMin, uPID->OutMax);
 
-	/* Check out value */
-	uPID->OutputSum = double_clamp(uPID->OutputSum, uPID->OutMin, uPID->OutMax);
-
+		/* Check out value */
+		uPID->OutputSum = double_clamp(uPID->OutputSum, uPID->OutMin, uPID->OutMax);
+	}
 }
 
 /* PID I-windup Limits */
@@ -166,7 +187,7 @@ void PID_SetTunings(PID_TypeDef *uPID, double Kp, double Ki, double Kd){
 /* PID Direction */
 void PID_SetControllerDirection(PID_TypeDef *uPID, PIDCD_TypeDef Direction){
 	/* Check parameters */
-	if (Direction !=uPID->ControllerDirection){
+	if ((uPID->InAuto) && (Direction !=uPID->ControllerDirection)){
 		uPID->Kp = (0 - uPID->Kp);
 		uPID->Ki = (0 - uPID->Ki);
 		uPID->Kd = (0 - uPID->Kd);
