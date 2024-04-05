@@ -114,7 +114,7 @@ double PID_MAX_I_LIMIT = 150;
 char buffer[40];
 
 /* Converts power in W to correct duty cycle */
-#define POWER_REDUCTION_FACTOR 0.131
+#define POWER_REDUCTION_FACTOR 0.123
 
 /* Filtered ADC reading value */
 float ADC_filter_mean = 0.0;
@@ -203,11 +203,12 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.preset_temp_1 = 330,
 											.preset_temp_2 = 430,
 											.GPIO4_ON_at_run = 0,
-											.screen_rotation = 2};
+											.screen_rotation = 2,
+											.power_limit = 0};
 
 /* List of names for settings menue */
-#define menu_length 13
-char menu_names[menu_length][20] = { "Startup Temp  ",
+#define menu_length 14
+char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Temp Offset    ",
 							"Standby Temp   ",
 							"Standby Time   ",
@@ -217,6 +218,7 @@ char menu_names[menu_length][20] = { "Startup Temp  ",
 							"Preset Temp 2     ",
 							"GPIO4 ON at run",
 							"Screen rotation    ",
+							"Limit Power          ",
 							"-Load Default-     ",
 							"-Exit and Save-   ",
 							"-Exit no Save-    "};
@@ -901,6 +903,12 @@ void get_handle_type(){
 		Kd = 1;
 		PID_MAX_I_LIMIT = 150;
 	}
+
+	/* If a custom power limit is specified in user flash, use this limit */
+	if(flash_values.power_limit != 0){
+		sensor_values.max_power_watt = flash_values.power_limit * 10;
+	}
+
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
 	PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT); 	// Set max and min I limit
 }
