@@ -41,11 +41,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_line   0002b007  00000000  00000000  00084107  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000e98f4  00000000  00000000  000af10e  2**0
+ 19 .debug_str    000e98f9  00000000  00000000  000af10e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  0000ad34  00000000  00000000  00198a04  2**2
+ 20 .debug_frame  0000ad34  00000000  00000000  00198a08  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000007c  00000000  00000000  001a3738  2**0
+ 21 .debug_line_str 0000007c  00000000  00000000  001a373c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -2123,8 +2123,8 @@ void get_heater_current(){
  80015e8:	bf00      	nop
  80015ea:	bd80      	pop	{r7, pc}
  80015ec:	f3af 8000 	nop.w
- 80015f0:	9999999a 	.word	0x9999999a
- 80015f4:	3fb99999 	.word	0x3fb99999
+ 80015f0:	4abe6a33 	.word	0x4abe6a33
+ 80015f4:	3f67763e 	.word	0x3f67763e
  80015f8:	2000058e 	.word	0x2000058e
  80015fc:	20000f90 	.word	0x20000f90
  8001600:	20000038 	.word	0x20000038
@@ -3285,10 +3285,10 @@ void update_display(){
  8002010:	200e      	movs	r0, #14
  8002012:	f004 fc05 	bl	8006820 <LCD_PutStr>
 
-		if(sensor_values.heater_current < 30){ //NT115 at 9V draws 81
+		if(sensor_values.heater_current < 1){ //NT115 at 9V draws 2.3
  8002016:	4b64      	ldr	r3, [pc, #400]	; (80021a8 <update_display+0x228>)
  8002018:	edd3 7a05 	vldr	s15, [r3, #20]
- 800201c:	eeb3 7a0e 	vmov.f32	s14, #62	; 0x41f00000  30.0
+ 800201c:	eeb7 7a00 	vmov.f32	s14, #112	; 0x3f800000  1.0
  8002020:	eef4 7ac7 	vcmpe.f32	s15, s14
  8002024:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
  8002028:	d512      	bpl.n	8002050 <update_display+0xd0>
@@ -5516,10 +5516,10 @@ void handle_emergency_shutdown(){
  80034a4:	e02b      	b.n	80034fe <handle_emergency_shutdown+0x106>
 	}
 	/* Set state to EMERGENCY_SLEEP if no tip detected (no current draw) */
-	else if((sensor_values.heater_current < 30) && (active_state == RUN)){ //NT115 at 9V draws 81
+	else if((sensor_values.heater_current < 1) && (active_state == RUN)){ //NT115 at 9V draws 81
  80034a6:	4b1c      	ldr	r3, [pc, #112]	; (8003518 <handle_emergency_shutdown+0x120>)
  80034a8:	edd3 7a05 	vldr	s15, [r3, #20]
- 80034ac:	eeb3 7a0e 	vmov.f32	s14, #62	; 0x41f00000  30.0
+ 80034ac:	eeb7 7a00 	vmov.f32	s14, #112	; 0x3f800000  1.0
  80034b0:	eef4 7ac7 	vcmpe.f32	s15, s14
  80034b4:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
  80034b8:	d50a      	bpl.n	80034d0 <handle_emergency_shutdown+0xd8>

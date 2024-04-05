@@ -132,7 +132,7 @@ uint16_t current_raw = 0;
 
 /* Constants for scaling input voltage ADC value*/
 #define VOLTAGE_COMPENSATION 0.00840442388
-#define CURRENT_COMPENSATION 0.1
+#define CURRENT_COMPENSATION 0.002864
 
 /* Min allowed bus voltage */
 #define MIN_BUSVOLTAGE 8.0
@@ -509,7 +509,7 @@ void update_display(){
 		}
 		LCD_PutStr(14, 75, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		if(sensor_values.heater_current < 30){ //NT115 at 9V draws 81
+		if(sensor_values.heater_current < 1){ //NT115 at 9V draws 2.3
 			LCD_PutStr(10, 165, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
@@ -788,7 +788,7 @@ void handle_emergency_shutdown(){
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if no tip detected (no current draw) */
-	else if((sensor_values.heater_current < 30) && (active_state == RUN)){ //NT115 at 9V draws 81
+	else if((sensor_values.heater_current < 1) && (active_state == RUN)){ //NT115 at 9V draws 81
 		show_popup("NO tip detected");
 		change_state(EMERGENCY_SLEEP);
 	}
