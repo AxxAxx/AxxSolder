@@ -885,7 +885,7 @@ void get_handle_type(){
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
 		handle = NT115;
-		sensor_values.max_power_watt = 20; //20W
+		sensor_values.max_power_watt = 22; //22W
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
@@ -894,7 +894,7 @@ void get_handle_type(){
 	/* Determine if T210 handle is detected */
 	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
 		handle = T210;
-		sensor_values.max_power_watt = 60; //60W
+		sensor_values.max_power_watt = 65; //65W
 		Kp = 5;
 		Ki = 5.5;
 		Kd = 0.25;
@@ -902,7 +902,7 @@ void get_handle_type(){
 	}
 	else{
 		handle = T245;
-		sensor_values.max_power_watt = 120; //120W
+		sensor_values.max_power_watt = 130; //130W
 		Kp = 8;
 		Ki = 5;
 		Kd = 1;

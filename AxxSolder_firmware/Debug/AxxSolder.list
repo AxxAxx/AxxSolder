@@ -5936,7 +5936,7 @@ void get_handle_type(){
  80037d6:	4b64      	ldr	r3, [pc, #400]	; (8003968 <get_handle_type+0x228>)
  80037d8:	2200      	movs	r2, #0
  80037da:	701a      	strb	r2, [r3, #0]
-		sensor_values.max_power_watt = 20; //20W
+		sensor_values.max_power_watt = 22; //22W
  80037dc:	4b5f      	ldr	r3, [pc, #380]	; (800395c <get_handle_type+0x21c>)
  80037de:	4a63      	ldr	r2, [pc, #396]	; (800396c <get_handle_type+0x22c>)
  80037e0:	651a      	str	r2, [r3, #80]	; 0x50
@@ -5984,7 +5984,7 @@ void get_handle_type(){
  8003840:	4b49      	ldr	r3, [pc, #292]	; (8003968 <get_handle_type+0x228>)
  8003842:	2201      	movs	r2, #1
  8003844:	701a      	strb	r2, [r3, #0]
-		sensor_values.max_power_watt = 60; //60W
+		sensor_values.max_power_watt = 65; //65W
  8003846:	4b45      	ldr	r3, [pc, #276]	; (800395c <get_handle_type+0x21c>)
  8003848:	4a51      	ldr	r2, [pc, #324]	; (8003990 <get_handle_type+0x250>)
  800384a:	651a      	str	r2, [r3, #80]	; 0x50
@@ -6015,7 +6015,7 @@ void get_handle_type(){
  800387e:	4b3a      	ldr	r3, [pc, #232]	; (8003968 <get_handle_type+0x228>)
  8003880:	2202      	movs	r2, #2
  8003882:	701a      	strb	r2, [r3, #0]
-		sensor_values.max_power_watt = 120; //120W
+		sensor_values.max_power_watt = 130; //130W
  8003884:	4b35      	ldr	r3, [pc, #212]	; (800395c <get_handle_type+0x21c>)
  8003886:	4a46      	ldr	r2, [pc, #280]	; (80039a0 <get_handle_type+0x260>)
  8003888:	651a      	str	r2, [r3, #80]	; 0x50
@@ -6106,7 +6106,7 @@ void get_handle_type(){
  8003960:	20001c48 	.word	0x20001c48
  8003964:	3fe00000 	.word	0x3fe00000
  8003968:	200004b0 	.word	0x200004b0
- 800396c:	41a00000 	.word	0x41a00000
+ 800396c:	41b00000 	.word	0x41b00000
  8003970:	200004e0 	.word	0x200004e0
  8003974:	40080000 	.word	0x40080000
  8003978:	200004e8 	.word	0x200004e8
@@ -6115,11 +6115,11 @@ void get_handle_type(){
  8003984:	3fd00000 	.word	0x3fd00000
  8003988:	20000020 	.word	0x20000020
  800398c:	40590000 	.word	0x40590000
- 8003990:	42700000 	.word	0x42700000
+ 8003990:	42820000 	.word	0x42820000
  8003994:	40140000 	.word	0x40140000
  8003998:	40160000 	.word	0x40160000
  800399c:	405f4000 	.word	0x405f4000
- 80039a0:	42f00000 	.word	0x42f00000
+ 80039a0:	43020000 	.word	0x43020000
  80039a4:	40200000 	.word	0x40200000
  80039a8:	200005a0 	.word	0x200005a0
  80039ac:	40240000 	.word	0x40240000
