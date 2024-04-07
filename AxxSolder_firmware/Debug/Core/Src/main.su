@@ -26,7 +26,7 @@
 ../Core/Src/main.c:947:6:HAL_TIM_PeriodElapsedCallback	16	static
 ../Core/Src/main.c:988:6:HAL_ADC_ConvCpltCallback	16	static
 ../Core/Src/main.c:1006:6:HAL_ADC_LevelOutOfWindowCallback	16	static
-../Core/Src/main.c:1023:5:main	104	static
+../Core/Src/main.c:1023:5:main	112	static
 ../Core/Src/main.c:1233:6:SystemClock_Config	88	static
 ../Core/Src/main.c:1280:13:MX_ADC1_Init	56	static
 ../Core/Src/main.c:1366:13:MX_ADC2_Init	72	static
