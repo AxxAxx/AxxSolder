@@ -17,4 +17,4 @@
 ../Core/Src/stm32g4xx_hal_msp.c:805:6:HAL_TIM_Base_MspDeInit	16	static
 ../Core/Src/stm32g4xx_hal_msp.c:886:6:HAL_TIM_OnePulse_MspDeInit	16	static
 ../Core/Src/stm32g4xx_hal_msp.c:908:6:HAL_UART_MspInit	112	static
-../Core/Src/stm32g4xx_hal_msp.c:955:6:HAL_UART_MspDeInit	16	static
+../Core/Src/stm32g4xx_hal_msp.c:958:6:HAL_UART_MspDeInit	16	static

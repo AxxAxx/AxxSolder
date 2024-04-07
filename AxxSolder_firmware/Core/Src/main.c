@@ -167,6 +167,7 @@ uint8_t custom_temperature_on = 0;
 struct sensor_values_struct {
 	double set_temperature;
 	double thermocouple_temperature;
+	double thermocouple_temperature_display;
 	float bus_voltage;
 	float heater_current;
 	uint16_t leak_current;
@@ -181,6 +182,7 @@ struct sensor_values_struct {
 
 struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
         									.thermocouple_temperature = 0.0,
+											.thermocouple_temperature_display = 0,0,
 											.bus_voltage = 0.0,
 											.heater_current = 0,
 											.leak_current = 0,
@@ -236,6 +238,7 @@ uint8_t thermocouple_measurement_done = 1;
 
 /* Moving average filters for sensor data */
 FilterTypeDef thermocouple_temperature_filter_struct;
+FilterTypeDef thermocouple_temperature_display_filter_struct;
 FilterTypeDef mcu_temperature_filter_struct;
 FilterTypeDef input_voltage_filterStruct;
 FilterTypeDef current_filterStruct;
@@ -364,6 +367,8 @@ void get_thermocouple_temperature(){
 	}
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
 	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,999); // Clamp
+
+	sensor_values.thermocouple_temperature_display = Moving_Average_Compute(sensor_values.thermocouple_temperature, &thermocouple_temperature_display_filter_struct); /* Moving average filter */
 }
 
 /* Sets the duty cycle of timer controlling the heater */
@@ -514,8 +519,8 @@ void update_display(){
 		}
 		else{
 			memset(&buffer, '\0', sizeof(buffer));
-			sprintf(buffer, "%.f", sensor_values.thermocouple_temperature);
-			if(sensor_values.thermocouple_temperature < 99.5){
+			sprintf(buffer, "%.f", sensor_values.thermocouple_temperature_display);
+			if(sensor_values.thermocouple_temperature_display < 99.5){
 				buffer[2] = 32;
 				buffer[3] = 32;
 			}
@@ -891,8 +896,8 @@ void get_handle_type(){
 		handle = T210;
 		sensor_values.max_power_watt = 60; //60W
 		Kp = 5;
-		Ki = 6;
-		Kd = 0.5;
+		Ki = 5.5;
+		Kd = 0.25;
 		PID_MAX_I_LIMIT = 125;
 	}
 	else{
@@ -1072,7 +1077,8 @@ int main(void)
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
 
 	/* initialize moving average functions */
-	Moving_Average_Init(&thermocouple_temperature_filter_struct,20);
+	Moving_Average_Init(&thermocouple_temperature_filter_struct,30);
+	Moving_Average_Init(&thermocouple_temperature_display_filter_struct,100);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
 	Moving_Average_Init(&current_filterStruct,10);
