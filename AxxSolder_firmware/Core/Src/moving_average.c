@@ -43,7 +43,7 @@ void Moving_Average_Init(FilterTypeDef* filter_struct, float window_length)
 	filter_struct->Sum = 0;
 	filter_struct->WindowPointer = 0;
 
-	for(uint32_t i=0; i<filter_struct->WindowLength; i++)
+	for(uint32_t i=0; i<(uint32_t)filter_struct->WindowLength; i++)
 	{
 		filter_struct->History[i] = 0;
 	}
@@ -60,7 +60,7 @@ double Moving_Average_Compute(uint32_t raw_data, FilterTypeDef* filter_struct)
 	filter_struct->Sum += raw_data;
 	filter_struct->Sum -= filter_struct->History[filter_struct->WindowPointer];
 	filter_struct->History[filter_struct->WindowPointer] = raw_data;
-	if(filter_struct->WindowPointer < filter_struct->WindowLength - 1)
+	if(filter_struct->WindowPointer < (uint32_t)(filter_struct->WindowLength - 1.0f))
 	{
 		filter_struct->WindowPointer += 1;
 	}
@@ -68,5 +68,5 @@ double Moving_Average_Compute(uint32_t raw_data, FilterTypeDef* filter_struct)
 	{
 		filter_struct->WindowPointer = 0;
 	}
-	return filter_struct->Sum/filter_struct->WindowLength;
+	return (double)filter_struct->Sum/(double)filter_struct->WindowLength;
 }

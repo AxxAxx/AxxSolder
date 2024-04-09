@@ -87,6 +87,8 @@ PIDCD_TypeDef PID_GetDirection(PID_TypeDef *uPID);
 /* PID Sampling */
 void PID_SetSampleTime(PID_TypeDef *uPID, int32_t NewSampleTime, int32_t updateOnCall);
 
+void PID_SetMode(PID_TypeDef *uPID, PIDMode_TypeDef Mode);
+
 /* Get Tunings Param */
 double PID_GetKp(PID_TypeDef *uPID);
 double PID_GetKi(PID_TypeDef *uPID);

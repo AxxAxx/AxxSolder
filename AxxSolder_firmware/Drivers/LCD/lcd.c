@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "lcd.h"
 
 
@@ -55,7 +56,6 @@ const uint8_t init_cmd[] = {
 
 
 
-char str[32];
 
 static void LCD_Update(void);
 typedef struct{
@@ -127,7 +127,7 @@ static void setDMAMemMode(uint8_t memInc, uint8_t size)
   if(config.dma_sz!=size || config.dma_mem_inc!=memInc){
     config.dma_sz =size;
     config.dma_mem_inc = memInc;
-    __HAL_DMA_DISABLE(LCD_HANDLE.hdmatx);;
+    __HAL_DMA_DISABLE(LCD_HANDLE.hdmatx);
 #ifdef DMA_SxCR_EN
     while((LCD_HANDLE.hdmatx->Instance->CR & DMA_SxCR_EN) != RESET);
 #elif defined DMA_CCR_EN
@@ -645,6 +645,7 @@ void LCD_Test(void)
   int8_t xadd=2,yadd=2,dstep=2;
   uint8_t r=0,g=0,b=0, t;
   uint32_t start, show;
+  char str[32];
 
   UG_FontSetTransparency(1);
 
@@ -919,7 +920,7 @@ void LCD_Test(void)
 }
 
 
-static void window_1_callback(UG_MESSAGE *msg)
+static void window_1_callback(UG_MESSAGE *msg __unused)
 {
 /*
     if(msg->type == MSG_TYPE_OBJECT)
