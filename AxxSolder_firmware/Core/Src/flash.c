@@ -14,12 +14,10 @@ uint8_t flashWriting = 0;
 unsigned char bufferFlash[sizeof(Flash_values)];
 static unsigned int bufLength = sizeof(Flash_values);
 
-/*Variable used for Erase procedure*/
-static FLASH_EraseInitTypeDef EraseInitStruct;
 
 uint32_t GetPage(uint32_t Addr)
 {
-  return (Addr - FLASH_BASE) / FLASH_PAGE_SIZE;;
+  return (Addr - FLASH_BASE) / FLASH_PAGE_SIZE;
 }
 
 bool FlashCheckCRC()
@@ -41,7 +39,7 @@ bool FlashCheckCRC()
 
 bool FlashReadToBuf()
 {
-	int i = 0;
+	unsigned int i = 0;
 	unsigned char temp[8];
 	uint32_t Address = FLASH_USER_START_ADDR;
 
@@ -51,7 +49,7 @@ bool FlashReadToBuf()
 		{
 			*(uint64_t*) temp = *(volatile uint64_t*) Address;
 
-			for (int j = 0; j < 8; j++)
+			for (unsigned int j = 0; j < 8; j++)
 			{
 				if (j + i < bufLength)
 				{
@@ -134,9 +132,10 @@ uint32_t Flash_Write_Data (uint32_t StartPageAddress, uint32_t *Data, uint16_t n
 
 
 bool FlashWrite(Flash_values *flash_values){
+	static FLASH_EraseInitTypeDef EraseInitStruct;
 	flashWriting = 1;
 	volatile uint64_t uwCRCValue = 0;
-	int i = 0;
+	unsigned int i = 0;
 	uint32_t Address = FLASH_USER_START_ADDR;
 	uint32_t PageError = 0;
 	uint64_t temp = 0;
@@ -173,7 +172,7 @@ bool FlashWrite(Flash_values *flash_values){
 
 		while (Address < FLASH_USER_END_ADDR)
 		{
-			for (int j = 0; j < 8; j++)
+			for (unsigned int j = 0; j < 8; j++)
 			{
 				if (j + i < bufLength)
 				{
