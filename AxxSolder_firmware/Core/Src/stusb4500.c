@@ -36,7 +36,10 @@ HAL_StatusTypeDef stusb_update_pdo(uint8_t pdo_number, uint16_t voltage_mv, uint
   // get existing
   addr = DPM_SNK_PDO1;
   ret = read_register(STUSB4500_ADDR, addr, data, 12);
-  for (i = 0 ; i < 3 ; i++) { pdo_profile[i].d32 = (uint32_t) (data[j] +(data[j+1]<<8)+(data[j+2]<<16)+(data[j+3]<<24));
+  for (i = 0 ; i < 3 ; i++) { pdo_profile[i].d32 =  (uint32_t) data[j]
+                                                 + ((uint32_t) data[j+1] << 8)
+                                                 + ((uint32_t) data[j+2] << 16)
+                                                 + ((uint32_t) data[j+3] << 24);
     j += 4;
   }
 

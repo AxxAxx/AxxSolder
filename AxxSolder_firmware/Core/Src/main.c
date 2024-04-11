@@ -28,8 +28,7 @@
 #include "flash.h"
 #include "stusb4500.h"
 #include <math.h>
-#include <stdint.h>
-#include <string.h>
+#include <stdio.h>
 //#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
@@ -153,13 +152,13 @@ uint8_t custom_temperature_on = 0;
 #define TC_COMPENSATION_X1_T210 0.31863796444354214
 #define TC_COMPENSATION_X0_T210 20.968033870812942
 
-#define TC_COMPENSATION_X2_T245 -4.735112838956741e-07
+#define TC_COMPENSATION_X2_T245 (-4.735112838956741e-07)
 #define TC_COMPENSATION_X1_T245 0.11936452029674384
 #define TC_COMPENSATION_X0_T245 23.777399955382318
 
 /* Constants for internal MCU temperture */
 #define V30 0.76 			// from datasheet
-#define VSENSE 3.3/4096.0 	// VSENSE value
+#define VSENSE (3.3/4096.0) 	// VSENSE value
 #define Avg_Slope 0.0025 	// 2.5mV from datasheet
 
 
@@ -182,7 +181,7 @@ struct sensor_values_struct {
 
 struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
         									.thermocouple_temperature = 0.0,
-											.thermocouple_temperature_display = 0,0,
+											.thermocouple_temperature_display = 0,
 											.bus_voltage = 0.0,
 											.heater_current = 0,
 											.leak_current = 0,
@@ -423,10 +422,10 @@ void settings_menue(){
 			if (menue_level == 1){
 				((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				if ((menu_cursor_position == 5) || (menu_cursor_position == 8)){
-					((double*)&flash_values)[menu_cursor_position] = round(fmod(abs(((double*)&flash_values)[menu_cursor_position]), 2));
+					((double*)&flash_values)[menu_cursor_position] = round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2));
 				}
 				if(menu_cursor_position != 1){
-					((double*)&flash_values)[menu_cursor_position] = abs(((double*)&flash_values)[menu_cursor_position]);
+					((double*)&flash_values)[menu_cursor_position] = fabs(((double*)&flash_values)[menu_cursor_position]);
 				}
 			}
 
@@ -780,7 +779,7 @@ void beep(){
 /* Function to set state to EMERGENCY_SLEEP */
 void handle_emergency_shutdown(){
 	/* Get time when iron turns on */
-	if(!sensor_values.previous_state == RUN  && active_state == RUN){
+	if(sensor_values.previous_state != RUN && active_state == RUN){
 		previous_millis_left_stand = HAL_GetTick();
 	}
 	/* Set state to EMERGENCY_SLEEP if iron ON for longer time than emergency_time */
@@ -1004,7 +1003,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 }
 
 /* ADC watchdog Callback */
-void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* hadc){
+void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* hadc __unused){
 		LCD_draw_earth_fault_popup();
 }
 
