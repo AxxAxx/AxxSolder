@@ -215,15 +215,16 @@ char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Standby Temp   ",
 							"Standby Time   ",
 							"EM Time          ",
-							"Buzzer Enable    ",
-							"Preset Temp 1     ",
-							"Preset Temp 2     ",
-							"GPIO4 ON at run",
+							"Buzzer Enable      ",
+							"Preset Temp 1      ",
+							"Preset Temp 2      ",
+							"GPIO4 ON at run  ",
 							"Screen rotation    ",
-							"Limit Power          ",
+							"Limit Power        ",
 							"-Load Default-     ",
 							"-Exit and Save-   ",
 							"-Exit no Save-    "};
+
 
 /* PID data */
 double PID_output = 0.0;
@@ -496,7 +497,7 @@ void settings_menue(){
 					}
 				}
 				if(i >= menu_length-3){
-					LCD_PutStr(200, 45+(i-menue_start)*25, "      ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+					LCD_PutStr(200, 45+(i-menue_start)*25, "        ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 				}
 
 			}
