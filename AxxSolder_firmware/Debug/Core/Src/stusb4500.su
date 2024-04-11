@@ -1,5 +1,0 @@
-../Core/Src/stusb4500.c:13:26:read_register	32	static
-../Core/Src/stusb4500.c:18:26:write_register	32	static
-../Core/Src/stusb4500.c:23:19:stusb_read_rdo	24	static
-../Core/Src/stusb4500.c:30:19:stusb_update_pdo	64	static
-../Core/Src/stusb4500.c:61:19:stusb_set_valid_pdo	24	static
