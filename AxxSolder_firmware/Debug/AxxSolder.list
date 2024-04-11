@@ -7,23 +7,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         00015d48  080001e0  080001e0  000101e0  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       00002e10  08015f28  08015f28  00025f28  2**3
+  2 .rodata       00002e18  08015f28  08015f28  00025f28  2**3
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  08018d38  08018d38  00030424  2**0
+  3 .ARM.extab    00000000  08018d40  08018d40  00030424  2**0
                   CONTENTS
-  4 .ARM          00000008  08018d38  08018d38  00028d38  2**2
+  4 .ARM          00000008  08018d40  08018d40  00028d40  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  08018d40  08018d40  00030424  2**0
+  5 .preinit_array 00000000  08018d48  08018d48  00030424  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  08018d40  08018d40  00028d40  2**2
+  6 .init_array   00000004  08018d48  08018d48  00028d48  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  08018d44  08018d44  00028d44  2**2
+  7 .fini_array   00000004  08018d4c  08018d4c  00028d4c  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         00000424  20000000  08018d48  00030000  2**3
+  8 .data         00000424  20000000  08018d50  00030000  2**3
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00002338  20000428  0801916c  00030428  2**3
+  9 .bss          00002338  20000428  08019174  00030428  2**3
                   ALLOC
- 10 ._user_heap_stack 00000600  20002760  0801916c  00032760  2**0
+ 10 ._user_heap_stack 00000600  20002760  08019174  00032760  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00030424  2**0
                   CONTENTS, READONLY
@@ -2819,7 +2819,7 @@ void settings_menue(){
  8001c74:	40000000 	.word	0x40000000
  8001c78:	48000400 	.word	0x48000400
  8001c7c:	200005a0 	.word	0x200005a0
- 8001c80:	08017128 	.word	0x08017128
+ 8001c80:	0801712c 	.word	0x0801712c
  8001c84:	08015f28 	.word	0x08015f28
  8001c88:	08015f34 	.word	0x08015f34
  8001c8c:	08015f3c 	.word	0x08015f3c
@@ -3136,7 +3136,7 @@ void settings_menue(){
  8001edc:	200005a0 	.word	0x200005a0
  8001ee0:	20000090 	.word	0x20000090
  8001ee4:	200000e8 	.word	0x200000e8
- 8001ee8:	08017128 	.word	0x08017128
+ 8001ee8:	0801712c 	.word	0x0801712c
  8001eec:	08015f48 	.word	0x08015f48
  8001ef0:	40230000 	.word	0x40230000
 					}
@@ -3177,7 +3177,7 @@ void settings_menue(){
  8001f36:	697b      	ldr	r3, [r7, #20]
  8001f38:	2b0a      	cmp	r3, #10
  8001f3a:	dd20      	ble.n	8001f7e <settings_menue+0x62e>
-					LCD_PutStr(200, 45+(i-menue_start)*25, "      ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+					LCD_PutStr(200, 45+(i-menue_start)*25, "        ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
  8001f3c:	8c7b      	ldrh	r3, [r7, #34]	; 0x22
  8001f3e:	697a      	ldr	r2, [r7, #20]
  8001f40:	1ad3      	subs	r3, r2, r3
@@ -3231,7 +3231,7 @@ void settings_menue(){
  8001f9c:	46bd      	mov	sp, r7
  8001f9e:	e8bd 83f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, pc}
  8001fa2:	bf00      	nop
- 8001fa4:	08017128 	.word	0x08017128
+ 8001fa4:	0801712c 	.word	0x0801712c
  8001fa8:	08015f50 	.word	0x08015f50
  8001fac:	00000000 	.word	0x00000000
 
@@ -3485,14 +3485,14 @@ void update_display(){
  80021d0:	200005a0 	.word	0x200005a0
  80021d4:	200004f8 	.word	0x200004f8
  80021d8:	20000038 	.word	0x20000038
- 80021dc:	08015f58 	.word	0x08015f58
- 80021e0:	08018118 	.word	0x08018118
- 80021e4:	08015f5c 	.word	0x08015f5c
- 80021e8:	08015f64 	.word	0x08015f64
- 80021ec:	08016158 	.word	0x08016158
+ 80021dc:	08015f5c 	.word	0x08015f5c
+ 80021e0:	0801811c 	.word	0x0801811c
+ 80021e4:	08015f60 	.word	0x08015f60
+ 80021e8:	08015f68 	.word	0x08015f68
+ 80021ec:	0801615c 	.word	0x0801615c
  80021f0:	200004b0 	.word	0x200004b0
- 80021f4:	08015f6c 	.word	0x08015f6c
- 80021f8:	08015f74 	.word	0x08015f74
+ 80021f4:	08015f70 	.word	0x08015f70
+ 80021f8:	08015f78 	.word	0x08015f78
 		}
 		else if(handle == NT115){
  80021fc:	4bab      	ldr	r3, [pc, #684]	; (80024ac <update_display+0x4fc>)
@@ -3792,21 +3792,21 @@ void update_display(){
  80024a8:	701a      	strb	r2, [r3, #0]
  80024aa:	e08c      	b.n	80025c6 <update_display+0x616>
  80024ac:	200004b0 	.word	0x200004b0
- 80024b0:	08016158 	.word	0x08016158
- 80024b4:	08015f7c 	.word	0x08015f7c
+ 80024b0:	0801615c 	.word	0x0801615c
+ 80024b4:	08015f80 	.word	0x08015f80
  80024b8:	2000001d 	.word	0x2000001d
  80024bc:	200004d7 	.word	0x200004d7
- 80024c0:	08017128 	.word	0x08017128
- 80024c4:	08015f84 	.word	0x08015f84
- 80024c8:	08015f88 	.word	0x08015f88
+ 80024c0:	0801712c 	.word	0x0801712c
+ 80024c4:	08015f88 	.word	0x08015f88
+ 80024c8:	08015f8c 	.word	0x08015f8c
  80024cc:	200004d8 	.word	0x200004d8
- 80024d0:	08015f8c 	.word	0x08015f8c
- 80024d4:	08015f90 	.word	0x08015f90
- 80024d8:	08015f94 	.word	0x08015f94
- 80024dc:	08015f98 	.word	0x08015f98
- 80024e0:	08015f9c 	.word	0x08015f9c
- 80024e4:	08015fa0 	.word	0x08015fa0
- 80024e8:	08015fa4 	.word	0x08015fa4
+ 80024d0:	08015f90 	.word	0x08015f90
+ 80024d4:	08015f94 	.word	0x08015f94
+ 80024d8:	08015f98 	.word	0x08015f98
+ 80024dc:	08015f9c 	.word	0x08015f9c
+ 80024e0:	08015fa0 	.word	0x08015fa0
+ 80024e4:	08015fa4 	.word	0x08015fa4
+ 80024e8:	08015fa8 	.word	0x08015fa8
 		}
 		else if(active_state == RUN){
  80024ec:	4bb4      	ldr	r3, [pc, #720]	; (80027c0 <update_display+0x810>)
@@ -4140,14 +4140,14 @@ void update_display(){
  80027d8:	200004d7 	.word	0x200004d7
  80027dc:	200004f8 	.word	0x200004f8
  80027e0:	20000038 	.word	0x20000038
- 80027e4:	08015f58 	.word	0x08015f58
- 80027e8:	08018118 	.word	0x08018118
- 80027ec:	08015f5c 	.word	0x08015f5c
- 80027f0:	08015f64 	.word	0x08015f64
- 80027f4:	08016158 	.word	0x08016158
+ 80027e4:	08015f5c 	.word	0x08015f5c
+ 80027e8:	0801811c 	.word	0x0801811c
+ 80027ec:	08015f60 	.word	0x08015f60
+ 80027f0:	08015f68 	.word	0x08015f68
+ 80027f4:	0801615c 	.word	0x0801615c
  80027f8:	200004b0 	.word	0x200004b0
- 80027fc:	08015f6c 	.word	0x08015f6c
- 8002800:	08015f74 	.word	0x08015f74
+ 80027fc:	08015f70 	.word	0x08015f70
+ 8002800:	08015f78 	.word	0x08015f78
 		}
 		else if(handle == NT115){
  8002804:	4ba9      	ldr	r3, [pc, #676]	; (8002aac <update_display+0xafc>)
@@ -4434,21 +4434,21 @@ void update_display(){
  8002aa8:	e090      	b.n	8002bcc <update_display+0xc1c>
  8002aaa:	bf00      	nop
  8002aac:	200004b0 	.word	0x200004b0
- 8002ab0:	08016158 	.word	0x08016158
- 8002ab4:	08015f7c 	.word	0x08015f7c
+ 8002ab0:	0801615c 	.word	0x0801615c
+ 8002ab4:	08015f80 	.word	0x08015f80
  8002ab8:	2000001d 	.word	0x2000001d
  8002abc:	200004d7 	.word	0x200004d7
- 8002ac0:	08017128 	.word	0x08017128
- 8002ac4:	08015f84 	.word	0x08015f84
- 8002ac8:	08015f88 	.word	0x08015f88
+ 8002ac0:	0801712c 	.word	0x0801712c
+ 8002ac4:	08015f88 	.word	0x08015f88
+ 8002ac8:	08015f8c 	.word	0x08015f8c
  8002acc:	200004d8 	.word	0x200004d8
- 8002ad0:	08015f8c 	.word	0x08015f8c
- 8002ad4:	08015f90 	.word	0x08015f90
- 8002ad8:	08015f94 	.word	0x08015f94
- 8002adc:	08015f98 	.word	0x08015f98
- 8002ae0:	08015f9c 	.word	0x08015f9c
- 8002ae4:	08015fa0 	.word	0x08015fa0
- 8002ae8:	08015fa4 	.word	0x08015fa4
+ 8002ad0:	08015f90 	.word	0x08015f90
+ 8002ad4:	08015f94 	.word	0x08015f94
+ 8002ad8:	08015f98 	.word	0x08015f98
+ 8002adc:	08015f9c 	.word	0x08015f9c
+ 8002ae0:	08015fa0 	.word	0x08015fa0
+ 8002ae4:	08015fa4 	.word	0x08015fa4
+ 8002ae8:	08015fa8 	.word	0x08015fa8
 		}
 		else if(active_state == RUN){
  8002aec:	4b3e      	ldr	r3, [pc, #248]	; (8002be8 <update_display+0xc38>)
@@ -4930,18 +4930,18 @@ void LCD_draw_main_screen(){
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
  8002f6a:	e113      	b.n	8003194 <LCD_draw_main_screen+0x590>
  8002f6c:	200005a0 	.word	0x200005a0
- 8002f70:	08016ef4 	.word	0x08016ef4
- 8002f74:	08015fa8 	.word	0x08015fa8
- 8002f78:	08017128 	.word	0x08017128
- 8002f7c:	08015fb4 	.word	0x08015fb4
- 8002f80:	08018038 	.word	0x08018038
- 8002f84:	08015fc0 	.word	0x08015fc0
- 8002f88:	08015fc4 	.word	0x08015fc4
- 8002f8c:	08016158 	.word	0x08016158
- 8002f90:	08015fd0 	.word	0x08015fd0
- 8002f94:	08015fe0 	.word	0x08015fe0
- 8002f98:	08015ffc 	.word	0x08015ffc
- 8002f9c:	0801601c 	.word	0x0801601c
+ 8002f70:	08016ef8 	.word	0x08016ef8
+ 8002f74:	08015fac 	.word	0x08015fac
+ 8002f78:	0801712c 	.word	0x0801712c
+ 8002f7c:	08015fb8 	.word	0x08015fb8
+ 8002f80:	0801803c 	.word	0x0801803c
+ 8002f84:	08015fc4 	.word	0x08015fc4
+ 8002f88:	08015fc8 	.word	0x08015fc8
+ 8002f8c:	0801615c 	.word	0x0801615c
+ 8002f90:	08015fd4 	.word	0x08015fd4
+ 8002f94:	08015fe4 	.word	0x08015fe4
+ 8002f98:	08016000 	.word	0x08016000
+ 8002f9c:	08016020 	.word	0x08016020
  8002fa0:	200004f8 	.word	0x200004f8
  8002fa4:	08015f48 	.word	0x08015f48
 	}
@@ -5163,15 +5163,15 @@ void LCD_draw_main_screen(){
  8003196:	3704      	adds	r7, #4
  8003198:	46bd      	mov	sp, r7
  800319a:	bd90      	pop	{r4, r7, pc}
- 800319c:	08017128 	.word	0x08017128
- 80031a0:	08015fb4 	.word	0x08015fb4
- 80031a4:	08018038 	.word	0x08018038
- 80031a8:	08015fc0 	.word	0x08015fc0
- 80031ac:	08015fc4 	.word	0x08015fc4
- 80031b0:	08016158 	.word	0x08016158
- 80031b4:	08015fd0 	.word	0x08015fd0
- 80031b8:	08015fe0 	.word	0x08015fe0
- 80031bc:	08015ffc 	.word	0x08015ffc
+ 800319c:	0801712c 	.word	0x0801712c
+ 80031a0:	08015fb8 	.word	0x08015fb8
+ 80031a4:	0801803c 	.word	0x0801803c
+ 80031a8:	08015fc4 	.word	0x08015fc4
+ 80031ac:	08015fc8 	.word	0x08015fc8
+ 80031b0:	0801615c 	.word	0x0801615c
+ 80031b4:	08015fd4 	.word	0x08015fd4
+ 80031b8:	08015fe4 	.word	0x08015fe4
+ 80031bc:	08016000 	.word	0x08016000
 
 080031c0 <show_popup>:
 
@@ -5234,7 +5234,7 @@ void show_popup(char * text){
  800323a:	46bd      	mov	sp, r7
  800323c:	bd90      	pop	{r4, r7, pc}
  800323e:	bf00      	nop
- 8003240:	08017128 	.word	0x08017128
+ 8003240:	0801712c 	.word	0x0801712c
  8003244:	200004d8 	.word	0x200004d8
  8003248:	200004d7 	.word	0x200004d7
 
@@ -5351,12 +5351,12 @@ void LCD_draw_earth_fault_popup(){
  800334a:	3704      	adds	r7, #4
  800334c:	46bd      	mov	sp, r7
  800334e:	bd90      	pop	{r4, r7, pc}
- 8003350:	08017128 	.word	0x08017128
- 8003354:	08016024 	.word	0x08016024
- 8003358:	08016030 	.word	0x08016030
- 800335c:	08016038 	.word	0x08016038
- 8003360:	08016040 	.word	0x08016040
- 8003364:	0801604c 	.word	0x0801604c
+ 8003350:	0801712c 	.word	0x0801712c
+ 8003354:	08016028 	.word	0x08016028
+ 8003358:	08016034 	.word	0x08016034
+ 800335c:	0801603c 	.word	0x0801603c
+ 8003360:	08016044 	.word	0x08016044
+ 8003364:	08016050 	.word	0x08016050
 
 08003368 <get_set_temperature>:
 
@@ -5593,10 +5593,10 @@ void handle_emergency_shutdown(){
  800354c:	2000001d 	.word	0x2000001d
  8003550:	200004c0 	.word	0x200004c0
  8003554:	200005a0 	.word	0x200005a0
- 8003558:	08016058 	.word	0x08016058
- 800355c:	08016068 	.word	0x08016068
- 8003560:	08016078 	.word	0x08016078
- 8003564:	08016088 	.word	0x08016088
+ 8003558:	0801605c 	.word	0x0801605c
+ 800355c:	0801606c 	.word	0x0801606c
+ 8003560:	0801607c 	.word	0x0801607c
+ 8003564:	0801608c 	.word	0x0801608c
 
 08003568 <handle_button_status>:
 
@@ -7121,7 +7121,7 @@ int main(void)
  8004120:	40590000 	.word	0x40590000
  8004124:	200024e0 	.word	0x200024e0
  8004128:	40240000 	.word	0x40240000
- 800412c:	080160a0 	.word	0x080160a0
+ 800412c:	080160a4 	.word	0x080160a4
  8004130:	20002448 	.word	0x20002448
  8004134:	200004c8 	.word	0x200004c8
  8004138:	20000010 	.word	0x20000010
@@ -12548,7 +12548,7 @@ LoopForever:
   ldr r1, =_edata
  8006180:	20000424 	.word	0x20000424
   ldr r2, =_sidata
- 8006184:	08018d48 	.word	0x08018d48
+ 8006184:	08018d50 	.word	0x08018d50
   ldr r2, =_sbss
  8006188:	20000428 	.word	0x20000428
   ldr r4, =_ebss
@@ -13910,7 +13910,7 @@ void LCD_init(void)
  80069c8:	080066f1 	.word	0x080066f1
  80069cc:	08006681 	.word	0x08006681
  80069d0:	0800675f 	.word	0x0800675f
- 80069d4:	080160e4 	.word	0x080160e4
+ 80069d4:	080160e8 	.word	0x080160e8
 
 080069d8 <HAL_Init>:
   *         each 1ms in the SysTick_Handler() interrupt handler.
@@ -26952,7 +26952,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
  800b2d0:	40022000 	.word	0x40022000
  800b2d4:	40021000 	.word	0x40021000
  800b2d8:	04c4b400 	.word	0x04c4b400
- 800b2dc:	080160cc 	.word	0x080160cc
+ 800b2dc:	080160d0 	.word	0x080160d0
  800b2e0:	20000220 	.word	0x20000220
  800b2e4:	20000234 	.word	0x20000234
 
@@ -27133,7 +27133,7 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  800b3e4:	4618      	mov	r0, r3
  800b3e6:	bd80      	pop	{r7, pc}
  800b3e8:	40021000 	.word	0x40021000
- 800b3ec:	080160dc 	.word	0x080160dc
+ 800b3ec:	080160e0 	.word	0x080160e0
 
 0800b3f0 <HAL_RCC_GetPCLK2Freq>:
   * @note   Each time PCLK2 changes, this function must be called to update the
@@ -27160,7 +27160,7 @@ uint32_t HAL_RCC_GetPCLK2Freq(void)
  800b410:	4618      	mov	r0, r3
  800b412:	bd80      	pop	{r7, pc}
  800b414:	40021000 	.word	0x40021000
- 800b418:	080160dc 	.word	0x080160dc
+ 800b418:	080160e0 	.word	0x080160e0
 
 0800b41c <RCC_GetSysClockFreqFromPLLSource>:
 /**
@@ -36667,7 +36667,7 @@ HAL_StatusTypeDef UART_SetConfig(UART_HandleTypeDef *huart)
  800ec24:	46bd      	mov	sp, r7
  800ec26:	e8bd 8fb0 	ldmia.w	sp!, {r4, r5, r7, r8, r9, sl, fp, pc}
  800ec2a:	bf00      	nop
- 800ec2c:	08016130 	.word	0x08016130
+ 800ec2c:	08016134 	.word	0x08016134
  800ec30:	00f42400 	.word	0x00f42400
 
 0800ec34 <UART_AdvFeatureConfig>:
@@ -38469,8 +38469,8 @@ static void UARTEx_SetNbDataToProcess(UART_HandleTypeDef *huart)
  800f66c:	f85d 7b04 	ldr.w	r7, [sp], #4
  800f670:	4770      	bx	lr
  800f672:	bf00      	nop
- 800f674:	08016148 	.word	0x08016148
- 800f678:	08016150 	.word	0x08016150
+ 800f674:	0801614c 	.word	0x0801614c
+ 800f678:	08016154 	.word	0x08016154
 
 0800f67c <ptr_8to16>:
 static UG_S16 _UG_GetCharData(UG_CHAR encoding,  const UG_U8 **p);
@@ -43000,7 +43000,7 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8011452:	46bd      	mov	sp, r7
  8011454:	bd90      	pop	{r4, r7, pc}
  8011456:	bf00      	nop
- 8011458:	080188e8 	.word	0x080188e8
+ 8011458:	080188ec 	.word	0x080188ec
  801145c:	200025f8 	.word	0x200025f8
 
 08011460 <__cvt>:
@@ -43429,11 +43429,11 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8011874:	e7ee      	b.n	8011854 <_printf_float+0x2b4>
  8011876:	bf00      	nop
  8011878:	7fefffff 	.word	0x7fefffff
- 801187c:	08018900 	.word	0x08018900
- 8011880:	08018904 	.word	0x08018904
- 8011884:	08018908 	.word	0x08018908
- 8011888:	0801890c 	.word	0x0801890c
- 801188c:	08018910 	.word	0x08018910
+ 801187c:	08018904 	.word	0x08018904
+ 8011880:	08018908 	.word	0x08018908
+ 8011884:	0801890c 	.word	0x0801890c
+ 8011888:	08018910 	.word	0x08018910
+ 801188c:	08018914 	.word	0x08018914
  8011890:	9a0a      	ldr	r2, [sp, #40]	; 0x28
  8011892:	6da3      	ldr	r3, [r4, #88]	; 0x58
  8011894:	429a      	cmp	r2, r3
@@ -43920,8 +43920,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8011d1c:	f104 0619 	add.w	r6, r4, #25
  8011d20:	e7f5      	b.n	8011d0e <_printf_i+0x226>
  8011d22:	bf00      	nop
- 8011d24:	08018912 	.word	0x08018912
- 8011d28:	08018923 	.word	0x08018923
+ 8011d24:	08018916 	.word	0x08018916
+ 8011d28:	08018927 	.word	0x08018927
 
 08011d2c <_scanf_float>:
  8011d2c:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
@@ -44315,8 +44315,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  801213e:	2500      	movs	r5, #0
  8012140:	e635      	b.n	8011dae <_scanf_float+0x82>
  8012142:	bf00      	nop
- 8012144:	08018934 	.word	0x08018934
- 8012148:	08018cc5 	.word	0x08018cc5
+ 8012144:	08018938 	.word	0x08018938
+ 8012148:	08018ccd 	.word	0x08018ccd
 
 0801214c <std>:
  801214c:	2300      	movs	r3, #0
@@ -44686,10 +44686,10 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  801247a:	4798      	blx	r3
  801247c:	3601      	adds	r6, #1
  801247e:	e7f2      	b.n	8012466 <__libc_init_array+0x1e>
- 8012480:	08018d40 	.word	0x08018d40
- 8012484:	08018d40 	.word	0x08018d40
- 8012488:	08018d40 	.word	0x08018d40
- 801248c:	08018d44 	.word	0x08018d44
+ 8012480:	08018d48 	.word	0x08018d48
+ 8012484:	08018d48 	.word	0x08018d48
+ 8012488:	08018d48 	.word	0x08018d48
+ 801248c:	08018d4c 	.word	0x08018d4c
 
 08012490 <__retarget_lock_init_recursive>:
  8012490:	4770      	bx	lr
@@ -45109,15 +45109,15 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  80128ac:	3fc68a28 	.word	0x3fc68a28
  80128b0:	509f79fb 	.word	0x509f79fb
  80128b4:	3fd34413 	.word	0x3fd34413
- 80128b8:	08018946 	.word	0x08018946
- 80128bc:	0801895d 	.word	0x0801895d
+ 80128b8:	0801894a 	.word	0x0801894a
+ 80128bc:	08018961 	.word	0x08018961
  80128c0:	7ff00000 	.word	0x7ff00000
- 80128c4:	08018942 	.word	0x08018942
- 80128c8:	08018939 	.word	0x08018939
- 80128cc:	08018911 	.word	0x08018911
+ 80128c4:	08018946 	.word	0x08018946
+ 80128c8:	0801893d 	.word	0x0801893d
+ 80128cc:	08018915 	.word	0x08018915
  80128d0:	3ff80000 	.word	0x3ff80000
- 80128d4:	08018a48 	.word	0x08018a48
- 80128d8:	080189b5 	.word	0x080189b5
+ 80128d4:	08018a50 	.word	0x08018a50
+ 80128d8:	080189b9 	.word	0x080189b9
  80128dc:	2301      	movs	r3, #1
  80128de:	9309      	str	r3, [sp, #36]	; 0x24
  80128e0:	e7d7      	b.n	8012892 <_dtoa_r+0x2c2>
@@ -45417,8 +45417,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8012c06:	4689      	mov	r9, r1
  8012c08:	e7bd      	b.n	8012b86 <_dtoa_r+0x5b6>
  8012c0a:	bf00      	nop
- 8012c0c:	08018a48 	.word	0x08018a48
- 8012c10:	08018a20 	.word	0x08018a20
+ 8012c0c:	08018a50 	.word	0x08018a50
+ 8012c10:	08018a28 	.word	0x08018a28
  8012c14:	3ff00000 	.word	0x3ff00000
  8012c18:	40240000 	.word	0x40240000
  8012c1c:	401c0000 	.word	0x401c0000
@@ -46014,9 +46014,9 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  80131a0:	f73f aeb1 	bgt.w	8012f06 <_dtoa_r+0x936>
  80131a4:	e7b0      	b.n	8013108 <_dtoa_r+0xb38>
  80131a6:	bf00      	nop
- 80131a8:	080189b5 	.word	0x080189b5
- 80131ac:	08018910 	.word	0x08018910
- 80131b0:	08018939 	.word	0x08018939
+ 80131a8:	080189b9 	.word	0x080189b9
+ 80131ac:	08018914 	.word	0x08018914
+ 80131b0:	0801893d 	.word	0x0801893d
 
 080131b4 <_free_r>:
  80131b4:	b537      	push	{r0, r1, r2, r4, r5, lr}
@@ -46300,8 +46300,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8013424:	e9c0 3303 	strd	r3, r3, [r0, #12]
  8013428:	e7f7      	b.n	801341a <_Balloc+0x66>
  801342a:	bf00      	nop
- 801342c:	08018946 	.word	0x08018946
- 8013430:	080189c6 	.word	0x080189c6
+ 801342c:	0801894a 	.word	0x0801894a
+ 8013430:	080189ca 	.word	0x080189ca
 
 08013434 <_Bfree>:
  8013434:	b570      	push	{r4, r5, r6, lr}
@@ -46329,8 +46329,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8013468:	6021      	str	r1, [r4, #0]
  801346a:	f843 4022 	str.w	r4, [r3, r2, lsl #2]
  801346e:	bd70      	pop	{r4, r5, r6, pc}
- 8013470:	08018946 	.word	0x08018946
- 8013474:	080189c6 	.word	0x080189c6
+ 8013470:	0801894a 	.word	0x0801894a
+ 8013474:	080189ca 	.word	0x080189ca
 
 08013478 <__multadd>:
  8013478:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
@@ -46384,8 +46384,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  80134f4:	6125      	str	r5, [r4, #16]
  80134f6:	4620      	mov	r0, r4
  80134f8:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
- 80134fc:	080189b5 	.word	0x080189b5
- 8013500:	080189c6 	.word	0x080189c6
+ 80134fc:	080189b9 	.word	0x080189b9
+ 8013500:	080189ca 	.word	0x080189ca
 
 08013504 <__s2b>:
  8013504:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
@@ -46446,8 +46446,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8013588:	f7ff ff76 	bl	8013478 <__multadd>
  801358c:	e7ee      	b.n	801356c <__s2b+0x68>
  801358e:	bf00      	nop
- 8013590:	080189b5 	.word	0x080189b5
- 8013594:	080189c6 	.word	0x080189c6
+ 8013590:	080189b9 	.word	0x080189b9
+ 8013594:	080189ca 	.word	0x080189ca
 
 08013598 <__hi0bits>:
  8013598:	0c03      	lsrs	r3, r0, #16
@@ -46540,8 +46540,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8013652:	6103      	str	r3, [r0, #16]
  8013654:	bd10      	pop	{r4, pc}
  8013656:	bf00      	nop
- 8013658:	080189b5 	.word	0x080189b5
- 801365c:	080189c6 	.word	0x080189c6
+ 8013658:	080189b9 	.word	0x080189b9
+ 801365c:	080189ca 	.word	0x080189ca
 
 08013660 <__multiply>:
  8013660:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
@@ -46660,8 +46660,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  80137a6:	e799      	b.n	80136dc <__multiply+0x7c>
  80137a8:	3e01      	subs	r6, #1
  80137aa:	e79b      	b.n	80136e4 <__multiply+0x84>
- 80137ac:	080189b5 	.word	0x080189b5
- 80137b0:	080189c6 	.word	0x080189c6
+ 80137ac:	080189b9 	.word	0x080189b9
+ 80137b0:	080189ca 	.word	0x080189ca
 
 080137b4 <__pow5mult>:
  80137b4:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
@@ -46729,9 +46729,9 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8013854:	4638      	mov	r0, r7
  8013856:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
  801385a:	bf00      	nop
- 801385c:	08018b10 	.word	0x08018b10
- 8013860:	08018946 	.word	0x08018946
- 8013864:	080189c6 	.word	0x080189c6
+ 801385c:	08018b18 	.word	0x08018b18
+ 8013860:	0801894a 	.word	0x0801894a
+ 8013864:	080189ca 	.word	0x080189ca
 
 08013868 <__lshift>:
  8013868:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
@@ -46810,8 +46810,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8013932:	d8f9      	bhi.n	8013928 <__lshift+0xc0>
  8013934:	e7ea      	b.n	801390c <__lshift+0xa4>
  8013936:	bf00      	nop
- 8013938:	080189b5 	.word	0x080189b5
- 801393c:	080189c6 	.word	0x080189c6
+ 8013938:	080189b9 	.word	0x080189b9
+ 801393c:	080189ca 	.word	0x080189ca
 
 08013940 <__mcmp>:
  8013940:	b530      	push	{r4, r5, lr}
@@ -46937,8 +46937,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8013a7e:	3f01      	subs	r7, #1
  8013a80:	e7ea      	b.n	8013a58 <__mdiff+0xe0>
  8013a82:	bf00      	nop
- 8013a84:	080189b5 	.word	0x080189b5
- 8013a88:	080189c6 	.word	0x080189c6
+ 8013a84:	080189b9 	.word	0x080189b9
+ 8013a88:	080189ca 	.word	0x080189ca
 
 08013a8c <__ulp>:
  8013a8c:	b082      	sub	sp, #8
@@ -47090,8 +47090,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8013c10:	ebc0 1042 	rsb	r0, r0, r2, lsl #5
  8013c14:	e7e2      	b.n	8013bdc <__d2b+0x70>
  8013c16:	bf00      	nop
- 8013c18:	080189b5 	.word	0x080189b5
- 8013c1c:	080189c6 	.word	0x080189c6
+ 8013c18:	080189b9 	.word	0x080189b9
+ 8013c1c:	080189ca 	.word	0x080189ca
 
 08013c20 <__ratio>:
  8013c20:	e92d 4ff7 	stmdb	sp!, {r0, r1, r2, r4, r5, r6, r7, r8, r9, sl, fp, lr}
@@ -47487,8 +47487,8 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8013fd0:	e788      	b.n	8013ee4 <_strtod_l+0x19c>
  8013fd2:	f04f 0c01 	mov.w	ip, #1
  8013fd6:	e7f8      	b.n	8013fca <_strtod_l+0x282>
- 8013fd8:	08018b20 	.word	0x08018b20
- 8013fdc:	08018b1c 	.word	0x08018b1c
+ 8013fd8:	08018b28 	.word	0x08018b28
+ 8013fdc:	08018b24 	.word	0x08018b24
  8013fe0:	7ff00000 	.word	0x7ff00000
  8013fe4:	9a15      	ldr	r2, [sp, #84]	; 0x54
  8013fe6:	1c51      	adds	r1, r2, #1
@@ -47780,13 +47780,13 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  80142b8:	f04f 0900 	mov.w	r9, #0
  80142bc:	6023      	str	r3, [r4, #0]
  80142be:	e78d      	b.n	80141dc <_strtod_l+0x494>
- 80142c0:	0801890d 	.word	0x0801890d
- 80142c4:	08018b34 	.word	0x08018b34
- 80142c8:	08018905 	.word	0x08018905
- 80142cc:	0801893c 	.word	0x0801893c
- 80142d0:	08018cc5 	.word	0x08018cc5
- 80142d4:	08018a48 	.word	0x08018a48
- 80142d8:	08018a20 	.word	0x08018a20
+ 80142c0:	08018911 	.word	0x08018911
+ 80142c4:	08018b3c 	.word	0x08018b3c
+ 80142c8:	08018909 	.word	0x08018909
+ 80142cc:	08018940 	.word	0x08018940
+ 80142d0:	08018ccd 	.word	0x08018ccd
+ 80142d4:	08018a50 	.word	0x08018a50
+ 80142d8:	08018a28 	.word	0x08018a28
  80142dc:	7ff00000 	.word	0x7ff00000
  80142e0:	7ca00000 	.word	0x7ca00000
  80142e4:	7fefffff 	.word	0x7fefffff
@@ -48151,7 +48151,7 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8014688:	39500000 	.word	0x39500000
  801468c:	000fffff 	.word	0x000fffff
  8014690:	7fefffff 	.word	0x7fefffff
- 8014694:	08018b48 	.word	0x08018b48
+ 8014694:	08018b50 	.word	0x08018b50
  8014698:	4659      	mov	r1, fp
  801469a:	4628      	mov	r0, r5
  801469c:	f7ff fac0 	bl	8013c20 <__ratio>
@@ -48494,7 +48494,7 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8014a2e:	230a      	movs	r3, #10
  8014a30:	e7ab      	b.n	801498a <_strtol_l.constprop.0+0x56>
  8014a32:	bf00      	nop
- 8014a34:	08018b71 	.word	0x08018b71
+ 8014a34:	08018b79 	.word	0x08018b79
 
 08014a38 <_strtol_r>:
  8014a38:	f7ff bf7c 	b.w	8014934 <_strtol_l.constprop.0>
@@ -48775,11 +48775,11 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8014cd0:	4638      	mov	r0, r7
  8014cd2:	f7fc ff09 	bl	8011ae8 <_printf_i>
  8014cd6:	e7eb      	b.n	8014cb0 <_svfiprintf_r+0x1c0>
- 8014cd8:	08018c71 	.word	0x08018c71
- 8014cdc:	08018c7b 	.word	0x08018c7b
+ 8014cd8:	08018c79 	.word	0x08018c79
+ 8014cdc:	08018c83 	.word	0x08018c83
  8014ce0:	080115a1 	.word	0x080115a1
  8014ce4:	08014a3d 	.word	0x08014a3d
- 8014ce8:	08018c77 	.word	0x08018c77
+ 8014ce8:	08018c7f 	.word	0x08018c7f
 
 08014cec <__sflush_r>:
  8014cec:	898a      	ldrh	r2, [r1, #12]
@@ -49027,9 +49027,9 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8014ef8:	e7f3      	b.n	8014ee2 <__assert_func+0x12>
  8014efa:	bf00      	nop
  8014efc:	200002b4 	.word	0x200002b4
- 8014f00:	08018c8a 	.word	0x08018c8a
- 8014f04:	08018c97 	.word	0x08018c97
- 8014f08:	08018cc5 	.word	0x08018cc5
+ 8014f00:	08018c92 	.word	0x08018c92
+ 8014f04:	08018c9f 	.word	0x08018c9f
+ 8014f08:	08018ccd 	.word	0x08018ccd
 
 08014f0c <_calloc_r>:
  8014f0c:	b537      	push	{r0, r1, r2, r4, r5, lr}
@@ -49428,9 +49428,9 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  80152da:	2b00      	cmp	r3, #0
  80152dc:	d1dc      	bne.n	8015298 <__gethex+0x290>
  80152de:	e7ed      	b.n	80152bc <__gethex+0x2b4>
- 80152e0:	08018b1c 	.word	0x08018b1c
- 80152e4:	080189b5 	.word	0x080189b5
- 80152e8:	08018cc6 	.word	0x08018cc6
+ 80152e0:	08018b24 	.word	0x08018b24
+ 80152e4:	080189b9 	.word	0x080189b9
+ 80152e8:	08018cce 	.word	0x08018cce
  80152ec:	f106 38ff 	add.w	r8, r6, #4294967295
  80152f0:	f1bb 0f00 	cmp.w	fp, #0
  80152f4:	d133      	bne.n	801535e <__gethex+0x356>
@@ -49570,7 +49570,7 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  801545a:	dbe6      	blt.n	801542a <__gethex+0x422>
  801545c:	e7ee      	b.n	801543c <__gethex+0x434>
  801545e:	bf00      	nop
- 8015460:	080189b5 	.word	0x080189b5
+ 8015460:	080189b9 	.word	0x080189b9
 
 08015464 <L_shift>:
  8015464:	f1c2 0208 	rsb	r2, r2, #8
@@ -50108,11 +50108,11 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8015930:	4630      	mov	r0, r6
  8015932:	f7fc f8d9 	bl	8011ae8 <_printf_i>
  8015936:	e7e4      	b.n	8015902 <_vfiprintf_r+0x1ea>
- 8015938:	08018c71 	.word	0x08018c71
- 801593c:	08018c7b 	.word	0x08018c7b
+ 8015938:	08018c79 	.word	0x08018c79
+ 801593c:	08018c83 	.word	0x08018c83
  8015940:	080115a1 	.word	0x080115a1
  8015944:	080156f5 	.word	0x080156f5
- 8015948:	08018c77 	.word	0x08018c77
+ 8015948:	08018c7f 	.word	0x08018c7f
 
 0801594c <__swbuf_r>:
  801594c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
@@ -50714,7 +50714,7 @@ static void _UG_WindowUpdate( UG_WINDOW* wnd )
  8015ef6:	bf00      	nop
  8015ef8:	7fefffff 	.word	0x7fefffff
  8015efc:	7ff00000 	.word	0x7ff00000
- 8015f00:	08018d28 	.word	0x08018d28
+ 8015f00:	08018d30 	.word	0x08018d30
  8015f04:	fffffbed 	.word	0xfffffbed
  8015f08:	fffffc02 	.word	0xfffffc02
  8015f0c:	fffffbe2 	.word	0xfffffbe2
