@@ -58,7 +58,7 @@ typedef UG_U8                        UG_COLOR;
 /* Internal helpers */
 #define UG_GetFontWidth(f)                            *(f+1)
 #define UG_GetFontHeight(f)                           *(f+2)
-#define swap(a, b)                                    { UG_U16 t=a; a=b; b=t; }
+#define swap(a, b)                                    do { UG_U16 t=a; a=b; b=t; } while(0)
 
 /* Sizing helpers */
 #define UGUI_POS(xs, ys, w, h)                        xs, ys, xs+w, ys+h
