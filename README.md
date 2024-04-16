@@ -13,7 +13,7 @@ Two different versions are designed around the same PCB and software - one solde
 ![coverphoto](./photos/AxxSolder_cover.jpg)
 
 # Questions and support
-Please use [Discord](https://discord.gg/xvb4fTaJ) for build related and general questions.
+Please use [Discord](https://discord.gg/dRD2ZfmyHY) for build related and general questions.
 
 # Table of Contents
 - [AxxSolder Overview](#axxsolder-overview)
