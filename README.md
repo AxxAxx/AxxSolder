@@ -86,12 +86,14 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 (This shows AxxSolder 2 and not the latest AxxSolder 3)  
 Click on the gif to get to YouTube and see the demo in full resolution.  
 [![AxxSolder DEMO](./photos/AxxSolder_DEMO.gif)](https://www.youtube.com/watch?v=-3MtJyTwZFQ)
+
 # AxxSolder Station
-My persoonal prefered setup is to pair AxxSodler with the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html). This makes a very nice, compact and powerful soldering station. The JBC ADS stand is paired with a custom 3D printed enclosure for AxxSolder and the PCB is mounted with two maunting brackets. All 3D printed parts are availible under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). 
+The preferred setup is to pair AxxSolder with the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html). This makes a very nice, compact and powerful soldering station. The JBC ADS stand is paired with a custom 3D printed enclosure for AxxSolder and the PCB is mounted with two mounting brackets. All 3D printed parts are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). 
 ![AxxSolder_station](./photos/AxxSolder_station.jpg)  
-The JBC ADS stand comes with a silicone cable fitted with two Binder 99-0621-00-07 connectors. In order to use this cable a Binder 99-0624-00-07 is mounted into the AxxSodler enclosure and wired as the image below:  
+The JBC ADS stand comes with a silicone cable fitted with two Binder 99-0621-00-07 connectors. In order to use this cable a Binder 99-0624-00-07 is mounted into the AxxSolder enclosure and wired as the image below:  
 ![AxxSolder_station](./photos/Station_connections.jpg)  
-By default the stand seperates the two signals comming from the "tool rest position" and the "tip change position" and does not have two separate connections for tip sensing 1 and 2 (as wee need). Therefore a moification is done to the PCB inside the JBC ADS stand in order to combine the "tool rest position" and the "tip change position" sense into one connection and seperate the two tip sense connections. This is shown in the image above.
+By default, the stand separates the two signals coming from the "tool rest position" and the "tip change position" and does NOT have two separate connections for tip sensing 1 and 2 (as is needed). Therefore, a modification is done to the PCB inside the JBC ADS stand in order to combine the "tool rest position" and the "tip change position" sense into one connection and separate the two tip sense connections. This is shown in the image above.
+
 # AxxSolder Portable
 It is often nice to have a compact and portable soldering iron controller for when you are away from your comfortable desk. A neat powerful package with the same capabilities as your main soldering station. This is why AxxSolder Portable was designed. The only difference between AxxSolder station and Portable is the enclosure. As AxxSolder accepts an input of 9-24 V it is compatible with a range of battery options. The author usually use a battery pack consisting of 12 Samsung INR18650 35E in a 3S4P configuration which works very well. The portable version has an aluminium tab on the enclosure connected to the same input on the PCB as the "handle rest" on the station version. This allows the user to rest the iron onto the aluminium tab and automatically enter sleep mode.   
 ![AxxSolder_portable](./photos/AxxSolder_portable.jpg)
