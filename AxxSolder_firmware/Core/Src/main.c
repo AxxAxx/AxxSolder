@@ -947,12 +947,13 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	/* take thermocouple measurement every 25 ms */
 	if (htim == &htim6){
-		heater_off();
 		thermocouple_measurement_done = 0;
+		heater_off();
 		__HAL_TIM_ENABLE(&htim7);
 	}
 
 	if (htim == &htim7){
+		HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_SET);
 		HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
 		}
 
@@ -987,11 +988,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 /* ADC conversion completed Callbacks */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	if ((hadc->Instance == ADC1) && (thermocouple_measurement_done == 0)){
+		HAL_ADC_Stop_DMA(&hadc1);
+		HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_RESET);
 		get_thermocouple_temperature();
 		heater_on();
 		/* Compute PID */
 		PID_Compute(&TPID);
-		HAL_ADC_Stop_DMA(&hadc1);
 		thermocouple_measurement_done = 1;
 	}
 	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
@@ -1147,6 +1149,7 @@ int main(void)
   		beep();
   		HAL_Delay(100);
   		beep();
+
 
   		while (1){
   			if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
@@ -1580,7 +1583,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 20-1;
+  htim1.Init.Prescaler = 17-1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 500;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
