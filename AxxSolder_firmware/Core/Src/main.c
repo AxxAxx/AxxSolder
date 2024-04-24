@@ -1175,8 +1175,13 @@ int main(void)
   					break;
   				}
   				case STANDBY: {
-  					PID_setpoint = flash_values.standby_temp;
-  					break;
+  				  if(flash_values.standby_temp > sensor_values.set_temperature){
+  				    PID_setpoint = sensor_values.set_temperature;
+  				  }
+  				  else{
+  				    PID_setpoint = flash_values.standby_temp;
+  				  }
+  				  break;
   				}
   				case SLEEP:
   				case EMERGENCY_SLEEP:
