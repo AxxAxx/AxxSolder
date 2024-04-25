@@ -213,16 +213,16 @@ char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Temp Offset    ",
 							"Standby Temp   ",
 							"Standby Time   ",
-							"EM Time          ",
+							"Sleep Time       ",
 							"Buzzer Enable      ",
 							"Preset Temp 1      ",
 							"Preset Temp 2      ",
-							"GPIO4 ON at run  ",
-							"Screen rotation    ",
-							"Limit Power        ",
-							"-Load Default-     ",
-							"-Exit and Save-   ",
-							"-Exit no Save-    "};
+							"GPIO4 ON at run    ",
+							"Screen rotation      ",
+							"Limit Power          ",
+							"-Load Default-       ",
+							"-Save and Reboot- ",
+							"-Exit no Save-        "};
 
 
 /* PID data */
@@ -459,6 +459,7 @@ void settings_menue(){
 			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-2)){
 				menu_active = 0;
 				FlashWrite(&flash_values);
+				HAL_NVIC_SystemReset();
 			}
 			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-3)){
 				flash_values = default_flash_values;
@@ -947,12 +948,13 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	/* take thermocouple measurement every 25 ms */
 	if (htim == &htim6){
-		heater_off();
 		thermocouple_measurement_done = 0;
+		heater_off();
 		__HAL_TIM_ENABLE(&htim7);
 	}
 
 	if (htim == &htim7){
+		HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_SET);
 		HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
 		}
 
@@ -987,11 +989,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 /* ADC conversion completed Callbacks */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	if ((hadc->Instance == ADC1) && (thermocouple_measurement_done == 0)){
+		HAL_ADC_Stop_DMA(&hadc1);
+		HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_RESET);
 		get_thermocouple_temperature();
 		heater_on();
 		/* Compute PID */
 		PID_Compute(&TPID);
-		HAL_ADC_Stop_DMA(&hadc1);
 		thermocouple_measurement_done = 1;
 	}
 	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
@@ -1148,6 +1151,7 @@ int main(void)
   		HAL_Delay(100);
   		beep();
 
+
   		while (1){
   			if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
   				get_stand_status();
@@ -1172,8 +1176,13 @@ int main(void)
   					break;
   				}
   				case STANDBY: {
-  					PID_setpoint = flash_values.standby_temp;
-  					break;
+  				  if(flash_values.standby_temp > sensor_values.set_temperature){
+  				    PID_setpoint = sensor_values.set_temperature;
+  				  }
+  				  else{
+  				    PID_setpoint = flash_values.standby_temp;
+  				  }
+  				  break;
   				}
   				case SLEEP:
   				case EMERGENCY_SLEEP:
@@ -1580,7 +1589,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 20-1;
+  htim1.Init.Prescaler = 17-1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 500;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
