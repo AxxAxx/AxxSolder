@@ -221,7 +221,7 @@ char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Screen rotation    ",
 							"Limit Power        ",
 							"-Load Default-     ",
-							"-Exit and Save-   ",
+							"-Save and Reboot- ",
 							"-Exit no Save-    "};
 
 
@@ -459,6 +459,7 @@ void settings_menue(){
 			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-2)){
 				menu_active = 0;
 				FlashWrite(&flash_values);
+				HAL_NVIC_SystemReset();
 			}
 			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-3)){
 				flash_values = default_flash_values;
