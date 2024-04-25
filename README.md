@@ -71,6 +71,7 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 # Software Version History and Hardware Compatibility
 | Version | Date  | Hardware Compatibility |
 |---------|------|----------------------|
+|[v3.0.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Apr 25, 2024|V3.*|
 |[v3.0.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Mar 26, 2024|V3.*|
 |[v3.0.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.0)|Mar 02, 2024|V3.*|
 |[v2.2.4](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.2)|Dec 11, 2023|V2.*|
@@ -150,7 +151,7 @@ To access the user settings the user holds down the encoder button at start-up. 
 |Temp Offset|Temperature offset applied to measured temperature|deg C|0|
 |Standby Temp|Temperature to go to after handle is set in stand|deg C|150|
 |Standby Time|Time for which standby temperature is held before cooling down|minutes|10|
-|EM Time|Time that the iron can be ON before cooling down (safety feature)|minutes|30|
+|Sleep Time|Time that the iron can be ON before cooling down (safety feature)|minutes|30|
 |Buzzer Enable|Enable or Disable the buzzer|ON/OFF|ON|
 |Preset Temp 1|Preset temperature for button 1|deg C|330|
 |Preset Temp 2|Preset temperature for button 2|deg C|430|
@@ -158,7 +159,7 @@ To access the user settings the user holds down the encoder button at start-up. 
 |Screen rotation|Rotate the screen|"0"=-180 deg, "1"=-90 deg, "2"=0 deg, "3"=90 deg|2|
 |Limit Power|Limit the output power|"0"=no user limit, "1"=10 W, "2"= 20 W, "3"= 30 W ...|0|
 |-Load Default-|Load default parameters|N/A|N/A|
-|-Exit and Save-|Exit and Save|N/A|N/A|
+|-Save and Reboote-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
 
 # PID control
