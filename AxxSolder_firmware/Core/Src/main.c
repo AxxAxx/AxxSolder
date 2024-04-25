@@ -213,16 +213,16 @@ char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Temp Offset    ",
 							"Standby Temp   ",
 							"Standby Time   ",
-							"EM Time          ",
+							"Sleep Time       ",
 							"Buzzer Enable      ",
 							"Preset Temp 1      ",
 							"Preset Temp 2      ",
-							"GPIO4 ON at run  ",
-							"Screen rotation    ",
-							"Limit Power        ",
-							"-Load Default-     ",
+							"GPIO4 ON at run    ",
+							"Screen rotation      ",
+							"Limit Power          ",
+							"-Load Default-       ",
 							"-Save and Reboot- ",
-							"-Exit no Save-    "};
+							"-Exit no Save-        "};
 
 
 /* PID data */
