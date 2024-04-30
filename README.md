@@ -159,7 +159,7 @@ To access the user settings the user holds down the encoder button at start-up. 
 |Screen rotation|Rotate the screen|"0"=-180 deg, "1"=-90 deg, "2"=0 deg, "3"=90 deg|2|
 |Limit Power|Limit the output power|"0"=no user limit, "1"=10 W, "2"= 20 W, "3"= 30 W ...|0|
 |-Load Default-|Load default parameters|N/A|N/A|
-|-Save and Reboote-|Exit and Save|N/A|N/A|
+|-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
 
 # PID control
