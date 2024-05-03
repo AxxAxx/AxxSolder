@@ -2,10 +2,9 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAxxAxx%2FAxxSolder&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
-Interested in purchasing an AxxSolder 3.0?  
-I have created a [Tindie page](https://www.tindie.com/products/axxaxx/axxsolder-30/) for selling assembled and tested boards.
-
-![5assembledAxxSolder3](./photos/PCB_image_x5.jpg)
+Interested in purchasing an AxxSolder 3.0? On [Tindie](https://www.tindie.com/products/axxaxx/axxsolder-30/) you can purchase assembled and tested AxxSodler 3.0  
+<a href="https://www.tindie.com/stores/axxaxx/?ref=offsite_badges&utm_source=sellers_AxxAxx&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
+![5assembledAxxSolder3](./photos/AxxSolder_Tindie_Image)
 
 # AxxSolder Overview
 AxxSolder is a STM32 based soldering iron controller for JBC C115, C210 and C245 cartridges. 
