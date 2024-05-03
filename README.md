@@ -3,7 +3,7 @@
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
 Interested in purchasing an AxxSolder 3.0?  
-I have created a [Tindie page](https://www.tindie.com/products/axxaxx/axxsolder-30/) for selling assembled and tested boards. At the moment there is no AxxxSolder in stock but you can sign up to the Waitlist to get a notification when they are availible. I expect around mid May.
+I have created a [Tindie page](https://www.tindie.com/products/axxaxx/axxsolder-30/) for selling assembled and tested boards.
 
 ![5assembledAxxSolder3](./photos/PCB_image_x5.jpg)
 
