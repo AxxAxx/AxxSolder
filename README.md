@@ -4,7 +4,6 @@
 
 Interested in purchasing an AxxSolder 3.0? On [Tindie](https://www.tindie.com/products/axxaxx/axxsolder-30/) you can purchase assembled and tested AxxSodler 3.0  
 <a href="https://www.tindie.com/stores/axxaxx/?ref=offsite_badges&utm_source=sellers_AxxAxx&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
-![AxxSolder3](./photos/AxxSolder_Tindie_Image.jpg)
 
 # AxxSolder Overview
 AxxSolder is a STM32 based soldering iron controller for JBC C115, C210 and C245 cartridges. 
