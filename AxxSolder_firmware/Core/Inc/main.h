@@ -44,6 +44,8 @@ typedef struct{
 	double GPIO4_ON_at_run;
 	double screen_rotation;
 	double power_limit;
+	double current_measurement;
+
 
 }Flash_values;
 /* USER CODE END Includes */

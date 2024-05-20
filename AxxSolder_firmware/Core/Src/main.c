@@ -126,6 +126,8 @@ uint16_t ADC1_BUF[ADC1_BUF_LEN];
 uint16_t mcu_temperature_raw = 0;
 uint16_t current_raw = 0;
 
+double TC_temp = 0;
+
 /* Max allowed tip temperature */
 #define EMERGENCY_SHUTDOWN_TEMPERATURE 490
 
@@ -205,10 +207,11 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.preset_temp_2 = 430,
 											.GPIO4_ON_at_run = 0,
 											.screen_rotation = 2,
-											.power_limit = 0};
+											.power_limit = 0,
+											.current_measurement = 1};
 
 /* List of names for settings menue */
-#define menu_length 14
+#define menu_length 15
 char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Temp Offset    ",
 							"Standby Temp   ",
@@ -219,7 +222,8 @@ char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Preset Temp 2      ",
 							"GPIO4 ON at run    ",
 							"Screen rotation      ",
-							"Limit Power          ",
+							"Limit Power        ",
+							"I measurement       ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -354,7 +358,7 @@ void get_heater_current(){
 }
 
 void get_thermocouple_temperature(){
-	double TC_temp = Moving_Average_Compute(get_mean_ADC_reading_indexed(1), &thermocouple_temperature_filter_struct); /* Moving average filter */
+	TC_temp = Moving_Average_Compute(get_mean_ADC_reading_indexed(1), &thermocouple_temperature_filter_struct); /* Moving average filter */
 
 	if(handle == T210){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_T210 + TC_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
@@ -426,7 +430,7 @@ void settings_menue(){
 				else{
 					((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
-				if ((menu_cursor_position == 5) || (menu_cursor_position == 8)){
+				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11)){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
 				if (menu_cursor_position == 9){
@@ -534,7 +538,7 @@ void update_display(){
 		}
 		LCD_PutStr(14, 75, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		if(sensor_values.heater_current < 1){ //NT115 at 9V draws 2.3
+		if((sensor_values.heater_current < 1) || (TC_temp > 4096-10)) { //NT115 at 9V draws 2.3
 			LCD_PutStr(10, 165, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
@@ -605,7 +609,7 @@ void update_display(){
 		}
 		LCD_PutStr(14, 30, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		if(sensor_values.heater_current < 30){ //NT115 at 9V draws 81
+		if((sensor_values.heater_current < 1) || (TC_temp > 4096-10)) { //NT115 at 9V draws 2.3
 			LCD_PutStr(10, 120, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
@@ -1231,7 +1235,7 @@ int main(void)
   			}
 
  			/* Detect if a tip is present by sending a short voltage pulse and sense current */
-			#ifdef DETECT_TIP_BY_CURRENT
+			if (flash_values.current_measurement == 1){
   				if(HAL_GetTick() - previous_measure_current_update >= interval_measure_current){
   					if(thermocouple_measurement_done == 1){ //Only take current measurement if thermocouple measurement is not ongoing
 						current_measurement_done = 0;
@@ -1240,7 +1244,10 @@ int main(void)
 	  					previous_measure_current_update = HAL_GetTick();
   					}
   				}
-			#endif
+			}
+			else{
+				sensor_values.heater_current = 1; // If the current is not measured, apply a dummy value to heater_current
+			}
 
   			/* Update display */
   			if(HAL_GetTick() - previous_millis_display >= interval_display){
