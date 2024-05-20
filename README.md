@@ -155,7 +155,8 @@ To access the user settings the user holds down the encoder button at start-up. 
 |Preset Temp 2|Preset temperature for button 2|deg C|430|
 |GPIO4 ON at run|Enable 3.3V output on GPIO4 when the iron is in run mode|ON/OFF|OFF|
 |Screen rotation|Rotate the screen|"0"=-180 deg, "1"=-90 deg, "2"=0 deg, "3"=90 deg|2|
-|Limit Power|Limit the output power|"0"=no user limit, "1"=10 W, "2"= 20 W, "3"= 30 W ...|0|
+|Limit Power|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
+|I measurement|Measure the heater current|ON/OFF|ON
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
