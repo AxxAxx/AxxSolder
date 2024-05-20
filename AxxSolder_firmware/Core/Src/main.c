@@ -427,7 +427,7 @@ void settings_menue(){
 					((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
 				if ((menu_cursor_position == 5) || (menu_cursor_position == 8)){
-					((double*)&flash_values)[menu_cursor_position] = round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2));
+					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
 				if(menu_cursor_position != 1){
 					((double*)&flash_values)[menu_cursor_position] = fabs(((double*)&flash_values)[menu_cursor_position]);
