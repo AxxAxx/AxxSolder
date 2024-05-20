@@ -392,7 +392,7 @@ void settings_menue(){
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
 		if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
-			LCD_PutStr(0, 300, "Version:", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(6, 300, "Version:", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
 			LCD_PutStr(150, 300, version, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
 		}
 		else{
