@@ -420,7 +420,12 @@ void settings_menue(){
 				menu_cursor_position = (TIM2->CNT - 1000) / 2;
 			}
 			if (menue_level == 1){
-				((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
+				if (menu_cursor_position == 10){
+					((double*)&flash_values)[menu_cursor_position] = (float)old_value + round(((float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position)) * 5;
+				}
+				else{
+					((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
+				}
 				if ((menu_cursor_position == 5) || (menu_cursor_position == 8)){
 					((double*)&flash_values)[menu_cursor_position] = round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2));
 				}
@@ -912,7 +917,7 @@ void get_handle_type(){
 
 	/* If a custom power limit is specified in user flash, use this limit */
 	if(flash_values.power_limit != 0){
-		sensor_values.max_power_watt = flash_values.power_limit * 10;
+		sensor_values.max_power_watt = flash_values.power_limit;
 	}
 
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
