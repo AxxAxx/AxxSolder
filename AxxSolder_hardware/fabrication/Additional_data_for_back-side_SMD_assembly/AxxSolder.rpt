@@ -1,12 +1,12 @@
-## Footprint report - date Thu Mar 28 07:03:50 2024
+## Footprint report - date Mon May 20 18:07:55 2024
 ## Created by KiCad version 7.0.10
 ## Unit = mm, Angle = deg.
 
 $BeginDESCRIPTION
 
 $BOARD
-upper_left_corner 159.446429 66.810000
-lower_right_corner 201.625000 150.977000
+upper_left_corner 159.446429 63.001750
+lower_right_corner 208.334525 150.977000
 $EndBOARD
 
 $MODULE C1
@@ -2120,7 +2120,7 @@ $EndMODULE  J4
 $MODULE J5
 footprint footprints:TSW-102-XX-YY-S
 attribut none
-position 162.250000 72.225000  orientation -90.00
+position 162.250000 72.925000  orientation -90.00
 layer back
 $PAD "1"
 Shape Circle Layer both
@@ -2139,7 +2139,7 @@ $EndMODULE  J5
 $MODULE J6
 footprint footprints:TSW-102-XX-YY-S
 attribut none
-position 198.750000 72.225000  orientation -90.00
+position 198.750000 72.925000  orientation -90.00
 layer back
 $PAD "1"
 Shape Circle Layer both
