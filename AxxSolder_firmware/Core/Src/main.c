@@ -486,7 +486,17 @@ void settings_menue(){
 				memset(&str, '\0', sizeof(str));
 				sprintf(str, "%.0f", (((double*)&flash_values)[i]));
 
-				if((((double*)&flash_values)[i]) < 9.5){
+				if((((double*)&flash_values)[i]) < -9.5){
+					str[3] = 32;
+				}
+
+				else if((((double*)&flash_values)[i]) < 0){
+					str[2] = 32;
+					str[3] = 32;
+					str[4] = 32;
+				}
+
+				else if((((double*)&flash_values)[i]) < 9.5){
 					str[1] = 32;
 					str[2] = 32;
 					str[3] = 32;
@@ -496,6 +506,7 @@ void settings_menue(){
 					str[2] = 32;
 					str[3] = 32;
 				}
+
 				if(i < menu_length-3){
 					if((i == menu_cursor_position) && (menue_level == 1)){
 						LCD_PutStr(200, 45+(i-menue_start)*25, str, FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
