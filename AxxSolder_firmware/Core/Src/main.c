@@ -429,6 +429,9 @@ void settings_menue(){
 				if ((menu_cursor_position == 5) || (menu_cursor_position == 8)){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
+				if (menu_cursor_position == 9){
+					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 4)), 4);
+				}
 				if(menu_cursor_position != 1){
 					((double*)&flash_values)[menu_cursor_position] = fabs(((double*)&flash_values)[menu_cursor_position]);
 				}
