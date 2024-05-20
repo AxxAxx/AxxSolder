@@ -1,4 +1,4 @@
-### Footprint positions - created on Thu Mar 28 07:10:42 2024 ###
+### Footprint positions - created on Mon May 20 18:08:17 2024 ###
 ### Printed by KiCad version 7.0.10
 ## Unit = mm, Angle = deg.
 ## Side : All
@@ -68,8 +68,8 @@ J1        USB4110-GF-A        USB4110GFA                         180.5000  -146.
 J2        691243110009        691243110009                       196.2500  -106.0000  -90.0000  bottom
 J3        TSW-102-07-T-S      PinHeader_1x02_P2.54mm_Vertical    196.3250  -124.1000   90.0000  bottom
 J4        61300611821         RHDR6W97P0X254_1X6_1574X250X865P   162.5000  -109.3100  -90.0000  bottom
-J5        TSW-102-07-T-S      TSW-102-XX-YY-S                    162.2500   -72.2250  -90.0000  bottom
-J6        TSW-102-07-T-S      TSW-102-XX-YY-S                    198.7500   -72.2250  -90.0000  bottom
+J5        TSW-102-07-T-S      TSW-102-XX-YY-S                    162.2500   -72.9250  -90.0000  bottom
+J6        TSW-102-07-T-S      TSW-102-XX-YY-S                    198.7500   -72.9250  -90.0000  bottom
 L1        SRP7028CC-150M      INDPM7366X300N                     166.4000   -83.4000  -90.0000  bottom
 LS1       CMI-9653S-SMT-TR    CMI9653SSMTTR                      166.1000  -131.2500  -90.0000  bottom
 Q1        STL9P3LLH6          STL20N6F7                          195.0000  -137.7500   90.0000  bottom
