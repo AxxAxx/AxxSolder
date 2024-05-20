@@ -823,7 +823,7 @@ void handle_emergency_shutdown(){
 	}
 	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
 	else if((sensor_values.thermocouple_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
-		show_popup("Too high Temperature");
+		show_popup("OVERTEMP");
 		change_state(EMERGENCY_SLEEP);
 	}
 }
