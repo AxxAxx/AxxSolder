@@ -86,6 +86,26 @@ bool poll_source() {
   return ret;
 }
 
+bool stusb_set_highest_pdo(uint8_t *maxPower, uint8_t currentPdoIndex){
+	uint8_t highPowerPdoIdx = 0;
+	uint8_t maxWattage = 0;
+	for(uint8_t i = 0; i < pdos.numPDOs; i++){
+		uint8_t w = pdos.pdos[i].current*0.05 * pdos.pdos[i].voltage*0.01;
+		if(w>maxWattage){
+			highPowerPdoIdx = (w>maxWattage) ? i : highPowerPdoIdx;
+			maxWattage = w;
+		}
+	}
+	//already higest power PDO selected ?
+	if(currentPdoIndex-1 != highPowerPdoIdx){
+		stusb_update_pdo(2,pdos.pdos[highPowerPdoIdx].voltage*50, pdos.pdos[highPowerPdoIdx].current*10);
+		*maxPower = maxWattage;
+		stusb_soft_reset();
+		debug_print_str(DEBUG_INFO,"Re-negotiating highest power PDO");
+	}
+	return true;
+}
+
 bool is_vbus_ready() {
   HAL_StatusTypeDef halStatus = HAL_ERROR;
   uint8_t data = 0;

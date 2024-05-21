@@ -1159,8 +1159,8 @@ int main(void)
 				//check if USB-PD is available
 				STUSB_GEN1S_RDO_REG_STATUS_RegTypeDef rdo;
 				halStatus = stusb_read_rdo(&rdo);
-				volatile uint8_t rdoIndex = rdo.b.Object_Pos;
-				if(rdoIndex == 0){
+				volatile uint8_t currendPdoIndex = rdo.b.Object_Pos;
+				if(currendPdoIndex == 0){
 					debug_print_str(DEBUG_INFO,"No USB-PD detected");
 				}else{
 					//the usb devices need some time to transmit the messages and executer the soft reset
@@ -1173,6 +1173,10 @@ int main(void)
 						//HAL_Delay(2);
 						if(sourceStatus){
 							debug_print_str(DEBUG_INFO,"Got PDOs");
+							uint8_t maxPower = 0;
+							stusb_set_highest_pdo(&maxPower, currendPdoIndex);
+							//re-negotiate
+
 							break;
 						}
 					}
