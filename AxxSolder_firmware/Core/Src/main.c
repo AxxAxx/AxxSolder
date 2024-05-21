@@ -36,6 +36,13 @@
 /* USER CODE BEGIN PTD */
 #define version "3.0.2"
 
+#define DEBUG
+
+#ifdef DEBUG
+	#include "debug.h"
+	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
+#endif
+
 enum handles {
 	NT115,
 	T210,
@@ -1126,6 +1133,56 @@ int main(void)
   		/* Read flash data */
   	    FlashRead(&flash_values);
 
+		/* check STUSB4500 */
+		HAL_StatusTypeDef halStatus;
+  	    halStatus  = stusb_check_connection();
+  	    if(halStatus != HAL_OK){
+  	    	//do error handling for STUSB
+  	    	debug_print_str(DEBUG_ERROR,"STUSB4500 unavailable");
+  	    }else{
+  	    	debug_print_str(DEBUG_INFO,"STUSB4500 found");
+
+  	    	stusb_init();
+
+  	    	//1. check if cable is connected
+  	    	if(is_sink_connected()){
+
+				//2. wait for sink to get ready
+				while(!is_sink_ready()){
+					//debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
+				}
+				//if we are on USB-PD the sink needs some time to start
+				HAL_Delay(500);
+
+				stusb_soft_reset();
+
+				//check if USB-PD is available
+				STUSB_GEN1S_RDO_REG_STATUS_RegTypeDef rdo;
+				halStatus = stusb_read_rdo(&rdo);
+				volatile uint8_t rdoIndex = rdo.b.Object_Pos;
+				if(rdoIndex == 0){
+					debug_print_str(DEBUG_INFO,"No USB-PD detected");
+				}else{
+					//the usb devices need some time to transmit the messages and executer the soft reset
+					//HAL_Delay(4);
+					//poll alert status since we don't have the alert interrupt pin connected
+					//depending on the source we may need a few tries
+					bool sourceStatus = false;
+					for(int i=0;i<500;i++){
+						sourceStatus = poll_source();
+						//HAL_Delay(2);
+						if(sourceStatus){
+							debug_print_str(DEBUG_INFO,"Got PDOs");
+							break;
+						}
+					}
+				}
+  	    	}else{
+  	    		debug_print_str(DEBUG_INFO,"No USB-PD sink connected");
+  	    	}
+  	    }
+
+
   	    /* Set screen rotation */
   	    if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		  #define LCD_WIDTH  240
@@ -1170,9 +1227,11 @@ int main(void)
   		}
 
   		/* Start-up beep */
+#ifndef DEBUG
   		beep();
   		HAL_Delay(100);
   		beep();
+#endif
 
 
   		while (1){
@@ -1224,7 +1283,7 @@ int main(void)
   			// ----------------------------------------------
 
   			/* Send debug information */
-  			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
+  			/*if(HAL_GetTick() - previous_millis_debug >= interval_debug){
   				memset(&buffer, '\0', sizeof(buffer));
   				sprintf(buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
   						sensor_values.thermocouple_temperature, PID_setpoint,
@@ -1232,7 +1291,7 @@ int main(void)
   				//CDC_Transmit_FS((uint8_t *) buffer, strlen(buffer)); //Print string over USB virtual COM port
   			    HAL_UART_Transmit_IT(&huart1, (uint8_t *) buffer, strlen(buffer));
   				previous_millis_debug = HAL_GetTick();
-  			}
+  			}*/
 
  			/* Detect if a tip is present by sending a short voltage pulse and sense current */
 			if (flash_values.current_measurement == 1){
@@ -1523,7 +1582,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x30A0A7FB;
+  hi2c1.Init.Timing = 0x10802D9B;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
