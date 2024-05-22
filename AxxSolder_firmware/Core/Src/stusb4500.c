@@ -100,6 +100,8 @@ bool stusb_set_highest_pdo(uint8_t *maxPower, uint8_t currentPdoIndex){
 	if(currentPdoIndex-1 != highPowerPdoIdx){
 		stusb_update_pdo(2,pdos.pdos[highPowerPdoIdx].voltage*50, pdos.pdos[highPowerPdoIdx].current*10);
 		*maxPower = maxWattage;
+		// give the STUSB some time to apply the PDOs
+		HAL_Delay(500);
 		stusb_soft_reset();
 		debug_print_str(DEBUG_INFO,"Re-negotiating highest power PDO");
 	}
