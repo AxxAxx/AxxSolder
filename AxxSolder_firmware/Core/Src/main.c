@@ -1133,59 +1133,6 @@ int main(void)
   		/* Read flash data */
   	    FlashRead(&flash_values);
 
-		/* check STUSB4500 */
-		HAL_StatusTypeDef halStatus;
-  	    halStatus  = stusb_check_connection();
-  	    if(halStatus != HAL_OK){
-  	    	//do error handling for STUSB
-  	    	debug_print_str(DEBUG_ERROR,"STUSB4500 unavailable");
-  	    }else{
-  	    	debug_print_str(DEBUG_INFO,"STUSB4500 found");
-
-  	    	stusb_init();
-
-  	    	//1. check if cable is connected
-  	    	if(is_sink_connected()){
-
-				//2. wait for sink to get ready
-				while(!is_sink_ready()){
-					//debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
-				}
-				//if we are on USB-PD the sink needs some time to start
-				HAL_Delay(500);
-
-				stusb_soft_reset();
-
-				//check if USB-PD is available
-				STUSB_GEN1S_RDO_REG_STATUS_RegTypeDef rdo;
-				halStatus = stusb_read_rdo(&rdo);
-				volatile uint8_t currendPdoIndex = rdo.b.Object_Pos;
-				if(currendPdoIndex == 0){
-					debug_print_str(DEBUG_INFO,"No USB-PD detected");
-				}else{
-					//the usb devices need some time to transmit the messages and executer the soft reset
-					//HAL_Delay(4);
-					//poll alert status since we don't have the alert interrupt pin connected
-					//depending on the source we may need a few tries
-					bool sourceStatus = false;
-					for(int i=0;i<500;i++){
-						sourceStatus = poll_source();
-						//HAL_Delay(2);
-						if(sourceStatus){
-							debug_print_str(DEBUG_INFO,"Got PDOs");
-							uint8_t maxPower = 0;
-							stusb_set_highest_pdo(&maxPower, currendPdoIndex);
-							//re-negotiate
-
-							break;
-						}
-					}
-				}
-  	    	}else{
-  	    		debug_print_str(DEBUG_INFO,"No USB-PD sink connected");
-  	    	}
-  	    }
-
 
   	    /* Set screen rotation */
   	    if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
@@ -1229,6 +1176,65 @@ int main(void)
   			get_stand_status();
   			handle_button_status();
   		}
+
+  		/* check STUSB4500 */
+		HAL_StatusTypeDef halStatus;
+		halStatus  = stusb_check_connection();
+		if(halStatus != HAL_OK){
+			//do error handling for STUSB
+			debug_print_str(DEBUG_ERROR,"STUSB4500 unavailable");
+		}else{
+			debug_print_str(DEBUG_INFO,"STUSB4500 found");
+
+			stusb_init();
+
+			//1. check if cable is connected
+			if(stusb_is_sink_connected()){
+
+				//2. wait for sink to get ready
+				while(!stusb_is_sink_ready()){
+					//debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
+				}
+				//if we are on USB-PD the sink needs some time to start
+				HAL_Delay(500);
+
+				stusb_soft_reset();
+
+				//check if USB-PD is available
+				STUSB_GEN1S_RDO_REG_STATUS_RegTypeDef rdo;
+				halStatus = stusb_read_rdo(&rdo);
+				volatile uint8_t currendPdoIndex = rdo.b.Object_Pos;
+				if(currendPdoIndex == 0){
+					debug_print_str(DEBUG_INFO,"No USB-PD detected");
+				}else{
+					//the usb devices need some time to transmit the messages and executer the soft reset
+					//HAL_Delay(4);
+					//poll alert status since we don't have the alert interrupt pin connected
+					//depending on the source we may need a few tries
+					bool sourceStatus = false;
+					for(int i=0;i<500;i++){
+						sourceStatus = poll_source();
+						//HAL_Delay(2);
+						if(sourceStatus){
+							debug_print_str(DEBUG_INFO,"Got PDOs");
+							uint8_t maxPowerAvailable = 0;
+							stusb_set_highest_pdo(&maxPowerAvailable, currendPdoIndex);
+
+							//if selected power is higher than available power --> reduce power
+							if(sensor_values.max_power_watt > maxPowerAvailable){
+								sensor_values.max_power_watt = maxPowerAvailable*0.9;
+								debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*0.9);
+							}
+							//re-negotiate
+
+							break;
+						}
+					}
+				}
+			}else{
+				debug_print_str(DEBUG_INFO,"No USB-PD sink connected");
+			}
+		}
 
   		/* Start-up beep */
 #ifndef DEBUG

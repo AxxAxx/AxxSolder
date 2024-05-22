@@ -96,10 +96,10 @@ bool stusb_set_highest_pdo(uint8_t *maxPower, uint8_t currentPdoIndex){
 			maxWattage = w;
 		}
 	}
+	*maxPower = maxWattage;
 	//already higest power PDO selected ?
 	if(currentPdoIndex-1 != highPowerPdoIdx){
 		stusb_update_pdo(2,pdos.pdos[highPowerPdoIdx].voltage*50, pdos.pdos[highPowerPdoIdx].current*10);
-		*maxPower = maxWattage;
 		// give the STUSB some time to apply the PDOs
 		HAL_Delay(500);
 		stusb_soft_reset();
@@ -108,21 +108,21 @@ bool stusb_set_highest_pdo(uint8_t *maxPower, uint8_t currentPdoIndex){
 	return true;
 }
 
-bool is_vbus_ready() {
+bool stusb_is_vbus_ready() {
   HAL_StatusTypeDef halStatus = HAL_ERROR;
   uint8_t data = 0;
   halStatus = stusb_read_register(REG_TYPEC_MONITORING_STATUS_1, &data, 1);
   return (data&0x08);
 }
 
-bool is_sink_ready() {
+bool stusb_is_sink_ready() {
   HAL_StatusTypeDef halStatus = HAL_ERROR;
   uint8_t data = 0;
   halStatus = stusb_read_register(REG_PE_FSM, &data, 1);
   return (data&VAL_PE_SNK_READY);
 }
 
-bool is_sink_connected() {
+bool stusb_is_sink_connected() {
   HAL_StatusTypeDef halStatus = HAL_ERROR;
   uint8_t data = 0;
   halStatus = stusb_read_register(REG_PORT_STATUS_1, &data, 1);
