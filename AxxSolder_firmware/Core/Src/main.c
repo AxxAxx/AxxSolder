@@ -569,7 +569,7 @@ void update_display(){
 
 		memset(&buffer, '\0', sizeof(buffer));
 		sprintf(buffer, "%.1f", sensor_values.mcu_temperature);
-		LCD_PutStr(100, 275, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(50, 275, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(handle == T210){
 			LCD_PutStr(100, 235, "T210   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
@@ -582,14 +582,15 @@ void update_display(){
 		}
 
 		if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
-			UG_FillFrame(210,55,230,286, RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(214, 58,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			//UG_FillFrame(210,55,230,286, RGB_to_BRG(C_ORANGE));
+			UG_FillFrame(210,70,230,271, RGB_to_BRG(C_ORANGE));
+			//LCD_PutStr(214, 58,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(216, 92, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(214, 126, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(216, 161, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(214, 194, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(216, 228, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(214, 262, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			//LCD_PutStr(214, 262, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			sleep_state_written_to_LCD = 1;
 			standby_state_written_to_LCD = 0;
 		}
@@ -713,7 +714,10 @@ void LCD_draw_main_screen(){
 
 		LCD_PutStr(6, 235, "Handle type:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		LCD_PutStr(6, 255, "Input voltage:           V", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(6, 275, "MCU temp:              deg C", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(6, 275, "MCU:         °C", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(120, 275, "SRC:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(160, 275, "USB", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
 
 		UG_DrawLine(2, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
 		UG_DrawLine(2, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
@@ -727,8 +731,12 @@ void LCD_draw_main_screen(){
 		sprintf(buffer, "%.0f", flash_values.preset_temp_2);
 		LCD_PutStr(190, 301, buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 
-		UG_DrawFrame(208, 53, 232, 289, RGB_to_BRG(C_WHITE));
-		UG_DrawFrame(209, 54, 231, 288, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(208, 68, 232, 274, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(209, 69, 231, 273, RGB_to_BRG(C_WHITE));
+
+		LCD_PutStr(208, 275, "0W", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		sprintf(buffer, "%.0fW", sensor_values.max_power_watt);
+		LCD_PutStr(200, 48, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else{
 		UG_FillScreen(RGB_to_BRG(C_BLACK));
@@ -1189,10 +1197,6 @@ int main(void)
   		PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
         PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT);         // Set max and min I limit
 
-
-  		/* Draw the main screen decoration */
-  		LCD_draw_main_screen();
-
   		/* Init and fill filter structures with initial values */
   		for (int i = 0; i<200;i++){
   			get_bus_voltage();
@@ -1262,6 +1266,10 @@ int main(void)
 				debug_print_str(DEBUG_INFO,"No USB-PD sink connected");
 			}
 		}
+
+
+  		/* Draw the main screen decoration */
+  		LCD_draw_main_screen();
 
   		/* Start-up beep */
 #ifndef DEBUG
