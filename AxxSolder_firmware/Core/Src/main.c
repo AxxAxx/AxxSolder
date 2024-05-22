@@ -218,8 +218,8 @@ char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Standby Time   ",
 							"Sleep Time       ",
 							"Buzzer Enable      ",
-							"Preset Temp 1      ",
-							"Preset Temp 2      ",
+							"Preset Temp 1        ",
+							"Preset Temp 2        ",
 							"GPIO4 ON at run    ",
 							"Screen rotation      ",
 							"Limit Power        ",
@@ -430,13 +430,17 @@ void settings_menue(){
 				else{
 					((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
+
 				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11)){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
-				if (menu_cursor_position == 9){
+				else if (menu_cursor_position == 9){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 4)), 4);
 				}
-				if(menu_cursor_position != 1){
+				else if (menu_cursor_position == 1){
+					((double*)&flash_values)[menu_cursor_position] = round(((double*)&flash_values)[menu_cursor_position]);
+				}
+				else {
 					((double*)&flash_values)[menu_cursor_position] = fabs(((double*)&flash_values)[menu_cursor_position]);
 				}
 			}
