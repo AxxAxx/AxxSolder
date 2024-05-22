@@ -113,7 +113,7 @@ double PID_MAX_I_LIMIT = 150;
 char buffer[40];
 
 /* Converts power in W to correct duty cycle */
-#define POWER_REDUCTION_FACTOR 0.123
+#define POWER_CONVERSION_FACTOR 0.123
 
 /* Filtered ADC reading value */
 float ADC_filter_mean = 0.0;
@@ -383,7 +383,7 @@ void set_heater_duty(uint16_t dutycycle){
 
 /* Update the duty cycle of timer controlling the heater PWM */
 void heater_on(){
-	duty_cycle = PID_output*(sensor_values.max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+	duty_cycle = PID_output*(sensor_values.max_power_watt*POWER_CONVERSION_FACTOR/sensor_values.bus_voltage);
 	set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 }
 
