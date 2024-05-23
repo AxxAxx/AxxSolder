@@ -34,7 +34,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define version "3.0.2"
+#define version "3.1.0"
 
 #define BTN_LONG_PRESS 15 //*50ms (htim16 interval) --> 15 = 750ms
 
@@ -127,14 +127,14 @@ double PID_MAX_I_LIMIT = 150;
 /* PID parameters */
 #define PID_MAX_OUTPUT 500
 
-/* Function to detect tip presence by a periodic voltage and measure the current */
-#define DETECT_TIP_BY_CURRENT
+/* Buffer for UART print */
+char UART_buffer[40];
 
 /* Buffer for UART print */
-char buffer[40];
+char DISPLAY_buffer[40];
 
 /* Converts power in W to correct duty cycle */
-#define POWER_REDUCTION_FACTOR 0.123
+#define POWER_CONVERSION_FACTOR 0.123
 
 /* Filtered ADC reading value */
 float ADC_filter_mean = 0.0;
@@ -239,8 +239,8 @@ char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Standby Time   ",
 							"Sleep Time       ",
 							"Buzzer Enable      ",
-							"Preset Temp 1      ",
-							"Preset Temp 2      ",
+							"Preset Temp 1        ",
+							"Preset Temp 2        ",
 							"GPIO4 ON at run    ",
 							"Screen rotation      ",
 							"Limit Power        ",
@@ -404,7 +404,7 @@ void set_heater_duty(uint16_t dutycycle){
 
 /* Update the duty cycle of timer controlling the heater PWM */
 void heater_on(){
-	duty_cycle = PID_output*(sensor_values.max_power_watt*POWER_REDUCTION_FACTOR/sensor_values.bus_voltage);
+	duty_cycle = PID_output*(sensor_values.max_power_watt*POWER_CONVERSION_FACTOR/sensor_values.bus_voltage);
 	set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 }
 
@@ -451,13 +451,17 @@ void settings_menue(){
 				else{
 					((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
+
 				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11)){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
-				if (menu_cursor_position == 9){
+				else if (menu_cursor_position == 9){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 4)), 4);
 				}
-				if(menu_cursor_position != 1){
+				else if (menu_cursor_position == 1){
+					((double*)&flash_values)[menu_cursor_position] = round(((double*)&flash_values)[menu_cursor_position]);
+				}
+				else {
 					((double*)&flash_values)[menu_cursor_position] = fabs(((double*)&flash_values)[menu_cursor_position]);
 				}
 			}
@@ -551,43 +555,43 @@ void settings_menue(){
 
 void update_display(){
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.f", sensor_values.set_temperature);
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		sprintf(DISPLAY_buffer, "%.f", sensor_values.set_temperature);
 		if(sensor_values.set_temperature < 99.5){
-			buffer[2] = 32;
-			buffer[3] = 32;
+			DISPLAY_buffer[2] = 32;
+			DISPLAY_buffer[3] = 32;
 		}
-		LCD_PutStr(14, 75, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(14, 75, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.heater_current < 1) || (TC_temp > 4096-10)) { //NT115 at 9V draws 2.3
 			LCD_PutStr(10, 165, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
-			memset(&buffer, '\0', sizeof(buffer));
-			sprintf(buffer, "%.f", sensor_values.thermocouple_temperature_display);
+			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+			sprintf(DISPLAY_buffer, "%.f", sensor_values.thermocouple_temperature_display);
 			if(sensor_values.thermocouple_temperature_display < 99.5){
-				buffer[2] = 32;
-				buffer[3] = 32;
+				DISPLAY_buffer[2] = 32;
+				DISPLAY_buffer[3] = 32;
 			}
-			LCD_PutStr(14, 165, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(14, 165, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.1f", sensor_values.bus_voltage);
-		LCD_PutStr(100, 255, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+		LCD_PutStr(120, 255, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.1f", sensor_values.mcu_temperature);
-		LCD_PutStr(50, 275, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		sprintf(DISPLAY_buffer, "%.0f", sensor_values.mcu_temperature);
+		LCD_PutStr(55, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(handle == T210){
-			LCD_PutStr(100, 235, "T210   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(120, 235, "T210   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else if(handle == T245){
-			LCD_PutStr(100, 235, "T245   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(120, 235, "T245   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else if(handle == NT115){
-			LCD_PutStr(100, 235, "NT115", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(120, 235, "NT115", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
 		if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
@@ -623,34 +627,34 @@ void update_display(){
 		}
 	}
 	else{
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.f", sensor_values.set_temperature);
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		sprintf(DISPLAY_buffer, "%.f", sensor_values.set_temperature);
 		if(sensor_values.set_temperature < 99.5){
-			buffer[2] = 32;
-			buffer[3] = 32;
+			DISPLAY_buffer[2] = 32;
+			DISPLAY_buffer[3] = 32;
 		}
-		LCD_PutStr(14, 30, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(14, 30, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.heater_current < 1) || (TC_temp > 4096-10)) { //NT115 at 9V draws 2.3
 			LCD_PutStr(10, 120, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
-			memset(&buffer, '\0', sizeof(buffer));
-			sprintf(buffer, "%.f", sensor_values.thermocouple_temperature);
+			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+			sprintf(DISPLAY_buffer, "%.f", sensor_values.thermocouple_temperature);
 			if(sensor_values.thermocouple_temperature < 99.5){
-				buffer[2] = 32;
-				buffer[3] = 32;
+				DISPLAY_buffer[2] = 32;
+				DISPLAY_buffer[3] = 32;
 			}
-			LCD_PutStr(14, 120, buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(14, 120, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.1f", sensor_values.bus_voltage);
-		LCD_PutStr(100, 195, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+		LCD_PutStr(100, 195, DISPLAY_buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.1f", sensor_values.mcu_temperature);
-		LCD_PutStr(100, 210, buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		sprintf(DISPLAY_buffer, "%.1f", sensor_values.mcu_temperature);
+		LCD_PutStr(100, 210, DISPLAY_buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(handle == T210){
 			LCD_PutStr(100, 180, "T210   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
@@ -737,18 +741,17 @@ void LCD_draw_main_screen(){
 			break;
 		}
 
-
 		UG_DrawLine(2, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
 		UG_DrawLine(2, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
 
 
 		LCD_PutStr(6, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.0f", flash_values.preset_temp_1);
-		LCD_PutStr(130, 301, buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.0f", flash_values.preset_temp_2);
-		LCD_PutStr(190, 301, buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_1);
+		LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_2);
+		LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 
 		UG_DrawFrame(208, 68, 232, 274, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(209, 69, 231, 273, RGB_to_BRG(C_WHITE));
@@ -785,12 +788,12 @@ void LCD_draw_main_screen(){
 		UG_DrawLine(21, 0, 21, 220, RGB_to_BRG(C_DARK_SEA_GREEN));
 
 		LCD_PutStr(6, 271, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.0f", flash_values.preset_temp_1);
-		LCD_PutStr(130, 301, buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%.0f", flash_values.preset_temp_2);
-		LCD_PutStr(190, 271, buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_1);
+		LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_2);
+		LCD_PutStr(190, 271, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		 */
 		UG_DrawFrame(288, 3, 312, 228, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(289, 4, 311, 227, RGB_to_BRG(C_WHITE));
@@ -945,36 +948,45 @@ void get_handle_type(){
 	}
 	sensor_values.handle2_sense = Moving_Average_Compute(handle_status, &handle2_sense_filterStruct); /* Moving average filter */
 
+	/* If a custom power limit is specified in user flash, use this limit */
+	if(flash_values.power_limit != 0){
+		sensor_values.max_power_watt = flash_values.power_limit;
+	}
+
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
 		handle = NT115;
-		sensor_values.max_power_watt = 22; //22W
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
 		PID_MAX_I_LIMIT = 100;
+		/* If a custom power limit is not set use max allowed power for specific handle */
+		if (flash_values.power_limit == 0){
+			sensor_values.max_power_watt = 22; //22W
+		}
 	}
 	/* Determine if T210 handle is detected */
 	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
 		handle = T210;
-		sensor_values.max_power_watt = 65; //65W
 		Kp = 5;
 		Ki = 5.5;
 		Kd = 0.25;
 		PID_MAX_I_LIMIT = 125;
+		/* If a custom power limit is not set use max allowed power for specific handle */
+		if (flash_values.power_limit == 0){
+			sensor_values.max_power_watt = 65; //65W
+		}
 	}
 	else{
 		handle = T245;
-		sensor_values.max_power_watt = 130; //130W
 		Kp = 8;
 		Ki = 5;
 		Kd = 1;
 		PID_MAX_I_LIMIT = 150;
-	}
-
-	/* If a custom power limit is specified in user flash, use this limit */
-	if(flash_values.power_limit != 0){
-		sensor_values.max_power_watt = flash_values.power_limit;
+		/* If a custom power limit is not set use max allowed power for specific handle */
+		if (flash_values.power_limit == 0){
+			sensor_values.max_power_watt = 130; //130W
+		}
 	}
 
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
@@ -1354,7 +1366,7 @@ int main(void)
   						sensor_values.thermocouple_temperature, PID_setpoint,
 						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
   				//CDC_Transmit_FS((uint8_t *) buffer, strlen(buffer)); //Print string over USB virtual COM port
-  			    HAL_UART_Transmit_IT(&huart1, (uint8_t *) buffer, strlen(buffer));
+  			    HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
   				previous_millis_debug = HAL_GetTick();
   			}*/
 

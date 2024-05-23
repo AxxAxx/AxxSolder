@@ -90,6 +90,9 @@ extern UG_FONT FONT_arial_12X15[];
 #ifdef UGUI_USE_FONT_arial_16X18
 extern UG_FONT FONT_arial_16X18[];
 #endif
+#ifdef UGUI_USE_FONT_arial_17X18
+extern UG_FONT FONT_arial_17X18[];
+#endif
 #ifdef UGUI_USE_FONT_arial_20X23
 extern UG_FONT FONT_arial_20X23[];
 #endif
