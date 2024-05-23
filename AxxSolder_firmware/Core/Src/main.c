@@ -557,20 +557,20 @@ void update_display(){
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
-		LCD_PutStr(100, 255, DISPLAY_buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(120, 255, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.1f", sensor_values.mcu_temperature);
-		LCD_PutStr(100, 275, DISPLAY_buffer, FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		sprintf(DISPLAY_buffer, "%.0f", sensor_values.mcu_temperature);
+		LCD_PutStr(55, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(handle == T210){
-			LCD_PutStr(100, 235, "T210   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(120, 235, "T210   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else if(handle == T245){
-			LCD_PutStr(100, 235, "T245   ", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(120, 235, "T245   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else if(handle == NT115){
-			LCD_PutStr(100, 235, "NT115", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(120, 235, "NT115", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
 		if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
@@ -703,9 +703,9 @@ void LCD_draw_main_screen(){
 		UG_DrawFrame(6, 134, 182, 220, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(5, 133, 183, 221, RGB_to_BRG(C_WHITE));
 
-		LCD_PutStr(6, 235, "Handle type:", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(6, 255, "Input voltage:           V", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(6, 275, "MCU temp:              deg C", FONT_arial_16X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(6, 235, "Handle type:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(6, 255, "Input voltage:           V", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(6, 275, "MCU:     °C - SRC: USB", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		UG_DrawLine(2, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
 		UG_DrawLine(2, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
