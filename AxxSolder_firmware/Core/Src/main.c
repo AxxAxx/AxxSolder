@@ -333,6 +333,11 @@ void get_mcu_temp(){
 	sensor_values.mcu_temperature =	Moving_Average_Compute((((get_mean_ADC_reading_indexed(2) * VSENSE) - V30) / Avg_Slope + 25), &mcu_temperature_filter_struct);
 }
 
+/* Function to get the hardware version based on version bit pins */
+uint8_t get_hw_version(){
+	return (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_3_Pin) << 2) + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_2_Pin) << 1) + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_1_Pin));
+}
+
 uint16_t RGB_to_BRG(uint16_t color){
 	//return ((color & 0b0000000000011111)  << 11)    |    ((color & 0b1111100000000000) >> 5)   |    ((color  & 0b0000011111100000) >> 6);
 	return ((((color & 0b0000000000011111)  << 11) & 0b1111100000000000) | ((color & 0b1111111111100000) >> 5));
