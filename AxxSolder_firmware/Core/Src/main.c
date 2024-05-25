@@ -93,8 +93,7 @@ uint8_t SW_3_pressed_long = 0;
 typedef enum {
 	POWER_DC,
 	POWER_USB,
-	POWER_BAT,
-	POWER_SOURCE_MAX
+	POWER_BAT
 }power_source_t;
 power_source_t power_source = POWER_DC;
 

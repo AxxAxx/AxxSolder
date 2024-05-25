@@ -119,6 +119,10 @@ typedef struct
 HAL_StatusTypeDef stusb_init();
 HAL_StatusTypeDef stusb_soft_reset();
 HAL_StatusTypeDef stusb_check_connection();
+bool stusb_is_sink_ready();
+bool stusb_is_sink_connected();
+bool stusb_set_highest_pdo(uint8_t *maxPower, uint8_t currentPdoIndex);
+bool poll_source();
 HAL_StatusTypeDef stusb_read_rdo(STUSB_GEN1S_RDO_REG_STATUS_RegTypeDef *Nego_RDO);
 HAL_StatusTypeDef stusb_update_pdo(uint8_t pdo_number, uint16_t voltage_mv, uint16_t current_ma);
 HAL_StatusTypeDef stusb_set_valid_pdo(uint8_t valid_count);
