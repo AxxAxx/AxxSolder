@@ -199,6 +199,7 @@ struct sensor_values_struct {
 	mainstates previous_state;
 	double enc_button_status;
 	float max_power_watt;
+	double USB_PD_power_limit;
 };
 
 struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
@@ -213,7 +214,8 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.handle2_sense  = 0.0,
 											.previous_state = SLEEP,
 											.enc_button_status = 0.0,
-											.max_power_watt = 0};
+											.max_power_watt = 0,
+											.USB_PD_power_limit = 0};
 
 /* Struct to hold flash values */
 Flash_values flash_values;
@@ -977,7 +979,7 @@ void get_handle_type(){
 		Kd = 0.25;
 		PID_MAX_I_LIMIT = 100;
 		/* If a custom power limit is not set use max allowed power for specific handle */
-		if (flash_values.power_limit == 0){
+		if (flash_values.power_limit == 0 && sensor_values.USB_PD_power_limit == 0){
 			sensor_values.max_power_watt = 22; //22W
 		}
 	}
@@ -989,7 +991,7 @@ void get_handle_type(){
 		Kd = 0.25;
 		PID_MAX_I_LIMIT = 125;
 		/* If a custom power limit is not set use max allowed power for specific handle */
-		if (flash_values.power_limit == 0){
+		if (flash_values.power_limit == 0 && sensor_values.USB_PD_power_limit == 0){
 			sensor_values.max_power_watt = 65; //65W
 		}
 	}
@@ -1000,7 +1002,7 @@ void get_handle_type(){
 		Kd = 1;
 		PID_MAX_I_LIMIT = 150;
 		/* If a custom power limit is not set use max allowed power for specific handle */
-		if (flash_values.power_limit == 0){
+		if (flash_values.power_limit == 0 && sensor_values.USB_PD_power_limit == 0){
 			sensor_values.max_power_watt = 130; //130W
 		}
 	}
@@ -1317,6 +1319,7 @@ int main(void)
 
 							//if selected power is higher than available power --> reduce power
 							if(sensor_values.max_power_watt > maxPowerAvailable){
+								sensor_values.USB_PD_power_limit = 1;
 								sensor_values.max_power_watt = maxPowerAvailable*0.9;
 								debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*0.9);
 							}
