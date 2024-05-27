@@ -230,7 +230,7 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.power_limit = 0,
 											.current_measurement = 1};
 
-/* List of names for settings menue */
+/* List of names for settings menu */
 #define menu_length 15
 char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Temp Offset    ",
@@ -417,7 +417,7 @@ void heater_off(){
 	set_heater_duty(0);
 }
 
-void settings_menue(){
+void settings_menu(){
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
 		if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
@@ -432,8 +432,8 @@ void settings_menue(){
 		TIM2->CNT = 1000;
 		uint16_t menu_cursor_position = 0;
 		uint16_t old_menu_cursor_position = 0;
-		uint16_t menue_start = 0;
-		uint16_t menue_level = 0;
+		uint16_t menu_start = 0;
+		uint16_t menu_level = 0;
 		uint16_t menu_active = 1;
 		float old_value = 0;
 
@@ -444,11 +444,11 @@ void settings_menue(){
 
 		HAL_Delay(500);
 		while(menu_active == 1){
-			if(menue_level == 0){
+			if(menu_level == 0){
 				TIM2->CNT = clamp(TIM2->CNT, 1000, 1000000);
 				menu_cursor_position = (TIM2->CNT - 1000) / 2;
 			}
-			if (menue_level == 1){
+			if (menu_level == 1){
 				if (menu_cursor_position == 10){
 					((double*)&flash_values)[menu_cursor_position] = (float)old_value + round(((float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position)) * 5;
 				}
@@ -476,22 +476,22 @@ void settings_menue(){
 			}
 
 			if(menu_cursor_position >= 6){
-				menue_start = menu_cursor_position-6;
+				menu_start = menu_cursor_position-6;
 			}
 			else{
-				menue_start = 0;
+				menu_start = 0;
 			}
 
 			if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position < menu_length-3)){
-				if(menue_level == 0){
+				if(menu_level == 0){
 					old_value = ((double*)&flash_values)[menu_cursor_position];
 					old_menu_cursor_position = menu_cursor_position;
 				}
-				if(menue_level == 1){
+				if(menu_level == 1){
 					TIM2->CNT = old_menu_cursor_position*2 + 1000;
 				}
 
-				menue_level = abs(menue_level-1);
+				menu_level = abs(menu_level-1);
 				HAL_Delay(200);
 			}
 			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-1)){
@@ -506,13 +506,13 @@ void settings_menue(){
 				flash_values = default_flash_values;
 			}
 
-			for(int i = menue_start;i<=menue_start+6;i++){
+			for(int i = menu_start;i<=menu_start+6;i++){
 
-				if((i == menu_cursor_position) && (menue_level == 0)){
-					LCD_PutStr(5, 45+(i-menue_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
+				if((i == menu_cursor_position) && (menu_level == 0)){
+					LCD_PutStr(5, 45+(i-menu_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
 				}
 				else{
-					LCD_PutStr(5, 45+(i-menue_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+					LCD_PutStr(5, 45+(i-menu_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 				}
 
 				char str[20];
@@ -541,15 +541,15 @@ void settings_menue(){
 				}
 
 				if(i < menu_length-3){
-					if((i == menu_cursor_position) && (menue_level == 1)){
-						LCD_PutStr(200, 45+(i-menue_start)*25, str, FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
+					if((i == menu_cursor_position) && (menu_level == 1)){
+						LCD_PutStr(200, 45+(i-menu_start)*25, str, FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
 					}
 					else{
-						LCD_PutStr(200, 45+(i-menue_start)*25, str, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+						LCD_PutStr(200, 45+(i-menu_start)*25, str, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 					}
 				}
 				if(i >= menu_length-3){
-					LCD_PutStr(200, 45+(i-menue_start)*25, "        ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+					LCD_PutStr(200, 45+(i-menu_start)*25, "        ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 				}
 
 			}
@@ -1248,7 +1248,7 @@ int main(void)
   		/* Set startup state */
   	    change_state(HALTED);
 
-  		settings_menue();
+  		settings_menu();
 
   		/* Set initial encoder timer value */
   		TIM2->CNT = flash_values.startup_temperature;
