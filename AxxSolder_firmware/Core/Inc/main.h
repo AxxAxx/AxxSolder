@@ -45,9 +45,9 @@ typedef struct{
 	double screen_rotation;
 	double power_limit;
 	double current_measurement;
-
-
+	double startup_beep;
 }Flash_values;
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

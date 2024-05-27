@@ -230,10 +230,11 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.GPIO4_ON_at_run = 0,
 											.screen_rotation = 2,
 											.power_limit = 0,
-											.current_measurement = 1};
+											.current_measurement = 1,
+											.startup_beep = 1};
 
 /* List of names for settings menu */
-#define menu_length 15
+#define menu_length 16
 char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Temp Offset    ",
 							"Standby Temp   ",
@@ -246,6 +247,7 @@ char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Screen rotation      ",
 							"Limit Power        ",
 							"I measurement       ",
+							"Startup beep        ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -458,7 +460,7 @@ void settings_menu(){
 					((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
 
-				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11)){
+				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12)){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
 				else if (menu_cursor_position == 9){
@@ -1339,11 +1341,11 @@ int main(void)
   		LCD_draw_main_screen();
 
   		/* Start-up beep */
-#ifndef DEBUG
-  		beep();
-  		HAL_Delay(100);
-  		beep();
-#endif
+  		if(flash_values.startup_beep == 1){
+  			beep();
+  			HAL_Delay(100);
+  			beep();
+  		}
 
 
   		while (1){
