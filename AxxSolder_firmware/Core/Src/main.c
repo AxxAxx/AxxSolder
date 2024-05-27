@@ -81,13 +81,13 @@ uint32_t previous_sensor_update_low_update = 0;
 uint32_t interval_sensor_update_low_update = 100;
 
 /* Button flags */
-uint8_t SW_ready = 1;
-uint8_t SW_1_pressed = 0;
-uint8_t SW_2_pressed = 0;
-uint8_t SW_3_pressed = 0;
-uint8_t SW_1_pressed_long = 0;
-uint8_t SW_2_pressed_long = 0;
-uint8_t SW_3_pressed_long = 0;
+volatile uint8_t SW_ready = 1;
+volatile uint8_t SW_1_pressed = 0;
+volatile uint8_t SW_2_pressed = 0;
+volatile uint8_t SW_3_pressed = 0;
+volatile uint8_t SW_1_pressed_long = 0;
+volatile uint8_t SW_2_pressed_long = 0;
+volatile uint8_t SW_3_pressed_long = 0;
 
 /* power sources */
 typedef enum {
@@ -1004,14 +1004,15 @@ void get_handle_type(){
 }
 
 /* Interrupts at button press */
-static uint16_t btnPressed = 0;
+volatile static uint16_t btnPressed = 0;
+volatile static uint16_t debounceDone = 0;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if(((GPIO_Pin == SW_1_Pin) || (GPIO_Pin == SW_2_Pin) || (GPIO_Pin == SW_3_Pin)) && (SW_ready == 1)){ //A button is pressed
     	btnPressed = GPIO_Pin;
 		HAL_TIM_Base_Start_IT(&htim16);
-		beep();
 		SW_ready = 0;
+		debounceDone = 0;
     }
 }
 
@@ -1054,11 +1055,24 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	/* Button Debounce timer (50 ms) */
 	static uint8_t timerCycles = 0;
 
-	if ((htim == &htim16 && SW_ready == 0)){
+	if(SW_ready == 0 && debounceDone == 0){
+		timerCycles = 0;
+		if((btnPressed == SW_1_Pin && HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) ||
+				(btnPressed == SW_2_Pin && HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin) == GPIO_PIN_SET) ||
+				(btnPressed == SW_3_Pin && HAL_GPIO_ReadPin(SW_3_GPIO_Port, SW_3_Pin) == GPIO_PIN_SET)){
+			debounceDone = 1;
+		}else{
+			HAL_TIM_Base_Stop_IT(&htim16);
+			SW_ready = 1;
+		}
+	}
+
+	if (debounceDone == 1 && htim == &htim16 && SW_ready == 0){
 		HAL_TIM_Base_Stop_IT(&htim16);
 		if(btnPressed == SW_1_Pin && HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_RESET){
 			SW_ready = 1;
 			SW_1_pressed = 1;
+			beep();
 			timerCycles = 0;
 		}else if(timerCycles > BTN_LONG_PRESS && btnPressed == SW_1_Pin && HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET){
 			SW_ready = 1;
@@ -1069,6 +1083,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		else if(btnPressed == SW_2_Pin && HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin) == GPIO_PIN_RESET){
 			SW_ready = 1;
 			SW_2_pressed = 1;
+			beep();
 			timerCycles = 0;
 		}else if(timerCycles > BTN_LONG_PRESS && btnPressed == SW_2_Pin && HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin) == GPIO_PIN_SET){
 			SW_ready = 1;
@@ -1079,6 +1094,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		else if(btnPressed == SW_3_Pin && HAL_GPIO_ReadPin(SW_3_GPIO_Port, SW_3_Pin) == GPIO_PIN_RESET){
 			SW_ready = 1;
 			SW_3_pressed = 1;
+			beep();
 			timerCycles = 0;
 		}
 		else if(timerCycles > BTN_LONG_PRESS && btnPressed == SW_3_Pin && HAL_GPIO_ReadPin(SW_3_GPIO_Port, SW_3_Pin) == GPIO_PIN_SET){
