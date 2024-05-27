@@ -598,6 +598,9 @@ void update_display(){
 			LCD_PutStr(125, 235, "NT115", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
+		sprintf(DISPLAY_buffer, "%.0f W", sensor_values.max_power_watt);
+		LCD_PutStr(185, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
 		if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
 			//UG_FillFrame(210,55,230,286, RGB_to_BRG(C_ORANGE));
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
@@ -760,8 +763,6 @@ void LCD_draw_main_screen(){
 		UG_DrawFrame(209, 65, 231, 269, RGB_to_BRG(C_WHITE));
 
 		LCD_PutStr(205, 275, "0 W", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		sprintf(DISPLAY_buffer, "%.0f W", sensor_values.max_power_watt);
-		LCD_PutStr(185, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else{
 		UG_FillScreen(RGB_to_BRG(C_BLACK));
