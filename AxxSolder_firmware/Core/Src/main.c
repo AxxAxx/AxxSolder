@@ -157,6 +157,8 @@ double TC_temp = 0;
 
 /* Min allowed bus voltage */
 #define MIN_BUSVOLTAGE 8.0
+#define MIN_BUSPOWER 8.0
+#define USB_PD_POWER_REDUCTION_FACTOR 1.0
 
 /* MinMax selectable values */
 double min_selectable_temperature = 20;
@@ -878,6 +880,11 @@ void handle_emergency_shutdown(){
 		show_popup("Too Low voltage");
 		change_state(EMERGENCY_SLEEP);
 	}
+	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
+	if((sensor_values.max_power_watt <= MIN_BUSPOWER) && (active_state == RUN)){
+		show_popup("Low input power");
+		change_state(EMERGENCY_SLEEP);
+	}
 	/* Set state to EMERGENCY_SLEEP if no tip detected (no current draw) */
 	else if((sensor_values.heater_current < 1) && (active_state == RUN)){ //NT115 at 9V draws 81
 		show_popup("NO tip detected");
@@ -1322,7 +1329,7 @@ int main(void)
 							//if selected power is higher than available power --> reduce power
 							if(sensor_values.max_power_watt > maxPowerAvailable){
 								sensor_values.USB_PD_power_limit = 1;
-								sensor_values.max_power_watt = maxPowerAvailable*0.9;
+								sensor_values.max_power_watt = maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR;
 								debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*0.9);
 							}
 							//re-negotiate
