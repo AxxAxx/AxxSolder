@@ -1330,7 +1330,7 @@ int main(void)
 							if(sensor_values.max_power_watt > maxPowerAvailable){
 								sensor_values.USB_PD_power_limit = 1;
 								sensor_values.max_power_watt = maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR;
-								debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*0.9);
+								debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR);
 							}
 							//re-negotiate
 
