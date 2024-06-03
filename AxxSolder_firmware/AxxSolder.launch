@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.st.stm32cube.ide.mcu.debug.launch.launchConfigurationType">
+    <stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.device" value="STM32G431CB"/>
+    <stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.endian" value="little"/>
+    <stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.init_speed" value="4000"/>
+    <booleanAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.jlink_check_serial_number" value="false"/>
+    <stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.jlink_script_path" value=""/>
+    <booleanAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.jlink_script_used" value="false"/>
+    <stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.jlink_txt_serial_number" value=""/>
+    <stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.reset_strategy" value="type_0_normal"/>
+    <stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.restart_configurations" value="{&quot;fVersion&quot;:1,&quot;fItems&quot;:[{&quot;fDisplayName&quot;:&quot;Type 0: Normal&quot;,&quot;fIsSuppressible&quot;:false,&quot;fResetAttribute&quot;:&quot;Type 0: Normal&quot;,&quot;fResetStrategies&quot;:[{&quot;fDisplayName&quot;:&quot;None&quot;,&quot;fLaunchAttribute&quot;:&quot;no_reset&quot;,&quot;fGdbCommands&quot;:[],&quot;fCmdOptions&quot;:[]},{&quot;fDisplayName&quot;:&quot;Type 0: Normal&quot;,&quot;fLaunchAttribute&quot;:&quot;type_0_normal&quot;,&quot;fGdbCommands&quot;:[&quot;monitor reset\r\n&quot;],&quot;fCmdOptions&quot;:[]}],&quot;fGdbCommandGroup&quot;:{&quot;name&quot;:&quot;Additional commands&quot;,&quot;commands&quot;:[]},&quot;fStartApplication&quot;:true}]}"/>
+    <intAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.rtos_implementation" value="1"/>
+    <booleanAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.scan_chain_auto" value="true"/>
+    <intAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.scan_chain_irpre" value="0"/>
+    <intAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.scan_chain_pos" value="0"/>
+    <stringAttribute key="com.st.stm32cube.ide.mcu.debug.jlink.selected_rtos" value="RTOSPlugin_Azure"/>
+    <booleanAttribute key="com.st.stm32cube.ide.mcu.debug.jlinkenable_rtos" value="false"/>
     <stringAttribute key="com.st.stm32cube.ide.mcu.debug.launch.access_port_id" value="0"/>
     <stringAttribute key="com.st.stm32cube.ide.mcu.debug.launch.cubeprog_external_loaders" value="[]"/>
     <stringAttribute key="com.st.stm32cube.ide.mcu.debug.launch.debug_auth_certif_path" value=""/>
@@ -32,7 +47,7 @@
     <booleanAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.enable_shared_stlink" value="false"/>
     <stringAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.frequency" value="0"/>
     <booleanAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.halt_all_on_reset" value="false"/>
-    <stringAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.log_file" value="C:\Users\axelj\Desktop\AxxSolder\Debug\st-link_gdbserver_log.txt"/>
+    <stringAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.log_file" value="C:\Users\axelj\ownCloud\2_Project\00_AxxProjects\AxxSolder\AxxSolder_firmware\Debug\st-link_gdbserver_log.txt"/>
     <stringAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.low_power_debug" value="enable"/>
     <stringAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.max_halt_delay" value="2"/>
     <stringAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.reset_strategy" value="connect_under_reset"/>
@@ -70,7 +85,7 @@
     <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug/AxxSolder.elf"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="AxxSolder"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1461543827"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value=""/>
     <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/AxxSolder"/>

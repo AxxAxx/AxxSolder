@@ -43,6 +43,7 @@
 #define UGUI_USE_FONT_arial_10X13
 #define UGUI_USE_FONT_arial_12X15
 #define UGUI_USE_FONT_arial_16X18
+#define UGUI_USE_FONT_arial_17X18
 #define UGUI_USE_FONT_arial_20X23
 #define UGUI_USE_FONT_arial_25X28
 #define UGUI_USE_FONT_arial_29X35
