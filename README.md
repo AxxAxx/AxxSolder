@@ -105,6 +105,7 @@ The connections from the handle to the PCB through the Hirose RPC1-12RB-6P(71) c
 # Recommended power supply
 A well-suited power supply with isolated output (SELV) is the Meanwell LRS-150-24. It is rated for 156 W at 24 V. A cover protecting the terminals for this power supply can be found under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD).  
 ![LRS-150-24](./photos/LRS-150-24.jpg)
+Another suitable power supply is the Meanwell XLG-150-24 wich has a slightly different form factor and is fully enclosed.
 
 # Handle identification and connections
 In order for AxxSolder to know which type of handle (NT115, T210, T245) is connected specific pins must be connected within the handle connector. By default, the original JBC handle T245 has NO pins connected while in the original T210 pins 5 and 6 are connected. The original NT115 handle has a different connector from JBC and must be modified. If the user changes the connector or uses a non-genuine handle it is important to make sure that pin 5 and 3 is connected within the connector. All the necessary connections are shown in the image below. While powering on AxxSolder fir the first time after doing these connections within the handle connector or connections to AxxSolder it is wise to attach a handle without its cartridge and ensure that AxxSolder shows the correct handle type on the display. Failing to detect the handle type will cause damage to the tip as the thermal calibration and max power allowed will be wrong.  
