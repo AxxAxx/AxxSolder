@@ -7,7 +7,7 @@ Interested in purchasing an AxxSolder 3.0? On [Tindie](https://www.tindie.com/pr
 
 # AxxSolder Overview
 AxxSolder is a STM32 based soldering iron controller for JBC C115, C210 and C245 cartridges. 
-Two different versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-24V OR a USB-C Power Delivery source. The recommended power supply is a Meanwell [LRS-150-24](#recommended-power-supply) which can power all compatible JBC irons at full power. If a 65W, 20V USB-PD supply is used then NT115 and T210 handles can be powered at full power and T245 at limited power. The software is written for the [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html) and implements a PID for temperature control, TFT display driver, sleep function when the handle is at rest and functions for read/write user settings to flash. Enclosures for both station and portable versions are 3D printed and design files are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the AxxSolder station can be found under [DEMO](#demo). A *bill of materials* (BOM) with individual component prices can be found under [/bom](https://github.com/AxxAxx/AxxSolder/tree/main/AxxSolder_hardware/bom).  
+Two different versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The hardware takes a DC input source of 9-24V OR a USB-C Power Delivery source. The recommended power supply is a Meanwell [LRS-150-24](#recommended-power-supply) which can power all compatible JBC irons at full power. If a 65W, 20V USB-PD supply is used then NT115 and T210 handles can be powered at full power and T245 at limited power. The power limiting is automatic and AxxSolder reads the power capability of the USB-PD source and reduces output power accordingly. The software is written for the [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html) and implements a PID for temperature control, TFT display driver, sleep function when the handle is at rest and functions for read/write user settings to flash to name a few. Enclosures for both station and portable versions are 3D printed and design files are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the AxxSolder station (version 2) can be found under [DEMO](#demo). A *bill of materials* (BOM) with individual component prices can be found under [/bom](https://github.com/AxxAxx/AxxSolder/tree/main/AxxSolder_hardware/bom).  
 ![coverphoto](./photos/AxxSolder_cover.jpg)
 
 # Questions and support
@@ -35,10 +35,11 @@ Please use [Discord](https://discord.gg/dRD2ZfmyHY) for build related and genera
 
 # Features
 - The tip temperature is set by a rotary encoder. Pressing the encoder puts AxxSolder into Sleep mode and heating is turned off, press again to wake up.  
-- AxxSolder is capable of driving C115, C210 and C245 style cartridges from JBC. With the "H_sense1" and "H_sense2" inputs AxxSolder can determine if the connected handle is either a NT115, T210 or T245 and adjust max output power accordingly. The max power output is limited in software to 120W for T245, 60W for T210 and 20W for NT115 handles.
+- AxxSolder is capable of driving C115, C210 and C245 style cartridges from JBC. With the "H_sense1" and "H_sense2" inputs AxxSolder can determine if the connected handle is either a NT115, T210 or T245 and adjust max output power accordingly. The max power output is limited in software to 130W for T245, 65W for T210 and 22W for NT115 handles.
 - When the handle is put into the stand (connected to Stand_sense) AxxSolder goes into "Standby mode". On the portable version an aluminium plate is mounted and allows the AxxSolder to go into Standby mode when the cartridge or handle rests against it. After 10 min in Standby mode AxxSolder goes into "Sleep mode" and turns heating completely off. This is similar to what JBC calls [Sleep and Hibernation](https://www.jbctools.com/intelligent-heat-management.html).  
 - If AxxSolder is left in normal running mode for longer than 30 min, the station automatically goes into sleep mode after 30 min as a safety feature.  
 - Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.
+- At start-up any USB-PD source is detected and the highest possible power is negotiated. AxxSolder limits the soldering iron output power to the max output power of the USB-PD source automatically.
 - User settings are stored in non volatile flash and can be configured via a settings menu described in [SETTINGS](#settings).
 - The two buttons are used to store temperature presets, e.g. 330 deg C and 430 deg C. Both preset temperatures are configurable in the settings menu.
 - The TFT display used in this project is a 2 inch 320x240 Color TFT display [2.0" 320x240 Color IPS TFT Display](https://www.adafruit.com/product/4311) and shows information about:
@@ -50,6 +51,8 @@ Please use [Discord](https://discord.gg/dRD2ZfmyHY) for build related and genera
   - Input voltage
   - MCU temperature
   - Current detected handle type
+  - Current max power output
+  - Current power source USB-PD / DC
 
 # Cartridge differences
 Cartridges from JBC do all contain a thermocouple element to read the tip temperature and a resistive heater element. The configuration of thermocouple and heater element differ slightly between cartridge models. In order to determine the internal configuration of the cartridges two cross sections were done. These show clearly how the C210 and C245 cartridges are constructed internally. The images can be seen here: [https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller](https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller/msg5124267/#msg5124267).
@@ -69,6 +72,7 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 # Software Version History and Hardware Compatibility
 | Version | Date  | Hardware Compatibility |
 |---------|------|----------------------|
+|[v3.1.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.1.0)|Jun 5, 2024|V3.*|
 |[v3.0.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Apr 25, 2024|V3.*|
 |[v3.0.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Mar 26, 2024|V3.*|
 |[v3.0.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.0)|Mar 02, 2024|V3.*|
@@ -157,6 +161,7 @@ To access the user settings the user holds down the encoder button at start-up. 
 |Screen rotation|Rotate the screen|"0"=-180 deg, "1"=-90 deg, "2"=0 deg, "3"=90 deg|2|
 |Limit Power|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
 |I measurement|Measure the heater current|ON/OFF|ON
+|Startup beep|Beep after startup|ON/OFF|ON
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
@@ -167,7 +172,7 @@ As the thermal mass of each cartridge differs the PID parameters should in theor
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
 		handle = NT115;
-		sensor_values.max_power_watt = 20; //20W
+		sensor_values.max_power_watt = 22; //22W
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
@@ -176,7 +181,7 @@ As the thermal mass of each cartridge differs the PID parameters should in theor
 	/* Determine if T210 handle is detected */
 	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
 		handle = T210;
-		sensor_values.max_power_watt = 60; //60W
+		sensor_values.max_power_watt = 65; //65W
 		Kp = 5;
 		Ki = 5;
 		Kd = 0.5;
@@ -184,7 +189,7 @@ As the thermal mass of each cartridge differs the PID parameters should in theor
 	}
 	else{
 		handle = T245;
-		sensor_values.max_power_watt = 120; //120W
+		sensor_values.max_power_watt = 130; //130W
 		Kp = 8;
 		Ki = 3;
 		Kd = 0.5;
