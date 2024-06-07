@@ -34,7 +34,9 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define version "3.1.0"
+uint8_t fw_version_major =  3;
+uint8_t fw_version_minor =  1;
+uint8_t fw_version_patch =  0;
 
 #define BTN_LONG_PRESS 15 //*50ms (htim16 interval) --> 15 = 750ms
 
@@ -427,12 +429,14 @@ void settings_menu(){
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
 		if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
-			LCD_PutStr(6, 300, "Version:", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
-			LCD_PutStr(150, 300, version, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+			char str[8];
+			sprintf(str, "fw: %d.%d.%d     hw: %d", fw_version_major,fw_version_minor, fw_version_patch, get_hw_version());
+			LCD_PutStr(6, 300, str, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_BLACK));
 		}
 		else{
-			LCD_PutStr(0, 215, "Version:", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
-			LCD_PutStr(150, 215, version, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+			char str[8];
+			sprintf(str, "fw: %d.%d.%d     hw: %d", fw_version_major,fw_version_minor, fw_version_patch, get_hw_version());
+			LCD_PutStr(6, 215, str, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_BLACK));
 		}
 
 		TIM2->CNT = 1000;
