@@ -101,10 +101,10 @@
   (pad "B8" smd rect (at -1.75 -3.678) (size 0.3 1.15) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp fb66fa03-43d4-4f37-bbbc-c49acbe7824c))
   (pad "B9" smd rect (at -2.25 -3.678) (size 0.3 1.15) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 76d2d77d-4c4d-47ad-9086-f1517d07a880))
   (pad "B12" smd rect (at -3.05 -3.678) (size 0.3 1.15) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 61148b50-a212-4389-99d9-b5df4d39d9ba))
-  (pad "S0" smd rect (at -5.11 -3.103 90) (size 2 2.18) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp b00396a2-e8bc-407d-a0ef-9565a1460eb5))
+  (pad "S1" smd rect (at -5.11 -3.103 90) (size 2 2.18) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp b00396a2-e8bc-407d-a0ef-9565a1460eb5))
+  (pad "S1" smd rect (at -5.11 0.827 90) (size 2 2.18) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp ba3a4006-3e15-4047-804e-0af3d12d25b3))
   (pad "S1" smd rect (at 5.11 -3.103 90) (size 2 2.18) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 837bcf2d-35fd-4c46-ac5d-814b26e7e711))
-  (pad "S2" smd rect (at -5.11 0.827 90) (size 2 2.18) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp ba3a4006-3e15-4047-804e-0af3d12d25b3))
-  (pad "S2" smd rect (at 5.11 0.827 90) (size 2 2.18) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp bd875178-0141-43d5-ad6e-38fde974ba2e))
+  (pad "S1" smd rect (at 5.11 0.827 90) (size 2 2.18) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp bd875178-0141-43d5-ad6e-38fde974ba2e))
   (model "${KIPRJMOD}/3rd-parties-libraries/3D-models/USB4110-GF-A.stp"
     (offset (xyz 0 2.599999866 0))
     (scale (xyz 1 1 1))
