@@ -1261,9 +1261,6 @@ int main(void)
 		  #define LCD_HEIGHT 320
 		}
 
-  	    LCD_init();
-  	  	LCD_SetRotation(flash_values.screen_rotation);
-
   		/* Set startup state */
   	    change_state(HALTED);
 
@@ -1351,6 +1348,9 @@ int main(void)
 			}
 		}
 
+  	    /* Initiate display */
+  	    LCD_init();
+  	  	LCD_SetRotation(flash_values.screen_rotation);
 
   		/* Draw the main screen decoration */
   		LCD_draw_main_screen();
