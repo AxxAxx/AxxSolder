@@ -57,7 +57,6 @@ Please use [Discord](https://discord.gg/d884Ce2C) for build related and general 
 
 # DEMO
 (This shows AxxSolder 2 and not the latest AxxSolder 3)  
-Click on the image to get to YouTube and see the demo. 
 ![YouTube](./photos/YouTube.PNG) 
 [https://www.youtube.com/watch?v=I5uLvEM9wpY](https://www.youtube.com/watch?v=I5uLvEM9wpY)
 
