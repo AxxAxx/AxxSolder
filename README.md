@@ -56,7 +56,7 @@ Please use [Discord](https://discord.gg/d884Ce2C) for build related and general 
   - Current power source USB-PD / DC
 
 # DEMO
-![YouTube](./photos/YouTube.PNG) 
+[![YouTube](./photos/YouTube.PNG)](https://www.youtube.com/watch?v=I5uLvEM9wpY)
 [https://www.youtube.com/watch?v=I5uLvEM9wpY](https://www.youtube.com/watch?v=I5uLvEM9wpY)
 
 # Schematic
