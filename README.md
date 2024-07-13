@@ -87,8 +87,8 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 
 # DEMO
 (This shows AxxSolder 2 and not the latest AxxSolder 3)  
-Click on the gif to get to YouTube and see the demo in full resolution.  
-[![AxxSolder DEMO](./photos/AxxSolder_DEMO.gif)](https://www.youtube.com/watch?v=-3MtJyTwZFQ)
+Click on the image to get to YouTube and see the demo.  
+[![YouTube](./photos/YouTube.png)](https://www.youtube.com/watch?v=I5uLvEM9wpY)
 
 # AxxSolder Station
 The preferred setup is to pair AxxSolder with the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html). This makes a very nice, compact and powerful soldering station. The JBC ADS stand is paired with a custom 3D printed enclosure for AxxSolder and the PCB is mounted with two mounting brackets. All 3D printed parts are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). 
