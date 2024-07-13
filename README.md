@@ -17,11 +17,10 @@ Please use [Discord](https://discord.gg/d884Ce2C) for build related and general 
 - [AxxSolder Overview](#axxsolder-overview)
 - [Questions and support](#questions-and-support)
 - [Features](#features)
-- [Cartridge differences](#cartridge-differences)
+- [DEMO](#demo)
 - [Schematic](#schematic)
 - [PCB](#pcb)
 - [Software Version History and Hardware Compatibility](#software-version-history-and-hardware-compatibility)
-- [DEMO](#demo)
 - [AxxSolder Station](#axxsolder-station)
 - [AxxSolder Portable](#axxsolder-portable)
 - [Recommended power supply](#recommended-power-supply)
@@ -30,8 +29,10 @@ Please use [Discord](https://discord.gg/d884Ce2C) for build related and general 
 - [First start up after build](#first-start-up-after-build)
 - [Settings](#settings)
 - [PID control](#pid-control)
+- [Cartridge differences](#cartridge-differences)
 - [Temperature calibration](#temperature-calibration)
 - [Temperature measurement](#temperature-measurement)
+- [Current measurement](#current-measurement)
 
 # Features
 - The tip temperature is set by a rotary encoder. Pressing the encoder puts AxxSolder into Sleep mode and heating is turned off, press again to wake up.  
@@ -54,9 +55,11 @@ Please use [Discord](https://discord.gg/d884Ce2C) for build related and general 
   - Current max power output
   - Current power source USB-PD / DC
 
-# Cartridge differences
-Cartridges from JBC do all contain a thermocouple element to read the tip temperature and a resistive heater element. The configuration of thermocouple and heater element differ slightly between cartridge models. In order to determine the internal configuration of the cartridges two cross sections were done. These show clearly how the C210 and C245 cartridges are constructed internally. The images can be seen here: [https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller](https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller/msg5124267/#msg5124267).
-As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. This is done automatically be the inputs "Handle_sense_1" and "Handle_sense_2" This can be done thanks to the design of the handle connector. For the JCB T210 handle pin 5 and 6 are connected internally in the connector and for NT115 pin 3 and 5 should be connected. This allows AxxSolder to sense which handle is connected and assign correct thermocouple correction, PID parameters and max output power.
+# DEMO
+(This shows AxxSolder 2 and not the latest AxxSolder 3)  
+Click on the image to get to YouTube and see the demo. 
+![YouTube](./photos/YouTube.PNG) 
+[https://www.youtube.com/watch?v=I5uLvEM9wpY](https://www.youtube.com/watch?v=I5uLvEM9wpY)
 
 # Schematic
 The schematic for AxxSolder is shown below. Both station and portable versions use the same PCB and software. The MCU is a [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html). 
@@ -84,12 +87,6 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 |[v2.1.3-revC](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.3-revC)|Oct 16, 2023|V2.*|
 |[v2.1.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.1)|Oct 7, 2023|V2.*|
 |[v2.1.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.0)|Oct 7, 2023|V2.*|
-
-# DEMO
-(This shows AxxSolder 2 and not the latest AxxSolder 3)  
-Click on the image to get to YouTube and see the demo.  
-![YouTube](./photos/YouTube.png)
-[https://www.youtube.com/watch?v=I5uLvEM9wpY](https://www.youtube.com/watch?v=I5uLvEM9wpY)
 
 # AxxSolder Station
 The preferred setup is to pair AxxSolder with the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html). This makes a very nice, compact and powerful soldering station. The JBC ADS stand is paired with a custom 3D printed enclosure for AxxSolder and the PCB is mounted with two mounting brackets. All 3D printed parts are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). 
@@ -203,6 +200,11 @@ As the thermal mass of each cartridge differs the PID parameters should in theor
 The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-007 cartridge.  
 
  ![AxxSolder_pid](./photos/PID_TUNING.png)
+
+# Cartridge differences
+Cartridges from JBC do all contain a thermocouple element to read the tip temperature and a resistive heater element. The configuration of thermocouple and heater element differ slightly between cartridge models. In order to determine the internal configuration of the cartridges two cross sections were done. These show clearly how the C210 and C245 cartridges are constructed internally. The images can be seen here: [https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller](https://www.eevblog.com/forum/projects/axxsolder-jbc-soldering-controller/msg5124267/#msg5124267).
+As the thermocouple output also differs (see my measurements [Temperature calibration](#temperature-calibration)) the correct handle/cartridge type has to be set. This is done automatically be the inputs "Handle_sense_1" and "Handle_sense_2" This can be done thanks to the design of the handle connector. For the JCB T210 handle pin 5 and 6 are connected internally in the connector and for NT115 pin 3 and 5 should be connected. This allows AxxSolder to sense which handle is connected and assign correct thermocouple correction, PID parameters and max output power.
+ 
 # Temperature calibration
 The voltage from the thermocouple embedded inside the cartridge is amplified by an OPA2387 operational amplifier and then read by the ADC of the MCU. To correlate the measured ADC value to the cartridge temperature experiments were done. A constant power was applied to the heating element of the cartridge and the ADC value was read as well as the actual tip temperature. The tip temperature was measured by a "Soldering Tip Thermocouple" used in e.g. the Hakko FG-100.   
 The measured data was recorded and plotted for both the C115, C210 and C245 cartridges. The specific cartridges used were the C115112, C210-007 and C245-945. The measured data were fitted to polynomial equations:  
