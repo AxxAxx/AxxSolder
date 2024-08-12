@@ -1273,6 +1273,10 @@ int main(void)
 		  #define LCD_HEIGHT 320
 		}
 
+  	    /* Initiate display */
+  	    LCD_init();
+  	  	LCD_SetRotation(flash_values.screen_rotation);
+
   		/* Set startup state */
   	    change_state(HALTED);
 
@@ -1359,10 +1363,6 @@ int main(void)
 				debug_print_str(DEBUG_INFO,"No USB-PD sink connected");
 			}
 		}
-		
-  	    /* Initiate display */
-  	    LCD_init();
-  	  	LCD_SetRotation(flash_values.screen_rotation);
 
   		/* Draw the main screen decoration */
   		LCD_draw_main_screen();
