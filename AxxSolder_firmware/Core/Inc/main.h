@@ -46,6 +46,7 @@ typedef struct{
 	double power_limit;
 	double current_measurement;
 	double startup_beep;
+	double deg_celsius;
 }Flash_values;
 
 /* USER CODE END Includes */

@@ -235,7 +235,8 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.screen_rotation = 2,
 											.power_limit = 0,
 											.current_measurement = 1,
-											.startup_beep = 1};
+											.startup_beep = 1,
+											.deg_celsius = 1};
 
 /* List of names for settings menu */
 #define menu_length 16
@@ -391,6 +392,7 @@ void get_heater_current(){
 }
 
 void get_thermocouple_temperature(){
+
 	TC_temp = Moving_Average_Compute(get_mean_ADC_reading_indexed(1), &thermocouple_temperature_filter_struct); /* Moving average filter */
 
 	if(handle == T210){
@@ -423,6 +425,16 @@ void heater_on(){
 /* Disable the duty cycle of timer controlling the heater PWM*/
 void heater_off(){
 	set_heater_duty(0);
+}
+
+/* return the temperature in the correct unit */
+double convert_temperature(double temperature){
+	if (flash_values.deg_celsius == 2){
+		return temperature;
+	}
+	else{
+		return ((temperature * 9) + 3) / 5 + 32;
+	}
 }
 
 void settings_menu(){
@@ -570,7 +582,7 @@ void settings_menu(){
 void update_display(){
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.f", sensor_values.set_temperature);
+		sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.set_temperature));
 		if(sensor_values.set_temperature < 99.5){
 			DISPLAY_buffer[2] = 32;
 			DISPLAY_buffer[3] = 32;
@@ -582,7 +594,7 @@ void update_display(){
 		}
 		else{
 			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.f", sensor_values.thermocouple_temperature_display);
+			sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.thermocouple_temperature_display));
 			if(sensor_values.thermocouple_temperature_display < 99.5){
 				DISPLAY_buffer[2] = 32;
 				DISPLAY_buffer[3] = 32;
@@ -595,7 +607,7 @@ void update_display(){
 		LCD_PutStr(125, 255, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", sensor_values.mcu_temperature);
+		sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
 		LCD_PutStr(60, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(handle == T210){
@@ -1347,7 +1359,7 @@ int main(void)
 				debug_print_str(DEBUG_INFO,"No USB-PD sink connected");
 			}
 		}
-
+		
   	    /* Initiate display */
   	    LCD_init();
   	  	LCD_SetRotation(flash_values.screen_rotation);
