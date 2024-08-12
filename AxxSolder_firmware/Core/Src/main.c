@@ -148,7 +148,15 @@ uint16_t ADC1_BUF[ADC1_BUF_LEN];
 uint16_t mcu_temperature_raw = 0;
 uint16_t current_raw = 0;
 
+/* Thermocouple temperature */
 double TC_temp = 0;
+
+/* Variables for thermocouple outlier detection */
+double TC_temp_from_ADC = 0;
+double TC_temp_from_ADC_previous = 0;
+double TC_temp_from_ADC_diff = 0;
+uint16_t TC_outliers_detected = 0;
+uint16_t TC_outliers_threshold = 300;
 
 /* Max allowed tip temperature */
 #define EMERGENCY_SHUTDOWN_TEMPERATURE 490
@@ -392,8 +400,22 @@ void get_heater_current(){
 }
 
 void get_thermocouple_temperature(){
+	/* Thermocouple outlier detection and filter */
+	TC_temp_from_ADC_previous = TC_temp_from_ADC;
+	TC_temp_from_ADC = get_mean_ADC_reading_indexed(1);
+	TC_temp_from_ADC_diff = fabs(TC_temp_from_ADC_previous - TC_temp_from_ADC);
+	if((TC_temp_from_ADC_diff > TC_outliers_threshold) && (TC_outliers_detected < 2)){
+		TC_outliers_detected++;
+		if(TC_outliers_detected < 2){
+			TC_temp_from_ADC = TC_temp_from_ADC_previous;
+		}
+	}
+	else{
+		TC_outliers_detected = 0;
+	}
 
-	TC_temp = Moving_Average_Compute(get_mean_ADC_reading_indexed(1), &thermocouple_temperature_filter_struct); /* Moving average filter */
+	/* Compute moving average of Thermocouple measurements */
+	TC_temp = Moving_Average_Compute(TC_temp_from_ADC, &thermocouple_temperature_filter_struct); /* Moving average */
 
 	if(handle == T210){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_T210 + TC_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
@@ -1424,7 +1446,7 @@ int main(void)
   			// ----------------------------------------------
 
   			/* Send debug information */
-  			/*if(HAL_GetTick() - previous_millis_debug >= interval_debug){
+  			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
   				memset(&UART_buffer, '\0', sizeof(UART_buffer));
   				sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
   						sensor_values.thermocouple_temperature, PID_setpoint,
@@ -1432,7 +1454,7 @@ int main(void)
   				//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
   			    HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
   				previous_millis_debug = HAL_GetTick();
-  			}*/
+  			}
 
  			/* Detect if a tip is present by sending a short voltage pulse and sense current */
 			if (flash_values.current_measurement == 1){
