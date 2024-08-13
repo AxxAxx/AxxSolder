@@ -1484,18 +1484,19 @@ int main(void)
   			//sensor_values.set_temperature = temperature_tuning;
   			// ----------------------------------------------
 
-			#ifdef DEBUG
-				/* Send debug information */
-				if(HAL_GetTick() - previous_millis_debug >= interval_debug){
-					memset(&UART_buffer, '\0', sizeof(UART_buffer));
-					sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
-							sensor_values.thermocouple_temperature, PID_setpoint,
-							PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
-					//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
-					HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
-					previous_millis_debug = HAL_GetTick();
-				}
-			#endif
+
+			/* Send debug information */
+  			/*
+			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
+				memset(&UART_buffer, '\0', sizeof(UART_buffer));
+				sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
+						sensor_values.thermocouple_temperature, PID_setpoint,
+						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
+				//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
+				HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
+				previous_millis_debug = HAL_GetTick();
+			}
+			*/
 
  			/* Detect if a tip is present by sending a short voltage pulse and sense current */
 			if (flash_values.current_measurement == 1){
