@@ -621,7 +621,7 @@ void update_display(){
 		else{
 			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 			sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.thermocouple_temperature_display));
-			if(sensor_values.thermocouple_temperature_display < 99.5){
+			if(convert_temperature(sensor_values.thermocouple_temperature_display) < 99.5){
 				DISPLAY_buffer[2] = 32;
 				DISPLAY_buffer[3] = 32;
 			}
@@ -633,8 +633,13 @@ void update_display(){
 		LCD_PutStr(125, 255, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
-		LCD_PutStr(58, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(convert_temperature(sensor_values.mcu_temperature) < 99.5){
+			sprintf(DISPLAY_buffer, "  %.0f", convert_temperature(sensor_values.mcu_temperature));
+		}
+		else{
+			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
+		}
+		LCD_PutStr(56, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(handle == T210){
 			LCD_PutStr(125, 235, "T210   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
