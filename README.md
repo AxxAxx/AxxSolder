@@ -160,6 +160,7 @@ To access the user settings the user holds down the encoder button at start-up. 
 |Limit Power|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
 |I measurement|Measure the heater current|ON/OFF|ON
 |Startup beep|Beep after startup|ON/OFF|ON
+|Temp in celcius|Show temperatures in Celcius and not Fahrenheit|ON/OFF|ON
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
