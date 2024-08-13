@@ -895,8 +895,8 @@ void LCD_draw_main_screen(){
 }
 
 void show_popup(char * text){
-	UG_FillFrame(10, 50, 225, 105, RGB_to_BRG(C_ORANGE));
-	UG_FillFrame(15, 55, 220, 100, RGB_to_BRG(C_WHITE));
+	UG_FillFrame(10, 50, 235, 105, RGB_to_BRG(C_ORANGE));
+	UG_FillFrame(15, 55, 230, 100, RGB_to_BRG(C_WHITE));
 	LCD_PutStr(20, 70, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
 	HAL_Delay(2000);
 	LCD_draw_main_screen();
@@ -948,17 +948,17 @@ void handle_emergency_shutdown(){
 	}
 	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
 	if((sensor_values.bus_voltage <= MIN_BUSVOLTAGE) && (active_state == RUN)){
-		show_popup("Too Low voltage");
+		show_popup("Inp. Voltage too low");
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
 	if((sensor_values.max_power_watt <= MIN_BUSPOWER) && (active_state == RUN)){
-		show_popup("Low input power");
+		show_popup("Inp. Power too low");
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if no tip detected (no current draw) */
 	else if((sensor_values.heater_current < 1) && (active_state == RUN)){ //NT115 at 9V draws 81
-		show_popup("NO tip detected");
+		show_popup("No tip detected");
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
