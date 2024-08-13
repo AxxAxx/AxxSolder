@@ -692,7 +692,7 @@ void update_display(){
 	}
 	else{
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.f", sensor_values.set_temperature);
+		sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.set_temperature));
 		if(sensor_values.set_temperature < 99.5){
 			DISPLAY_buffer[2] = 32;
 			DISPLAY_buffer[3] = 32;
@@ -704,8 +704,8 @@ void update_display(){
 		}
 		else{
 			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.f", sensor_values.thermocouple_temperature);
-			if(sensor_values.thermocouple_temperature < 99.5){
+			sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.thermocouple_temperature));
+			if(convert_temperature(sensor_values.thermocouple_temperature) < 99.5){
 				DISPLAY_buffer[2] = 32;
 				DISPLAY_buffer[3] = 32;
 			}
@@ -717,8 +717,13 @@ void update_display(){
 		LCD_PutStr(120, 200, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", sensor_values.mcu_temperature);
-		LCD_PutStr(53, 220, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(convert_temperature(sensor_values.mcu_temperature) < 99.5){
+			sprintf(DISPLAY_buffer, "  %.0f", convert_temperature(sensor_values.mcu_temperature));
+		}
+		else{
+			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
+		}
+		LCD_PutStr(52, 220, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(handle == T210){
 			LCD_PutStr(120, 180, "T210   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
@@ -863,10 +868,10 @@ void LCD_draw_main_screen(){
 		LCD_PutStr(6, 180, "Handle type:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		LCD_PutStr(6, 200, "Input voltage:          V", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(6, 220, "MCU:     °C", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(6, 220, "MCU:      °C", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
-			LCD_PutStr(6, 220, "MCU:     °F", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(6, 220, "MCU:       °F", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		LCD_PutStr(110, 220, "SRC:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		switch(power_source){
