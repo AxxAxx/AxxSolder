@@ -561,8 +561,12 @@ void settings_menu(){
 
 				char str[20];
 				memset(&str, '\0', sizeof(str));
-				sprintf(str, "%.0f", (((double*)&flash_values)[i]));
-
+				if ((i == 0) || (i == 1) || (i == 2) || (i == 6) || (i == 7)){
+					sprintf(str, "%.0f", convert_temperature((((double*)&flash_values)[i])));
+				}
+				else{
+					sprintf(str, "%.0f", (((double*)&flash_values)[i]));
+				}
 				if((((double*)&flash_values)[i]) < -9.5){
 					str[3] = 32;
 				}
