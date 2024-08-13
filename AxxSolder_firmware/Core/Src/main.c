@@ -40,8 +40,7 @@ uint8_t fw_version_patch =  0;
 
 #define BTN_LONG_PRESS 15 //*50ms (htim16 interval) --> 15 = 750ms
 
-#define DEBUG
-
+//#define DEBUG
 #ifdef DEBUG
 	#include "debug.h"
 	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -247,7 +246,7 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.deg_celsius = 1};
 
 /* List of names for settings menu */
-#define menu_length 16
+#define menu_length 17
 char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Temp Offset    ",
 							"Standby Temp   ",
@@ -261,6 +260,7 @@ char menu_names[menu_length][22] = { "Startup Temp  ",
 							"Limit Power        ",
 							"I measurement       ",
 							"Startup beep        ",
+							"Temp in celcius    ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -451,7 +451,7 @@ void heater_off(){
 
 /* return the temperature in the correct unit */
 double convert_temperature(double temperature){
-	if (flash_values.deg_celsius == 2){
+	if (flash_values.deg_celsius == 1){
 		return temperature;
 	}
 	else{
@@ -500,7 +500,7 @@ void settings_menu(){
 					((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
 
-				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12)){
+				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13)){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
 				else if (menu_cursor_position == 9){
@@ -630,7 +630,7 @@ void update_display(){
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
-		LCD_PutStr(60, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(58, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(handle == T210){
 			LCD_PutStr(125, 235, "T210   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
@@ -709,7 +709,7 @@ void update_display(){
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		sprintf(DISPLAY_buffer, "%.0f", sensor_values.mcu_temperature);
-		LCD_PutStr(55, 220, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(53, 220, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(handle == T210){
 			LCD_PutStr(120, 180, "T210   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
@@ -767,21 +767,33 @@ void LCD_draw_main_screen(){
 		UG_DrawCircle(128, 76, 5, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(128, 76, 4, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(128, 76, 3, RGB_to_BRG(C_WHITE));
-		LCD_PutStr(135, 70, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-
-
+		if(flash_values.deg_celsius == 1){
+			LCD_PutStr(135, 70, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(135, 70, "F", FONT_arial_36X44_F, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
 		LCD_PutStr(19, 135, "Actual temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		UG_DrawCircle(128, 166, 5, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(128, 166, 4, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(128, 166, 3, RGB_to_BRG(C_WHITE));
-		LCD_PutStr(135, 160, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-
+		if(flash_values.deg_celsius == 1){
+			LCD_PutStr(135, 160, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(135, 160, "F", FONT_arial_36X44_F, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
 		UG_DrawFrame(11, 129, 187, 215, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(10, 128, 188, 216, RGB_to_BRG(C_WHITE));
 
 		LCD_PutStr(11, 235, "Handle type:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		LCD_PutStr(11, 255, "Input voltage:         V", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(11, 275, "MCU:     °C", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(flash_values.deg_celsius == 1){
+			LCD_PutStr(11, 275, "MCU:      °C", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(11, 275, "MCU:      °F", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
 		LCD_PutStr(113, 275, "SRC:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		switch(power_source){
 		case POWER_DC:
@@ -801,10 +813,10 @@ void LCD_draw_main_screen(){
 
 		LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_1);
+		sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_1));
 		LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_2);
+		sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_2));
 		LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 
 		UG_DrawFrame(208, 64, 232, 270, RGB_to_BRG(C_WHITE));
@@ -819,21 +831,34 @@ void LCD_draw_main_screen(){
 		UG_DrawCircle(123, 41, 5, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(123, 41, 4, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(123, 41, 3, RGB_to_BRG(C_WHITE));
-		LCD_PutStr(130, 35, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-
-
+		if(flash_values.deg_celsius == 1){
+			LCD_PutStr(130, 35, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(130, 35, "F", FONT_arial_36X44_F, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
 		LCD_PutStr(14, 95, "Actual temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		UG_DrawCircle(123, 126, 5, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(123, 126, 4, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(123, 126, 3, RGB_to_BRG(C_WHITE));
-		LCD_PutStr(130, 120, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(flash_values.deg_celsius == 1){
+			LCD_PutStr(130, 120, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(130, 120, "F", FONT_arial_36X44_F, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
 
 		UG_DrawFrame(6, 89, 182,175, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(5, 88, 183, 176, RGB_to_BRG(C_WHITE));
 
 		LCD_PutStr(6, 180, "Handle type:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		LCD_PutStr(6, 200, "Input voltage:          V", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(6, 220, "MCU:     °C", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(flash_values.deg_celsius == 1){
+			LCD_PutStr(6, 220, "MCU:     °C", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(6, 220, "MCU:     °F", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
 		LCD_PutStr(110, 220, "SRC:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		switch(power_source){
 		case POWER_DC:
@@ -1445,16 +1470,18 @@ int main(void)
   			//sensor_values.set_temperature = temperature_tuning;
   			// ----------------------------------------------
 
-  			/* Send debug information */
-  			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
-  				memset(&UART_buffer, '\0', sizeof(UART_buffer));
-  				sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
-  						sensor_values.thermocouple_temperature, PID_setpoint,
-						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
-  				//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
-  			    HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
-  				previous_millis_debug = HAL_GetTick();
-  			}
+			#ifdef DEBUG
+				/* Send debug information */
+				if(HAL_GetTick() - previous_millis_debug >= interval_debug){
+					memset(&UART_buffer, '\0', sizeof(UART_buffer));
+					sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
+							sensor_values.thermocouple_temperature, PID_setpoint,
+							PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
+					//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
+					HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
+					previous_millis_debug = HAL_GetTick();
+				}
+			#endif
 
  			/* Detect if a tip is present by sending a short voltage pulse and sense current */
 			if (flash_values.current_measurement == 1){

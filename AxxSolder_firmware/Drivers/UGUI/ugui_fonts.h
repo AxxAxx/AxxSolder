@@ -117,10 +117,12 @@ extern UG_FONT FONT_arial_49X57[];
 #ifdef UGUI_USE_FONT_arial_36X44_NUMBERS
 extern UG_FONT FONT_arial_36X44_NUMBERS[];
 #endif
+#ifdef UGUI_USE_FONT_arial_36X44_F
+extern UG_FONT FONT_arial_36X44_F[];
+#endif
 #ifdef UGUI_USE_FONT_arial_36X44_C
 extern UG_FONT FONT_arial_36X44_C[];
 #endif
-
 #ifdef UGUI_USE_FONT_arial_19X22
 extern UG_FONT FONT_arial_19X22[];
 #endif

@@ -52,6 +52,7 @@
 #define UGUI_USE_FONT_arial_45X52
 #define UGUI_USE_FONT_arial_49X57
 #define UGUI_USE_FONT_arial_36X44_NUMBERS
+#define UGUI_USE_FONT_arial_36X44_F
 #define UGUI_USE_FONT_arial_36X44_C
 #define UGUI_USE_FONT_arial_19X22
 /* Feature enablers */
