@@ -110,6 +110,10 @@ In order for AxxSolder to know which type of handle (NT115, T210, T245) is conne
 
 # Firmware update
 Programming or updating the firmware the STM32 MCU can be done in two ways, by using a SWD programmer or directly via USB. 
+There is a bug in the new ST Programmer software version 2.17 throwing the error: "Error: Database: There's no active configuration for this device.  All the 3 configurations are disabled!" when trying to connect to the MCU.  
+Download version 2.15 instead:
+![STprogrammer_2_15](./photos/STprogrammer_2_15.png)
+
 ## SWD programmer
 These come in a variety of models and are available from several different places online. In the below example a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is used. The MCU is programmed by the following steps:
 1. Disconnect any soldering iron handles from AxxSolder during the firmware update process.
