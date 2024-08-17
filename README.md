@@ -109,7 +109,7 @@ In order for AxxSolder to know which type of handle (NT115, T210, T245) is conne
 ![Handle_connections](./photos/handle_connectors.jpg)
 
 # Firmware update
-Programming or updating the firmware the STM32 MCU can be done in two ways, by using a SWD programmer or directly via USB. 
+Flashing or updating the firmware on the STM32 MCU can be done in two ways, by using a SWD programmer or directly via USB. 
 There is a bug in the new ST Programmer software version 2.17 throwing the error: "Error: Database: There's no active configuration for this device.  All the 3 configurations are disabled!" when trying to connect to the MCU.  
 Download version 2.15 instead:
 ![STprogrammer_2_15](./photos/STprogrammer_2_15.png)
