@@ -559,45 +559,33 @@ void settings_menu(){
 					LCD_PutStr(5, 45+(i-menu_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 				}
 
-				char str[20];
-				memset(&str, '\0', sizeof(str));
-				if ((i == 0) || (i == 1) || (i == 2) || (i == 6) || (i == 7)){
-					sprintf(str, "%.0f", convert_temperature((((double*)&flash_values)[i])));
-				}
-				else{
-					sprintf(str, "%.0f", (((double*)&flash_values)[i]));
-				}
-				if((((double*)&flash_values)[i]) < -9.5){
-					str[3] = 32;
-				}
 
-				else if((((double*)&flash_values)[i]) < 0){
-					str[2] = 32;
-					str[3] = 32;
-					str[4] = 32;
-				}
 
-				else if((((double*)&flash_values)[i]) < 9.5){
-					str[1] = 32;
-					str[2] = 32;
-					str[3] = 32;
-					str[4] = 32;
-				}
-				else if((((double*)&flash_values)[i]) < 99.5){
-					str[2] = 32;
-					str[3] = 32;
-				}
-
+				char string[5];
 				if(i < menu_length-3){
 					if((i == menu_cursor_position) && (menu_level == 1)){
-						LCD_PutStr(200, 45+(i-menu_start)*25, str, FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
+						if ((i == 0) || (i == 1) || (i == 2) || (i == 6) || (i == 7)){
+							left_align_double(string, convert_temperature(((double*)&flash_values)[i]), strlen(string));
+							LCD_PutStr(190, 45+(i-menu_start)*25, string, FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
+						}
+						else{
+							left_align_double(string, (((double*)&flash_values)[i]), strlen(string));
+							LCD_PutStr(190, 45+(i-menu_start)*25, string, FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
+						}
 					}
 					else{
-						LCD_PutStr(200, 45+(i-menu_start)*25, str, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+						if ((i == 0) || (i == 1) || (i == 2) || (i == 6) || (i == 7)){
+							left_align_double(string, convert_temperature((((double*)&flash_values)[i])), strlen(string));
+							LCD_PutStr(190, 45+(i-menu_start)*25, string, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+						}
+						else{
+							left_align_double(string, (((double*)&flash_values)[i]), strlen(string));
+							LCD_PutStr(190, 45+(i-menu_start)*25, string, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+						}
 					}
 				}
 				if(i >= menu_length-3){
-					LCD_PutStr(200, 45+(i-menu_start)*25, "        ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+					LCD_PutStr(190, 45+(i-menu_start)*25, "        ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 				}
 
 			}
@@ -609,7 +597,7 @@ void update_display(){
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.set_temperature));
-		if(sensor_values.set_temperature < 99.5){
+		if(convert_temperature(sensor_values.set_temperature) < 99.5){
 			DISPLAY_buffer[2] = 32;
 			DISPLAY_buffer[3] = 32;
 		}
@@ -693,7 +681,7 @@ void update_display(){
 	else{
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.set_temperature));
-		if(sensor_values.set_temperature < 99.5){
+		if(convert_temperature(sensor_values.set_temperature) < 99.5){
 			DISPLAY_buffer[2] = 32;
 			DISPLAY_buffer[3] = 32;
 		}
@@ -1101,6 +1089,47 @@ void get_handle_type(){
 	PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT); 	// Set max and min I limit
 }
 
+/* Function to left align a string from double */
+void left_align_double(char* str, double number, uint8_t len)
+  		{
+			char tempstring[len];
+			memset(&tempstring, '\0', len);
+			sprintf(tempstring, "%.0f", number);
+
+			if(number < -99.5){
+				;
+			}
+			else if(number < -9.5){
+				tempstring[3] = 32;
+				tempstring[4] = 32;
+			}
+			else if(number < 0){
+				tempstring[2] = 32;
+				tempstring[3] = 32;
+				tempstring[4] = 32;
+				tempstring[5] = 32;
+			}
+			else if(number < 9.5){
+				tempstring[1] = 32;
+				tempstring[2] = 32;
+				tempstring[3] = 32;
+				tempstring[4] = 32;
+				tempstring[5] = 32;
+				tempstring[6] = 32;
+			}
+			else if(number < 99.5){
+				tempstring[2] = 32;
+				tempstring[3] = 32;
+				tempstring[4] = 32;
+				tempstring[5] = 32;
+			}
+			else if(number < 999.5){
+				tempstring[3] = 32;
+				tempstring[4] = 32;
+			}
+			strcpy(str, tempstring);
+  		}
+
 /* Interrupts at button press */
 volatile static uint16_t btnPressed = 0;
 volatile static uint16_t debounceDone = 0;
@@ -1229,7 +1258,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* hadc __unused){
 		LCD_draw_earth_fault_popup();
 }
-
 
 // For DEBUG
 //HAL_GPIO_WritePin(USR_1_GPIO_Port, USR_1_Pin, GPIO_PIN_SET);
@@ -1434,7 +1462,6 @@ int main(void)
   			HAL_Delay(100);
   			beep();
   		}
-
 
   		while (1){
   			if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
