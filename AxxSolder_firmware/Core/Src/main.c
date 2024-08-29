@@ -260,7 +260,7 @@ char menu_names[menu_length][22] = { "Startup Temp °C   ",
 							"Limit Power          ",
 							"I measurement       ",
 							"Startup beep         ",
-							"Temp in celcius     ",
+							"Temp in celsius     ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
