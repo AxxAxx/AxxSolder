@@ -36,7 +36,7 @@
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  2;
-uint8_t fw_version_patch =  0;
+uint8_t fw_version_patch =  1;
 
 #define BTN_LONG_PRESS 15 //*50ms (htim16 interval) --> 15 = 750ms
 
@@ -256,11 +256,11 @@ char menu_names[menu_length][22] = { "Startup Temp °C   ",
 							"Preset Temp 1 °C    ",
 							"Preset Temp 2 °C    ",
 							"GPIO4 ON at run    ",
-							"Screen rotation      ",
+							"Screen Rotation      ",
 							"Limit Power          ",
-							"I measurement       ",
-							"Startup beep         ",
-							"Temp in celsius     ",
+							"I Measurement       ",
+							"Startup Beep         ",
+							"Temp in Celsius     ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
