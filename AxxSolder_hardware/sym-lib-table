@@ -47,4 +47,6 @@
   (lib (name "INA180A4IDBVT")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/INA180A4IDBVT.kicad_sym")(options "")(descr ""))
   (lib (name "INA281A5QDBVRQ1")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/INA281A5QDBVRQ1.kicad_sym")(options "")(descr ""))
   (lib (name "0154007_DR")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/0154007_DR.kicad_sym")(options "")(descr ""))
+  (lib (name "TSW-108-07-T-S")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/TSW-108-07-T-S.kicad_sym")(options "")(descr ""))
+  (lib (name "TSW-101-07-T-S")(type "KiCad")(uri "${KIPRJMOD}/3rd-parties-libraries/schematic-symbols/TSW-101-07-T-S.kicad_sym")(options "")(descr ""))
 )

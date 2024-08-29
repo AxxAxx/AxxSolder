@@ -372,7 +372,7 @@ void get_mcu_temp(){
 
 /* Function to get the hardware version based on version bit pins */
 uint8_t get_hw_version(){
-	return (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_3_Pin) << 2) + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_2_Pin) << 1) + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_1_Pin));
+	return 3 + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_3_Pin) << 2) + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_2_Pin) << 1) + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_1_Pin)); //version counting starts at version 3
 }
 
 uint16_t RGB_to_BRG(uint16_t color){
@@ -1497,18 +1497,19 @@ int main(void)
   			//sensor_values.set_temperature = temperature_tuning;
   			// ----------------------------------------------
 
-			#ifdef DEBUG
-				/* Send debug information */
-				if(HAL_GetTick() - previous_millis_debug >= interval_debug){
-					memset(&UART_buffer, '\0', sizeof(UART_buffer));
-					sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
-							sensor_values.thermocouple_temperature, PID_setpoint,
-							PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
-					//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
-					HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
-					previous_millis_debug = HAL_GetTick();
-				}
-			#endif
+
+			/* Send debug information */
+  			/*
+			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
+				memset(&UART_buffer, '\0', sizeof(UART_buffer));
+				sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
+						sensor_values.thermocouple_temperature, PID_setpoint,
+						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
+				//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
+				HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
+				previous_millis_debug = HAL_GetTick();
+			}
+			*/
 
  			/* Detect if a tip is present by sending a short voltage pulse and sense current */
 			if (flash_values.current_measurement == 1){

@@ -2,7 +2,7 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAxxAxx%2FAxxSolder&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
-Interested in purchasing an AxxSolder 3.0? On [Tindie](https://www.tindie.com/products/axxaxx/axxsolder-30/) you can purchase assembled and tested AxxSolder 3.0 boards with connectors.  
+Interested in purchasing an AxxSolder 3.1? On [Tindie](https://www.tindie.com/products/axxaxx/axxsolder-30/) you can purchase assembled and tested AxxSolder 3.1 boards with connectors.  
 <a href="https://www.tindie.com/stores/axxaxx/?ref=offsite_badges&utm_source=sellers_AxxAxx&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
 
 # AxxSolder Overview
@@ -11,7 +11,7 @@ Two different versions are designed around the same PCB and software - one solde
 ![coverphoto](./photos/AxxSolder_cover.jpg)
 
 # Questions and support
-Please use [Discord](https://discord.gg/d884Ce2C) for build related and general questions.
+Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and general questions.
 
 # Table of Contents
 - [AxxSolder Overview](#axxsolder-overview)
@@ -73,6 +73,7 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 # Software Version History and Hardware Compatibility
 | Version | Date  | Hardware Compatibility |
 |---------|------|----------------------|
+|[v3.2.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.0)|Aug 13, 2024|V3.*|
 |[v3.1.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.1.0)|Jun 5, 2024|V3.*|
 |[v3.0.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Apr 25, 2024|V3.*|
 |[v3.0.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Mar 26, 2024|V3.*|
@@ -159,6 +160,7 @@ To access the user settings the user holds down the encoder button at start-up. 
 |Limit Power|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
 |I measurement|Measure the heater current|ON/OFF|ON
 |Startup beep|Beep after startup|ON/OFF|ON
+|Temp in celcius|Show temperatures in Celcius and not Fahrenheit|ON/OFF|ON
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
