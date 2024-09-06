@@ -242,7 +242,7 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.standby_temp = 150,
 											.standby_time = 10,
 											.emergency_time = 30,
-											.buzzer_enable = 1,
+											.buzzer_enabled = 1,
 											.preset_temp_1 = 330,
 											.preset_temp_2 = 430,
 											.GPIO4_ON_at_run = 0,
@@ -259,7 +259,7 @@ char menu_names[menu_length][22] = { "Startup Temp °C   ",
 							"Standby Temp °C  ",
 							"Standby Time °C   ",
 							"Sleep Time           ",
-							"Buzzer Enable      ",
+							"Buzzer Enabled     ",
 							"Preset Temp 1 °C    ",
 							"Preset Temp 2 °C    ",
 							"GPIO4 ON at run    ",
@@ -958,14 +958,6 @@ void get_set_temperature(){
 	}
 }
 
-/* Beep the beeper */
-void beep(){
-	if(flash_values.buzzer_enable == 1){
-		HAL_TIM_PWM_Start_IT(&htim4, TIM_CHANNEL_2);
-		HAL_TIM_Base_Start_IT(&htim17);
-	}
-}
-
 /* Function to check if the delta temperature is larger than expected */
 void handle_delta_temperature(){
 	if((startup_done == 1) && ((sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous) > MAX_TC_DELTA_FAULTDETECTION)){
@@ -1150,7 +1142,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 /* Interrupts at every encoder increment */
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	if ((htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) || (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) ) {
-		beep();
+		beep(flash_values.buzzer_enabled);
 	}
 }
 
@@ -1203,34 +1195,34 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		if(btnPressed == SW_1_Pin && HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_RESET){
 			SW_ready = 1;
 			SW_1_pressed = 1;
-			beep();
+			beep(flash_values.buzzer_enabled);
 			timerCycles = 0;
 		}else if(timerCycles > BTN_LONG_PRESS && btnPressed == SW_1_Pin && HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET){
 			SW_ready = 1;
-			beep();
+			beep(flash_values.buzzer_enabled);
 			SW_1_pressed_long = 1;
 			timerCycles = 0;
 		}
 		else if(btnPressed == SW_2_Pin && HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin) == GPIO_PIN_RESET){
 			SW_ready = 1;
 			SW_2_pressed = 1;
-			beep();
+			beep(flash_values.buzzer_enabled);
 			timerCycles = 0;
 		}else if(timerCycles > BTN_LONG_PRESS && btnPressed == SW_2_Pin && HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin) == GPIO_PIN_SET){
 			SW_ready = 1;
-			beep();
+			beep(flash_values.buzzer_enabled);
 			SW_2_pressed_long = 1;
 			timerCycles = 0;
 		}
 		else if(btnPressed == SW_3_Pin && HAL_GPIO_ReadPin(SW_3_GPIO_Port, SW_3_Pin) == GPIO_PIN_RESET){
 			SW_ready = 1;
 			SW_3_pressed = 1;
-			beep();
+			beep(flash_values.buzzer_enabled);
 			timerCycles = 0;
 		}
 		else if(timerCycles > BTN_LONG_PRESS && btnPressed == SW_3_Pin && HAL_GPIO_ReadPin(SW_3_GPIO_Port, SW_3_Pin) == GPIO_PIN_SET){
 			SW_ready = 1;
-			beep();
+			beep(flash_values.buzzer_enabled);
 			SW_3_pressed_long = 1;
 			timerCycles = 0;
 		}else{
@@ -1461,11 +1453,7 @@ int main(void)
   		LCD_draw_main_screen();
 
   		/* Start-up beep */
-  		if(flash_values.startup_beep == 1){
-  			beep();
-  			HAL_Delay(100);
-  			beep();
-  		}
+  		beep_startup(flash_values.startup_beep);
 
   		//Flag to indicate that the startup sequence is done
   		startup_done = 1;
