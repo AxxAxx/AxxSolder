@@ -963,7 +963,7 @@ void get_set_temperature(){
 
 /* Function to check if the delta temperature is larger than expected */
 void handle_delta_temperature(){
-	if((startup_done == 1) && ((sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous) > MAX_TC_DELTA_FAULTDETECTION)){
+	/*if((startup_done == 1) && ((sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous) > MAX_TC_DELTA_FAULTDETECTION)){
 		heater_off();
 		sensor_values.heater_current = 0;
 		update_display();
@@ -971,7 +971,7 @@ void handle_delta_temperature(){
 		change_state(EMERGENCY_SLEEP);
 	}
 	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
-}
+*/}
 
 /* Function to set state to EMERGENCY_SLEEP */
 void handle_emergency_shutdown(){
@@ -1331,7 +1331,7 @@ int main(void)
 	Moving_Average_Init(&thermocouple_temperature_display_filter_struct,10);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
-	Moving_Average_Init(&current_filterStruct,10);
+	Moving_Average_Init(&current_filterStruct,5);
 	Moving_Average_Init(&stand_sense_filterStruct,20);
 	Moving_Average_Init(&handle1_sense_filterStruct,20);
 	Moving_Average_Init(&handle2_sense_filterStruct,20);
