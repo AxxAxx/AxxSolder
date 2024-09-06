@@ -27,8 +27,8 @@
   *SOFTWARE.
   */
 
-#ifndef MOVING_AVERAGE_H
-#define MOVING_AVERAGE_H
+#ifndef INC_MOVING_AVERAGE_H
+#define INC_MOVING_AVERAGE_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "stdint.h"

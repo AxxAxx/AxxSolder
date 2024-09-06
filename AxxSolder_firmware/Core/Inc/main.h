@@ -38,7 +38,7 @@ typedef struct{
 	double standby_temp;
 	double standby_time;
 	double emergency_time;
-	double buzzer_enable;
+	double buzzer_enabled;
 	double preset_temp_1;
 	double preset_temp_2;
 	double GPIO4_ON_at_run;
