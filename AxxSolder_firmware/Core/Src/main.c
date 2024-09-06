@@ -27,6 +27,7 @@
 #include "moving_average.h"
 #include "flash.h"
 #include "stusb4500.h"
+#include "buzzer.h"
 #include <math.h>
 #include <stdio.h>
 //#include "usbd_cdc_if.h"
@@ -94,7 +95,7 @@ volatile uint8_t SW_3_pressed_long = 0;
 typedef enum {
 	POWER_DC,
 	POWER_USB,
-	POWER_BAT
+	POWER_BAT //Future feature
 }power_source_t;
 power_source_t power_source = POWER_DC;
 
@@ -106,7 +107,6 @@ typedef enum {
 	EMERGENCY_SLEEP,
 	HALTED,
 } mainstates;
-mainstates active_state = SLEEP;
 
 uint8_t sleep_state_written_to_LCD = 0;
 uint8_t standby_state_written_to_LCD = 0;
@@ -213,8 +213,8 @@ struct sensor_values_struct {
 	double in_stand;
 	double handle1_sense;
 	double handle2_sense;
+	mainstates current_state;
 	mainstates previous_state;
-	double enc_button_status;
 	float max_power_watt;
 	double USB_PD_power_limit;
 };
@@ -230,8 +230,8 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.in_stand = 0.0,
 											.handle1_sense  = 0.0,
 											.handle2_sense  = 0.0,
+											.current_state = SLEEP,
 											.previous_state = SLEEP,
-											.enc_button_status = 0.0,
 											.max_power_watt = 0,
 											.USB_PD_power_limit = 0};
 
@@ -388,9 +388,9 @@ uint16_t RGB_to_BRG(uint16_t color){
 }
 
 void change_state(mainstates new_state){
-	sensor_values.previous_state = active_state;
-	active_state = new_state;
-	if((active_state == RUN) && (flash_values.GPIO4_ON_at_run == 1)){
+	sensor_values.previous_state = sensor_values.current_state;
+	sensor_values.current_state = new_state;
+	if((sensor_values.current_state == RUN) && (flash_values.GPIO4_ON_at_run == 1)){
 		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_SET);
 	}
 	else{
@@ -680,7 +680,7 @@ void update_display(){
 		}
 		LCD_PutStr(185, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
+		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(214, 73,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(216, 99, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -692,7 +692,7 @@ void update_display(){
 			sleep_state_written_to_LCD = 1;
 			standby_state_written_to_LCD = 0;
 		}
-		else if((active_state == STANDBY) && !standby_state_written_to_LCD){
+		else if((sensor_values.current_state == STANDBY) && !standby_state_written_to_LCD){
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(214, 73,  "S", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(214, 99,  "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -704,7 +704,7 @@ void update_display(){
 			standby_state_written_to_LCD = 1;
 			sleep_state_written_to_LCD = 0;
 		}
-		else if(active_state == RUN){
+		else if(sensor_values.current_state == RUN){
 			UG_FillFrame(210, 268-(PID_output/PID_MAX_OUTPUT)*202, 	230, 	268,									RGB_to_BRG(C_LIGHT_SKY_BLUE));
 			UG_FillFrame(210, 66, 									230, 	268-(PID_output/PID_MAX_OUTPUT)*202, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
@@ -756,7 +756,7 @@ void update_display(){
 			LCD_PutStr(120, 180, "NT115", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
-		if((active_state == SLEEP || active_state == EMERGENCY_SLEEP || active_state == HALTED) && !sleep_state_written_to_LCD){
+		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(290,12,310,229, RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(294, 6,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(296, 41, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -767,7 +767,7 @@ void update_display(){
 			sleep_state_written_to_LCD = 1;
 			standby_state_written_to_LCD = 0;
 		}
-		else if((active_state == STANDBY) && !standby_state_written_to_LCD){
+		else if((sensor_values.current_state == STANDBY) && !standby_state_written_to_LCD){
 			UG_FillFrame(290,12,310,229, RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(294, 6,  "S", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(294, 35,  "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -779,7 +779,7 @@ void update_display(){
 			standby_state_written_to_LCD = 1;
 			sleep_state_written_to_LCD = 0;
 		}
-		else if(active_state == RUN){
+		else if(sensor_values.current_state == RUN){
 			UG_FillFrame(290, 229-(PID_output/PID_MAX_OUTPUT)*217, 	310, 	229, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
 			UG_FillFrame(290, 12, 									310, 	229-(PID_output/PID_MAX_OUTPUT)*217, RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
@@ -950,6 +950,9 @@ void LCD_draw_earth_fault_popup(){
 	Error_Handler();
 }
 
+
+
+
 /* Get encoder value (Set temp.) and limit is NOT heating_halted*/
 void get_set_temperature(){
 	if(custom_temperature_on == 0){
@@ -973,31 +976,31 @@ void handle_delta_temperature(){
 /* Function to set state to EMERGENCY_SLEEP */
 void handle_emergency_shutdown(){
 	/* Get time when iron turns on */
-	if(sensor_values.previous_state != RUN && active_state == RUN){
+	if(sensor_values.previous_state != RUN && sensor_values.current_state == RUN){
 		previous_millis_left_stand = HAL_GetTick();
 	}
 	/* Set state to EMERGENCY_SLEEP if iron ON for longer time than emergency_time */
-	if ((sensor_values.in_stand == 0) && (HAL_GetTick() - previous_millis_left_stand >= flash_values.emergency_time*60000) && active_state == RUN){
+	if ((sensor_values.in_stand == 0) && (HAL_GetTick() - previous_millis_left_stand >= flash_values.emergency_time*60000) && sensor_values.current_state == RUN){
 		show_popup("Standby timeout");
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
-	if((sensor_values.bus_voltage <= MIN_BUSVOLTAGE) && (active_state == RUN)){
+	if((sensor_values.bus_voltage <= MIN_BUSVOLTAGE) && (sensor_values.current_state == RUN)){
 		show_popup("Inp. Voltage too low");
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
-	if((sensor_values.max_power_watt <= MIN_BUSPOWER) && (active_state == RUN)){
+	if((sensor_values.max_power_watt <= MIN_BUSPOWER) && (sensor_values.current_state == RUN)){
 		show_popup("Inp. Power too low");
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if no tip detected (no current draw) */
-	else if((sensor_values.heater_current < 1) && (active_state == RUN)){ //NT115 at 9V draws 81
+	else if((sensor_values.heater_current < 1) && (sensor_values.current_state == RUN)){ //NT115 at 9V draws 81
 		show_popup("No tip detected");
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
-	else if((sensor_values.thermocouple_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (active_state == RUN)){
+	else if((sensor_values.thermocouple_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (sensor_values.current_state == RUN)){
 		show_popup("OVERTEMP");
 		change_state(EMERGENCY_SLEEP);
 	}
@@ -1008,10 +1011,10 @@ void handle_button_status(){
 	if(SW_1_pressed == 1){
 		SW_1_pressed = 0;
 		// toggle between RUN and HALTED
-		if ((active_state == RUN) || (active_state == STANDBY)){
+		if ((sensor_values.current_state == RUN) || (sensor_values.current_state == STANDBY)){
 			change_state(HALTED);
 		}
-		else if ((active_state == HALTED) || (active_state == EMERGENCY_SLEEP)){
+		else if ((sensor_values.current_state == HALTED) || (sensor_values.current_state == EMERGENCY_SLEEP)){
 			change_state(RUN);
 		}
 		previous_millis_heating_halted_update = HAL_GetTick();
@@ -1042,21 +1045,21 @@ void get_stand_status(){
 
 	/* If handle is in stand set state to STANDBY */
 	if(sensor_values.in_stand >= 0.2){
-		if(active_state == RUN){
+		if (sensor_values.current_state == RUN){
 			change_state(STANDBY);
 			previous_standby_millis = HAL_GetTick();
 		}
-		if((HAL_GetTick()-previous_standby_millis >= flash_values.standby_time*60000.0) && (active_state == STANDBY)){
+		if((HAL_GetTick()-previous_standby_millis >= flash_values.standby_time*60000.0) && (sensor_values.current_state == STANDBY)){
 			change_state(SLEEP);
 		}
-		if((active_state == EMERGENCY_SLEEP) || (active_state == HALTED)){
+		if ((sensor_values.current_state == EMERGENCY_SLEEP) || (sensor_values.current_state == HALTED)){
 			change_state(SLEEP);
 		}
 	}
 
 	/* If handle is NOT in stand and state is SLEEP, change state to RUN */
 	if(sensor_values.in_stand < 0.2){
-		if((active_state == SLEEP) || (active_state == STANDBY) || (active_state == RUN)){
+		if ((sensor_values.current_state == SLEEP) || (sensor_values.current_state == STANDBY) || (sensor_values.current_state == RUN)){
 			change_state(RUN);
 		}
 	}
@@ -1347,7 +1350,6 @@ int main(void)
   		/* Read flash data */
   	    FlashRead(&flash_values);
 
-
   	    /* Set screen rotation */
   	    if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		  #define LCD_WIDTH  240
@@ -1478,7 +1480,7 @@ int main(void)
   			}
 
   			/* switch */
-  			switch (active_state) {
+  			switch(sensor_values.current_state) {
   				case RUN: {
   					PID_setpoint = sensor_values.set_temperature;
   					break;
