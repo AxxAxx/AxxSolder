@@ -149,7 +149,6 @@ uint16_t current_raw = 0;
 
 /* Thermocouple temperature */
 double TC_temp = 0;
-double TC_temp_previous = 0;
 
 /* flag to indicate that startup sequence is done */
 uint8_t startup_done = 0;
@@ -199,7 +198,7 @@ uint8_t custom_temperature_on = 0;
 #define Avg_Slope 0.0025 	// 2.5mV from datasheet
 
 /* Largest delta temperature before detecting a faulty or missing cartridge */
-#define MAX_TC_DELTA_FAULTDETECTION 35
+#define MAX_TC_DELTA_FAULTDETECTION 25
 
 /* Struct to hold sensor values */
 struct sensor_values_struct {
@@ -352,7 +351,6 @@ static void MX_TIM8_Init(void);
 static void MX_TIM6_Init(void);
 static void MX_TIM16_Init(void);
 /* USER CODE BEGIN PFP */
-void show_popup(char *text);
 
 /* USER CODE END PFP */
 
@@ -436,7 +434,6 @@ void get_thermocouple_temperature(){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_NT115 + TC_temp*TC_COMPENSATION_X1_NT115 + TC_COMPENSATION_X0_NT115;
 	}
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
-	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,530); // Clamp
 
 	sensor_values.thermocouple_temperature_display = Moving_Average_Compute(sensor_values.thermocouple_temperature, &thermocouple_temperature_display_filter_struct); /* Moving average filter */
 }
