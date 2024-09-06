@@ -149,6 +149,10 @@ uint16_t current_raw = 0;
 
 /* Thermocouple temperature */
 double TC_temp = 0;
+double TC_temp_previous = 0;
+
+/* flag to indicate that startup sequence is done */
+uint8_t startup_done = 0;
 
 /* Variables for thermocouple outlier detection */
 double TC_temp_from_ADC = 0;
@@ -194,11 +198,14 @@ uint8_t custom_temperature_on = 0;
 #define VSENSE (3.3/4096.0) 	// VSENSE value
 #define Avg_Slope 0.0025 	// 2.5mV from datasheet
 
+/* Largest delta temperature before detecting a faulty or missing cartridge */
+#define MAX_TC_DELTA_FAULTDETECTION 35
 
 /* Struct to hold sensor values */
 struct sensor_values_struct {
 	double set_temperature;
 	double thermocouple_temperature;
+	double thermocouple_temperature_previous;
 	double thermocouple_temperature_display;
 	float bus_voltage;
 	float heater_current;
@@ -215,6 +222,7 @@ struct sensor_values_struct {
 
 struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
         									.thermocouple_temperature = 0.0,
+        									.thermocouple_temperature_previous = 0.0,
 											.thermocouple_temperature_display = 0,
 											.bus_voltage = 0.0,
 											.heater_current = 0,
@@ -344,6 +352,7 @@ static void MX_TIM8_Init(void);
 static void MX_TIM6_Init(void);
 static void MX_TIM16_Init(void);
 /* USER CODE BEGIN PFP */
+void show_popup(char *text);
 
 /* USER CODE END PFP */
 
@@ -919,7 +928,7 @@ void LCD_draw_main_screen(){
 	}
 }
 
-void show_popup(char * text){
+void show_popup(char *text){
 	UG_FillFrame(10, 50, 235, 105, RGB_to_BRG(C_ORANGE));
 	UG_FillFrame(15, 55, 230, 100, RGB_to_BRG(C_WHITE));
 	LCD_PutStr(20, 70, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
@@ -958,6 +967,18 @@ void beep(){
 		HAL_TIM_PWM_Start_IT(&htim4, TIM_CHANNEL_2);
 		HAL_TIM_Base_Start_IT(&htim17);
 	}
+}
+
+/* Function to check if the delta temperature is larger than expected */
+void handle_delta_temperature(){
+	if((startup_done == 1) && ((sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous) > MAX_TC_DELTA_FAULTDETECTION)){
+		heater_off();
+		sensor_values.heater_current = 0;
+		update_display();
+		show_popup("No or Faulty tip!");
+		change_state(EMERGENCY_SLEEP);
+	}
+	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
 }
 
 /* Function to set state to EMERGENCY_SLEEP */
@@ -1449,6 +1470,10 @@ int main(void)
   			beep();
   		}
 
+  		//Flag to indicate that the startup sequence is done
+  		startup_done = 1;
+  		sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
+
   		while (1){
   			if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
   				get_stand_status();
@@ -1456,6 +1481,7 @@ int main(void)
   				get_set_temperature();
   				handle_button_status();
   	  			handle_emergency_shutdown();
+  	  			handle_delta_temperature();
   				previous_sensor_update_high_update = HAL_GetTick();
   			}
 
