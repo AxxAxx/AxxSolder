@@ -30,6 +30,7 @@
 #include "buzzer.h"
 #include <math.h>
 #include <stdio.h>
+#include <float.h>
 //#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
@@ -51,7 +52,7 @@ enum handles {
 	NT115,
 	T210,
 	T245
-} handle;
+} attached_handle;
 
 /* Timing constants */
 uint32_t previous_millis_display = 0;
@@ -172,6 +173,11 @@ uint16_t TC_outliers_threshold = 300;
 #define MIN_BUSPOWER 8.0
 #define USB_PD_POWER_REDUCTION_FACTOR 1.0
 
+/* Max allowed power per handle type */
+#define NT115_MAX_POWER 22
+#define T210_MAX_POWER 	65
+#define T245_MAX_POWER 	130
+
 /* MinMax selectable values */
 double min_selectable_temperature = 20;
 double max_selectable_temperature = 450;
@@ -233,7 +239,7 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.current_state = SLEEP,
 											.previous_state = SLEEP,
 											.max_power_watt = 0,
-											.USB_PD_power_limit = 0};
+											.USB_PD_power_limit = DBL_MAX};
 
 /* Struct to hold flash values */
 Flash_values flash_values;
@@ -364,6 +370,11 @@ double clamp(double d, double min, double max) {
   return t > max ? max : t;
 }
 
+/* Function to get min of two floats */
+double min(double a, double b) {
+  return a < b ? a : b;
+}
+
 /* Returns the average of 100 readings of the index+3*n value in the ADC_buffer vector */
 double get_mean_ADC_reading_indexed(uint8_t index){
 	ADC_filter_mean = 0;
@@ -424,16 +435,17 @@ void get_thermocouple_temperature(){
 	/* Compute moving average of Thermocouple measurements */
 	TC_temp = Moving_Average_Compute(TC_temp_from_ADC, &thermocouple_temperature_filter_struct); /* Moving average */
 
-	if(handle == T210){
+	if(attached_handle == T210){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_T210 + TC_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
 	}
-	else if(handle == T245){
+	else if(attached_handle == T245){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_T245 + TC_temp*TC_COMPENSATION_X1_T245 + TC_COMPENSATION_X0_T245;
 	}
-	else if(handle == NT115){
+	else if(attached_handle == NT115){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_NT115 + TC_temp*TC_COMPENSATION_X1_NT115 + TC_COMPENSATION_X0_NT115;
 	}
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
+	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,999); // Clamp
 
 	sensor_values.thermocouple_temperature_display = Moving_Average_Compute(sensor_values.thermocouple_temperature, &thermocouple_temperature_display_filter_struct); /* Moving average filter */
 }
@@ -455,7 +467,7 @@ void heater_off(){
 	set_heater_duty(0);
 }
 
-/* return the temperature in the correct unit */
+/* Return the temperature in the correct unit */
 double convert_temperature(double temperature){
 	if (flash_values.deg_celsius == 1){
 		return temperature;
@@ -662,13 +674,13 @@ void update_display(){
 		}
 		LCD_PutStr(56, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		if(handle == T210){
+		if(attached_handle == T210){
 			LCD_PutStr(125, 235, "T210   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
-		else if(handle == T245){
+		else if(attached_handle == T245){
 			LCD_PutStr(125, 235, "T245   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
-		else if(handle == NT115){
+		else if(attached_handle == NT115){
 			LCD_PutStr(125, 235, "NT115", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
@@ -746,13 +758,13 @@ void update_display(){
 		}
 		LCD_PutStr(52, 220, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		if(handle == T210){
+		if(attached_handle == T210){
 			LCD_PutStr(120, 180, "T210   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
-		else if(handle == T245){
+		else if(attached_handle == T245){
 			LCD_PutStr(120, 180, "T245   ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
-		else if(handle == NT115){
+		else if(attached_handle == NT115){
 			LCD_PutStr(120, 180, "NT115", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
@@ -950,10 +962,7 @@ void LCD_draw_earth_fault_popup(){
 	Error_Handler();
 }
 
-
-
-
-/* Get encoder value (Set temp.) and limit is NOT heating_halted*/
+/* Get encoder value (Set temp.) and limit */
 void get_set_temperature(){
 	if(custom_temperature_on == 0){
 		TIM2->CNT = clamp(TIM2->CNT, min_selectable_temperature, max_selectable_temperature);
@@ -963,7 +972,7 @@ void get_set_temperature(){
 
 /* Function to check if the delta temperature is larger than expected */
 void handle_delta_temperature(){
-	/*if((startup_done == 1) && ((sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous) > MAX_TC_DELTA_FAULTDETECTION)){
+	if((startup_done == 1) && ((sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous) > MAX_TC_DELTA_FAULTDETECTION)){
 		heater_off();
 		sensor_values.heater_current = 0;
 		update_display();
@@ -971,7 +980,7 @@ void handle_delta_temperature(){
 		change_state(EMERGENCY_SLEEP);
 	}
 	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
-*/}
+}
 
 /* Function to set state to EMERGENCY_SLEEP */
 void handle_emergency_shutdown(){
@@ -989,13 +998,13 @@ void handle_emergency_shutdown(){
 		show_popup("Inp. Voltage too low");
 		change_state(EMERGENCY_SLEEP);
 	}
-	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
+	/* Set state to EMERGENCY_SLEEP if input power is too low */
 	if((sensor_values.max_power_watt <= MIN_BUSPOWER) && (sensor_values.current_state == RUN)){
 		show_popup("Inp. Power too low");
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if no tip detected (no current draw) */
-	else if((sensor_values.heater_current < 1) && (sensor_values.current_state == RUN)){ //NT115 at 9V draws 81
+	else if((sensor_values.heater_current < 1) && (sensor_values.current_state == RUN)){ //NT115 at 9V draws 2.3
 		show_popup("No tip detected");
 		change_state(EMERGENCY_SLEEP);
 	}
@@ -1065,7 +1074,7 @@ void get_stand_status(){
 	}
 }
 
-/* Automatically detect handle type, T210 or T245 based on HANDLE_DETECTION_Pin, which is connected to BLUE for T210.*/
+/* Automatically detect handle type, NT115, T210 or T245 based on HANDLE_INP_1_Pin and HANDLE_INP_2_Pin.*/
 void get_handle_type(){
 	uint8_t handle_status;
 	if(HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_1_Pin) == 0){
@@ -1084,45 +1093,50 @@ void get_handle_type(){
 	}
 	sensor_values.handle2_sense = Moving_Average_Compute(handle_status, &handle2_sense_filterStruct); /* Moving average filter */
 
-	/* If a custom power limit is specified in user flash, use this limit */
-	if(flash_values.power_limit != 0){
-		sensor_values.max_power_watt = flash_values.power_limit;
-	}
 
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
-		handle = NT115;
+		attached_handle = NT115;
+	}
+	/* Determine if T210 handle is detected */
+	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
+		attached_handle = T210;
+	}
+	/* Determine if T245 handle is detected */
+	else{
+		attached_handle = T245;
+	}
+}
+
+void get_handle_values(){
+	if(attached_handle == NT115){
 		Kp = 3;
 		Ki = 1;
 		Kd = 0.25;
 		PID_MAX_I_LIMIT = 100;
-		/* If a custom power limit is not set use max allowed power for specific handle */
-		if (flash_values.power_limit == 0 && sensor_values.USB_PD_power_limit == 0){
-			sensor_values.max_power_watt = 22; //22W
-		}
+		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
+		sensor_values.max_power_watt = min(sensor_values.USB_PD_power_limit, NT115_MAX_POWER);
 	}
-	/* Determine if T210 handle is detected */
-	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
-		handle = T210;
+	else if(attached_handle == T210){
 		Kp = 5;
 		Ki = 5.5;
 		Kd = 0.25;
 		PID_MAX_I_LIMIT = 125;
-		/* If a custom power limit is not set use max allowed power for specific handle */
-		if (flash_values.power_limit == 0 && sensor_values.USB_PD_power_limit == 0){
-			sensor_values.max_power_watt = 65; //65W
-		}
+		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
+		sensor_values.max_power_watt = min(sensor_values.USB_PD_power_limit, T210_MAX_POWER);
 	}
-	else{
-		handle = T245;
+	else if(attached_handle == T245){
 		Kp = 8;
 		Ki = 5;
 		Kd = 1;
 		PID_MAX_I_LIMIT = 150;
-		/* If a custom power limit is not set use max allowed power for specific handle */
-		if (flash_values.power_limit == 0 && sensor_values.USB_PD_power_limit == 0){
-			sensor_values.max_power_watt = 130; //130W
-		}
+		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
+		sensor_values.max_power_watt = min(sensor_values.USB_PD_power_limit, T245_MAX_POWER);
+	}
+
+	/* If a custom power limit is specified in user flash, use this limit */
+	if(flash_values.power_limit != 0){
+		sensor_values.max_power_watt = flash_values.power_limit;
 	}
 
 	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
@@ -1149,7 +1163,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	}
 }
 
-// Callback:
+/* Timer Callbacks */
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
 	if (((htim == &htim1) && (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)) && (current_measurement_requested == 1)){
 		current_measurement_requested = 0;
@@ -1158,7 +1172,6 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
 	}
 }
 
-/* Timer Callbacks */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	/* take thermocouple measurement every 25 ms */
 	if (htim == &htim6){
@@ -1367,6 +1380,7 @@ int main(void)
   		/* Set startup state */
   	    change_state(HALTED);
 
+  	    /* start settings menu */
   		settings_menu();
 
   		/* Set initial encoder timer value */
@@ -1386,6 +1400,7 @@ int main(void)
   			get_mcu_temp();
   			get_thermocouple_temperature();
   			get_handle_type();
+  			get_handle_values();
   			get_stand_status();
   			handle_button_status();
   		}
@@ -1434,12 +1449,9 @@ int main(void)
 							uint8_t maxPowerAvailable = 0;
 							stusb_set_highest_pdo(&maxPowerAvailable, currendPdoIndex);
 
-							//if selected power is higher than available power --> reduce power
-							if(sensor_values.max_power_watt > maxPowerAvailable){
-								sensor_values.USB_PD_power_limit = 1;
-								sensor_values.max_power_watt = maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR;
-								debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR);
-							}
+							sensor_values.USB_PD_power_limit = maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR;
+							debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR);
+
 							//re-negotiate
 
 							break;
@@ -1465,10 +1477,11 @@ int main(void)
   			if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
   				get_stand_status();
   				get_handle_type();
+  				get_handle_values();
   				get_set_temperature();
   				handle_button_status();
   	  			handle_emergency_shutdown();
-  	  			handle_delta_temperature();
+  	  			//handle_delta_temperature();
   				previous_sensor_update_high_update = HAL_GetTick();
   			}
 
