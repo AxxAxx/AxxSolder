@@ -179,8 +179,8 @@ uint16_t TC_outliers_threshold = 300;
 #define T245_MAX_POWER 	130
 
 /* MinMax selectable values */
-double min_selectable_temperature = 20;
-double max_selectable_temperature = 450;
+#define MIN_SELECTABLE_TEMPERATURE 20
+#define MAX_SELECTABLE_TEMPERATURE 450
 
 /* Allow use of custom temperatue, used for tuning */
 uint8_t custom_temperature_on = 0;
@@ -199,9 +199,9 @@ uint8_t custom_temperature_on = 0;
 #define TC_COMPENSATION_X0_T245 23.777399955382318
 
 /* Constants for internal MCU temperture */
-#define V30 0.76 			// from datasheet
-#define VSENSE (3.3/4096.0) 	// VSENSE value
-#define Avg_Slope 0.0025 	// 2.5mV from datasheet
+#define V30 		0.76 			// from datasheet
+#define VSENSE 		(3.3/4096.0) 	// VSENSE value
+#define Avg_Slope 	0.0025 			// 2.5mV from datasheet
 
 /* Largest delta temperature before detecting a faulty or missing cartridge */
 #define MAX_TC_DELTA_FAULTDETECTION 25
@@ -370,7 +370,7 @@ double clamp(double d, double min, double max) {
   return t > max ? max : t;
 }
 
-/* Function to get min of two floats */
+/* Function to get min value of a and b */
 double min(double a, double b) {
   return a < b ? a : b;
 }
@@ -394,7 +394,6 @@ uint8_t get_hw_version(){
 }
 
 uint16_t RGB_to_BRG(uint16_t color){
-	//return ((color & 0b0000000000011111)  << 11)    |    ((color & 0b1111100000000000) >> 5)   |    ((color  & 0b0000011111100000) >> 6);
 	return ((((color & 0b0000000000011111)  << 11) & 0b1111100000000000) | ((color & 0b1111111111100000) >> 5));
 }
 
@@ -457,7 +456,7 @@ void set_heater_duty(uint16_t dutycycle){
 }
 
 /* Update the duty cycle of timer controlling the heater PWM */
-void heater_on(){
+void update_heater_PWM(){
 	duty_cycle = PID_output*(sensor_values.max_power_watt*POWER_CONVERSION_FACTOR/sensor_values.bus_voltage);
 	set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 }
@@ -965,7 +964,7 @@ void LCD_draw_earth_fault_popup(){
 /* Get encoder value (Set temp.) and limit */
 void get_set_temperature(){
 	if(custom_temperature_on == 0){
-		TIM2->CNT = clamp(TIM2->CNT, min_selectable_temperature, max_selectable_temperature);
+		TIM2->CNT = clamp(TIM2->CNT, MIN_SELECTABLE_TEMPERATURE, MAX_SELECTABLE_TEMPERATURE);
 		sensor_values.set_temperature = (uint16_t)(TIM2->CNT/2) * 2;
 	}
 }
@@ -1253,7 +1252,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		HAL_ADC_Stop_DMA(&hadc1);
 		HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_RESET);
 		get_thermocouple_temperature();
-		heater_on();
+		update_heater_PWM();
 		/* Compute PID */
 		PID_Compute(&TPID);
 		thermocouple_measurement_done = 1;
@@ -1261,7 +1260,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
 		sensor_values.leak_current = HAL_ADC_GetValue(&hadc2);
 		current_raw = HAL_ADC_GetValue(&hadc2);
-		heater_on();
+		update_heater_PWM();
 		current_measurement_done = 1;
 	}
 }
@@ -1453,7 +1452,6 @@ int main(void)
 							debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR);
 
 							//re-negotiate
-
 							break;
 						}
 					}
