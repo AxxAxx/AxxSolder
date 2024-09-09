@@ -151,7 +151,7 @@ uint16_t current_raw = 0;
 /* Thermocouple temperature */
 double TC_temp = 0;
 
-/* flag to indicate that startup sequence is done */
+/* Flag to indicate that startup sequence is done */
 uint8_t startup_done = 0;
 
 /* Variables for thermocouple outlier detection */
@@ -178,7 +178,7 @@ uint16_t TC_outliers_threshold = 300;
 #define T210_MAX_POWER 	65
 #define T245_MAX_POWER 	130
 
-/* MinMax selectable values */
+/* Min and Max selectable values */
 #define MIN_SELECTABLE_TEMPERATURE 20
 #define MAX_SELECTABLE_TEMPERATURE 450
 
@@ -393,6 +393,7 @@ uint8_t get_hw_version(){
 	return 3 + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_3_Pin) << 2) + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_2_Pin) << 1) + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_1_Pin)); //version counting starts at version 3
 }
 
+/* Convert RGB colour to BRG color */
 uint16_t RGB_to_BRG(uint16_t color){
 	return ((((color & 0b0000000000011111)  << 11) & 0b1111100000000000) | ((color & 0b1111111111100000) >> 5));
 }
