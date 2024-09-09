@@ -48,6 +48,23 @@ uint8_t fw_version_patch =  1;
 	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 #endif
 
+/* PID parameters */
+#define KP_NT115 		3
+#define KI_NT115 		1
+#define KD_NT115 		0.25
+#define MAX_I_NT115 	125
+
+#define KP_T210 		5
+#define KI_T210 		5.5
+#define KD_T210 		0.25
+#define MAX_I_T210 		125
+
+#define KP_T245 		8
+#define KI_T245 		5
+#define KD_T245 		1
+#define MAX_I_T245 		150
+
+/* Handles */
 enum handles {
 	NT115,
 	T210,
@@ -118,12 +135,6 @@ double Ki_tuning = 0;
 double Kd_tuning = 0;
 double temperature_tuning = 100;
 double PID_MAX_I_LIMIT_tuning = 0;
-
-/* PID tuning parameters */
-double Kp = 0;
-double Ki = 0;
-double Kd = 0;
-double PID_MAX_I_LIMIT = 150;
 
 /* PID parameters */
 #define PID_MAX_OUTPUT 500
@@ -1108,39 +1119,49 @@ void get_handle_type(){
 	}
 }
 
-void get_handle_values(){
+
+
+#define KP_NT115 		3
+#define KI_NT115 		1
+#define KD_NT115 		0.25
+#define MAX_I_NT115 	100
+
+#define KP_T210 		5
+#define KI_T210 		5.5
+#define KD_T210 		0.25
+#define MAX_I_T210 		125
+
+#define KP_T245 		8
+#define KI_T245 		5
+#define KD_T245 		1
+#define MAX_I_T245 		150
+
+
+
+void set_handle_values(){
 	if(attached_handle == NT115){
-		Kp = 3;
-		Ki = 1;
-		Kd = 0.25;
-		PID_MAX_I_LIMIT = 100;
 		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
 		sensor_values.max_power_watt = min(sensor_values.USB_PD_power_limit, NT115_MAX_POWER);
+		PID_SetTunings(&TPID, KP_NT115, KI_NT115, KD_NT115); // Update PID parameters based on handle type
+		PID_SetILimits(&TPID, -MAX_I_NT115, MAX_I_NT115); 	// Set max and min I limit
 	}
 	else if(attached_handle == T210){
-		Kp = 5;
-		Ki = 5.5;
-		Kd = 0.25;
-		PID_MAX_I_LIMIT = 125;
 		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
 		sensor_values.max_power_watt = min(sensor_values.USB_PD_power_limit, T210_MAX_POWER);
+		PID_SetTunings(&TPID, KP_T210, KI_T210, KD_T210); // Update PID parameters based on handle type
+		PID_SetILimits(&TPID, -MAX_I_T210, MAX_I_T210); 	// Set max and min I limit
 	}
 	else if(attached_handle == T245){
-		Kp = 8;
-		Ki = 5;
-		Kd = 1;
-		PID_MAX_I_LIMIT = 150;
 		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
 		sensor_values.max_power_watt = min(sensor_values.USB_PD_power_limit, T245_MAX_POWER);
+		PID_SetTunings(&TPID, KP_T245, KI_T245, KD_T245); // Update PID parameters based on handle type
+		PID_SetILimits(&TPID, -MAX_I_T245, MAX_I_T245); 	// Set max and min I limit
 	}
 
 	/* If a custom power limit is specified in user flash, use this limit */
 	if(flash_values.power_limit != 0){
 		sensor_values.max_power_watt = flash_values.power_limit;
-	}
-
-	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
-	PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT); 	// Set max and min I limit
+}
 }
 
 /* Interrupts at button press */
@@ -1387,11 +1408,11 @@ int main(void)
   		TIM2->CNT = flash_values.startup_temperature;
 
   		/* Initiate PID controller */
-  		PID(&TPID, &sensor_values.thermocouple_temperature, &PID_output, &PID_setpoint, Kp, Ki, Kd, _PID_CD_DIRECT);
+  		PID(&TPID, &sensor_values.thermocouple_temperature, &PID_output, &PID_setpoint, 0, 0, 0, _PID_CD_DIRECT); //PID parameters are set depending on detected handle by set_handle_values()
   		PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
   		PID_SetSampleTime(&TPID, interval_PID_update, 0); 		//Set PID sample time to "interval_PID_update" to make sure PID is calculated every time it is called
   		PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
-        PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT);         // Set max and min I limit
+        PID_SetILimits(&TPID, 0, 0);         // Set max and min I limit
 
   		/* Init and fill filter structures with initial values */
   		for (int i = 0; i<200;i++){
@@ -1400,7 +1421,7 @@ int main(void)
   			get_mcu_temp();
   			get_thermocouple_temperature();
   			get_handle_type();
-  			get_handle_values();
+  			set_handle_values();
   			get_stand_status();
   			handle_button_status();
   		}
@@ -1476,7 +1497,7 @@ int main(void)
   			if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
   				get_stand_status();
   				get_handle_type();
-  				get_handle_values();
+  				set_handle_values();
   				get_set_temperature();
   				handle_button_status();
   	  			handle_emergency_shutdown();
