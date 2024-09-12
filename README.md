@@ -173,34 +173,21 @@ To access the user settings the user holds down the encoder button at start-up. 
 # PID control
 As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
 ```c
-	/* Determine if NT115 handle is detected */
-	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
-		handle = NT115;
-		sensor_values.max_power_watt = 22; //22W
-		Kp = 3;
-		Ki = 1;
-		Kd = 0.25;
-		PID_MAX_I_LIMIT = 100;
-	}
-	/* Determine if T210 handle is detected */
-	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
-		handle = T210;
-		sensor_values.max_power_watt = 65; //65W
-		Kp = 5;
-		Ki = 5;
-		Kd = 0.5;
-		PID_MAX_I_LIMIT = 125;
-	}
-	else{
-		handle = T245;
-		sensor_values.max_power_watt = 130; //130W
-		Kp = 8;
-		Ki = 3;
-		Kd = 0.5;
-		PID_MAX_I_LIMIT = 150;
-	}
-	PID_SetTunings(&TPID, Kp, Ki, Kd); // Update PID parameters based on handle type
-	PID_SetILimits(&TPID, -PID_MAX_I_LIMIT, PID_MAX_I_LIMIT); 	// Set max and min I limit
+/* PID parameters */
+#define KP_NT115 		3
+#define KI_NT115 		1
+#define KD_NT115 		0.25
+#define MAX_I_NT115 	125
+
+#define KP_T210 		5
+#define KI_T210 		5.5
+#define KD_T210 		0.25
+#define MAX_I_T210 		125
+
+#define KP_T245 		8
+#define KI_T245 		5
+#define KD_T245 		1
+#define MAX_I_T245 		150
 ```
 The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-007 cartridge.  
 
