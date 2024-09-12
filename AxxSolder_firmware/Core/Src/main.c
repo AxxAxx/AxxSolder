@@ -41,8 +41,7 @@ uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  2;
 uint8_t fw_version_patch =  1;
 
-#define BTN_LONG_PRESS 15 //*50ms (htim16 interval) --> 15 = 750ms
-
+//#define PID_TUNING
 //#define DEBUG
 #ifdef DEBUG
 	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -63,13 +62,6 @@ uint8_t fw_version_patch =  1;
 #define KI_T245 		5
 #define KD_T245 		1
 #define MAX_I_T245 		150
-
-/* Handles */
-enum handles {
-	NT115,
-	T210,
-	T245
-} attached_handle;
 
 /* Timing constants */
 uint32_t previous_millis_display = 0;
@@ -94,14 +86,12 @@ uint32_t interval_sensor_update_high_update = 10;
 uint32_t previous_sensor_update_low_update = 0;
 uint32_t interval_sensor_update_low_update = 100;
 
-/* Button flags */
-volatile uint8_t SW_ready = 1;
-volatile uint8_t SW_1_pressed = 0;
-volatile uint8_t SW_2_pressed = 0;
-volatile uint8_t SW_3_pressed = 0;
-volatile uint8_t SW_1_pressed_long = 0;
-volatile uint8_t SW_2_pressed_long = 0;
-volatile uint8_t SW_3_pressed_long = 0;
+/* Handles */
+enum handles {
+	NT115,
+	T210,
+	T245
+} attached_handle;
 
 /* power sources */
 typedef enum {
@@ -207,6 +197,18 @@ uint16_t TC_outliers_detected = 0;
 
 /* Largest delta temperature before detecting a faulty or missing cartridge */
 #define MAX_TC_DELTA_FAULTDETECTION 25
+
+/* Define time for long button press */
+#define BTN_LONG_PRESS 15 //*50ms (htim16 interval) --> 15 = 750ms
+
+/* Button flags */
+volatile uint8_t SW_ready = 1;
+volatile uint8_t SW_1_pressed = 0;
+volatile uint8_t SW_2_pressed = 0;
+volatile uint8_t SW_3_pressed = 0;
+volatile uint8_t SW_1_pressed_long = 0;
+volatile uint8_t SW_2_pressed_long = 0;
+volatile uint8_t SW_3_pressed_long = 0;
 
 /* Struct to hold sensor values */
 struct sensor_values_struct {
@@ -1499,13 +1501,13 @@ int main(void)
 			}
 		}
 
-		// TUNING - ONLY USED DURING MANUAL PID TUNING
-		// ----------------------------------------------
-		//custom_temperature_on = 1;
-		//PID_SetTunings(&TPID, Kp_tuning, Ki_tuning, Kd_tuning/10.0);
-		//PID_SetILimits(&TPID, -PID_MAX_I_LIMIT_tuning, PID_MAX_I_LIMIT_tuning); 	// Set max and min I limit
-		//sensor_values.set_temperature = temperature_tuning;
-		// ----------------------------------------------
+		/* PID Tuning manual control */
+		#ifdef PID_TUNING
+		custom_temperature_on = 1;
+		PID_SetTunings(&TPID, Kp_tuning, Ki_tuning, Kd_tuning/10.0);
+		PID_SetILimits(&TPID, -PID_MAX_I_LIMIT_tuning, PID_MAX_I_LIMIT_tuning); 	// Set max and min I limit
+		sensor_values.set_temperature = temperature_tuning;
+		#endif
 
 		/* Send debug information */
 		#ifdef DEBUG
