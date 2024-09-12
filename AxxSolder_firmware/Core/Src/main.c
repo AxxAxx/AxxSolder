@@ -28,6 +28,7 @@
 #include "flash.h"
 #include "stusb4500.h"
 #include "buzzer.h"
+#include "debug.h"
 #include <math.h>
 #include <stdio.h>
 #include <float.h>
@@ -44,7 +45,6 @@ uint8_t fw_version_patch =  1;
 
 //#define DEBUG
 #ifdef DEBUG
-	#include "debug.h"
 	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 #endif
 
@@ -78,18 +78,12 @@ uint32_t interval_display = 40;
 uint32_t previous_millis_debug = 0;
 uint32_t interval_debug = 50;
 
-uint32_t previous_PID_update = 0;
-uint32_t interval_PID_update = 25;
-
-uint32_t previous_millis_HANDLE_update = 0;
-uint32_t interval_HANDLE_update = 200;
-
 uint32_t previous_millis_heating_halted_update = 0;
 uint32_t interval_heating_halted_update = 500;
 
 uint32_t previous_millis_left_stand = 0;
 
-uint32_t previous_standby_millis = 0;
+uint32_t previous_millis_standby = 0;
 
 uint32_t previous_measure_current_update = 0;
 uint32_t interval_measure_current = 250;
@@ -136,8 +130,12 @@ double Kd_tuning = 0;
 double temperature_tuning = 100;
 double PID_MAX_I_LIMIT_tuning = 0;
 
+/* Allow use of custom temperatue, used for tuning */
+uint8_t custom_temperature_on = 0;
+
 /* PID parameters */
 #define PID_MAX_OUTPUT 500
+#define PID_UPDATE_INTERVAL 25
 
 /* Buffer for UART print */
 char UART_buffer[40];
@@ -145,18 +143,11 @@ char UART_buffer[40];
 /* Buffer for UART print */
 char DISPLAY_buffer[40];
 
-/* Converts power in W to correct duty cycle */
-#define POWER_CONVERSION_FACTOR 0.123
-
-/* Filtered ADC reading value */
-float ADC_filter_mean = 0.0;
-
 /* ADC Buffer */
 #define ADC1_BUF_LEN 57 //3*19
 uint16_t ADC1_BUF[ADC1_BUF_LEN];
 
-/* RAW ADC data */
-uint16_t mcu_temperature_raw = 0;
+/* RAW ADC from current measurement */
 uint16_t current_raw = 0;
 
 /* Thermocouple temperature */
@@ -170,7 +161,7 @@ double TC_temp_from_ADC = 0;
 double TC_temp_from_ADC_previous = 0;
 double TC_temp_from_ADC_diff = 0;
 uint16_t TC_outliers_detected = 0;
-uint16_t TC_outliers_threshold = 300;
+#define TC_OUTLIERS_THRESHOLD 300
 
 /* Max allowed tip temperature */
 #define EMERGENCY_SHUTDOWN_TEMPERATURE 490
@@ -179,7 +170,10 @@ uint16_t TC_outliers_threshold = 300;
 #define VOLTAGE_COMPENSATION 0.00840442388
 #define CURRENT_COMPENSATION 0.002864
 
-/* Min allowed bus voltage */
+/* Constants for scaling power in W to correct duty cycle */
+#define POWER_CONVERSION_FACTOR 0.123
+
+/* Min allowed bus voltage and power */
 #define MIN_BUSVOLTAGE 8.0
 #define MIN_BUSPOWER 8.0
 #define USB_PD_POWER_REDUCTION_FACTOR 1.0
@@ -193,15 +187,12 @@ uint16_t TC_outliers_threshold = 300;
 #define MIN_SELECTABLE_TEMPERATURE 20
 #define MAX_SELECTABLE_TEMPERATURE 450
 
-/* Allow use of custom temperatue, used for tuning */
-uint8_t custom_temperature_on = 0;
-
 /* TC Compensation constants */
-#define TC_COMPENSATION_X2_NT115 5.1026665462522864e-05
+#define TC_COMPENSATION_X2_NT115 (5.1026665462522864e-05)
 #define TC_COMPENSATION_X1_NT115 0.42050803230712813
 #define TC_COMPENSATION_X0_NT115 20.14538589052425
 
-#define TC_COMPENSATION_X2_T210 4.223931712905644e-06
+#define TC_COMPENSATION_X2_T210 (4.223931712905644e-06)
 #define TC_COMPENSATION_X1_T210 0.31863796444354214
 #define TC_COMPENSATION_X0_T210 20.968033870812942
 
@@ -236,6 +227,7 @@ struct sensor_values_struct {
 	double USB_PD_power_limit;
 };
 
+/* Struct to hold sensor values */
 struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
         									.thermocouple_temperature = 0.0,
         									.thermocouple_temperature_previous = 0.0,
@@ -288,7 +280,6 @@ char menu_names[menu_length][22] = { "Startup Temp °C    ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
-
 
 /* PID data */
 double PID_output = 0.0;
@@ -388,15 +379,11 @@ double min(double a, double b) {
 
 /* Returns the average of 100 readings of the index+3*n value in the ADC_buffer vector */
 double get_mean_ADC_reading_indexed(uint8_t index){
-	ADC_filter_mean = 0;
+	double ADC_filter_mean = 0;
 	for(int n=index;n<ADC1_BUF_LEN;n=n+3){
 		ADC_filter_mean += ADC1_BUF[n];
 	}
 	return ADC_filter_mean/(ADC1_BUF_LEN/3.0);
-}
-
-void get_mcu_temp(){
-	sensor_values.mcu_temperature =	Moving_Average_Compute((((get_mean_ADC_reading_indexed(2) * VSENSE) - V30) / Avg_Slope + 25), &mcu_temperature_filter_struct);
 }
 
 /* Function to get the hardware version based on version bit pins */
@@ -420,10 +407,17 @@ void change_state(mainstates new_state){
 	}
 }
 
-void get_bus_voltage(){
-	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading_indexed(0), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION;
+/* Function to get the filtered MCU temperature */
+void get_mcu_temp(){
+	sensor_values.mcu_temperature =	Moving_Average_Compute((((get_mean_ADC_reading_indexed(2) * VSENSE) - V30) / Avg_Slope + 25), &mcu_temperature_filter_struct); //Index 2 is MCU temp
 }
 
+/* Function to get the filtered bus voltage */
+void get_bus_voltage(){
+	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading_indexed(0), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION; //Index 0 is bus voltage
+}
+
+/* Function to get the filtered heater current */
 void get_heater_current(){
 	sensor_values.heater_current = Moving_Average_Compute(current_raw, &current_filterStruct)*CURRENT_COMPENSATION;
 }
@@ -433,7 +427,7 @@ void get_thermocouple_temperature(){
 	TC_temp_from_ADC_previous = TC_temp_from_ADC;
 	TC_temp_from_ADC = get_mean_ADC_reading_indexed(1);
 	TC_temp_from_ADC_diff = fabs(TC_temp_from_ADC_previous - TC_temp_from_ADC);
-	if((TC_temp_from_ADC_diff > TC_outliers_threshold) && (TC_outliers_detected < 2)){
+	if((TC_temp_from_ADC_diff > TC_OUTLIERS_THRESHOLD) && (TC_outliers_detected < 2)){
 		TC_outliers_detected++;
 		if(TC_outliers_detected < 2){
 			TC_temp_from_ADC = TC_temp_from_ADC_previous;
@@ -1067,9 +1061,9 @@ void get_stand_status(){
 	if(sensor_values.in_stand >= 0.2){
 		if (sensor_values.current_state == RUN){
 			change_state(STANDBY);
-			previous_standby_millis = HAL_GetTick();
+			previous_millis_standby = HAL_GetTick();
 		}
-		if((HAL_GetTick()-previous_standby_millis >= flash_values.standby_time*60000.0) && (sensor_values.current_state == STANDBY)){
+		if((HAL_GetTick()-previous_millis_standby >= flash_values.standby_time*60000.0) && (sensor_values.current_state == STANDBY)){
 			change_state(SLEEP);
 		}
 		if ((sensor_values.current_state == EMERGENCY_SLEEP) || (sensor_values.current_state == HALTED)){
@@ -1175,7 +1169,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-	/* take thermocouple measurement every 25 ms */
+	/* Take thermocouple measurement every 25 ms */
 	if (htim == &htim6){
 		thermocouple_measurement_done = 0;
 		heater_off();
@@ -1193,9 +1187,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		HAL_TIM_PWM_Stop_IT(&htim4, TIM_CHANNEL_2);
 	}
 
-	/* Button Debounce timer (50 ms) */
+	/* Button De-bounce timer (50 ms) */
 	static uint8_t timerCycles = 0;
-
 	if(SW_ready == 0 && debounceDone == 0){
 		timerCycles = 0;
 		if((btnPressed == SW_1_Pin && HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) ||
@@ -1357,207 +1350,196 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	HAL_Delay(200);
 
-  		// Check if user data in flash is valid, if not - write default parameters
-  		if(!FlashCheckCRC()){
-  	    	FlashWrite(&default_flash_values);
-  		}
+	// Check if user data in flash is valid, if not - write default parameters
+	if(!FlashCheckCRC()){
+		FlashWrite(&default_flash_values);
+	}
 
-  		/* Read flash data */
-  	    FlashRead(&flash_values);
+	/* Read flash data */
+	FlashRead(&flash_values);
 
-  	    /* Set screen rotation */
-  	    if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
-		  #define LCD_WIDTH  240
-		  #define LCD_HEIGHT 320
-  	    }
-  	    if((flash_values.screen_rotation == 1) || (flash_values.screen_rotation == 3)){
-		  #define LCD_WIDTH  240
-		  #define LCD_HEIGHT 320
-		}
+	/* Initiate display */
+	LCD_init();
+	LCD_SetRotation(flash_values.screen_rotation);
 
-  	    /* Initiate display */
-  	    LCD_init();
-  	  	LCD_SetRotation(flash_values.screen_rotation);
+	/* Set startup state */
+	change_state(HALTED);
 
-  		/* Set startup state */
-  	    change_state(HALTED);
+	/* start settings menu */
+	settings_menu();
 
-  	    /* start settings menu */
-  		settings_menu();
+	/* Set initial encoder timer value */
+	TIM2->CNT = flash_values.startup_temperature;
 
-  		/* Set initial encoder timer value */
-  		TIM2->CNT = flash_values.startup_temperature;
+	/* Initiate PID controller */
+	PID(&TPID, &sensor_values.thermocouple_temperature, &PID_output, &PID_setpoint, 0, 0, 0, _PID_CD_DIRECT); //PID parameters are set depending on detected handle by set_handle_values()
+	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
+	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		//Set PID sample time to "PID_UPDATE_INTERVAL" to make sure PID is calculated every time it is called
+	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
+	PID_SetILimits(&TPID, 0, 0);         					// Set max and min I limit
 
-  		/* Initiate PID controller */
-  		PID(&TPID, &sensor_values.thermocouple_temperature, &PID_output, &PID_setpoint, 0, 0, 0, _PID_CD_DIRECT); //PID parameters are set depending on detected handle by set_handle_values()
-  		PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
-  		PID_SetSampleTime(&TPID, interval_PID_update, 0); 		//Set PID sample time to "interval_PID_update" to make sure PID is calculated every time it is called
-  		PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
-        PID_SetILimits(&TPID, 0, 0);         // Set max and min I limit
+	/* Init and fill filter structures with initial values */
+	for (int i = 0; i<200;i++){
+		get_bus_voltage();
+		get_heater_current();
+		get_mcu_temp();
+		get_thermocouple_temperature();
+		get_handle_type();
+		set_handle_values();
+		get_stand_status();
+		handle_button_status();
+	}
 
-  		/* Init and fill filter structures with initial values */
-  		for (int i = 0; i<200;i++){
-  			get_bus_voltage();
-  			get_heater_current();
-  			get_mcu_temp();
-  			get_thermocouple_temperature();
-  			get_handle_type();
-  			set_handle_values();
-  			get_stand_status();
-  			handle_button_status();
-  		}
+	/* check STUSB4500 */
+	HAL_StatusTypeDef halStatus;
+	halStatus  = stusb_check_connection();
+	if(halStatus != HAL_OK){
+		//do error handling for STUSB
+		debug_print_str(DEBUG_ERROR,"STUSB4500 unavailable");
+	}else{
+		debug_print_str(DEBUG_INFO,"STUSB4500 found");
 
-  		/* check STUSB4500 */
-		HAL_StatusTypeDef halStatus;
-		halStatus  = stusb_check_connection();
-		if(halStatus != HAL_OK){
-			//do error handling for STUSB
-			debug_print_str(DEBUG_ERROR,"STUSB4500 unavailable");
-		}else{
-			debug_print_str(DEBUG_INFO,"STUSB4500 found");
+		stusb_init();
 
-			stusb_init();
+		//1. check if cable is connected
+		if(stusb_is_sink_connected()){
 
-			//1. check if cable is connected
-			if(stusb_is_sink_connected()){
+			//2. wait for sink to get ready
+			while(!stusb_is_sink_ready()){
+				//debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
+			}
+			//if we are on USB-PD the sink needs some time to start
+			HAL_Delay(500);
 
-				//2. wait for sink to get ready
-				while(!stusb_is_sink_ready()){
-					//debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
-				}
-				//if we are on USB-PD the sink needs some time to start
-				HAL_Delay(500);
+			stusb_soft_reset();
 
-				stusb_soft_reset();
+			//check if USB-PD is available
+			STUSB_GEN1S_RDO_REG_STATUS_RegTypeDef rdo;
+			halStatus = stusb_read_rdo(&rdo);
+			volatile uint8_t currendPdoIndex = rdo.b.Object_Pos;
+			if(currendPdoIndex == 0){
+				debug_print_str(DEBUG_INFO,"No USB-PD detected");
+			}else{
+				power_source = POWER_USB;
+				//the usb devices need some time to transmit the messages and executer the soft reset
+				//HAL_Delay(4);
+				//poll alert status since we don't have the alert interrupt pin connected
+				//depending on the source we may need a few tries
+				bool sourceStatus = false;
+				for(int i=0;i<500;i++){
+					sourceStatus = poll_source();
+					//HAL_Delay(2);
+					if(sourceStatus){
+						debug_print_str(DEBUG_INFO,"Got PDOs");
+						uint8_t maxPowerAvailable = 0;
+						stusb_set_highest_pdo(&maxPowerAvailable, currendPdoIndex);
 
-				//check if USB-PD is available
-				STUSB_GEN1S_RDO_REG_STATUS_RegTypeDef rdo;
-				halStatus = stusb_read_rdo(&rdo);
-				volatile uint8_t currendPdoIndex = rdo.b.Object_Pos;
-				if(currendPdoIndex == 0){
-					debug_print_str(DEBUG_INFO,"No USB-PD detected");
-				}else{
-					power_source = POWER_USB;
-					//the usb devices need some time to transmit the messages and executer the soft reset
-					//HAL_Delay(4);
-					//poll alert status since we don't have the alert interrupt pin connected
-					//depending on the source we may need a few tries
-					bool sourceStatus = false;
-					for(int i=0;i<500;i++){
-						sourceStatus = poll_source();
-						//HAL_Delay(2);
-						if(sourceStatus){
-							debug_print_str(DEBUG_INFO,"Got PDOs");
-							uint8_t maxPowerAvailable = 0;
-							stusb_set_highest_pdo(&maxPowerAvailable, currendPdoIndex);
+						sensor_values.USB_PD_power_limit = maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR;
+						debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR);
 
-							sensor_values.USB_PD_power_limit = maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR;
-							debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR);
-
-							//re-negotiate
-							break;
-						}
+						//re-negotiate
+						break;
 					}
 				}
-			}else{
-				debug_print_str(DEBUG_INFO,"No USB-PD sink connected");
+			}
+		}else{
+			debug_print_str(DEBUG_INFO,"No USB-PD sink connected");
+		}
+	}
+
+	/* Draw the main screen decoration */
+	LCD_draw_main_screen();
+
+	/* Start-up beep */
+	beep_startup(flash_values.startup_beep);
+
+	//Flag to indicate that the startup sequence is done
+	startup_done = 1;
+	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
+
+	while (1){
+		if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
+			get_stand_status();
+			get_handle_type();
+			set_handle_values();
+			get_set_temperature();
+			handle_button_status();
+			handle_emergency_shutdown();
+			//handle_delta_temperature();
+			previous_sensor_update_high_update = HAL_GetTick();
+		}
+
+		if(HAL_GetTick() - previous_sensor_update_low_update >= interval_sensor_update_low_update){
+			get_bus_voltage();
+			get_heater_current();
+			get_mcu_temp();
+			previous_sensor_update_low_update = HAL_GetTick();
+		}
+
+		/* switch */
+		switch(sensor_values.current_state) {
+			case RUN: {
+				PID_setpoint = sensor_values.set_temperature;
+				break;
+			}
+			case STANDBY: {
+			  if(flash_values.standby_temp > sensor_values.set_temperature){
+				PID_setpoint = sensor_values.set_temperature;
+			  }
+			  else{
+				PID_setpoint = flash_values.standby_temp;
+			  }
+			  break;
+			}
+			case SLEEP:
+			case EMERGENCY_SLEEP:
+			case HALTED: {
+				PID_setpoint = 0;
+				break;
 			}
 		}
 
-  		/* Draw the main screen decoration */
-  		LCD_draw_main_screen();
+		// TUNING - ONLY USED DURING MANUAL PID TUNING
+		// ----------------------------------------------
+		//custom_temperature_on = 1;
+		//PID_SetTunings(&TPID, Kp_tuning, Ki_tuning, Kd_tuning/10.0);
+		//PID_SetILimits(&TPID, -PID_MAX_I_LIMIT_tuning, PID_MAX_I_LIMIT_tuning); 	// Set max and min I limit
+		//sensor_values.set_temperature = temperature_tuning;
+		// ----------------------------------------------
 
-  		/* Start-up beep */
-  		beep_startup(flash_values.startup_beep);
+		/* Send debug information */
+		#ifdef DEBUG
+		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
+			memset(&UART_buffer, '\0', sizeof(UART_buffer));
+			sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
+					sensor_values.thermocouple_temperature, PID_setpoint,
+					PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
+			//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
+			HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
+			previous_millis_debug = HAL_GetTick();
+		}
+		#endif
 
-  		//Flag to indicate that the startup sequence is done
-  		startup_done = 1;
-  		sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
-
-  		while (1){
-  			if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
-  				get_stand_status();
-  				get_handle_type();
-  				set_handle_values();
-  				get_set_temperature();
-  				handle_button_status();
-  	  			handle_emergency_shutdown();
-  	  			//handle_delta_temperature();
-  				previous_sensor_update_high_update = HAL_GetTick();
-  			}
-
-  			if(HAL_GetTick() - previous_sensor_update_low_update >= interval_sensor_update_low_update){
-  				get_bus_voltage();
-  				get_heater_current();
-  				get_mcu_temp();
-  				previous_sensor_update_low_update = HAL_GetTick();
-  			}
-
-  			/* switch */
-  			switch(sensor_values.current_state) {
-  				case RUN: {
-  					PID_setpoint = sensor_values.set_temperature;
-  					break;
-  				}
-  				case STANDBY: {
-  				  if(flash_values.standby_temp > sensor_values.set_temperature){
-  				    PID_setpoint = sensor_values.set_temperature;
-  				  }
-  				  else{
-  				    PID_setpoint = flash_values.standby_temp;
-  				  }
-  				  break;
-  				}
-  				case SLEEP:
-  				case EMERGENCY_SLEEP:
-  				case HALTED: {
-  					PID_setpoint = 0;
-  					break;
-  				}
-  			}
-
-  			// TUNING - ONLY USED DURING MANUAL PID TUNING
-  			// ----------------------------------------------
-  			//custom_temperature_on = 1;
-  			//PID_SetTunings(&TPID, Kp_tuning, Ki_tuning, Kd_tuning/10.0);
-  			//PID_SetILimits(&TPID, -PID_MAX_I_LIMIT_tuning, PID_MAX_I_LIMIT_tuning); 	// Set max and min I limit
-  			//sensor_values.set_temperature = temperature_tuning;
-  			// ----------------------------------------------
-
-
-			/* Send debug information */
-  			/*
-			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
-				memset(&UART_buffer, '\0', sizeof(UART_buffer));
-				sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
-						sensor_values.thermocouple_temperature, PID_setpoint,
-						PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
-				//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
-				HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
-				previous_millis_debug = HAL_GetTick();
+		/* Detect if a tip is present by sending a short voltage pulse and sense current */
+		if (flash_values.current_measurement == 1){
+			if(HAL_GetTick() - previous_measure_current_update >= interval_measure_current){
+				if(thermocouple_measurement_done == 1){ //Only take current measurement if thermocouple measurement is not ongoing
+					current_measurement_done = 0;
+					set_heater_duty(PID_MAX_OUTPUT/2);
+					current_measurement_requested = 1;
+					previous_measure_current_update = HAL_GetTick();
+				}
 			}
-			*/
+		}
+		else{
+			sensor_values.heater_current = 1; // If the current is not measured, apply a dummy value to heater_current
+		}
 
- 			/* Detect if a tip is present by sending a short voltage pulse and sense current */
-			if (flash_values.current_measurement == 1){
-  				if(HAL_GetTick() - previous_measure_current_update >= interval_measure_current){
-  					if(thermocouple_measurement_done == 1){ //Only take current measurement if thermocouple measurement is not ongoing
-						current_measurement_done = 0;
-						set_heater_duty(PID_MAX_OUTPUT/2);
-						current_measurement_requested = 1;
-	  					previous_measure_current_update = HAL_GetTick();
-  					}
-  				}
-			}
-			else{
-				sensor_values.heater_current = 1; // If the current is not measured, apply a dummy value to heater_current
-			}
-
-  			/* Update display */
-  			if(HAL_GetTick() - previous_millis_display >= interval_display){
-  				update_display();
-  				previous_millis_display = HAL_GetTick();
-  			}
+		/* Update display */
+		if(HAL_GetTick() - previous_millis_display >= interval_display){
+			update_display();
+			previous_millis_display = HAL_GetTick();
+		}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
