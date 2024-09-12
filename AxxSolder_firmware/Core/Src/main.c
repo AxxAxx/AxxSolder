@@ -271,12 +271,12 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 
 /* List of names for settings menu */
 #define menu_length 17
-char menu_names[menu_length][22] = { "Startup Temp °C   ",
-							"Temp Offset °C    ",
-							"Standby Temp °C  ",
-							"Standby Time °C   ",
-							"Sleep Time [min]   ",
-							"Buzzer Enabled     ",
+char menu_names[menu_length][22] = { "Startup Temp °C    ",
+							"Temp Offset °C      ",
+							"Standby Temp °C   ",
+							"Standby Time [min]  ",
+							"Sleep Time [min]    ",
+							"Buzzer Enabled      ",
 							"Preset Temp 1 °C    ",
 							"Preset Temp 2 °C    ",
 							"GPIO4 ON at run    ",
@@ -1119,25 +1119,6 @@ void get_handle_type(){
 	}
 }
 
-
-
-#define KP_NT115 		3
-#define KI_NT115 		1
-#define KD_NT115 		0.25
-#define MAX_I_NT115 	100
-
-#define KP_T210 		5
-#define KI_T210 		5.5
-#define KD_T210 		0.25
-#define MAX_I_T210 		125
-
-#define KP_T245 		8
-#define KI_T245 		5
-#define KD_T245 		1
-#define MAX_I_T245 		150
-
-
-
 void set_handle_values(){
 	if(attached_handle == NT115){
 		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
@@ -1161,7 +1142,7 @@ void set_handle_values(){
 	/* If a custom power limit is specified in user flash, use this limit */
 	if(flash_values.power_limit != 0){
 		sensor_values.max_power_watt = flash_values.power_limit;
-}
+	}
 }
 
 /* Interrupts at button press */
