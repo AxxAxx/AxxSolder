@@ -1,4 +1,4 @@
-### Footprint positions - created on Wed Sep 11 11:09:42 2024 ###
+### Footprint positions - created on Sun Sep 15 12:53:58 2024 ###
 ### Printed by KiCad version 7.0.10
 ## Unit = mm, Angle = deg.
 ## Side : All
@@ -65,7 +65,7 @@ IC7       MAX16171ATA_VY+T    SON50P300X200X80-9N                193.7500  -131.
 IC8       LTC4440AHMS8E       SOP65P490X110-9N                   180.8880   -82.2250    0.0000  bottom
 IC9       INA281A5QDBVRQ1     SOT95P280X145-5N                   188.9500  -107.0000    0.0000  bottom
 J1        USB4110-GF-A        USB4110GFA                         180.5000  -146.2500  180.0000  bottom
-J2        691243110009        691243110009                       196.2500  -106.2000  -90.0000  bottom
+J2        691243110008        691243110009                       196.2500  -106.2000  -90.0000  bottom
 J3        TSW-102-07-T-S      PinHeader_1x02_P2.54mm_Vertical    196.6750  -124.1000   90.0000  bottom
 J4        61300611821         RHDR6W97P0X254_1X6_1574X250X865P   162.5000  -109.3100  -90.0000  bottom
 J5        TSW-102-07-T-S      TSW-102-XX-YY-S                    162.2500   -72.9250  -90.0000  bottom
