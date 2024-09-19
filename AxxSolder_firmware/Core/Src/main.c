@@ -1511,9 +1511,9 @@ int main(void)
 		#ifdef DEBUG
 		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
 			memset(&UART_buffer, '\0', sizeof(UART_buffer));
-			sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
+			sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
 					sensor_values.thermocouple_temperature, PID_setpoint,
-					PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
+					PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current, sensor_values.thermocouple_temperature_display);
 			//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
 			HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
 			previous_millis_debug = HAL_GetTick();
