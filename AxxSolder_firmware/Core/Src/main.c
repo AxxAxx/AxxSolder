@@ -1337,8 +1337,8 @@ int main(void)
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
 
 	/* initialize moving average functions */
-	Moving_Average_Init(&thermocouple_temperature_filter_struct,30);
-	Moving_Average_Init(&thermocouple_temperature_display_filter_struct,10);
+	Moving_Average_Init(&thermocouple_temperature_filter_struct,2);
+	Moving_Average_Init(&thermocouple_temperature_display_filter_struct,100);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
 	Moving_Average_Init(&current_filterStruct,5);
