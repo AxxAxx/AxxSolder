@@ -107,8 +107,17 @@ typedef enum {
 	STANDBY,
 	SLEEP,
 	EMERGENCY_SLEEP,
-	HALTED,
+	HALTED
 } mainstates;
+
+/* states for cartridge */
+typedef enum {
+	ATTACHED,
+	DETACHED
+} cartridge_state_t;
+cartridge_state_t cartridge_state = ATTACHED;
+cartridge_state_t previous_cartridge_state = ATTACHED;
+
 
 uint8_t sleep_state_written_to_LCD = 0;
 uint8_t standby_state_written_to_LCD = 0;
@@ -655,7 +664,7 @@ void update_display(){
 		}
 		LCD_PutStr(19, 70, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		if((sensor_values.heater_current < 1) || (TC_temp > 4096-10)) { //NT115 at 9V draws 2.3
+		if(cartridge_state == DETACHED) {
 			LCD_PutStr(15, 160, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
@@ -739,7 +748,7 @@ void update_display(){
 		}
 		LCD_PutStr(14, 35, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		if((sensor_values.heater_current < 1) || (TC_temp > 4096-10)) { //NT115 at 9V draws 2.3
+		if(cartridge_state == DETACHED) {
 			LCD_PutStr(10, 120, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
@@ -1020,6 +1029,24 @@ void handle_emergency_shutdown(){
 		show_popup("OVERTEMP");
 		change_state(EMERGENCY_SLEEP);
 	}
+}
+
+void handle_cartridge_presence(){
+	if((sensor_values.heater_current < 1) || (TC_temp > 4096-10)) { //NT115 at 9V draws 2.3
+		cartridge_state = DETACHED;
+	}
+	else{
+		cartridge_state = ATTACHED;
+	}
+
+	/*if ((previous_cartridge_state == DETACHED) && (cartridge_state = ATTACHED)){
+		for (int i = 0; i<200;i++){
+			get_thermocouple_temperature();
+		}
+	}
+
+	previous_cartridge_state = cartridge_state;
+*/
 }
 
 /* Function to toggle between RUN and HALTED at each press of the encoder button */
@@ -1388,6 +1415,7 @@ int main(void)
 		set_handle_values();
 		get_stand_status();
 		handle_button_status();
+		handle_cartridge_presence();
 	}
 
 	/* check STUSB4500 */
@@ -1465,6 +1493,7 @@ int main(void)
 			get_set_temperature();
 			handle_button_status();
 			handle_emergency_shutdown();
+			handle_cartridge_presence();
 			//handle_delta_temperature();
 			previous_sensor_update_high_update = HAL_GetTick();
 		}
