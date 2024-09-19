@@ -1179,7 +1179,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	}
 
 	if (htim == &htim7){
-		HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_SET);
 		HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
 		}
 
@@ -1248,7 +1247,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	if ((hadc->Instance == ADC1) && (thermocouple_measurement_done == 0)){
 		HAL_ADC_Stop_DMA(&hadc1);
-		HAL_GPIO_WritePin(GPIOB, USR_2_Pin, GPIO_PIN_RESET);
 		get_thermocouple_temperature();
 		update_heater_PWM();
 		/* Compute PID */
