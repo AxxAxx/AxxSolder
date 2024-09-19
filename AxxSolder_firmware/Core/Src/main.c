@@ -1039,14 +1039,12 @@ void handle_cartridge_presence(){
 		cartridge_state = ATTACHED;
 	}
 
-	/*if ((previous_cartridge_state == DETACHED) && (cartridge_state = ATTACHED)){
-		for (int i = 0; i<200;i++){
-			get_thermocouple_temperature();
-		}
+	if ((previous_cartridge_state == DETACHED) && (cartridge_state == ATTACHED)){
+		Moving_Average_Set_Value(sensor_values.thermocouple_temperature, &thermocouple_temperature_display_filter_struct);
 	}
 
 	previous_cartridge_state = cartridge_state;
-*/
+
 }
 
 /* Function to toggle between RUN and HALTED at each press of the encoder button */

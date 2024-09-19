@@ -3,6 +3,8 @@
   * @file    moving_average.h
   * @author  Mohammad Hussein Tavakoli Bina, Sepehr Hashtroudi.
   * @brief   This file contains function prototype of moving average filter.
+  * @remark  2024-09-19 - Edited by Axel Johansson, Adding function
+  *  			Moving_Average_Set_Value
   ******************************************************************************
   *MIT License
   *
@@ -34,12 +36,12 @@
 #include "stdint.h"
 
 /* Definitions ---------------------------------------------------------------*/
-//#define WindowLength 5
+#define Max_WindowLength 200
 
 /* TypeDefs ------------------------------------------------------------------*/
 typedef struct{
 	float WindowLength;
-	uint32_t History[200]; /*Array to store values of filter window*/
+	uint32_t History[Max_WindowLength]; /*Array to store values of filter window*/
 	uint32_t Sum;	/* Sum of filter window's elements*/
 	uint32_t WindowPointer; /* Pointer to the first element of window*/
 }FilterTypeDef;
@@ -47,5 +49,6 @@ typedef struct{
 /* Function prototypes -------------------------------------------------------*/
 void Moving_Average_Init(FilterTypeDef* filter_struct, float window_length);
 double Moving_Average_Compute(uint32_t raw_data, FilterTypeDef* filter_struct);
+void Moving_Average_Set_Value(uint32_t raw_data, FilterTypeDef* filter_struct);
 
 #endif

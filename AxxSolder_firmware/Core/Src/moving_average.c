@@ -70,3 +70,15 @@ double Moving_Average_Compute(uint32_t raw_data, FilterTypeDef* filter_struct)
 	}
 	return (double)filter_struct->Sum/(double)filter_struct->WindowLength;
 }
+
+/* Fill moving average filter history with raw_data */
+void Moving_Average_Set_Value(uint32_t raw_data, FilterTypeDef* filter_struct){
+	filter_struct->Sum = raw_data*filter_struct->WindowLength;
+	filter_struct->WindowPointer = 0;
+
+	for(uint32_t i=0; i<(uint32_t)filter_struct->WindowLength; i++)
+	{
+		filter_struct->History[i] = raw_data;
+	}
+}
+
