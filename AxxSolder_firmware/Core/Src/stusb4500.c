@@ -1,10 +1,3 @@
-/*
- * STUSB4500 I2C Driver
- *
- * Largely based on ST firmware example: https://github.com/usb-c/STUSB4500/tree/master/Firmware/Project/Src
- * Otter-Iron support added by J.Whittington 2020
- *
- */
 #include "stusb4500.h"
 #include "debug.h"
 

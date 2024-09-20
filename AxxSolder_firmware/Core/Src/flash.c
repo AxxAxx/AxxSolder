@@ -1,10 +1,3 @@
-/*
- * flash.c
- *
- *  Created on: Nov 16, 2023
- *      Author: axel_
- */
-
 #include "flash.h"
 #include "main.h"
 

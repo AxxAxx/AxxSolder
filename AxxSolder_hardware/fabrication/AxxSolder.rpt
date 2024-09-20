@@ -1,11 +1,11 @@
-## Footprint report - date Thu Jun 20 20:51:29 2024
+## Footprint report - date Sun Sep 15 12:54:05 2024
 ## Created by KiCad version 7.0.10
 ## Unit = mm, Angle = deg.
 
 $BeginDESCRIPTION
 
 $BOARD
-upper_left_corner 159.755000 63.001750
+upper_left_corner 151.415478 63.001750
 lower_right_corner 201.625000 150.977000
 $EndBOARD
 
