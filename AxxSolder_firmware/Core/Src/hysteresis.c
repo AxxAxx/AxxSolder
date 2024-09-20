@@ -2,7 +2,7 @@
  * hysteresis.c
  *
  *  Created on: Sep 20, 2024
- *      Author: axelj
+ *      Author: Axel Johansson
  */
 
 
