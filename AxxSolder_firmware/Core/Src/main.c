@@ -43,7 +43,7 @@ uint8_t fw_version_minor =  2;
 uint8_t fw_version_patch =  1;
 
 //#define PID_TUNING
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 #endif
@@ -297,9 +297,7 @@ char menu_names[menu_length][22] = { "Startup Temp °C    ",
 							"-Exit no Save-        "};
 
 /* PID data */
-double PID_output = 0.0;
 double PID_setpoint = 0.0;
-double duty_cycle = 0.0;
 
 /* Flags for temp asn current measurements */
 uint8_t current_measurement_requested = 0;
@@ -483,7 +481,7 @@ void set_heater_duty(uint16_t dutycycle){
 
 /* Update the duty cycle of timer controlling the heater PWM */
 void update_heater_PWM(){
-	duty_cycle = sensor_values.requested_power*(sensor_values.max_power_watt*POWER_CONVERSION_FACTOR/sensor_values.bus_voltage);
+	double duty_cycle = sensor_values.requested_power*(sensor_values.max_power_watt*POWER_CONVERSION_FACTOR/sensor_values.bus_voltage);
 	set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 }
 
@@ -762,8 +760,8 @@ void update_display(){
 		}
 		else{
 			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.thermocouple_temperature));
-			if(convert_temperature(sensor_values.thermocouple_temperature) < 99.5){
+			sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.thermocouple_temperature_filtered));
+			if(convert_temperature(sensor_values.thermocouple_temperature_filtered) < 99.5){
 				DISPLAY_buffer[2] = 32;
 				DISPLAY_buffer[3] = 32;
 			}
