@@ -49,7 +49,7 @@ uint8_t fw_version_patch =  1;
 #endif
 
 /* PID parameters */
-#define KP_NT115 		3
+#define KP_NT115 		5
 #define KI_NT115 		1
 #define KD_NT115 		0.25
 #define MAX_I_NT115 	125
