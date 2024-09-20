@@ -1032,7 +1032,7 @@ void handle_emergency_shutdown(){
 		change_state(EMERGENCY_SLEEP);
 	}
 	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
-	else if((sensor_values.thermocouple_temperature > EMERGENCY_SHUTDOWN_TEMPERATURE) && (sensor_values.current_state == RUN)){
+	else if((sensor_values.thermocouple_temperature_filtered > EMERGENCY_SHUTDOWN_TEMPERATURE) && (sensor_values.current_state == RUN)){
 		show_popup("OVERTEMP");
 		change_state(EMERGENCY_SLEEP);
 	}
@@ -1042,6 +1042,7 @@ void handle_emergency_shutdown(){
 void handle_cartridge_presence(){
 	if((sensor_values.heater_current < 1) || (TC_temp > 4096-10)) { //NT115 at 9V draws 2.3
 		cartridge_state = DETACHED;
+		change_state(EMERGENCY_SLEEP);
 	}
 	else{
 		cartridge_state = ATTACHED;
