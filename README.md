@@ -175,10 +175,10 @@ To access the user settings the user holds down the encoder button at start-up. 
 As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
 ```c
 /* PID parameters */
-#define KP_NT115       3
-#define KI_NT115       1
+#define KP_NT115       5
+#define KI_NT115       4
 #define KD_NT115       0.25
-#define MAX_I_NT115    125
+#define MAX_I_NT115    150
 
 #define KP_T210        5
 #define KI_T210        5.5
