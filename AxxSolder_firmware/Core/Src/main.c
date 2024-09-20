@@ -25,6 +25,7 @@
 #include "string.h"
 #include "pid.h"
 #include "moving_average.h"
+#include "hysteresis.h"
 #include "flash.h"
 #include "stusb4500.h"
 #include "buzzer.h"
@@ -42,7 +43,7 @@ uint8_t fw_version_minor =  2;
 uint8_t fw_version_patch =  1;
 
 //#define PID_TUNING
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
 	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 #endif
@@ -313,6 +314,9 @@ FilterTypeDef stand_sense_filterStruct;
 FilterTypeDef handle1_sense_filterStruct;
 FilterTypeDef handle2_sense_filterStruct;
 
+/* Hysteresis filters for sensor data */
+FilterTypeDef thermocouple_temperature_display_hysteresis;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -464,6 +468,8 @@ void get_thermocouple_temperature(){
 	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,500); // Clamp
 
 	sensor_values.thermocouple_temperature_display = Moving_Average_Compute(sensor_values.thermocouple_temperature, &thermocouple_temperature_display_filter_struct); /* Moving average filter */
+	sensor_values.thermocouple_temperature_display = Hysteresis_Add(sensor_values.thermocouple_temperature_display, &thermocouple_temperature_display_hysteresis);
+
 }
 
 /* Sets the duty cycle of timer controlling the heater */
@@ -1361,13 +1367,16 @@ int main(void)
 
 	/* initialize moving average functions */
 	Moving_Average_Init(&thermocouple_temperature_filter_struct,2);
-	Moving_Average_Init(&thermocouple_temperature_display_filter_struct,40);
+	Moving_Average_Init(&thermocouple_temperature_display_filter_struct,50);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
 	Moving_Average_Init(&current_filterStruct,5);
 	Moving_Average_Init(&stand_sense_filterStruct,20);
 	Moving_Average_Init(&handle1_sense_filterStruct,20);
 	Moving_Average_Init(&handle2_sense_filterStruct,20);
+
+	/* initialize hysteresis functions */
+	Hysteresis_Init(&thermocouple_temperature_display_hysteresis, 0.5);
 
   /* USER CODE END 2 */
 
