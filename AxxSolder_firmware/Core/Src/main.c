@@ -43,7 +43,7 @@ uint8_t fw_version_minor =  2;
 uint8_t fw_version_patch =  1;
 
 //#define PID_TUNING
-//#define DEBUG
+#define DEBUG
 #ifdef DEBUG
 	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 #endif
@@ -224,7 +224,9 @@ struct sensor_values_struct {
 	double set_temperature;
 	double thermocouple_temperature;
 	double thermocouple_temperature_previous;
-	double thermocouple_temperature_display;
+	double thermocouple_temperature_filtered;
+	double requested_power;
+	double requested_power_filtered;
 	float bus_voltage;
 	float heater_current;
 	uint16_t leak_current;
@@ -242,7 +244,9 @@ struct sensor_values_struct {
 struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
         									.thermocouple_temperature = 0.0,
         									.thermocouple_temperature_previous = 0.0,
-											.thermocouple_temperature_display = 0,
+											.thermocouple_temperature_filtered = 0,
+											.requested_power = 0.0,
+											.requested_power_filtered = 0.0,
 											.bus_voltage = 0.0,
 											.heater_current = 0,
 											.leak_current = 0,
@@ -305,7 +309,8 @@ uint8_t thermocouple_measurement_done = 1;
 
 /* Moving average filters for sensor data */
 FilterTypeDef thermocouple_temperature_filter_struct;
-FilterTypeDef thermocouple_temperature_display_filter_struct;
+FilterTypeDef thermocouple_temperature_filtered_filter_struct;
+FilterTypeDef requested_power_filtered_filter_struct;
 FilterTypeDef mcu_temperature_filter_struct;
 FilterTypeDef input_voltage_filterStruct;
 FilterTypeDef current_filterStruct;
@@ -314,7 +319,7 @@ FilterTypeDef handle1_sense_filterStruct;
 FilterTypeDef handle2_sense_filterStruct;
 
 /* Hysteresis filters for sensor data */
-Hysteresis_FilterTypeDef thermocouple_temperature_display_hysteresis;
+Hysteresis_FilterTypeDef thermocouple_temperature_filtered_hysteresis;
 
 /* USER CODE END PTD */
 
@@ -466,8 +471,8 @@ void get_thermocouple_temperature(){
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
 	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,500); // Clamp
 
-	sensor_values.thermocouple_temperature_display = Moving_Average_Compute(sensor_values.thermocouple_temperature, &thermocouple_temperature_display_filter_struct); 	/* Moving average filter */
-	sensor_values.thermocouple_temperature_display = Hysteresis_Add(sensor_values.thermocouple_temperature_display, &thermocouple_temperature_display_hysteresis);		/* Hysteresis filter */
+	sensor_values.thermocouple_temperature_filtered = Moving_Average_Compute(sensor_values.thermocouple_temperature, &thermocouple_temperature_filtered_filter_struct); 	/* Moving average filter */
+	sensor_values.thermocouple_temperature_filtered = Hysteresis_Add(sensor_values.thermocouple_temperature_filtered, &thermocouple_temperature_filtered_hysteresis);		/* Hysteresis filter */
 }
 
 /* Sets the duty cycle of timer controlling the heater */
@@ -478,7 +483,7 @@ void set_heater_duty(uint16_t dutycycle){
 
 /* Update the duty cycle of timer controlling the heater PWM */
 void update_heater_PWM(){
-	duty_cycle = PID_output*(sensor_values.max_power_watt*POWER_CONVERSION_FACTOR/sensor_values.bus_voltage);
+	duty_cycle = sensor_values.requested_power*(sensor_values.max_power_watt*POWER_CONVERSION_FACTOR/sensor_values.bus_voltage);
 	set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 }
 
@@ -673,8 +678,8 @@ void update_display(){
 		}
 		else{
 			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.thermocouple_temperature_display));
-			if(convert_temperature(sensor_values.thermocouple_temperature_display) < 99.5){
+			sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.thermocouple_temperature_filtered));
+			if(convert_temperature(sensor_values.thermocouple_temperature_filtered) < 99.5){
 				DISPLAY_buffer[2] = 32;
 				DISPLAY_buffer[3] = 32;
 			}
@@ -737,8 +742,8 @@ void update_display(){
 			sleep_state_written_to_LCD = 0;
 		}
 		else if(sensor_values.current_state == RUN){
-			UG_FillFrame(210, 268-(PID_output/PID_MAX_OUTPUT)*202, 	230, 	268,									RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(210, 66, 									230, 	268-(PID_output/PID_MAX_OUTPUT)*202, 	RGB_to_BRG(C_BLACK));
+			UG_FillFrame(210, 268-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*202, 	230, 	268,									RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(210, 66, 									230, 	268-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*202, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -812,8 +817,8 @@ void update_display(){
 			sleep_state_written_to_LCD = 0;
 		}
 		else if(sensor_values.current_state == RUN){
-			UG_FillFrame(290, 229-(PID_output/PID_MAX_OUTPUT)*217, 	310, 	229, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(290, 12, 									310, 	229-(PID_output/PID_MAX_OUTPUT)*217, RGB_to_BRG(C_BLACK));
+			UG_FillFrame(290, 229-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*217, 	310, 	229, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(290, 12, 									310, 	229-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*217, RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -1045,7 +1050,7 @@ void handle_cartridge_presence(){
 	}
 
 	if ((previous_cartridge_state == DETACHED) && (cartridge_state == ATTACHED)){
-		Moving_Average_Set_Value(sensor_values.thermocouple_temperature, &thermocouple_temperature_display_filter_struct);
+		Moving_Average_Set_Value(sensor_values.thermocouple_temperature, &thermocouple_temperature_filtered_filter_struct);
 	}
 	previous_cartridge_state = cartridge_state;
 }
@@ -1280,6 +1285,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		update_heater_PWM();
 		/* Compute PID */
 		PID_Compute(&TPID);
+		sensor_values.requested_power_filtered = Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct);
 		thermocouple_measurement_done = 1;
 	}
 	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
@@ -1365,7 +1371,8 @@ int main(void)
 
 	/* initialize moving average functions */
 	Moving_Average_Init(&thermocouple_temperature_filter_struct,2);
-	Moving_Average_Init(&thermocouple_temperature_display_filter_struct,50);
+	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,50);
+	Moving_Average_Init(&requested_power_filtered_filter_struct,20);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
 	Moving_Average_Init(&current_filterStruct,5);
@@ -1374,7 +1381,7 @@ int main(void)
 	Moving_Average_Init(&handle2_sense_filterStruct,20);
 
 	/* initialize hysteresis functions */
-	Hysteresis_Init(&thermocouple_temperature_display_hysteresis, 0.5);
+	Hysteresis_Init(&thermocouple_temperature_filtered_hysteresis, 0.5);
 
   /* USER CODE END 2 */
 
@@ -1404,7 +1411,7 @@ int main(void)
 	TIM2->CNT = flash_values.startup_temperature;
 
 	/* Initiate PID controller */
-	PID(&TPID, &sensor_values.thermocouple_temperature, &PID_output, &PID_setpoint, 0, 0, 0, _PID_CD_DIRECT); //PID parameters are set depending on detected handle by set_handle_values()
+	PID(&TPID, &sensor_values.thermocouple_temperature, &sensor_values.requested_power, &PID_setpoint, 0, 0, 0, _PID_CD_DIRECT); //PID parameters are set depending on detected handle by set_handle_values()
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		//Set PID sample time to "PID_UPDATE_INTERVAL" to make sure PID is calculated every time it is called
 	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
@@ -1545,9 +1552,9 @@ int main(void)
 		#ifdef DEBUG
 		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
 			memset(&UART_buffer, '\0', sizeof(UART_buffer));
-			sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
-					sensor_values.thermocouple_temperature, PID_setpoint,
-					PID_output/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current, sensor_values.thermocouple_temperature_display);
+			sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
+					sensor_values.thermocouple_temperature, sensor_values.thermocouple_temperature_filtered, PID_setpoint,
+					sensor_values.requested_power/PID_MAX_OUTPUT*100.0, sensor_values.requested_power_filtered/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
 			//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
 			HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
 			previous_millis_debug = HAL_GetTick();
@@ -1843,7 +1850,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x10802D9B;
+  hi2c1.Init.Timing = 0x30A0A7FB;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -2294,7 +2301,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 256000;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
