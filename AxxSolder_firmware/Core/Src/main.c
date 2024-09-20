@@ -43,16 +43,16 @@ uint8_t fw_version_minor =  2;
 uint8_t fw_version_patch =  1;
 
 //#define PID_TUNING
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 #endif
 
 /* PID parameters */
 #define KP_NT115 		5
-#define KI_NT115 		1
+#define KI_NT115 		4
 #define KD_NT115 		0.25
-#define MAX_I_NT115 	125
+#define MAX_I_NT115 	150
 
 #define KP_T210 		5
 #define KI_T210 		5.5
