@@ -119,7 +119,6 @@ typedef enum {
 cartridge_state_t cartridge_state = ATTACHED;
 cartridge_state_t previous_cartridge_state = ATTACHED;
 
-
 uint8_t sleep_state_written_to_LCD = 0;
 uint8_t standby_state_written_to_LCD = 0;
 
@@ -315,7 +314,7 @@ FilterTypeDef handle1_sense_filterStruct;
 FilterTypeDef handle2_sense_filterStruct;
 
 /* Hysteresis filters for sensor data */
-FilterTypeDef thermocouple_temperature_display_hysteresis;
+Hysteresis_FilterTypeDef thermocouple_temperature_display_hysteresis;
 
 /* USER CODE END PTD */
 
@@ -467,9 +466,8 @@ void get_thermocouple_temperature(){
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
 	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,500); // Clamp
 
-	sensor_values.thermocouple_temperature_display = Moving_Average_Compute(sensor_values.thermocouple_temperature, &thermocouple_temperature_display_filter_struct); /* Moving average filter */
-	sensor_values.thermocouple_temperature_display = Hysteresis_Add(sensor_values.thermocouple_temperature_display, &thermocouple_temperature_display_hysteresis);
-
+	sensor_values.thermocouple_temperature_display = Moving_Average_Compute(sensor_values.thermocouple_temperature, &thermocouple_temperature_display_filter_struct); 	/* Moving average filter */
+	sensor_values.thermocouple_temperature_display = Hysteresis_Add(sensor_values.thermocouple_temperature_display, &thermocouple_temperature_display_hysteresis);		/* Hysteresis filter */
 }
 
 /* Sets the duty cycle of timer controlling the heater */
@@ -1037,6 +1035,7 @@ void handle_emergency_shutdown(){
 	}
 }
 
+/* Function to handle the cartridge presence */
 void handle_cartridge_presence(){
 	if((sensor_values.heater_current < 1) || (TC_temp > 4096-10)) { //NT115 at 9V draws 2.3
 		cartridge_state = DETACHED;
@@ -1048,9 +1047,7 @@ void handle_cartridge_presence(){
 	if ((previous_cartridge_state == DETACHED) && (cartridge_state == ATTACHED)){
 		Moving_Average_Set_Value(sensor_values.thermocouple_temperature, &thermocouple_temperature_display_filter_struct);
 	}
-
 	previous_cartridge_state = cartridge_state;
-
 }
 
 /* Function to toggle between RUN and HALTED at each press of the encoder button */
@@ -1146,6 +1143,7 @@ void get_handle_type(){
 	}
 }
 
+/* Function to set heating values depending on detected handle */
 void set_handle_values(){
 	if(attached_handle == NT115){
 		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
