@@ -1013,28 +1013,28 @@ void handle_emergency_shutdown(){
 	}
 	/* Set state to EMERGENCY_SLEEP if iron ON for longer time than emergency_time */
 	if ((sensor_values.in_stand == 0) && (HAL_GetTick() - previous_millis_left_stand >= flash_values.emergency_time*60000) && sensor_values.current_state == RUN){
-		show_popup("Standby timeout");
 		change_state(EMERGENCY_SLEEP);
+		show_popup("Standby timeout");
 	}
 	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
 	if((sensor_values.bus_voltage <= MIN_BUSVOLTAGE) && (sensor_values.current_state == RUN)){
-		show_popup("Inp. Voltage too low");
 		change_state(EMERGENCY_SLEEP);
+		show_popup("Inp. Voltage too low");
 	}
 	/* Set state to EMERGENCY_SLEEP if input power is too low */
 	if((sensor_values.max_power_watt <= MIN_BUSPOWER) && (sensor_values.current_state == RUN)){
-		show_popup("Inp. Power too low");
 		change_state(EMERGENCY_SLEEP);
+		show_popup("Inp. Power too low");
 	}
 	/* Set state to EMERGENCY_SLEEP if no tip detected (no current draw) */
 	else if((sensor_values.heater_current < 1) && (sensor_values.current_state == RUN)){ //NT115 at 9V draws 2.3
-		show_popup("No tip detected");
 		change_state(EMERGENCY_SLEEP);
+		show_popup("No tip detected");
 	}
 	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
 	else if((sensor_values.thermocouple_temperature_filtered > EMERGENCY_SHUTDOWN_TEMPERATURE) && (sensor_values.current_state == RUN)){
-		show_popup("OVERTEMP");
 		change_state(EMERGENCY_SLEEP);
+		show_popup("OVERTEMP");
 	}
 }
 
@@ -1047,8 +1047,9 @@ void handle_cartridge_presence(){
 	else{
 		cartridge_state = ATTACHED;
 	}
-
+	/* When a inserted cartridge is detected - fill the moving average filter with TC measurements */
 	if ((previous_cartridge_state == DETACHED) && (cartridge_state == ATTACHED)){
+		HAL_Delay(100);
 		Moving_Average_Set_Value(sensor_values.thermocouple_temperature, &thermocouple_temperature_filtered_filter_struct);
 	}
 	previous_cartridge_state = cartridge_state;
