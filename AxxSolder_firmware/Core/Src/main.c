@@ -2,7 +2,8 @@
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body
+  * @author  		: Axel Johansson, Stockholm, Sweden
+  * @brief          : Main program body of AxxSodler
   ******************************************************************************
   * @attention
   *
