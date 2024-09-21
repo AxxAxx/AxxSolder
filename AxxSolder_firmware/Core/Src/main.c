@@ -300,7 +300,7 @@ char menu_names[menu_length][22] = { "Startup Temp °C    ",
 /* PID data */
 double PID_setpoint = 0.0;
 
-/* Flags for temp asn current measurements */
+/* Flags for temp and current measurements */
 uint8_t current_measurement_requested = 0;
 uint8_t current_measurement_done = 1;
 uint8_t thermocouple_measurement_requested = 0;
@@ -414,6 +414,7 @@ uint16_t RGB_to_BRG(uint16_t color){
 	return ((((color & 0b0000000000011111)  << 11) & 0b1111100000000000) | ((color & 0b1111111111100000) >> 5));
 }
 
+/* Function to change the main state */
 void change_state(mainstates new_state){
 	sensor_values.previous_state = sensor_values.current_state;
 	sensor_values.current_state = new_state;
@@ -503,44 +504,44 @@ double convert_temperature(double temperature){
 
 /* Function to left align a string from double */
 void left_align_double(char* str, double number, int8_t len)
-  		{
-			char tempstring[len];
-			memset(&tempstring, '\0', len);
-			sprintf(tempstring, "%.0f", number);
+	{
+		char tempstring[len];
+		memset(&tempstring, '\0', len);
+		sprintf(tempstring, "%.0f", number);
 
-			if(number < -99.5){
-				;
-			}
-			else if(number < -9.5){
-				tempstring[3] = 32;
-				tempstring[4] = 32;
-			}
-			else if(number < 0){
-				tempstring[2] = 32;
-				tempstring[3] = 32;
-				tempstring[4] = 32;
-				tempstring[5] = 32;
-			}
-			else if(number < 9.5){
-				tempstring[1] = 32;
-				tempstring[2] = 32;
-				tempstring[3] = 32;
-				tempstring[4] = 32;
-				tempstring[5] = 32;
-				tempstring[6] = 32;
-			}
-			else if(number < 99.5){
-				tempstring[2] = 32;
-				tempstring[3] = 32;
-				tempstring[4] = 32;
-				tempstring[5] = 32;
-			}
-			else if(number < 999.5){
-				tempstring[3] = 32;
-				tempstring[4] = 32;
-			}
-			strcpy(str, tempstring);
-  		}
+		if(number < -99.5){
+			;
+		}
+		else if(number < -9.5){
+			tempstring[3] = 32;
+			tempstring[4] = 32;
+		}
+		else if(number < 0){
+			tempstring[2] = 32;
+			tempstring[3] = 32;
+			tempstring[4] = 32;
+			tempstring[5] = 32;
+		}
+		else if(number < 9.5){
+			tempstring[1] = 32;
+			tempstring[2] = 32;
+			tempstring[3] = 32;
+			tempstring[4] = 32;
+			tempstring[5] = 32;
+			tempstring[6] = 32;
+		}
+		else if(number < 99.5){
+			tempstring[2] = 32;
+			tempstring[3] = 32;
+			tempstring[4] = 32;
+			tempstring[5] = 32;
+		}
+		else if(number < 999.5){
+			tempstring[3] = 32;
+			tempstring[4] = 32;
+		}
+		strcpy(str, tempstring);
+	}
 
 void settings_menu(){
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
@@ -1462,14 +1463,13 @@ int main(void)
 				debug_print_str(DEBUG_INFO,"No USB-PD detected");
 			}else{
 				power_source = POWER_USB;
-				//the usb devices need some time to transmit the messages and executer the soft reset
+				//The usb devices need some time to transmit the messages and execute the soft reset
 				//HAL_Delay(4);
 				//poll alert status since we don't have the alert interrupt pin connected
 				//depending on the source we may need a few tries
 				bool sourceStatus = false;
 				for(int i=0;i<500;i++){
 					sourceStatus = poll_source();
-					//HAL_Delay(2);
 					if(sourceStatus){
 						debug_print_str(DEBUG_INFO,"Got PDOs");
 						uint8_t maxPowerAvailable = 0;
@@ -1477,7 +1477,6 @@ int main(void)
 
 						sensor_values.USB_PD_power_limit = maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR;
 						debug_print_int(DEBUG_INFO,"Reduced max power to", maxPowerAvailable*USB_PD_POWER_REDUCTION_FACTOR);
-
 						//re-negotiate
 						break;
 					}
