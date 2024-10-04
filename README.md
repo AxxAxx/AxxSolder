@@ -4,7 +4,7 @@
 
 
 AxxAxx is his mind baking the idea to make AxxSodler 4.0 with tweezer support! Primarily for the JBC AM120 and PA120 tweezer (Possibly NP115+AN115 with tweezer modification).  
-He hopes that - if you can - support with whatever contribution you feel OK with to: https://ko-fi.com/axxaxx and hopefully we can crowdsource enough funding to buy him a AM120 tweezer for the development (215 Euro) and make AxxSolder 4.0 with tweezer support! 🎉🎉🎉🎉
+He hopes that - if you can - support with whatever contribution you feel OK with to: https://ko-fi.com/axxaxx and hopefully we can crowdsource enough funding to buy a AM120 tweezer for the development (215 Euro) and make AxxSolder 4.0 with tweezer support! 🎉🎉🎉🎉
 
 
   
