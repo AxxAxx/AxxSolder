@@ -2,13 +2,6 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAxxAxx%2FAxxSolder&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
-
-AxxAxx is his mind baking the idea to make AxxSodler 4.0 with tweezer support! Primarily for the JBC AM120 and PA120 tweezer (Possibly NP115+AN115 with tweezer modification).  
-He hopes that - if you can - support with whatever contribution you feel OK with to: https://ko-fi.com/axxaxx and hopefully we can crowdsource enough funding to buy a AM120 tweezer for the development (215 Euro) and make AxxSolder 4.0 with tweezer support! 🎉🎉🎉🎉
-
-
-  
-  
   
 Interested in purchasing an AxxSolder 3.1? On [Tindie](https://www.tindie.com/stores/axxaxx/) you can purchase assembled and tested AxxSolder 3.1 boards with connectors.  
 <a href="https://www.tindie.com/stores/axxaxx/?ref=offsite_badges&utm_source=sellers_AxxAxx&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
