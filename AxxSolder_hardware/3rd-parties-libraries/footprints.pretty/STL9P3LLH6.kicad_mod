@@ -1,4 +1,4 @@
-(footprint "STL20N6F7" (version 20221018) (generator pcbnew)
+(footprint "STL9P3LLH6" (version 20221018) (generator pcbnew)
   (layer "F.Cu")
   (descr "PowerFLAT™ 3.3x3.3")
   (tags "MOSFET (P-Channel)")
@@ -7,7 +7,7 @@
       (effects (font (size 0.8 0.8) (thickness 0.15) bold))
     (tstamp 2518ca0d-1a70-4733-b35e-980bf7d38473)
   )
-  (fp_text value "STL20N6F7" (at 0 0.2) (layer "F.SilkS") hide
+  (fp_text value "STL9P3LLH6" (at 0 0.2) (layer "F.SilkS") hide
       (effects (font (size 1.27 1.27) (thickness 0.254)))
     (tstamp d0884ae7-51b8-4d77-b302-d099388c1f03)
   )
