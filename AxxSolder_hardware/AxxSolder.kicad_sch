@@ -15482,7 +15482,7 @@
     (property "Value" "STL9P3LLH6" (at 91.44 64.262 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "footprints:STL20N6F7" (at 69.85 162.992 0)
+    (property "Footprint" "footprints:STL9P3LLH6" (at 69.85 162.992 0)
       (effects (font (size 1.27 1.27)) (justify left top) hide)
     )
     (property "Datasheet" "https://www.st.com/resource/en/datasheet/stl9p3llh6.pdf" (at 69.85 262.992 0)
