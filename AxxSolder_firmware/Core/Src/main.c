@@ -56,9 +56,9 @@ uint8_t fw_version_patch =  1;
 #define MAX_I_NT115 	150
 
 #define KP_T210 		5
-#define KI_T210 		5.5
+#define KI_T210 		5.5//5
 #define KD_T210 		0.25
-#define MAX_I_T210 		125
+#define MAX_I_T210 		125//250
 
 #define KP_T245 		8
 #define KI_T245 		5
@@ -136,6 +136,7 @@ uint8_t custom_temperature_on = 0;
 /* PID parameters */
 #define PID_MAX_OUTPUT 500
 #define PID_UPDATE_INTERVAL 25
+#define PID_add_I_min_error 999//50
 
 /* Buffer for UART print */
 char UART_buffer[40];
@@ -1418,6 +1419,7 @@ int main(void)
 	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		//Set PID sample time to "PID_UPDATE_INTERVAL" to make sure PID is calculated every time it is called
 	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
 	PID_SetILimits(&TPID, 0, 0);         					// Set max and min I limit
+	PID_SetIminError(&TPID,PID_add_I_min_error);
 
 	/* Init and fill filter structures with initial values */
 	for (int i = 0; i<200;i++){

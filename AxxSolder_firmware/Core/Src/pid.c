@@ -95,10 +95,17 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 		if(*uPID->MySetpoint == 0){
 			uPID->OutputSum = 0;
 		}
-		uPID->DispKi_part = uPID->OutputSum;
+
+		/* only add I part if error is smaller than IminError and scale it from IminError to 0 */
+		if(error < fabs(uPID->IminError)){
+			uPID->DispKi_part = (uPID->IminError - fabs(error))/uPID->IminError * uPID->OutputSum;
+		}
+		else{
+			uPID->DispKi_part = 0;
+		}
 
 		/* Final summation */
-		output += uPID->OutputSum;
+		output += uPID->DispKi_part;
 
 		/* Clamp output */
 		output = double_clamp(output, uPID->OutMin, uPID->OutMax);
@@ -159,6 +166,16 @@ void PID_SetILimits(PID_TypeDef *uPID, double Min, double Max){
 	uPID->IMin = Min;
 	uPID->IMax = Max;
 }
+
+/* Minimum error where I is added */
+void PID_SetIminError(PID_TypeDef *uPID, double IminError){	/* Check value */
+	if (IminError < 0){
+		return;
+	}
+
+	uPID->IminError = IminError;
+}
+
 
 /* PID Tunings */
 void PID_SetTunings(PID_TypeDef *uPID, double Kp, double Ki, double Kd){

@@ -58,6 +58,8 @@ typedef struct{
 	double          IMin;
 	double          IMax;
 
+	double			IminError;
+
 }PID_TypeDef;
 
 /* Init */
@@ -79,6 +81,9 @@ void PID_SetOutputLimits(PID_TypeDef *uPID, double Min, double Max);
 
 /* PID I-windup Limits */
 void PID_SetILimits(PID_TypeDef *uPID, double Min, double Max);
+
+/* Minimum error where I is added */
+void PID_SetIminError(PID_TypeDef *uPID, double IminError);
 
 /* PID Tunings */
 void PID_SetTunings(PID_TypeDef *uPID, double Kp, double Ki, double Kd);
