@@ -221,6 +221,12 @@ volatile uint8_t SW_1_pressed_long = 0;
 volatile uint8_t SW_2_pressed_long = 0;
 volatile uint8_t SW_3_pressed_long = 0;
 
+/* UART send buffers */
+#define MAX_BUFFER_LEN 250
+uint8_t UART_transmit_buffer[MAX_BUFFER_LEN];
+uint8_t UART_packet_index = 0;
+uint8_t UART_packet_length = 0;
+
 /* Struct to hold sensor values */
 struct sensor_values_struct {
 	double set_temperature;
@@ -413,6 +419,27 @@ uint8_t get_hw_version(){
 /* Convert RGB colour to BRG color */
 uint16_t RGB_to_BRG(uint16_t color){
 	return ((((color & 0b0000000000011111)  << 11) & 0b1111100000000000) | ((color & 0b1111111111100000) >> 5));
+}
+
+/* Pack float for sending over UART */
+void pack_float( uint8_t *buffer, uint8_t *packet_count, const float data_float)
+{
+    buffer[(*packet_count) + 0] = ((uint8_t*)&data_float)[0];
+    buffer[(*packet_count) + 1] = ((uint8_t*)&data_float)[1];
+    buffer[(*packet_count) + 2] = ((uint8_t*)&data_float)[2];
+    buffer[(*packet_count) + 3] = ((uint8_t*)&data_float)[3];
+
+    *packet_count+= sizeof(data_float);
+}
+
+/* Pack frame start for sending over UART */
+void pack_frame_start( uint8_t *buffer, uint8_t *packet_count, uint8_t UART_packet_length)
+{
+    buffer[0] = ((uint8_t)0xAA);
+    buffer[1] = ((uint8_t)0xBB);
+    buffer[2] = ((uint8_t)UART_packet_length);
+
+    *packet_count = 3;
 }
 
 /* Function to change the main state */
@@ -1553,12 +1580,19 @@ int main(void)
 		/* Send debug information */
 		#ifdef DEBUG
 		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
-			memset(&UART_buffer, '\0', sizeof(UART_buffer));
-			sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
-					sensor_values.thermocouple_temperature, sensor_values.thermocouple_temperature_filtered, PID_setpoint,
-					sensor_values.requested_power/PID_MAX_OUTPUT*100.0, sensor_values.requested_power_filtered/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
-			//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
-			HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
+			UART_packet_length = 9*sizeof(float);
+			pack_frame_start(UART_transmit_buffer, &UART_packet_index, UART_packet_length);
+			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.thermocouple_temperature);
+			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.thermocouple_temperature_filtered);
+			pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_setpoint);
+			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power/PID_MAX_OUTPUT*100.0);
+			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power_filtered/PID_MAX_OUTPUT*100.0);
+			pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetPpart(&TPID)/10.0);
+			pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetIpart(&TPID)/10.0);
+			pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetDpart(&TPID)/10.0);
+			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.heater_current);
+
+			HAL_UART_Transmit_IT(&huart1,(uint8_t*)UART_transmit_buffer, UART_packet_length+3);
 			previous_millis_debug = HAL_GetTick();
 		}
 		#endif
