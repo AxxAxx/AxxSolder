@@ -27,6 +27,7 @@
 #include "pid.h"
 #include "moving_average.h"
 #include "hysteresis.h"
+#include "type_packers.h"
 #include "flash.h"
 #include "stusb4500.h"
 #include "buzzer.h"
@@ -420,27 +421,6 @@ uint8_t get_hw_version(){
 /* Convert RGB colour to BRG color */
 uint16_t RGB_to_BRG(uint16_t color){
 	return ((((color & 0b0000000000011111)  << 11) & 0b1111100000000000) | ((color & 0b1111111111100000) >> 5));
-}
-
-/* Pack float for sending over UART */
-void pack_float( uint8_t *buffer, uint8_t *packet_count, const float data_float)
-{
-    buffer[(*packet_count) + 0] = ((uint8_t*)&data_float)[0];
-    buffer[(*packet_count) + 1] = ((uint8_t*)&data_float)[1];
-    buffer[(*packet_count) + 2] = ((uint8_t*)&data_float)[2];
-    buffer[(*packet_count) + 3] = ((uint8_t*)&data_float)[3];
-
-    *packet_count+= sizeof(data_float);
-}
-
-/* Pack frame start for sending over UART */
-void pack_frame_start( uint8_t *buffer, uint8_t *packet_count, uint8_t UART_packet_length)
-{
-    buffer[0] = ((uint8_t)0xAA);
-    buffer[1] = ((uint8_t)0xBB);
-    buffer[2] = ((uint8_t)UART_packet_length);
-
-    *packet_count = 3;
 }
 
 /* Function to change the main state */
@@ -1593,7 +1573,7 @@ int main(void)
 			pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetDpart(&TPID)/10.0);
 			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.heater_current);
 
-			HAL_UART_Transmit_DMA(&huart1,(uint8_t*)UART_transmit_buffer, UART_packet_length+3);
+			HAL_UART_Transmit_DMA(&huart1,(uint8_t*)UART_transmit_buffer, UART_packet_length+2); // Add two for starting bit and packet length
 			previous_millis_debug = HAL_GetTick();
 		}
 		#endif
