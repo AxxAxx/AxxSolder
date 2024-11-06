@@ -60,6 +60,8 @@ typedef struct{
 
 	double			IminError;
 
+	double			NegativeErrorIgainMultiplier;
+
 }PID_TypeDef;
 
 /* Init */
@@ -84,6 +86,9 @@ void PID_SetILimits(PID_TypeDef *uPID, double Min, double Max);
 
 /* Minimum error where I is added */
 void PID_SetIminError(PID_TypeDef *uPID, double IminError);
+
+/* Set the I gain multiplier for negative error*/
+void PID_SetNegativeErrorIgainMult(PID_TypeDef *uPID, double NegativeErrorIgainMultiplier);
 
 /* PID Tunings */
 void PID_SetTunings(PID_TypeDef *uPID, double Kp, double Ki, double Kd);
