@@ -45,10 +45,7 @@ uint8_t fw_version_minor =  2;
 uint8_t fw_version_patch =  1;
 
 //#define PID_TUNING
-#define DEBUG
-#ifdef DEBUG
-	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
-#endif
+DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 
 /* PID parameters */
 #define KP_NT115 		5
@@ -290,11 +287,12 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.temp_cal_300 = 300,
 											.temp_cal_350 = 350,
 											.temp_cal_400 = 400,
-											.temp_cal_450 = 450};
+											.temp_cal_450 = 450,
+											.serial_debug_print = 0};
 
 /* List of names for settings menu */
-#define menu_length 23
-char menu_names[menu_length][28] = { "Startup Temp °C    ",
+#define menu_length 24
+char menu_names[menu_length][29] = { "Startup Temp °C    ",
 							"Temp Offset °C      ",
 							"Standby Temp °C   ",
 							"Standby Time [min]  ",
@@ -314,6 +312,7 @@ char menu_names[menu_length][28] = { "Startup Temp °C    ",
 							"Temp cal 350         ",
 							"Temp cal 400         ",
 							"Temp cal 450         ",
+							"Serial DEBUG         ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -491,7 +490,7 @@ void get_thermocouple_temperature(){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_NT115 + TC_temp*TC_COMPENSATION_X1_NT115 + TC_COMPENSATION_X0_NT115;
 	}
 
-	/*Adjust measured temperature to fit calibrated values */
+	/* Adjust measured temperature to fit calibrated values */
 	if(sensor_values.thermocouple_temperature < 100){
 		sensor_values.thermocouple_temperature = sensor_values.thermocouple_temperature*(flash_values.temp_cal_100)/100;
 		}
@@ -1594,24 +1593,24 @@ int main(void)
 		#endif
 
 		/* Send debug information */
-		#ifdef DEBUG
-		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
-			UART_packet_length = 9*sizeof(float);
-			pack_frame_start(UART_transmit_buffer, &UART_packet_index, UART_packet_length);
-			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.thermocouple_temperature);
-			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.thermocouple_temperature_filtered);
-			pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_setpoint);
-			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power/PID_MAX_OUTPUT*100.0);
-			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power_filtered/PID_MAX_OUTPUT*100.0);
-			pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetPpart(&TPID)/10.0);
-			pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetIpart(&TPID)/10.0);
-			pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetDpart(&TPID)/10.0);
-			pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.heater_current);
+		if(flash_values.serial_debug_print == 1){
+			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
+				UART_packet_length = 9*sizeof(float);
+				pack_frame_start(UART_transmit_buffer, &UART_packet_index, UART_packet_length);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.thermocouple_temperature);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.thermocouple_temperature_filtered);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_setpoint);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power/PID_MAX_OUTPUT*100.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power_filtered/PID_MAX_OUTPUT*100.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetPpart(&TPID)/10.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetIpart(&TPID)/10.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetDpart(&TPID)/10.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.heater_current);
 
-			HAL_UART_Transmit_DMA(&huart1,(uint8_t*)UART_transmit_buffer, UART_packet_length+2); // Add two for starting bit and packet length
-			previous_millis_debug = HAL_GetTick();
+				HAL_UART_Transmit_DMA(&huart1,(uint8_t*)UART_transmit_buffer, UART_packet_length+2); // Add two for starting bit and packet length
+				previous_millis_debug = HAL_GetTick();
+			}
 		}
-		#endif
 
 		/* Detect if a tip is present by sending a short voltage pulse and sense current */
 		if (flash_values.current_measurement == 1){
