@@ -284,11 +284,17 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.power_limit = 0,
 											.current_measurement = 1,
 											.startup_beep = 1,
-											.deg_celsius = 1};
+											.deg_celsius = 1,
+											.temp_cal_100 = 100,
+											.temp_cal_200 = 200,
+											.temp_cal_300 = 300,
+											.temp_cal_350 = 350,
+											.temp_cal_400 = 400,
+											.temp_cal_450 = 450};
 
 /* List of names for settings menu */
-#define menu_length 17
-char menu_names[menu_length][22] = { "Startup Temp °C    ",
+#define menu_length 23
+char menu_names[menu_length][28] = { "Startup Temp °C    ",
 							"Temp Offset °C      ",
 							"Standby Temp °C   ",
 							"Standby Time [min]  ",
@@ -302,6 +308,12 @@ char menu_names[menu_length][22] = { "Startup Temp °C    ",
 							"I Measurement       ",
 							"Startup Beep         ",
 							"Temp in Celsius     ",
+							"Temp cal 100         ",
+							"Temp cal 200         ",
+							"Temp cal 300         ",
+							"Temp cal 350         ",
+							"Temp cal 400         ",
+							"Temp cal 450         ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -478,6 +490,27 @@ void get_thermocouple_temperature(){
 	else if(attached_handle == NT115){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_NT115 + TC_temp*TC_COMPENSATION_X1_NT115 + TC_COMPENSATION_X0_NT115;
 	}
+
+	/*Adjust measured temperature to fit calibrated values */
+	if(sensor_values.thermocouple_temperature < 100){
+		sensor_values.thermocouple_temperature = sensor_values.thermocouple_temperature*(flash_values.temp_cal_100)/100;
+		}
+	else if(sensor_values.thermocouple_temperature < 200){
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 100)*(flash_values.temp_cal_200-flash_values.temp_cal_100)/100 + flash_values.temp_cal_100;
+		}
+	else if(sensor_values.thermocouple_temperature < 300){
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 200)*(flash_values.temp_cal_300-flash_values.temp_cal_200)/100 + flash_values.temp_cal_200;
+	}
+	else if(sensor_values.thermocouple_temperature < 350){
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 300)*(flash_values.temp_cal_350-flash_values.temp_cal_300)/50 + flash_values.temp_cal_300;
+		}
+	else if(sensor_values.thermocouple_temperature < 400){
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 350)*(flash_values.temp_cal_400-flash_values.temp_cal_350)/50 + flash_values.temp_cal_350;
+		}
+	else{
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 400)*(flash_values.temp_cal_450-flash_values.temp_cal_400)/50 + flash_values.temp_cal_400;
+		}
+
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
 	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,500); // Clamp
 
