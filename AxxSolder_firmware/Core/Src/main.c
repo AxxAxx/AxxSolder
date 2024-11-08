@@ -49,19 +49,19 @@ DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 
 /* PID parameters */
 #define KP_NT115 		5
-#define KI_NT115 		4
+#define KI_NT115 		3
 #define KD_NT115 		0.25
-#define MAX_I_NT115 	150
+#define MAX_I_NT115 	300
 
-#define KP_T210 		5
-#define KI_T210 		3//5
+#define KP_T210 		8
+#define KI_T210 		4
 #define KD_T210 		0.25
-#define MAX_I_T210 		300//250
+#define MAX_I_T210 		300
 
 #define KP_T245 		8
-#define KI_T245 		5
-#define KD_T245 		1
-#define MAX_I_T245 		150
+#define KI_T245 		3
+#define KD_T245 		0.5
+#define MAX_I_T245 		300
 
 /* Timing constants */
 uint32_t previous_millis_display = 0;
@@ -135,7 +135,7 @@ uint8_t custom_temperature_on = 0;
 #define PID_MAX_OUTPUT 500
 #define PID_UPDATE_INTERVAL 25
 #define PID_ADD_I_MIN_ERROR 75
-#define PID_NEGATIVE_ERROR_I_GAIN_MULTIPLIER 5
+#define PID_NEGATIVE_ERROR_I_GAIN_MULTIPLIER 10
 
 /* Buffer for UART print */
 char UART_buffer[40];
