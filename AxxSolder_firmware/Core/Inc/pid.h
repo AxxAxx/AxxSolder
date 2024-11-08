@@ -6,6 +6,7 @@
 #include <string.h>
 #include "main.h"
 #include "stm32g4xx_hal.h"       /* Import HAL library */
+#include <math.h>
 
 #define DEFAULT_SAMPLE_TIME_MS 100
 #define DEFAULT_PWM_MAX 100
@@ -58,6 +59,10 @@ typedef struct{
 	double          IMin;
 	double          IMax;
 
+	double			IminError;
+
+	double			NegativeErrorIgainMultiplier;
+
 }PID_TypeDef;
 
 /* Init */
@@ -79,6 +84,12 @@ void PID_SetOutputLimits(PID_TypeDef *uPID, double Min, double Max);
 
 /* PID I-windup Limits */
 void PID_SetILimits(PID_TypeDef *uPID, double Min, double Max);
+
+/* Minimum error where I is added */
+void PID_SetIminError(PID_TypeDef *uPID, double IminError);
+
+/* Set the I gain multiplier for negative error*/
+void PID_SetNegativeErrorIgainMult(PID_TypeDef *uPID, double NegativeErrorIgainMultiplier);
 
 /* PID Tunings */
 void PID_SetTunings(PID_TypeDef *uPID, double Kp, double Ki, double Kd);

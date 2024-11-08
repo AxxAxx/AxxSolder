@@ -80,12 +80,14 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 		output += uPID->DispKd_part;
 
 		/* Conditional integration as anti-windup (clamping) */
-		if(check_clamping(output + uPID->Ki * error  * timeChange_in_seconds, uPID->OutMin, uPID->OutMax) && (error*(output + uPID->OutputSum) > 0)){
-		//if((error > proportional_band_max) || (error < proportional_band_min)){
+		if(check_clamping(output + uPID->NegativeErrorIgainMultiplier*uPID->Ki * error  * timeChange_in_seconds, uPID->OutMin, uPID->OutMax) && (error*(output + uPID->OutputSum) > 0)){
 			uPID->OutputSum     += 0;
 		}
-		else{
+		else if(error > 0){
 			uPID->OutputSum     += (uPID->Ki * error * timeChange_in_seconds);
+		}
+		else{
+			uPID->OutputSum     += uPID->NegativeErrorIgainMultiplier*(uPID->Ki * error * timeChange_in_seconds);
 		}
 
 		/* Clamp Integral part */
@@ -95,10 +97,15 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 		if(*uPID->MySetpoint == 0){
 			uPID->OutputSum = 0;
 		}
-		uPID->DispKi_part = uPID->OutputSum;
 
+		/* only add I part if error is smaller than IminError and scale it from IminError to 0 */
+		if(error > fabs(uPID->IminError)){
+			uPID->OutputSum = 0;
+		}
+
+		uPID->DispKi_part = uPID->OutputSum;
 		/* Final summation */
-		output += uPID->OutputSum;
+		output += uPID->DispKi_part;
 
 		/* Clamp output */
 		output = double_clamp(output, uPID->OutMin, uPID->OutMax);
@@ -158,6 +165,24 @@ void PID_SetILimits(PID_TypeDef *uPID, double Min, double Max){
 
 	uPID->IMin = Min;
 	uPID->IMax = Max;
+}
+
+/* Minimum error where I is added */
+void PID_SetIminError(PID_TypeDef *uPID, double IminError){	/* Check value */
+	if (IminError < 0){
+		return;
+	}
+
+	uPID->IminError = IminError;
+}
+
+/* Set the I gain multiplier for negative error*/
+void PID_SetNegativeErrorIgainMult(PID_TypeDef *uPID, double NegativeErrorIgainMultiplier){
+	if (NegativeErrorIgainMultiplier < 0){
+		return;
+	}
+
+	uPID->NegativeErrorIgainMultiplier = NegativeErrorIgainMultiplier;
 }
 
 /* PID Tunings */

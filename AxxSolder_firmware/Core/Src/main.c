@@ -27,6 +27,7 @@
 #include "pid.h"
 #include "moving_average.h"
 #include "hysteresis.h"
+#include "type_packers.h"
 #include "flash.h"
 #include "stusb4500.h"
 #include "buzzer.h"
@@ -41,29 +42,26 @@
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  2;
-uint8_t fw_version_patch =  1;
+uint8_t fw_version_patch =  2;
 
 //#define PID_TUNING
-//#define DEBUG
-#ifdef DEBUG
-	DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
-#endif
+DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 
 /* PID parameters */
 #define KP_NT115 		5
-#define KI_NT115 		4
+#define KI_NT115 		3
 #define KD_NT115 		0.25
-#define MAX_I_NT115 	150
+#define MAX_I_NT115 	300
 
-#define KP_T210 		5
-#define KI_T210 		5.5
+#define KP_T210 		8
+#define KI_T210 		4
 #define KD_T210 		0.25
-#define MAX_I_T210 		125
+#define MAX_I_T210 		300
 
 #define KP_T245 		8
-#define KI_T245 		5
-#define KD_T245 		1
-#define MAX_I_T245 		150
+#define KI_T245 		3
+#define KD_T245 		0.5
+#define MAX_I_T245 		300
 
 /* Timing constants */
 uint32_t previous_millis_display = 0;
@@ -136,6 +134,8 @@ uint8_t custom_temperature_on = 0;
 /* PID parameters */
 #define PID_MAX_OUTPUT 500
 #define PID_UPDATE_INTERVAL 25
+#define PID_ADD_I_MIN_ERROR 75
+#define PID_NEGATIVE_ERROR_I_GAIN_MULTIPLIER 10
 
 /* Buffer for UART print */
 char UART_buffer[40];
@@ -220,6 +220,12 @@ volatile uint8_t SW_1_pressed_long = 0;
 volatile uint8_t SW_2_pressed_long = 0;
 volatile uint8_t SW_3_pressed_long = 0;
 
+/* UART send buffers */
+#define MAX_BUFFER_LEN 250
+uint8_t UART_transmit_buffer[MAX_BUFFER_LEN];
+uint8_t UART_packet_index = 0;
+uint8_t UART_packet_length = 0;
+
 /* Struct to hold sensor values */
 struct sensor_values_struct {
 	double set_temperature;
@@ -275,11 +281,18 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.power_limit = 0,
 											.current_measurement = 1,
 											.startup_beep = 1,
-											.deg_celsius = 1};
+											.deg_celsius = 1,
+											.temp_cal_100 = 100,
+											.temp_cal_200 = 200,
+											.temp_cal_300 = 300,
+											.temp_cal_350 = 350,
+											.temp_cal_400 = 400,
+											.temp_cal_450 = 450,
+											.serial_debug_print = 0};
 
 /* List of names for settings menu */
-#define menu_length 17
-char menu_names[menu_length][22] = { "Startup Temp °C    ",
+#define menu_length 24
+char menu_names[menu_length][29] = { "Startup Temp °C    ",
 							"Temp Offset °C      ",
 							"Standby Temp °C   ",
 							"Standby Time [min]  ",
@@ -293,6 +306,13 @@ char menu_names[menu_length][22] = { "Startup Temp °C    ",
 							"I Measurement       ",
 							"Startup Beep         ",
 							"Temp in Celsius     ",
+							"Temp cal 100         ",
+							"Temp cal 200         ",
+							"Temp cal 300         ",
+							"Temp cal 350         ",
+							"Temp cal 400         ",
+							"Temp cal 450         ",
+							"Serial DEBUG         ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -353,6 +373,7 @@ TIM_HandleTypeDef htim16;
 TIM_HandleTypeDef htim17;
 
 UART_HandleTypeDef huart1;
+DMA_HandleTypeDef hdma_usart1_tx;
 
 /* USER CODE BEGIN PV */
 
@@ -468,6 +489,27 @@ void get_thermocouple_temperature(){
 	else if(attached_handle == NT115){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_NT115 + TC_temp*TC_COMPENSATION_X1_NT115 + TC_COMPENSATION_X0_NT115;
 	}
+
+	/* Adjust measured temperature to fit calibrated values */
+	if(sensor_values.thermocouple_temperature < 100){
+		sensor_values.thermocouple_temperature = sensor_values.thermocouple_temperature*(flash_values.temp_cal_100)/100.0f;
+		}
+	else if(sensor_values.thermocouple_temperature < 200){
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 100.0f)*(flash_values.temp_cal_200-flash_values.temp_cal_100)/100.0f + flash_values.temp_cal_100;
+		}
+	else if(sensor_values.thermocouple_temperature < 300){
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 200.0f)*(flash_values.temp_cal_300-flash_values.temp_cal_200)/100.0f + flash_values.temp_cal_200;
+	}
+	else if(sensor_values.thermocouple_temperature < 350){
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 300.0f)*(flash_values.temp_cal_350-flash_values.temp_cal_300)/50.0f + flash_values.temp_cal_300;
+		}
+	else if(sensor_values.thermocouple_temperature < 400){
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 350.0f)*(flash_values.temp_cal_400-flash_values.temp_cal_350)/50.0f + flash_values.temp_cal_350;
+		}
+	else{
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 400.0f)*(flash_values.temp_cal_450-flash_values.temp_cal_400)/50.0f + flash_values.temp_cal_400;
+		}
+
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
 	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,500); // Clamp
 
@@ -1373,7 +1415,7 @@ int main(void)
 
 	/* initialize moving average functions */
 	Moving_Average_Init(&thermocouple_temperature_filter_struct,2);
-	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,50);
+	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,30);
 	Moving_Average_Init(&requested_power_filtered_filter_struct,20);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
@@ -1418,6 +1460,8 @@ int main(void)
 	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		//Set PID sample time to "PID_UPDATE_INTERVAL" to make sure PID is calculated every time it is called
 	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
 	PID_SetILimits(&TPID, 0, 0);         					// Set max and min I limit
+	PID_SetIminError(&TPID,PID_ADD_I_MIN_ERROR);
+	PID_SetNegativeErrorIgainMult(&TPID, PID_NEGATIVE_ERROR_I_GAIN_MULTIPLIER);
 
 	/* Init and fill filter structures with initial values */
 	for (int i = 0; i<200;i++){
@@ -1549,17 +1593,24 @@ int main(void)
 		#endif
 
 		/* Send debug information */
-		#ifdef DEBUG
-		if(HAL_GetTick() - previous_millis_debug >= interval_debug){
-			memset(&UART_buffer, '\0', sizeof(UART_buffer));
-			sprintf(UART_buffer, "%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\t%3.1f\n",
-					sensor_values.thermocouple_temperature, sensor_values.thermocouple_temperature_filtered, PID_setpoint,
-					sensor_values.requested_power/PID_MAX_OUTPUT*100.0, sensor_values.requested_power_filtered/PID_MAX_OUTPUT*100.0, PID_GetPpart(&TPID)/10.0, PID_GetIpart(&TPID)/10.0, PID_GetDpart(&TPID)/10.0, sensor_values.heater_current);
-			//CDC_Transmit_FS((uint8_t *) buffer, strlen(UART_buffer)); //Print string over USB virtual COM port
-			HAL_UART_Transmit_IT(&huart1, (uint8_t *) UART_buffer, strlen(UART_buffer));
-			previous_millis_debug = HAL_GetTick();
+		if(flash_values.serial_debug_print == 1){
+			if(HAL_GetTick() - previous_millis_debug >= interval_debug){
+				UART_packet_length = 9*sizeof(float);
+				pack_frame_start(UART_transmit_buffer, &UART_packet_index, UART_packet_length);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.thermocouple_temperature);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.thermocouple_temperature_filtered);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_setpoint);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power/PID_MAX_OUTPUT*100.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power_filtered/PID_MAX_OUTPUT*100.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetPpart(&TPID)/10.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetIpart(&TPID)/10.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetDpart(&TPID)/10.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.heater_current);
+
+				HAL_UART_Transmit_DMA(&huart1,(uint8_t*)UART_transmit_buffer, UART_packet_length+2); // Add two for starting bit and packet length
+				previous_millis_debug = HAL_GetTick();
+			}
 		}
-		#endif
 
 		/* Detect if a tip is present by sending a short voltage pulse and sense current */
 		if (flash_values.current_measurement == 1){
@@ -2019,7 +2070,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 4.294967295E9;
+  htim2.Init.Period = 4294967295;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
@@ -2347,6 +2398,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  /* DMA1_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
   /* DMA1_Channel3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
