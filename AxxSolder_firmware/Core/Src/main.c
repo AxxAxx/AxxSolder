@@ -1415,7 +1415,7 @@ int main(void)
 
 	/* initialize moving average functions */
 	Moving_Average_Init(&thermocouple_temperature_filter_struct,2);
-	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,50);
+	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,30);
 	Moving_Average_Init(&requested_power_filtered_filter_struct,20);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
