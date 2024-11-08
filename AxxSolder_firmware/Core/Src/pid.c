@@ -80,14 +80,14 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 		output += uPID->DispKd_part;
 
 		/* Conditional integration as anti-windup (clamping) */
-		if(check_clamping(output + 5*uPID->Ki * error  * timeChange_in_seconds, uPID->OutMin, uPID->OutMax) && (error*(output + uPID->OutputSum) > 0)){
+		if(check_clamping(output + uPID->NegativeErrorIgainMultiplier*uPID->Ki * error  * timeChange_in_seconds, uPID->OutMin, uPID->OutMax) && (error*(output + uPID->OutputSum) > 0)){
 			uPID->OutputSum     += 0;
 		}
 		else if(error > 0){
 			uPID->OutputSum     += (uPID->Ki * error * timeChange_in_seconds);
 		}
 		else{
-			uPID->OutputSum     += 5*(uPID->Ki * error * timeChange_in_seconds);
+			uPID->OutputSum     += uPID->NegativeErrorIgainMultiplier*(uPID->Ki * error * timeChange_in_seconds);
 		}
 
 		/* Clamp Integral part */

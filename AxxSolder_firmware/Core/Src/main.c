@@ -492,22 +492,22 @@ void get_thermocouple_temperature(){
 
 	/* Adjust measured temperature to fit calibrated values */
 	if(sensor_values.thermocouple_temperature < 100){
-		sensor_values.thermocouple_temperature = sensor_values.thermocouple_temperature*(flash_values.temp_cal_100)/100;
+		sensor_values.thermocouple_temperature = sensor_values.thermocouple_temperature*(flash_values.temp_cal_100)/100.0f;
 		}
 	else if(sensor_values.thermocouple_temperature < 200){
-		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 100)*(flash_values.temp_cal_200-flash_values.temp_cal_100)/100 + flash_values.temp_cal_100;
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 100.0f)*(flash_values.temp_cal_200-flash_values.temp_cal_100)/100.0f + flash_values.temp_cal_100;
 		}
 	else if(sensor_values.thermocouple_temperature < 300){
-		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 200)*(flash_values.temp_cal_300-flash_values.temp_cal_200)/100 + flash_values.temp_cal_200;
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 200.0f)*(flash_values.temp_cal_300-flash_values.temp_cal_200)/100.0f + flash_values.temp_cal_200;
 	}
 	else if(sensor_values.thermocouple_temperature < 350){
-		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 300)*(flash_values.temp_cal_350-flash_values.temp_cal_300)/50 + flash_values.temp_cal_300;
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 300.0f)*(flash_values.temp_cal_350-flash_values.temp_cal_300)/50.0f + flash_values.temp_cal_300;
 		}
 	else if(sensor_values.thermocouple_temperature < 400){
-		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 350)*(flash_values.temp_cal_400-flash_values.temp_cal_350)/50 + flash_values.temp_cal_350;
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 350.0f)*(flash_values.temp_cal_400-flash_values.temp_cal_350)/50.0f + flash_values.temp_cal_350;
 		}
 	else{
-		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 400)*(flash_values.temp_cal_450-flash_values.temp_cal_400)/50 + flash_values.temp_cal_400;
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 400.0f)*(flash_values.temp_cal_450-flash_values.temp_cal_400)/50.0f + flash_values.temp_cal_400;
 		}
 
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value

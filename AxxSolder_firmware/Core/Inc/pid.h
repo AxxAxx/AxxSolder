@@ -6,6 +6,7 @@
 #include <string.h>
 #include "main.h"
 #include "stm32g4xx_hal.h"       /* Import HAL library */
+#include <math.h>
 
 #define DEFAULT_SAMPLE_TIME_MS 100
 #define DEFAULT_PWM_MAX 100
