@@ -19,10 +19,12 @@ jobs:
     - name: Build Docker image
       run: cd AxxSolder_firmware && docker build -t firmware-builder -f Containerfile .
 
+    - name: Set firmware path
+      run: echo "FIRMWARE_PATH=AxxSolder-${GITHUB_REF#refs/tags/}.bin" >> $GITHUB_ENV
+
     - name: Run firmware build and copy artifact
       if: startsWith(github.ref, 'refs/tags/')
       run: |
-        echo "FIRMWARE_PATH=AxxSolder-${GITHUB_REF#refs/tags/}.bin" >> $GITHUB_ENV
         cd AxxSolder_firmware
         docker run --rm \
           -v ${{ github.workspace }}:/workspace \
