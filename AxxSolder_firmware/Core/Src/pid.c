@@ -177,12 +177,13 @@ void PID_SetIminError(PID_TypeDef *uPID, double IminError){	/* Check value */
 }
 
 /* Set the I gain multiplier for negative error*/
-void PID_SetNegativeErrorIgainMult(PID_TypeDef *uPID, double NegativeErrorIgainMultiplier){
+void PID_SetNegativeErrorIgainMult(PID_TypeDef *uPID, double NegativeErrorIgainMultiplier, double NegativeErrorIgainBias){
 	if (NegativeErrorIgainMultiplier < 0){
 		return;
 	}
 
 	uPID->NegativeErrorIgainMultiplier = NegativeErrorIgainMultiplier;
+	uPID->NegativeErrorIgainBias = NegativeErrorIgainBias;
 }
 
 /* PID Tunings */

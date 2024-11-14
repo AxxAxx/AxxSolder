@@ -47,21 +47,28 @@ uint8_t fw_version_patch =  2;
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 
-/* PID parameters */
-#define KP_NT115 		5
-#define KI_NT115 		3
-#define KD_NT115 		0.25
-#define MAX_I_NT115 	300
+/* Cartridge type specific PID parameters */
+#define KP_NT115 					5
+#define KI_NT115 					3
+#define KD_NT115 					0.3
+#define MAX_I_NT115 				300
 
-#define KP_T210 		8
-#define KI_T210 		4
-#define KD_T210 		0.25
-#define MAX_I_T210 		300
+#define KP_T210 					7
+#define KI_T210 					4
+#define KD_T210 					0.3
+#define MAX_I_T210 					300
 
-#define KP_T245 		8
-#define KI_T245 		3
-#define KD_T245 		0.5
-#define MAX_I_T245 		300
+#define KP_T245 					8
+#define KI_T245 					2
+#define KD_T245 					0.5
+#define MAX_I_T245 					300
+
+/* General PID parameters */
+#define PID_MAX_OUTPUT 500
+#define PID_UPDATE_INTERVAL 25
+#define PID_ADD_I_MIN_ERROR 75
+double PID_NEG_ERROR_I_MULT = 7;
+double PID_NEG_ERROR_I_BIAS = 1;
 
 /* Timing constants */
 uint32_t previous_millis_display = 0;
@@ -130,12 +137,6 @@ double PID_MAX_I_LIMIT_tuning = 0;
 
 /* Allow use of custom temperatue, used for tuning */
 uint8_t custom_temperature_on = 0;
-
-/* PID parameters */
-#define PID_MAX_OUTPUT 500
-#define PID_UPDATE_INTERVAL 25
-#define PID_ADD_I_MIN_ERROR 75
-#define PID_NEGATIVE_ERROR_I_GAIN_MULTIPLIER 10
 
 /* Buffer for UART print */
 char UART_buffer[40];
@@ -1461,7 +1462,7 @@ int main(void)
 	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
 	PID_SetILimits(&TPID, 0, 0);         					// Set max and min I limit
 	PID_SetIminError(&TPID,PID_ADD_I_MIN_ERROR);
-	PID_SetNegativeErrorIgainMult(&TPID, PID_NEGATIVE_ERROR_I_GAIN_MULTIPLIER);
+	PID_SetNegativeErrorIgainMult(&TPID, PID_NEG_ERROR_I_MULT, PID_NEG_ERROR_I_BIAS); // Set un-symmetric I gain parameters
 
 	/* Init and fill filter structures with initial values */
 	for (int i = 0; i<200;i++){
@@ -1587,7 +1588,7 @@ int main(void)
 		/* PID Tuning manual control */
 		#ifdef PID_TUNING
 		custom_temperature_on = 1;
-		PID_SetTunings(&TPID, Kp_tuning, Ki_tuning, Kd_tuning/10.0);
+		PID_SetTunings(&TPID, Kp_tuning, Ki_tuning, Kd_tuning/100.0);
 		PID_SetILimits(&TPID, -PID_MAX_I_LIMIT_tuning, PID_MAX_I_LIMIT_tuning); 	// Set max and min I limit
 		sensor_values.set_temperature = temperature_tuning;
 		#endif
