@@ -589,7 +589,7 @@ void left_align_double(char* str, double number, int8_t len)
 void settings_menu(){
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
-		char str[20];
+		char str[32];
 		memset(&str, '\0', strlen(str));
 		if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 			sprintf(str, "fw: %d.%d.%d     hw: %d", fw_version_major,fw_version_minor, fw_version_patch, get_hw_version());
