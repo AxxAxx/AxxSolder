@@ -49,7 +49,7 @@ DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 
 /* Cartridge type specific PID parameters */
 #define KP_NT115 					5
-#define KI_NT115 					3
+#define KI_NT115 					2
 #define KD_NT115 					0.3
 #define MAX_I_NT115 				300
 
