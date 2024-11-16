@@ -75,6 +75,8 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 # Software Version History and Hardware Compatibility
 | Version | Date  | Hardware Compatibility |
 |---------|------|----------------------|
+|[v3.2.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.2)|Nov 15, 2024|V3.*|
+|[v3.2.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.1)|Sep 21, 2024|V3.*|
 |[v3.2.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.0)|Aug 13, 2024|V3.*|
 |[v3.1.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.1.0)|Jun 5, 2024|V3.*|
 |[v3.0.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Apr 25, 2024|V3.*|
@@ -168,12 +170,19 @@ To access the user settings the user holds down the encoder button at start-up. 
 |I measurement|Measure the heater current|ON/OFF|ON
 |Startup beep|Beep after startup|ON/OFF|ON
 |Temp in celcius|Show temperatures in Celcius and not Fahrenheit|ON/OFF|ON
+|Temp cal 100 °C|Actual temperature at 100 °C|deg C|100|
+|Temp cal 200 °C|Actual temperature at 200 °C|deg C|200|
+|Temp cal 300 °C|Actual temperature at 300 °C|deg C|300|
+|Temp cal 350 °C|Actual temperature at 350 °C|deg C|350|
+|Temp cal 400 °C|Actual temperature at 400 °C|deg C|400|
+|Temp cal 450 °C|Actual temperature at 450 °C|deg C|450|
+|Serial debug print|Print debug over serial|ON/OFF|OFF|
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
 
 # PID control
-As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
+The thermal mass and heat convection differs between different tip designs. Therefore the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good thermal performance in conducted tests.
 ```c
 /* Cartridge type specific PID parameters */
 #define KP_NT115        5
@@ -197,6 +206,11 @@ As the thermal mass of each cartridge differs the PID parameters should in theor
 #define PID_ADD_I_MIN_ERROR     75
 double PID_NEG_ERROR_I_MULT =   7;
 double PID_NEG_ERROR_I_BIAS =   1;
+
+/* Max allowed power per handle type */
+#define NT115_MAX_POWER         22
+#define T210_MAX_POWER 	        65
+#define T245_MAX_POWER 	        130
 ```
 The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-007 cartridge.  
 
