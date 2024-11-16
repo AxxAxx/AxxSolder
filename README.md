@@ -1,3 +1,4 @@
+[![Build Main](https://github.com/AxxAxx/AxxSolder/actions/workflows/build-main.yaml/badge.svg?branch=main&event=push)](https://github.com/AxxAxx/AxxSolder/actions/workflows/build-main.yaml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAxxAxx%2FAxxSolder&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
@@ -34,6 +35,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 - [Temperature calibration](#temperature-calibration)
 - [Temperature measurement](#temperature-measurement)
 - [Current measurement](#current-measurement)
+- [Last word about warranty](#last-word-about-warranty)
 
 # Features
 - The tip temperature is set by a rotary encoder. Pressing the encoder puts AxxSolder into Sleep mode and heating is turned off, press again to wake up.  
@@ -75,6 +77,8 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 # Software Version History and Hardware Compatibility
 | Version | Date  | Hardware Compatibility |
 |---------|------|----------------------|
+|[v3.2.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.2)|Nov 15, 2024|V3.*|
+|[v3.2.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.1)|Sep 21, 2024|V3.*|
 |[v3.2.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.0)|Aug 13, 2024|V3.*|
 |[v3.1.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.1.0)|Jun 5, 2024|V3.*|
 |[v3.0.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Apr 25, 2024|V3.*|
@@ -168,28 +172,47 @@ To access the user settings the user holds down the encoder button at start-up. 
 |I measurement|Measure the heater current|ON/OFF|ON
 |Startup beep|Beep after startup|ON/OFF|ON
 |Temp in celcius|Show temperatures in Celcius and not Fahrenheit|ON/OFF|ON
+|Temp cal 100 °C|Actual temperature at 100 °C|deg C|100|
+|Temp cal 200 °C|Actual temperature at 200 °C|deg C|200|
+|Temp cal 300 °C|Actual temperature at 300 °C|deg C|300|
+|Temp cal 350 °C|Actual temperature at 350 °C|deg C|350|
+|Temp cal 400 °C|Actual temperature at 400 °C|deg C|400|
+|Temp cal 450 °C|Actual temperature at 450 °C|deg C|450|
+|Serial debug print|Print debug over serial|ON/OFF|OFF|
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
 
 # PID control
-As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
+The thermal mass and heat convection differs between different tip designs. Therefore the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good thermal performance in conducted tests.
 ```c
-/* PID parameters */
-#define KP_NT115       5
-#define KI_NT115       4
-#define KD_NT115       0.25
-#define MAX_I_NT115    150
+/* Cartridge type specific PID parameters */
+#define KP_NT115        5
+#define KI_NT115        2
+#define KD_NT115        0.3
+#define MAX_I_NT115     300
 
-#define KP_T210        5
-#define KI_T210        5.5
-#define KD_T210        0.25
-#define MAX_I_T210     125
+#define KP_T210         7
+#define KI_T210         4
+#define KD_T210         0.3
+#define MAX_I_T210      300
 
-#define KP_T245        8
-#define KI_T245        5
-#define KD_T245        1
-#define MAX_I_T245     150
+#define KP_T245         8
+#define KI_T245         2
+#define KD_T245         0.5
+#define MAX_I_T245      300
+
+/* General PID parameters */
+#define PID_MAX_OUTPUT          500
+#define PID_UPDATE_INTERVAL     25
+#define PID_ADD_I_MIN_ERROR     75
+double PID_NEG_ERROR_I_MULT =   7;
+double PID_NEG_ERROR_I_BIAS =   1;
+
+/* Max allowed power per handle type */
+#define NT115_MAX_POWER         22
+#define T210_MAX_POWER 	        65
+#define T245_MAX_POWER 	        130
 ```
 The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-007 cartridge.  
 
@@ -216,6 +239,8 @@ The blue pulse indicates the wait time of 0.5 ms and the purple pulse is where t
 # Current measurement
 The current is sampled four times per second by a 30 us current pulse through the heater. This is done both to check if there is a functioning tip in the handle (otherwise the display shows "---" at current temp) and to be able to calculate the power drawn by the heater. By knowing how much the heater draws in ampere the actual power can be calculated by knowing the bus voltage and pulse duty cycle. to measure the current the gate to the MOSFET is turned on, 10 us later the voltage over the current shunt is sampled by the ADC and the result is converted. This is shown the image below.
 ![Oscilloscope_image_PWM](./photos/current_measurement.png)
+# Last word about warranty
+AxxSolder is an open source project and has absolutely no warranty, or guarantees on functionality or reliability! That said, have fun. :)
 ## Stargazers over time
 [![Stargazers over time](https://starchart.cc/AxxAxx/AxxSolder.svg?variant=adaptive)](https://starchart.cc/AxxAxx/AxxSolder)
 
