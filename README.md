@@ -42,7 +42,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 - If AxxSolder is left in normal running mode for longer than 30 min, the station automatically goes into sleep mode after 30 min as a safety feature.  
 - Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.
 - At start-up any USB-PD source is detected and the highest possible power is negotiated. AxxSolder limits the soldering iron output power to the max output power of the USB-PD source automatically.
-- User settings are stored in non volatile flash and can be configured via a settings menu described in [SETTINGS](#settings).
+- User settings are stored in non-volatile flash and can be configured via a settings menu described in [SETTINGS](#settings).
 - The two buttons are used to store temperature presets, e.g. 330 deg C and 430 deg C. Both preset temperatures are configurable in the settings menu.
 - There is a 3.3 V logic level output (GPIO4) that can be configured to go high when the iron is in Run mode, controlling e.g. fume extractor via a MosFET or relay.
 - The TFT display used in this project is a 2 inch 320x240 Color TFT display [2.0" 320x240 Color IPS TFT Display](https://www.adafruit.com/product/4311) and shows information about:
@@ -105,7 +105,7 @@ The connections from the handle to the PCB through the Hirose RPC1-12RB-6P(71) c
 # Recommended power supply
 A well-suited power supply with isolated output (SELV) is the Meanwell LRS-150-24. It is rated for 156 W at 24 V. A cover protecting the terminals for this power supply can be found under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD).  
 ![LRS-150-24](./photos/LRS-150-24.jpg)
-Another suitable power supply is the Meanwell XLG-150-24 wich has a slightly different form factor and is fully enclosed.
+Another suitable power supply is the Meanwell XLG-150-24 which has a slightly different form factor and is fully enclosed.
 
 # Handle identification and connections
 In order for AxxSolder to know which type of handle (NT115, T210, T245) is connected specific pins must be connected within the handle connector. By default, the original JBC handle T245 has NO pins connected while in the original T210 pins 5 and 6 are connected. The original NT115 handle has a different connector from JBC and must be modified. If the user changes the connector or uses a non-genuine handle it is important to make sure that pin 5 and 3 is connected within the connector. All the necessary connections are shown in the image below. While powering on AxxSolder fir the first time after doing these connections within the handle connector or connections to AxxSolder it is wise to attach a handle without its cartridge and ensure that AxxSolder shows the correct handle type on the display. Failing to detect the handle type will cause damage to the tip as the thermal calibration and max power allowed will be wrong.  
@@ -152,7 +152,7 @@ If you are not 110% sure about your soldering/connections it is wise to be on th
 
 # Settings
 To access the user settings the user holds down the encoder button at start-up. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters available.
-| Setting | Desciption  | Unit | Default |
+| Setting | Description  | Unit | Default |
 |---------|------|----------------------|----------------------|
 |Startup Temp °C|Default temperature selected after boot|deg C|330|
 |Temp Offset °C|Temperature offset applied to measured temperature|deg C|0|
