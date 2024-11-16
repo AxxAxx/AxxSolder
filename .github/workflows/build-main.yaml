@@ -1,0 +1,37 @@
+name: Build Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: cd AxxSolder_firmware && docker build -t firmware-builder -f Containerfile .
+
+    - name: Set firmware path
+      run: echo "FIRMWARE_PATH=AxxSolder-${GITHUB_REF#refs/tags/}.bin" >> $GITHUB_ENV
+
+    - name: Run firmware build and copy artifact
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        cd AxxSolder_firmware
+        docker run --rm \
+          -v ${{ github.workspace }}:/workspace \
+          -w /workspace \
+          firmware-builder \
+          cp /app/build/AxxSolder.bin /workspace/${FIRMWARE_PATH}
+    
+    - name: Upload firmware artifact
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/upload-artifact@v4
+      with:
+        name: firmware
+        path: ${{ env.FIRMWARE_PATH }}
