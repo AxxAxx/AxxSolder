@@ -176,27 +176,27 @@ To access the user settings the user holds down the encoder button at start-up. 
 As the thermal mass of each cartridge differs the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good enough PID performance in my tests. The Max allowed power is also different between handle types.
 ```c
 /* Cartridge type specific PID parameters */
-#define KP_NT115 					5
-#define KI_NT115 					2
-#define KD_NT115 					0.3
-#define MAX_I_NT115 				300
+#define KP_NT115        5
+#define KI_NT115        2
+#define KD_NT115        0.3
+#define MAX_I_NT115     300
 
-#define KP_T210 					7
-#define KI_T210 					4
-#define KD_T210 					0.3
-#define MAX_I_T210 					300
+#define KP_T210         7
+#define KI_T210         4
+#define KD_T210         0.3
+#define MAX_I_T210      300
 
-#define KP_T245 					8
-#define KI_T245 					2
-#define KD_T245 					0.5
-#define MAX_I_T245 					300
+#define KP_T245         8
+#define KI_T245         2
+#define KD_T245         0.5
+#define MAX_I_T245      300
 
 /* General PID parameters */
-#define PID_MAX_OUTPUT 500
-#define PID_UPDATE_INTERVAL 25
-#define PID_ADD_I_MIN_ERROR 75
-double PID_NEG_ERROR_I_MULT = 7;
-double PID_NEG_ERROR_I_BIAS = 1;
+#define PID_MAX_OUTPUT          500
+#define PID_UPDATE_INTERVAL     25
+#define PID_ADD_I_MIN_ERROR     75
+double PID_NEG_ERROR_I_MULT =   7;
+double PID_NEG_ERROR_I_BIAS =   1;
 ```
 The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-007 cartridge.  
 
