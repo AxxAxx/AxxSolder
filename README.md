@@ -37,7 +37,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 - [Temperature calibration](#temperature-calibration)
 - [Temperature measurement](#temperature-measurement)
 - [Current measurement](#current-measurement)
-- [Last word about warranty](#last-word-about-warranty)
+- [Disclaimer](#disclaimer)
 
 # Features
 - The tip temperature is set by a rotary encoder. Pressing the encoder puts AxxSolder into Sleep mode and heating is turned off, press again to wake up.  
@@ -247,8 +247,8 @@ The blue pulse indicates the wait time of 0.5 ms and the purple pulse is where t
 # Current measurement
 The current is sampled four times per second by a 30 us current pulse through the heater. This is done both to check if there is a functioning tip in the handle (otherwise the display shows "---" at current temp) and to be able to calculate the power drawn by the heater. By knowing how much the heater draws in ampere the actual power can be calculated by knowing the bus voltage and pulse duty cycle. to measure the current the gate to the MOSFET is turned on, 10 us later the voltage over the current shunt is sampled by the ADC and the result is converted. This is shown the image below.
 ![Oscilloscope_image_PWM](./photos/current_measurement.png)
-# Last word about warranty
-AxxSolder is an open source project and has absolutely no warranty, or guarantees on functionality or reliability! That said, have fun. :)
+# Disclaimer
+AxxSolder is an open source project and has absolutely no warranty, or guarantees on functionality or reliability! The authors of this project accept absolutely no liability for any harm or loss resulting from its use. That said, have fun. :)
 ## Stargazers over time
 [![Stargazers over time](https://starchart.cc/AxxAxx/AxxSolder.svg?variant=adaptive)](https://starchart.cc/AxxAxx/AxxSolder)
 
