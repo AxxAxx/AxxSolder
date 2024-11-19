@@ -289,11 +289,12 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.temp_cal_350 = 350,
 											.temp_cal_400 = 400,
 											.temp_cal_450 = 450,
-											.serial_debug_print = 0};
+											.serial_debug_print = 0,
+											.displayed_temp_filter = 5};
 
 /* List of names for settings menu */
-#define menu_length 24
-char menu_names[menu_length][29] = { "Startup Temp °C    ",
+#define menu_length 25
+char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp Offset °C      ",
 							"Standby Temp °C   ",
 							"Standby Time [min]  ",
@@ -314,6 +315,7 @@ char menu_names[menu_length][29] = { "Startup Temp °C    ",
 							"Temp cal 400         ",
 							"Temp cal 450         ",
 							"Serial DEBUG         ",
+							"Disp Temp. filter ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -632,6 +634,9 @@ void settings_menu(){
 				}
 				else if (menu_cursor_position == 9){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 4)), 4);
+				}
+				else if (menu_cursor_position == 21){
+					((double*)&flash_values)[menu_cursor_position] = 1 + fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 10)), 10);
 				}
 				else if (menu_cursor_position == 1){
 					((double*)&flash_values)[menu_cursor_position] = round(((double*)&flash_values)[menu_cursor_position]);
@@ -1416,7 +1421,7 @@ int main(void)
 
 	/* initialize moving average functions */
 	Moving_Average_Init(&thermocouple_temperature_filter_struct,2);
-	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,50);
+	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,flash_values.displayed_temp_filter*10);
 	Moving_Average_Init(&requested_power_filtered_filter_struct,20);
 	Moving_Average_Init(&mcu_temperature_filter_struct,100);
 	Moving_Average_Init(&input_voltage_filterStruct,25);
