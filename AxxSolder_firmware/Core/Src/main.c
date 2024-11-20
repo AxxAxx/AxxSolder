@@ -589,6 +589,7 @@ void left_align_double(char* str, double number, int8_t len)
 void settings_menu(){
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
+
 		char str[32];
 		memset(&str, '\0', strlen(str));
 		if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
@@ -612,6 +613,8 @@ void settings_menu(){
 		LCD_DrawLine(0,40,240,40,RGB_to_BRG(C_YELLOW));
 		LCD_DrawLine(0,41,240,41,RGB_to_BRG(C_YELLOW));
 		LCD_DrawLine(0,42,240,42,RGB_to_BRG(C_YELLOW));
+
+		while(HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){} // Wait until user releases button
 
 		HAL_Delay(500);
 		while(menu_active == 1){
