@@ -952,9 +952,9 @@ void LCD_draw_main_screen(){
 		LCD_PutStr(165, 10, "AxxSolder", FONT_arial_20X23, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
 
 		LCD_PutStr(64, 10, "Set temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		UG_DrawCircle(168, 41, 5, RGB_to_BRG(C_WHITE));
-		UG_DrawCircle(168, 41, 4, RGB_to_BRG(C_WHITE));
-		UG_DrawCircle(168, 41, 3, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(173, 41, 5, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(173, 41, 4, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(173, 41, 3, RGB_to_BRG(C_WHITE));
 		if(flash_values.deg_celsius == 1){
 			LCD_PutStr(180, 35, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
@@ -962,9 +962,9 @@ void LCD_draw_main_screen(){
 			LCD_PutStr(180, 35, "F", FONT_arial_36X44_F, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		LCD_PutStr(64, 90, "Actual temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		UG_DrawCircle(168, 121, 5, RGB_to_BRG(C_WHITE));
-		UG_DrawCircle(168, 121, 4, RGB_to_BRG(C_WHITE));
-		UG_DrawCircle(168, 121, 3, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(173, 121, 5, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(173, 121, 4, RGB_to_BRG(C_WHITE));
+		UG_DrawCircle(173, 121, 3, RGB_to_BRG(C_WHITE));
 		if(flash_values.deg_celsius == 1){
 			LCD_PutStr(180, 115, "C", FONT_arial_36X44_C, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
