@@ -315,7 +315,7 @@ char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp cal 400         ",
 							"Temp cal 450         ",
 							"Serial DEBUG         ",
-							"Disp Temp. filter ",
+							"Disp Temp. filter    ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
