@@ -535,11 +535,11 @@ void UG_PutString( UG_S16 x, UG_S16 y, char* str )
       }
       cw = _UG_GetCharData(chr,NULL);
       if(cw==-1) continue;
-      if ( xp + cw > gui->device->x_dim - 1 )
+      /*if ( xp + cw > gui->device->x_dim - 1 )
       {
          xp = x;
          yp +=  gui->currentFont.char_height+gui->char_v_space;
-      }
+      }*/
 
       _UG_PutChar(chr, xp, yp, gui->fore_color, gui->back_color);
 
