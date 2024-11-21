@@ -240,6 +240,16 @@ $Temp_{C210}[deg] =  4.22e^{-6} * ADC^2 + 0.32* ADC + 20.97$
 $Temp_{C245}[deg] = -4.73e^{-7} * ADC^2 + 0.12* ADC + 23.78$  
 These are then used in the software to retrieve correct tip temperatures.
 ![Temp_calibration](./photos/Temp_calibration_data.png)
+
+The user can adjust the temperature calibration at 6 points in order to compensate for variations in the cartridge thermocouple.  
+To calibrate temperature(s):
+- Make sure that the temperature calibration values are at their default nominal values in the settings.
+- Set AxxSolder to the temperature that you want to calibrate. for example 300 deg C.
+- When AxxSolder stabilizes around the setpoint, measure the actual tip temperature by using a soldering tip thermocouple, for example the HAKKO FG-100B.
+- Input the actual measured temperature, let's say 302 deg C into the 300 deg C calibration setting ("Temp cal 300" = 302).
+  
+AxxSolder will then use this calibration point and correct the temperature accordingly. It will do so linearly between all calibration points.
+
 # Temperature measurement
 As the thermocouple and heater element is connected in series inside the JBC cartridges and the thermocouple voltage measures over the same pins as the heating element we have to be careful when to do the temperature measurement. In order to not disturb the thermocouple measurement with heater element switching, the switching is turned off for 0.5 ms just before the temperature measurement is taken. The 0.5 ms delay ensures that the switching is turned off and the thermocouple signal is stabilized around a stable voltage.  
 The measured signal over the thermocouple is clamped to 3.3V with a BAV199 Schottky diode in order to protect the op-amp OPA2387. The voltage measurement is taken by the internal ADC in DMA mode with a circular buffer. The buffer holds several measurements which are averaged and filtered in software.  
