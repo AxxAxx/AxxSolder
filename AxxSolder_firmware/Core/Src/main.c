@@ -877,7 +877,7 @@ void update_display(){
 		}
 		else if(sensor_values.current_state == RUN){
 			UG_FillFrame(10, 209-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*177, 	30, 	209, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(10, 32, 									30, 	209-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*177, RGB_to_BRG(C_BLACK));
+			UG_FillFrame(10, 32, 									30, 	209-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*177, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -953,7 +953,7 @@ void LCD_draw_main_screen(){
 		UG_DrawFrame(208, 64, 232, 270, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(209, 65, 231, 269, RGB_to_BRG(C_WHITE));
 
-		LCD_PutStr(2, 275, "0 W", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(205, 275, "0 W", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 	}
 	else{
 		UG_FillScreen(RGB_to_BRG(C_BLACK));
@@ -1358,7 +1358,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		update_heater_PWM();
 		/* Compute PID */
 		PID_Compute(&TPID);
-		sensor_values.requested_power_filtered = Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct);
+		sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0, PID_MAX_OUTPUT);
 		thermocouple_measurement_done = 1;
 	}
 	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
