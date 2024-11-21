@@ -1451,6 +1451,7 @@ int main(void)
 	// Check if user data in flash is valid, if not - write default parameters
 	if(!FlashCheckCRC()){
 		FlashWrite(&default_flash_values);
+		HAL_NVIC_SystemReset();
 	}
 
 	/* Read flash data */
