@@ -183,6 +183,7 @@ uint16_t TC_outliers_detected = 0;
 #define NT115_MAX_POWER 22
 #define T210_MAX_POWER 	65
 #define T245_MAX_POWER 	130
+#define MAX_POWER 		150
 
 /* Min and Max selectable values */
 #define MIN_SELECTABLE_TEMPERATURE 20
@@ -646,6 +647,9 @@ void settings_menu(){
 				}
 				else if ((menu_cursor_position == 0)  || (menu_cursor_position == 1) || (menu_cursor_position == 2) || (menu_cursor_position == 6) || (menu_cursor_position == 7)){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), MAX_SELECTABLE_TEMPERATURE)), MAX_SELECTABLE_TEMPERATURE);
+				}
+				else if (menu_cursor_position == 10){
+					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), MAX_POWER)), MAX_POWER);
 				}
 				else {
 					((double*)&flash_values)[menu_cursor_position] = fabs(((double*)&flash_values)[menu_cursor_position]);
