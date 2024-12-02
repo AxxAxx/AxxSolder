@@ -644,6 +644,9 @@ void settings_menu(){
 				else if (menu_cursor_position == 1){
 					((double*)&flash_values)[menu_cursor_position] = round(((double*)&flash_values)[menu_cursor_position]);
 				}
+				else if ((menu_cursor_position == 0)  || (menu_cursor_position == 1) || (menu_cursor_position == 2) || (menu_cursor_position == 6) || (menu_cursor_position == 7)){
+					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), MAX_SELECTABLE_TEMPERATURE)), MAX_SELECTABLE_TEMPERATURE);
+				}
 				else {
 					((double*)&flash_values)[menu_cursor_position] = fabs(((double*)&flash_values)[menu_cursor_position]);
 				}
