@@ -42,7 +42,7 @@
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  2;
-uint8_t fw_version_patch =  3;
+uint8_t fw_version_patch =  4;
 
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -1458,6 +1458,8 @@ int main(void)
 	// Check if user data in flash is valid, if not - write default parameters
 	if(!FlashCheckCRC()){
 		FlashWrite(&default_flash_values);
+		beep(1); //Beep once to indicate default parameters written to flash
+		HAL_Delay(100);
 		HAL_NVIC_SystemReset();
 	}
 
@@ -1478,15 +1480,15 @@ int main(void)
 	TIM2->CNT = flash_values.startup_temperature;
 
 	/* initialize moving average functions */
-	Moving_Average_Init(&thermocouple_temperature_filter_struct,2);
+	Moving_Average_Init(&thermocouple_temperature_filter_struct,(uint32_t)2);
 	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,(uint32_t)flash_values.displayed_temp_filter*10);
-	Moving_Average_Init(&requested_power_filtered_filter_struct,20);
-	Moving_Average_Init(&mcu_temperature_filter_struct,100);
-	Moving_Average_Init(&input_voltage_filterStruct,25);
-	Moving_Average_Init(&current_filterStruct,5);
-	Moving_Average_Init(&stand_sense_filterStruct,20);
-	Moving_Average_Init(&handle1_sense_filterStruct,20);
-	Moving_Average_Init(&handle2_sense_filterStruct,20);
+	Moving_Average_Init(&requested_power_filtered_filter_struct,(uint32_t)20);
+	Moving_Average_Init(&mcu_temperature_filter_struct,(uint32_t)100);
+	Moving_Average_Init(&input_voltage_filterStruct,(uint32_t)25);
+	Moving_Average_Init(&current_filterStruct,(uint32_t)5);
+	Moving_Average_Init(&stand_sense_filterStruct,(uint32_t)20);
+	Moving_Average_Init(&handle1_sense_filterStruct,(uint32_t)20);
+	Moving_Average_Init(&handle2_sense_filterStruct,(uint32_t)20);
 
 	/* initialize hysteresis functions */
 	Hysteresis_Init(&thermocouple_temperature_filtered_hysteresis, 0.5);
@@ -1529,7 +1531,7 @@ int main(void)
 
 			//2. wait for sink to get ready
 			while(!stusb_is_sink_ready()){
-				//debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
+				debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
 			}
 			//if we are on USB-PD the sink needs some time to start
 			HAL_Delay(500);

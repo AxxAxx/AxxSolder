@@ -40,15 +40,15 @@
 
 /* TypeDefs ------------------------------------------------------------------*/
 typedef struct{
-	float WindowLength;
-	float History[Max_WindowLength]; /*Array to store values of filter window*/
-	float Sum;	/* Sum of filter window's elements*/
+	double WindowLength;
+	double History[Max_WindowLength]; /*Array to store values of filter window*/
+	double Sum;	/* Sum of filter window's elements*/
 	uint32_t WindowPointer; /* Pointer to the first element of window*/
 }FilterTypeDef;
 
 /* Function prototypes -------------------------------------------------------*/
 void Moving_Average_Init(FilterTypeDef* filter_struct, uint32_t window_length);
-float Moving_Average_Compute(float raw_data, FilterTypeDef* filter_struct);
-void Moving_Average_Set_Value(float raw_data, FilterTypeDef* filter_struct);
+double Moving_Average_Compute(double raw_data, FilterTypeDef* filter_struct);
+void Moving_Average_Set_Value(double raw_data, FilterTypeDef* filter_struct);
 
 #endif

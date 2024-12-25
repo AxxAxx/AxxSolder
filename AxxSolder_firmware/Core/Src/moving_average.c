@@ -55,7 +55,7 @@ void Moving_Average_Init(FilterTypeDef* filter_struct, uint32_t window_length)
 	* @param  filter_struct : Data structure
   * @retval Filtered value.
   */
-float Moving_Average_Compute(float raw_data, FilterTypeDef* filter_struct)
+double Moving_Average_Compute(double raw_data, FilterTypeDef* filter_struct)
 {
 	filter_struct->Sum += raw_data;
 	filter_struct->Sum -= filter_struct->History[filter_struct->WindowPointer];
@@ -68,11 +68,11 @@ float Moving_Average_Compute(float raw_data, FilterTypeDef* filter_struct)
 	{
 		filter_struct->WindowPointer = 0;
 	}
-	return (float)filter_struct->Sum/(float)filter_struct->WindowLength;
+	return (double)filter_struct->Sum/(double)filter_struct->WindowLength;
 }
 
 /* Fill moving average filter history with raw_data */
-void Moving_Average_Set_Value(float raw_data, FilterTypeDef* filter_struct){
+void Moving_Average_Set_Value(double raw_data, FilterTypeDef* filter_struct){
 	filter_struct->Sum = raw_data*filter_struct->WindowLength;
 	filter_struct->WindowPointer = 0;
 
