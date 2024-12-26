@@ -55,6 +55,7 @@ typedef struct{
 	double temp_cal_450;
 	double serial_debug_print;
 	double displayed_temp_filter;
+	double startup_temp_is_previous_temp;
 }Flash_values;
 
 /* USER CODE END Includes */

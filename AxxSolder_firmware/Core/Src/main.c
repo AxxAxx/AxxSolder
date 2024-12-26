@@ -291,10 +291,11 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.temp_cal_400 = 400,
 											.temp_cal_450 = 450,
 											.serial_debug_print = 0,
-											.displayed_temp_filter = 5};
+											.displayed_temp_filter = 5,
+											.startup_temp_is_previous_temp = 0};
 
 /* List of names for settings menu */
-#define menu_length 25
+#define menu_length 26
 char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp Offset °C      ",
 							"Standby Temp °C   ",
@@ -317,6 +318,7 @@ char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp cal 450         ",
 							"Serial DEBUG         ",
 							"Disp Temp. filter    ",
+							"Start at prev. temp ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -443,6 +445,11 @@ uint16_t RGB_to_BRG(uint16_t color){
 void change_state(mainstates new_state){
 	sensor_values.previous_state = sensor_values.current_state;
 	sensor_values.current_state = new_state;
+	if((sensor_values.current_state == RUN) && (flash_values.startup_temp_is_previous_temp == 1)){
+		flash_values.startup_temperature = sensor_values.set_temperature;
+		FlashWrite(&flash_values);
+	}
+
 	if((sensor_values.current_state == RUN) && (flash_values.GPIO4_ON_at_run == 1)){
 		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_SET);
 	}
@@ -633,7 +640,7 @@ void settings_menu(){
 					((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
 
-				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20)){
+				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20) || (menu_cursor_position == 22)){
 					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
 				else if (menu_cursor_position == 9){
