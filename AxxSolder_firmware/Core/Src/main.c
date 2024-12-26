@@ -723,7 +723,6 @@ void settings_menu(){
 				if(i >= menu_length-3){
 					LCD_PutStr(190, 45+(i-menu_start)*25, "        ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 				}
-
 			}
 		}
 	}
@@ -2546,16 +2545,14 @@ void Error_Handler(void)
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 	/*Configure GPIO pin : CURRENT_Pin */
-	GPIO_InitStruct.Pin = CURRENT_Pin;
+	GPIO_InitStruct.Pin = HEATER_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(GPIOF, HEATER_Pin, GPIO_PIN_RESET);
 
-	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct); // Replace GPIOx with the appropriate GPIO port
-	HAL_GPIO_WritePin(GPIOF, CURRENT_Pin, GPIO_PIN_RESET);
-
-  __disable_irq();
+	__disable_irq();
   while (1)
   {
   }
