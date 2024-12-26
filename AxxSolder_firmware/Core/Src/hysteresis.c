@@ -15,7 +15,7 @@ void Hysteresis_Init(Hysteresis_FilterTypeDef* hysteresis_struct, float hysteres
 	hysteresis_struct->previous_value = 0;
 }
 
-double Hysteresis_Add(double new_value, Hysteresis_FilterTypeDef* hysteresis_struct){
+float Hysteresis_Add(float new_value, Hysteresis_FilterTypeDef* hysteresis_struct){
 	if((new_value >= hysteresis_struct->previous_value + hysteresis_struct->hysteresis) || (new_value <= hysteresis_struct->previous_value - hysteresis_struct->hysteresis)){
 		hysteresis_struct->previous_value = new_value;
 		return new_value;
