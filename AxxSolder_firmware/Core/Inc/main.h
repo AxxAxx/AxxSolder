@@ -33,28 +33,29 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 /* Struct to hold flash_data values */
 typedef struct{
-	double startup_temperature;
-	double temperature_offset;
-	double standby_temp;
-	double standby_time;
-	double emergency_time;
-	double buzzer_enabled;
-	double preset_temp_1;
-	double preset_temp_2;
-	double GPIO4_ON_at_run;
-	double screen_rotation;
-	double power_limit;
-	double current_measurement;
-	double startup_beep;
-	double deg_celsius;
-	double temp_cal_100;
-	double temp_cal_200;
-	double temp_cal_300;
-	double temp_cal_350;
-	double temp_cal_400;
-	double temp_cal_450;
-	double serial_debug_print;
-	double displayed_temp_filter;
+	float startup_temperature;
+	float temperature_offset;
+	float standby_temp;
+	float standby_time;
+	float emergency_time;
+	float buzzer_enabled;
+	float preset_temp_1;
+	float preset_temp_2;
+	float GPIO4_ON_at_run;
+	float screen_rotation;
+	float power_limit;
+	float current_measurement;
+	float startup_beep;
+	float deg_celsius;
+	float temp_cal_100;
+	float temp_cal_200;
+	float temp_cal_300;
+	float temp_cal_350;
+	float temp_cal_400;
+	float temp_cal_450;
+	float serial_debug_print;
+	float displayed_temp_filter;
+	float startup_temp_is_previous_temp;
 }Flash_values;
 
 /* USER CODE END Includes */

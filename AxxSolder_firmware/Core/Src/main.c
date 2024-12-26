@@ -42,7 +42,7 @@
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  2;
-uint8_t fw_version_patch =  3;
+uint8_t fw_version_patch =  4;
 
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -67,8 +67,8 @@ DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 #define PID_MAX_OUTPUT 500
 #define PID_UPDATE_INTERVAL 25
 #define PID_ADD_I_MIN_ERROR 75
-double PID_NEG_ERROR_I_MULT = 7;
-double PID_NEG_ERROR_I_BIAS = 1;
+float PID_NEG_ERROR_I_MULT = 7;
+float PID_NEG_ERROR_I_BIAS = 1;
 
 /* Timing constants */
 uint32_t previous_millis_display = 0;
@@ -129,11 +129,11 @@ uint8_t sleep_state_written_to_LCD = 0;
 uint8_t standby_state_written_to_LCD = 0;
 
 /* Custom tuning parameters */
-double Kp_tuning = 0;
-double Ki_tuning = 0;
-double Kd_tuning = 0;
-double temperature_tuning = 100;
-double PID_MAX_I_LIMIT_tuning = 0;
+float Kp_tuning = 0;
+float Ki_tuning = 0;
+float Kd_tuning = 0;
+float temperature_tuning = 100;
+float PID_MAX_I_LIMIT_tuning = 0;
 
 /* Allow use of custom temperatue, used for tuning */
 uint8_t custom_temperature_on = 0;
@@ -152,15 +152,15 @@ uint16_t ADC1_BUF[ADC1_BUF_LEN];
 uint16_t current_raw = 0;
 
 /* Thermocouple temperature */
-double TC_temp = 0;
+float TC_temp = 0;
 
 /* Flag to indicate that startup sequence is done */
 uint8_t startup_done = 0;
 
 /* Variables for thermocouple outlier detection */
-double TC_temp_from_ADC = 0;
-double TC_temp_from_ADC_previous = 0;
-double TC_temp_from_ADC_diff = 0;
+float TC_temp_from_ADC = 0;
+float TC_temp_from_ADC_previous = 0;
+float TC_temp_from_ADC_diff = 0;
 uint16_t TC_outliers_detected = 0;
 #define TC_OUTLIERS_THRESHOLD 300
 
@@ -230,23 +230,23 @@ uint8_t UART_packet_length = 0;
 
 /* Struct to hold sensor values */
 struct sensor_values_struct {
-	double set_temperature;
-	double thermocouple_temperature;
-	double thermocouple_temperature_previous;
-	double thermocouple_temperature_filtered;
-	double requested_power;
-	double requested_power_filtered;
+	float set_temperature;
+	float thermocouple_temperature;
+	float thermocouple_temperature_previous;
+	float thermocouple_temperature_filtered;
+	float requested_power;
+	float requested_power_filtered;
 	float bus_voltage;
 	float heater_current;
 	uint16_t leak_current;
 	float mcu_temperature;
-	double in_stand;
-	double handle1_sense;
-	double handle2_sense;
+	float in_stand;
+	float handle1_sense;
+	float handle2_sense;
 	mainstates current_state;
 	mainstates previous_state;
 	float max_power_watt;
-	double USB_PD_power_limit;
+	float USB_PD_power_limit;
 };
 
 /* Struct to hold sensor values */
@@ -291,20 +291,21 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.temp_cal_400 = 400,
 											.temp_cal_450 = 450,
 											.serial_debug_print = 0,
-											.displayed_temp_filter = 5};
+											.displayed_temp_filter = 5,
+											.startup_temp_is_previous_temp = 0};
 
 /* List of names for settings menu */
-#define menu_length 25
+#define menu_length 26
 char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp Offset °C      ",
 							"Standby Temp °C   ",
 							"Standby Time [min]  ",
 							"Sleep Time [min]    ",
 							"Buzzer Enabled      ",
-							"Preset Temp 1 °C    ",
-							"Preset Temp 2 °C    ",
+							"Preset Temp 1 °C   ",
+							"Preset Temp 2 °C   ",
 							"GPIO4 ON at run    ",
-							"Screen Rotation      ",
+							"Screen Rotation     ",
 							"Limit Power [W]     ",
 							"I Measurement       ",
 							"Startup Beep         ",
@@ -315,14 +316,15 @@ char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp cal 350         ",
 							"Temp cal 400         ",
 							"Temp cal 450         ",
-							"Serial DEBUG         ",
+							"Serial DEBUG        ",
 							"Disp Temp. filter    ",
+							"Start at prev. temp ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
 
 /* PID data */
-double PID_setpoint = 0.0;
+float PID_setpoint = 0.0;
 
 /* Flags for temp and current measurements */
 uint8_t current_measurement_requested = 0;
@@ -410,19 +412,19 @@ static void MX_TIM16_Init(void);
 PID_TypeDef TPID;
 
 /* Function to clamp d between the limits min and max */
-double clamp(double d, double min, double max) {
-  const double t = d < min ? min : d;
+float clamp(float d, float min, float max) {
+  const float t = d < min ? min : d;
   return t > max ? max : t;
 }
 
 /* Function to get min value of a and b */
-double min(double a, double b) {
+float min(float a, float b) {
   return a < b ? a : b;
 }
 
 /* Returns the average of 100 readings of the index+3*n value in the ADC_buffer vector */
-double get_mean_ADC_reading_indexed(uint8_t index){
-	double ADC_filter_mean = 0;
+float get_mean_ADC_reading_indexed(uint8_t index){
+	float ADC_filter_mean = 0;
 	for(int n=index;n<ADC1_BUF_LEN;n=n+3){
 		ADC_filter_mean += ADC1_BUF[n];
 	}
@@ -443,6 +445,11 @@ uint16_t RGB_to_BRG(uint16_t color){
 void change_state(mainstates new_state){
 	sensor_values.previous_state = sensor_values.current_state;
 	sensor_values.current_state = new_state;
+	// If transitioning to RUN and temperature should be saved for use as start-up temp
+	if((sensor_values.previous_state != RUN) && (sensor_values.current_state == RUN) && (flash_values.startup_temp_is_previous_temp == 1)){
+		flash_values.startup_temperature = sensor_values.set_temperature;
+		FlashWrite(&flash_values);
+	}
 	if((sensor_values.current_state == RUN) && (flash_values.GPIO4_ON_at_run == 1)){
 		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_SET);
 	}
@@ -529,7 +536,7 @@ void set_heater_duty(uint16_t dutycycle){
 
 /* Update the duty cycle of timer controlling the heater PWM */
 void update_heater_PWM(){
-	double duty_cycle = sensor_values.requested_power*(sensor_values.max_power_watt*POWER_CONVERSION_FACTOR/sensor_values.bus_voltage);
+	float duty_cycle = sensor_values.requested_power*(sensor_values.max_power_watt*POWER_CONVERSION_FACTOR/sensor_values.bus_voltage);
 	set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
 }
 
@@ -539,7 +546,7 @@ void heater_off(){
 }
 
 /* Return the temperature in the correct unit */
-double convert_temperature(double temperature){
+float convert_temperature(float temperature){
 	if (flash_values.deg_celsius == 1){
 		return temperature;
 	}
@@ -548,8 +555,8 @@ double convert_temperature(double temperature){
 	}
 }
 
-/* Function to left align a string from double */
-void left_align_double(char* str, double number, int8_t len)
+/* Function to left align a string from float */
+void left_align_float(char* str, float number, int8_t len)
 	{
 		char tempstring[len];
 		memset(&tempstring, '\0', len);
@@ -627,32 +634,32 @@ void settings_menu(){
 			}
 			if (menu_level == 1){
 				if (menu_cursor_position == 10){
-					((double*)&flash_values)[menu_cursor_position] = (float)old_value + round(((float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position)) * 5;
+					((float*)&flash_values)[menu_cursor_position] = (float)old_value + round(((float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position)) * 5;
 				}
 				else{
-					((double*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
+					((float*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
 
-				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20)){
-					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 2)), 2);
+				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20) || (menu_cursor_position == 22)){
+					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
 				else if (menu_cursor_position == 9){
-					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 4)), 4);
+					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 4)), 4);
 				}
 				else if (menu_cursor_position == 21){
-					((double*)&flash_values)[menu_cursor_position] = 1 + fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), 10)), 10);
+					((float*)&flash_values)[menu_cursor_position] = 1 + fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 10)), 10);
 				}
 				else if (menu_cursor_position == 1){
-					((double*)&flash_values)[menu_cursor_position] = round(((double*)&flash_values)[menu_cursor_position]);
+					((float*)&flash_values)[menu_cursor_position] = round(((float*)&flash_values)[menu_cursor_position]);
 				}
 				else if ((menu_cursor_position == 0)  || (menu_cursor_position == 1) || (menu_cursor_position == 2) || (menu_cursor_position == 6) || (menu_cursor_position == 7)){
-					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), MAX_SELECTABLE_TEMPERATURE + 1)), MAX_SELECTABLE_TEMPERATURE + 1);
+					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), MAX_SELECTABLE_TEMPERATURE + 1)), MAX_SELECTABLE_TEMPERATURE + 1);
 				}
 				else if (menu_cursor_position == 10){
-					((double*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((double*)&flash_values)[menu_cursor_position]), MAX_POWER + 5)), MAX_POWER + 5);
+					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), MAX_POWER + 5)), MAX_POWER + 5);
 				}
 				else {
-					((double*)&flash_values)[menu_cursor_position] = fabs(((double*)&flash_values)[menu_cursor_position]);
+					((float*)&flash_values)[menu_cursor_position] = fabs(((float*)&flash_values)[menu_cursor_position]);
 				}
 			}
 
@@ -670,7 +677,7 @@ void settings_menu(){
 
 			if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position < menu_length-3)){
 				if(menu_level == 0){
-					old_value = ((double*)&flash_values)[menu_cursor_position];
+					old_value = ((float*)&flash_values)[menu_cursor_position];
 					old_menu_cursor_position = menu_cursor_position;
 				}
 				if(menu_level == 1){
@@ -702,20 +709,20 @@ void settings_menu(){
 				}
 
 				char string[10];
+				memset(&string, '\0', 10);
 				if(i < menu_length-3){
 					if((i == menu_cursor_position) && (menu_level == 1)){
-						left_align_double(string, (((double*)&flash_values)[i]), strlen(string));
+						left_align_float(string, (((float*)&flash_values)[i]), strlen(string));
 						LCD_PutStr(190, 45+(i-menu_start)*25, string, FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
 					}
 					else{
-						left_align_double(string, (((double*)&flash_values)[i]), strlen(string));
+						left_align_float(string, (((float*)&flash_values)[i]), strlen(string));
 						LCD_PutStr(190, 45+(i-menu_start)*25, string, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 					}
 				}
 				if(i >= menu_length-3){
 					LCD_PutStr(190, 45+(i-menu_start)*25, "        ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 				}
-
 			}
 		}
 	}
@@ -789,13 +796,13 @@ void update_display(){
 		}
 		else if((sensor_values.current_state == STANDBY) && !standby_state_written_to_LCD){
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(214, 73,  "S", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(214, 99,  "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(214, 129, "A", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(214, 158, "N", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(214, 191, "D", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(214, 217, "B", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(214, 247, "Y", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(213, 73,  "S", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(213, 102,  "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(213, 131, "A", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(213, 160, "N", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(213, 189, "D", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(213, 218, "B", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(213, 247, "Y", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			standby_state_written_to_LCD = 1;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -1458,6 +1465,8 @@ int main(void)
 	// Check if user data in flash is valid, if not - write default parameters
 	if(!FlashCheckCRC()){
 		FlashWrite(&default_flash_values);
+		beep(1); //Beep once to indicate default parameters written to flash
+		HAL_Delay(100);
 		HAL_NVIC_SystemReset();
 	}
 
@@ -1478,15 +1487,15 @@ int main(void)
 	TIM2->CNT = flash_values.startup_temperature;
 
 	/* initialize moving average functions */
-	Moving_Average_Init(&thermocouple_temperature_filter_struct,2);
+	Moving_Average_Init(&thermocouple_temperature_filter_struct,(uint32_t)2);
 	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,(uint32_t)flash_values.displayed_temp_filter*10);
-	Moving_Average_Init(&requested_power_filtered_filter_struct,20);
-	Moving_Average_Init(&mcu_temperature_filter_struct,100);
-	Moving_Average_Init(&input_voltage_filterStruct,25);
-	Moving_Average_Init(&current_filterStruct,5);
-	Moving_Average_Init(&stand_sense_filterStruct,20);
-	Moving_Average_Init(&handle1_sense_filterStruct,20);
-	Moving_Average_Init(&handle2_sense_filterStruct,20);
+	Moving_Average_Init(&requested_power_filtered_filter_struct,(uint32_t)20);
+	Moving_Average_Init(&mcu_temperature_filter_struct,(uint32_t)100);
+	Moving_Average_Init(&input_voltage_filterStruct,(uint32_t)25);
+	Moving_Average_Init(&current_filterStruct,(uint32_t)5);
+	Moving_Average_Init(&stand_sense_filterStruct,(uint32_t)20);
+	Moving_Average_Init(&handle1_sense_filterStruct,(uint32_t)20);
+	Moving_Average_Init(&handle2_sense_filterStruct,(uint32_t)20);
 
 	/* initialize hysteresis functions */
 	Hysteresis_Init(&thermocouple_temperature_filtered_hysteresis, 0.5);
@@ -1529,7 +1538,7 @@ int main(void)
 
 			//2. wait for sink to get ready
 			while(!stusb_is_sink_ready()){
-				//debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
+				debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
 			}
 			//if we are on USB-PD the sink needs some time to start
 			HAL_Delay(500);
@@ -2528,8 +2537,22 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
+
+	// Stop the heater PWM and reconfigure as a GPIO and set to RESET
 	heater_off();
-  __disable_irq();
+	HAL_TIMEx_PWMN_Stop_IT(&htim1, TIM_CHANNEL_3);
+
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	/*Configure GPIO pin : CURRENT_Pin */
+	GPIO_InitStruct.Pin = HEATER_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(GPIOF, HEATER_Pin, GPIO_PIN_RESET);
+
+	__disable_irq();
   while (1)
   {
   }

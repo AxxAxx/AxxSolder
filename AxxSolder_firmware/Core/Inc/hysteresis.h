@@ -6,12 +6,12 @@
 
 /* TypeDefs ------------------------------------------------------------------*/
 typedef struct{
-	double previous_value;	// previous value
-	double hysteresis;		// hysteresis
+	float previous_value;	// previous value
+	float hysteresis;		// hysteresis
 }Hysteresis_FilterTypeDef;
 
 /* Function prototypes -------------------------------------------------------*/
 void Hysteresis_Init(Hysteresis_FilterTypeDef* hysteresis_struct, float hysteresis);
-double Hysteresis_Add(double new_value, Hysteresis_FilterTypeDef* hysteresis_struct);
+float Hysteresis_Add(float new_value, Hysteresis_FilterTypeDef* hysteresis_struct);
 
 #endif

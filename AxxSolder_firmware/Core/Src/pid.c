@@ -7,10 +7,10 @@ void PID_Init(PID_TypeDef *uPID)
 	uPID->OutputSum = *uPID->MyOutput;
 	uPID->LastInput = *uPID->MyInput;
 
-	uPID->OutputSum = double_clamp(uPID->OutputSum, uPID->OutMin, uPID->OutMax);
+	uPID->OutputSum = float_clamp(uPID->OutputSum, uPID->OutMin, uPID->OutMax);
 }
 
-void PID(PID_TypeDef *uPID, double *Input, double *Output, double *Setpoint, double Kp, double Ki, double Kd, PIDCD_TypeDef ControllerDirection)
+void PID(PID_TypeDef *uPID, float *Input, float *Output, float *Setpoint, float Kp, float Ki, float Kd, PIDCD_TypeDef ControllerDirection)
 {
 	/* Set parameters */
 	uPID->MyOutput   = Output;
@@ -28,13 +28,13 @@ void PID(PID_TypeDef *uPID, double *Input, double *Output, double *Setpoint, dou
 }
 
 /* Function to clamp d between the limits min and max */
-double double_clamp(double d, double min, double max) {
-	  const double t = d < min ? min : d;
+float float_clamp(float d, float min, float max) {
+	  const float t = d < min ? min : d;
 	  return t > max ? max : t;
 }
 
 /* Function to check if clamping will occur */
-uint8_t check_clamping(double d, double min, double max) {
+uint8_t check_clamping(float d, float min, float max) {
 	  if(d > max || d < min){
 		  return 1;
 	  }
@@ -47,12 +47,12 @@ uint8_t check_clamping(double d, double min, double max) {
 uint8_t PID_Compute(PID_TypeDef *uPID){
 	uint32_t now;
 	uint32_t timeChange;
-	double timeChange_in_seconds;
+	float timeChange_in_seconds;
 
-	double input;
-	double error;
-	double dInput;
-	double output;
+	float input;
+	float error;
+	float dInput;
+	float output;
 
 	/* Check PID mode */
 	if (!uPID->InAuto){
@@ -91,7 +91,7 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 		}
 
 		/* Clamp Integral part */
-		uPID->OutputSum = double_clamp(uPID->OutputSum, uPID->IMin, uPID->IMax);
+		uPID->OutputSum = float_clamp(uPID->OutputSum, uPID->IMin, uPID->IMax);
 
 		/* If Setpoint is set to 0, zero integral part */
 		if(*uPID->MySetpoint == 0){
@@ -108,7 +108,7 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 		output += uPID->DispKi_part;
 
 		/* Clamp output */
-		output = double_clamp(output, uPID->OutMin, uPID->OutMax);
+		output = float_clamp(output, uPID->OutMin, uPID->OutMax);
 
 		*uPID->MyOutput = output;
 
@@ -138,7 +138,7 @@ PIDMode_TypeDef PID_GetMode(PID_TypeDef *uPID){
 }
 
 /* PID Limits */
-void PID_SetOutputLimits(PID_TypeDef *uPID, double Min, double Max){
+void PID_SetOutputLimits(PID_TypeDef *uPID, float Min, float Max){
 	/* Check value */
 	if (Min >= Max){
 		return;
@@ -149,15 +149,15 @@ void PID_SetOutputLimits(PID_TypeDef *uPID, double Min, double Max){
 
 	if (uPID->InAuto){
 		/* Check value */
-		*uPID->MyOutput = double_clamp(*uPID->MyOutput, uPID->OutMin, uPID->OutMax);
+		*uPID->MyOutput = float_clamp(*uPID->MyOutput, uPID->OutMin, uPID->OutMax);
 
 		/* Check out value */
-		uPID->OutputSum = double_clamp(uPID->OutputSum, uPID->OutMin, uPID->OutMax);
+		uPID->OutputSum = float_clamp(uPID->OutputSum, uPID->OutMin, uPID->OutMax);
 	}
 }
 
 /* PID I-windup Limits */
-void PID_SetILimits(PID_TypeDef *uPID, double Min, double Max){
+void PID_SetILimits(PID_TypeDef *uPID, float Min, float Max){
 	/* Check value */
 	if (Min >= Max){
 		return;
@@ -168,7 +168,7 @@ void PID_SetILimits(PID_TypeDef *uPID, double Min, double Max){
 }
 
 /* Minimum error where I is added */
-void PID_SetIminError(PID_TypeDef *uPID, double IminError){	/* Check value */
+void PID_SetIminError(PID_TypeDef *uPID, float IminError){	/* Check value */
 	if (IminError < 0){
 		return;
 	}
@@ -177,7 +177,7 @@ void PID_SetIminError(PID_TypeDef *uPID, double IminError){	/* Check value */
 }
 
 /* Set the I gain multiplier for negative error*/
-void PID_SetNegativeErrorIgainMult(PID_TypeDef *uPID, double NegativeErrorIgainMultiplier, double NegativeErrorIgainBias){
+void PID_SetNegativeErrorIgainMult(PID_TypeDef *uPID, float NegativeErrorIgainMultiplier, float NegativeErrorIgainBias){
 	if (NegativeErrorIgainMultiplier < 0){
 		return;
 	}
@@ -187,7 +187,7 @@ void PID_SetNegativeErrorIgainMult(PID_TypeDef *uPID, double NegativeErrorIgainM
 }
 
 /* PID Tunings */
-void PID_SetTunings(PID_TypeDef *uPID, double Kp, double Ki, double Kd){
+void PID_SetTunings(PID_TypeDef *uPID, float Kp, float Ki, float Kd){
 	/* Check value */
 	if (Kp < 0 || Ki < 0 || Kd < 0){
 		return;
@@ -232,11 +232,11 @@ void PID_SetSampleTime(PID_TypeDef *uPID, int32_t NewSampleTime, int32_t updateO
 		updateOnCall = 1;
 	}
 	uPID->updateOnEveryCall = updateOnCall;
-	double ratio;
+	float ratio;
 
 	/* Check value */
 	if (NewSampleTime > 0){
-		ratio = (double)NewSampleTime / (double)uPID->SampleTime;
+		ratio = (float)NewSampleTime / (float)uPID->SampleTime;
 
 		uPID->Ki *= ratio;
 		uPID->Kd /= ratio;
@@ -245,23 +245,23 @@ void PID_SetSampleTime(PID_TypeDef *uPID, int32_t NewSampleTime, int32_t updateO
 }
 
 /* Get Parameters */
-double PID_GetKp(PID_TypeDef *uPID){
+float PID_GetKp(PID_TypeDef *uPID){
 	return uPID->DispKp;
 }
-double PID_GetKi(PID_TypeDef *uPID){
+float PID_GetKi(PID_TypeDef *uPID){
 	return uPID->DispKi;
 }
-double PID_GetKd(PID_TypeDef *uPID){
+float PID_GetKd(PID_TypeDef *uPID){
 	return uPID->DispKd;
 }
 
 /* Get current contributions*/
-double PID_GetPpart(PID_TypeDef *uPID){
+float PID_GetPpart(PID_TypeDef *uPID){
 	return uPID->DispKp_part;
 }
-double PID_GetIpart(PID_TypeDef *uPID){
+float PID_GetIpart(PID_TypeDef *uPID){
 	return uPID->DispKi_part;
 }
-double PID_GetDpart(PID_TypeDef *uPID){
+float PID_GetDpart(PID_TypeDef *uPID){
 	return uPID->DispKd_part;
 }
