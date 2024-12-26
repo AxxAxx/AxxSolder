@@ -302,10 +302,10 @@ char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Standby Time [min]  ",
 							"Sleep Time [min]    ",
 							"Buzzer Enabled      ",
-							"Preset Temp 1 °C    ",
-							"Preset Temp 2 °C    ",
+							"Preset Temp 1 °C   ",
+							"Preset Temp 2 °C   ",
 							"GPIO4 ON at run    ",
-							"Screen Rotation      ",
+							"Screen Rotation     ",
 							"Limit Power [W]     ",
 							"I Measurement       ",
 							"Startup Beep         ",
@@ -316,7 +316,7 @@ char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp cal 350         ",
 							"Temp cal 400         ",
 							"Temp cal 450         ",
-							"Serial DEBUG         ",
+							"Serial DEBUG        ",
 							"Disp Temp. filter    ",
 							"Start at prev. temp ",
 							"-Load Default-       ",
@@ -450,7 +450,6 @@ void change_state(mainstates new_state){
 		flash_values.startup_temperature = sensor_values.set_temperature;
 		FlashWrite(&flash_values);
 	}
-
 	if((sensor_values.current_state == RUN) && (flash_values.GPIO4_ON_at_run == 1)){
 		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_SET);
 	}
@@ -710,6 +709,7 @@ void settings_menu(){
 				}
 
 				char string[10];
+				memset(&string, '\0', 10);
 				if(i < menu_length-3){
 					if((i == menu_cursor_position) && (menu_level == 1)){
 						left_align_float(string, (((float*)&flash_values)[i]), strlen(string));
