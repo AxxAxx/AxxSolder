@@ -2530,7 +2530,23 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
+
+	// Stop the heater PWM and reconfigure as a GPIO and set to RESET
 	heater_off();
+	HAL_TIMEx_PWMN_Stop_IT(&htim1, TIM_CHANNEL_3);
+
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	/*Configure GPIO pin : CURRENT_Pin */
+	GPIO_InitStruct.Pin = CURRENT_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct); // Replace GPIOx with the appropriate GPIO port
+	HAL_GPIO_WritePin(GPIOF, CURRENT_Pin, GPIO_PIN_RESET);
+
   __disable_irq();
   while (1)
   {
