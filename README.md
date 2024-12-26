@@ -79,6 +79,8 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 # Software Version History and Hardware Compatibility
 | Version | Date  | Hardware Compatibility |
 |---------|------|----------------------|
+|[v3.2.4](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.4)|Dec 26, 2024|V3.*|
+|[v3.2.3](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.3)|Dec 05, 2024|V3.*|
 |[v3.2.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.2)|Nov 15, 2024|V3.*|
 |[v3.2.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.1)|Sep 21, 2024|V3.*|
 |[v3.2.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.0)|Aug 13, 2024|V3.*|
@@ -189,6 +191,8 @@ To access the user settings the user holds down the encoder button at start-up. 
 |Temp cal 400 °C|Actual temperature at 400 °C|deg C|400|
 |Temp cal 450 °C|Actual temperature at 450 °C|deg C|450|
 |Serial debug print|Print debug over serial|ON/OFF|OFF|
+|Displayed temp filter|Moving average filter length|Lenght|5|
+|Startup temp is previous temp|Startup temp is previous used temp|ON/OFF|OFF|
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
