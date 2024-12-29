@@ -56,6 +56,7 @@ typedef struct{
 	float serial_debug_print;
 	float displayed_temp_filter;
 	float startup_temp_is_previous_temp;
+	float three_button_mode;
 }Flash_values;
 
 /* USER CODE END Includes */

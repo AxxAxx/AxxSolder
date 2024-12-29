@@ -79,6 +79,8 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 # Software Version History and Hardware Compatibility
 | Version | Date  | Hardware Compatibility |
 |---------|------|----------------------|
+|[v3.2.4](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.4)|Dec 26, 2024|V3.*|
+|[v3.2.3](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.3)|Dec 05, 2024|V3.*|
 |[v3.2.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.2)|Nov 15, 2024|V3.*|
 |[v3.2.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.1)|Sep 21, 2024|V3.*|
 |[v3.2.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.0)|Aug 13, 2024|V3.*|
@@ -119,7 +121,10 @@ A printable cover protecting the terminals of the for LRS-150-24 can be found un
 Another suitable power supply is the Meanwell XLG-150-24 which has a slightly different form factor and is fully enclosed.
 
 # Handle identification and connections
-In order for AxxSolder to know which type of handle (NT115, T210, T245) is connected specific pins must be connected within the handle connector. By default, the original JBC handle T245 has NO pins connected while in the original T210 pins 5 and 6 are connected. The original NT115 handle has a different connector from JBC and must be modified. If the user changes the connector or uses a non-genuine handle it is important to make sure that pin 5 and 3 is connected within the connector. All the necessary connections are shown in the image below. While powering on AxxSolder fir the first time after doing these connections within the handle connector or connections to AxxSolder it is wise to attach a handle without its cartridge and ensure that AxxSolder shows the correct handle type on the display. Failing to detect the handle type will cause damage to the tip as the thermal calibration and max power allowed will be wrong.  
+In order for AxxSolder to know which type of handle (NT115, T210, T245) is attached specific pins inside the handle connector must be connected (bridged with a jumper wire). By default, the original JBC handle T245 has NO bridged pins while inside the connector of the original JBC T210 the pins 5 and 6 are bridged with a jumper wire. The original NT115 handle from JBC has a different connector and must be modified accordingly. All the necessary connections are shown in the image below.  
+When powering on AxxSolder for the first time after doing these connections inside the handle connector it is wise to attach a handle without its cartridge and ensure that AxxSolder detects and shows the correct handle type on the display.  
+Failing to detect the handle type may cause permanent damage to the cartridge as the temperature calibration and max allowed power will be wrong.  
+❗WARNING❗ It has been discovered that some JBC clones have different pins bridged by the manufacturer. For example: Some AiXun T210 handles have pin 1 and 6 bridged, instead of pin 5 and 6 as AxxSolder requires for T210 handles. It is however easy to open up the connector and do the required pin connection.      
 ![Handle_connections](./photos/handle_connectors.jpg)
 
 # Firmware update
@@ -186,6 +191,8 @@ To access the user settings the user holds down the encoder button at start-up. 
 |Temp cal 400 °C|Actual temperature at 400 °C|deg C|400|
 |Temp cal 450 °C|Actual temperature at 450 °C|deg C|450|
 |Serial debug print|Print debug over serial|ON/OFF|OFF|
+|Displayed temp filter|Moving average filter length|Lenght|5|
+|Startup temp is previous temp|Startup temp is previous used temp|ON/OFF|OFF|
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
@@ -237,6 +244,16 @@ $Temp_{C210}[deg] =  4.22e^{-6} * ADC^2 + 0.32* ADC + 20.97$
 $Temp_{C245}[deg] = -4.73e^{-7} * ADC^2 + 0.12* ADC + 23.78$  
 These are then used in the software to retrieve correct tip temperatures.
 ![Temp_calibration](./photos/Temp_calibration_data.png)
+
+The user can adjust the temperature calibration at 6 points in order to compensate for variations in the cartridge thermocouple.  
+To calibrate temperature(s):
+- Make sure that the temperature calibration values are at their default nominal values in the settings.
+- Set AxxSolder to the temperature that you want to calibrate. for example 300 deg C.
+- When AxxSolder stabilizes around the setpoint, measure the actual tip temperature by using a soldering tip thermocouple, for example the HAKKO FG-100B.
+- Input the actual measured temperature, let's say 302 deg C into the 300 deg C calibration setting ("Temp cal 300" = 302).
+  
+AxxSolder will then use this calibration point and correct the temperature accordingly. It will do so linearly between all calibration points.
+
 # Temperature measurement
 As the thermocouple and heater element is connected in series inside the JBC cartridges and the thermocouple voltage measures over the same pins as the heating element we have to be careful when to do the temperature measurement. In order to not disturb the thermocouple measurement with heater element switching, the switching is turned off for 0.5 ms just before the temperature measurement is taken. The 0.5 ms delay ensures that the switching is turned off and the thermocouple signal is stabilized around a stable voltage.  
 The measured signal over the thermocouple is clamped to 3.3V with a BAV199 Schottky diode in order to protect the op-amp OPA2387. The voltage measurement is taken by the internal ADC in DMA mode with a circular buffer. The buffer holds several measurements which are averaged and filtered in software.  
