@@ -1,9 +1,6 @@
 name: Build and Release Firmware
 
 on:
-  push:
-    tags:
-      - '*' # Triggers on any tag
   pull_request:
     branches:
       - main  # Trigger on PRs to the main branch
