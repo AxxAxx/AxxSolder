@@ -1400,7 +1400,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		update_heater_PWM();
 		/* Compute PID */
 		PID_Compute(&TPID);
-		sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0, PID_MAX_OUTPUT);
 		thermocouple_measurement_done = 1;
 	}
 	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
@@ -1702,6 +1701,7 @@ int main(void)
 
 		/* Update display */
 		if(HAL_GetTick() - previous_millis_display >= interval_display){
+			sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0, PID_MAX_OUTPUT);
 			update_display();
 			previous_millis_display = HAL_GetTick();
 		}
