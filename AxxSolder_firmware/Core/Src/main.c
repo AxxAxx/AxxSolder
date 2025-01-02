@@ -42,7 +42,7 @@
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  2;
-uint8_t fw_version_patch =  4;
+uint8_t fw_version_patch =  5;
 
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -1495,7 +1495,6 @@ int main(void)
 		FlashWrite(&default_flash_values);
 		beep(1); //Beep once to indicate default parameters written to flash
 		HAL_Delay(100);
-		HAL_NVIC_SystemReset();
 	}
 
 	/* Read flash data */
