@@ -42,7 +42,7 @@
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  2;
-uint8_t fw_version_patch =  4;
+uint8_t fw_version_patch =  5;
 
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -292,10 +292,11 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.temp_cal_450 = 450,
 											.serial_debug_print = 0,
 											.displayed_temp_filter = 5,
-											.startup_temp_is_previous_temp = 0};
+											.startup_temp_is_previous_temp = 0,
+											.three_button_mode = 0};
 
 /* List of names for settings menu */
-#define menu_length 26
+#define menu_length 27
 char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp Offset °C      ",
 							"Standby Temp °C   ",
@@ -319,6 +320,7 @@ char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Serial DEBUG        ",
 							"Disp Temp. filter    ",
 							"Start at prev. temp ",
+							"3-button mode        ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -640,7 +642,7 @@ void settings_menu(){
 					((float*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
 
-				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20) || (menu_cursor_position == 22)){
+				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20) || (menu_cursor_position == 22) || (menu_cursor_position == 23)){
 					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
 				else if (menu_cursor_position == 9){
@@ -955,14 +957,18 @@ void LCD_draw_main_screen(){
 		UG_DrawLine(0, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
 		UG_DrawLine(0, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
 
-
-		LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_1));
-		LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_2));
-		LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		if(flash_values.three_button_mode == 1){
+			LCD_PutStr(11, 301, "TEMP         DOWN   UP", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_1));
+			LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_2));
+			LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		}
 
 		UG_DrawFrame(208, 64, 232, 270, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(209, 65, 231, 269, RGB_to_BRG(C_WHITE));
@@ -1024,19 +1030,26 @@ void LCD_draw_main_screen(){
 		UG_DrawLine(315, 0, 315, 240, RGB_to_BRG(C_DARK_SEA_GREEN));
 		UG_DrawLine(316, 0, 316, 240, RGB_to_BRG(C_DARK_SEA_GREEN));
 
-		LCD_PutStr(285, 75, "P", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(285, 97, "R", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(285, 119, "E", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(285, 141, "S", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(285, 163, "E", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(285, 185, "T", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(285, 207, "S", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_1);
-		LCD_PutStr(272, 40, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_2);
-		LCD_PutStr(272, 10, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		if(flash_values.three_button_mode == 1){
+			LCD_PutStr(269, 90, "DEC", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(269, 10, "INC", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(285, 75, "P", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(285, 97, "R", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(285, 119, "E", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(285, 141, "S", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(285, 163, "E", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(285, 185, "T", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(285, 207, "S", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+			sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_1);
+			LCD_PutStr(272, 40, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+			sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_2);
+			LCD_PutStr(272, 10, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		}
+
 
 
 		UG_DrawFrame(8, 30, 32, 212, RGB_to_BRG(C_WHITE));
@@ -1076,7 +1089,12 @@ void LCD_draw_earth_fault_popup(){
 void get_set_temperature(){
 	if(custom_temperature_on == 0){
 		TIM2->CNT = clamp(TIM2->CNT, MIN_SELECTABLE_TEMPERATURE, MAX_SELECTABLE_TEMPERATURE);
-		sensor_values.set_temperature = (uint16_t)(TIM2->CNT/2) * 2;
+		if(flash_values.three_button_mode == 1){
+			sensor_values.set_temperature = (uint16_t)(TIM2->CNT);
+		}
+		else{
+			sensor_values.set_temperature = (uint16_t)(TIM2->CNT/2) * 2;
+		}
 	}
 }
 
@@ -1159,12 +1177,22 @@ void handle_button_status(){
 	/* Set "set temp" to preset temp 1 */
 	if(SW_2_pressed == 1){
 		SW_2_pressed = 0;
-		TIM2->CNT = flash_values.preset_temp_1;
+		if(flash_values.three_button_mode == 1){
+			TIM2->CNT -= 5;
+		}
+		else{
+			TIM2->CNT = flash_values.preset_temp_1;
+		}
 	}
 	/* Set "set temp" to preset temp 2 */
 	if(SW_3_pressed == 1){
 		SW_3_pressed = 0;
-		TIM2->CNT = flash_values.preset_temp_2;
+		if(flash_values.three_button_mode == 1){
+			TIM2->CNT += 5;
+		}
+		else{
+			TIM2->CNT = flash_values.preset_temp_2;
+		}
 	}
 }
 
@@ -1370,9 +1398,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		HAL_ADC_Stop_DMA(&hadc1);
 		get_thermocouple_temperature();
 		update_heater_PWM();
-		/* Compute PID */
-		PID_Compute(&TPID);
-		sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0, PID_MAX_OUTPUT);
 		thermocouple_measurement_done = 1;
 	}
 	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
@@ -1467,7 +1492,6 @@ int main(void)
 		FlashWrite(&default_flash_values);
 		beep(1); //Beep once to indicate default parameters written to flash
 		HAL_Delay(100);
-		HAL_NVIC_SystemReset();
 	}
 
 	/* Read flash data */
@@ -1503,7 +1527,7 @@ int main(void)
 	/* Initiate PID controller */
 	PID(&TPID, &sensor_values.thermocouple_temperature, &sensor_values.requested_power, &PID_setpoint, 0, 0, 0, _PID_CD_DIRECT); //PID parameters are set depending on detected handle by set_handle_values()
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		//Set PID sample time to "PID_UPDATE_INTERVAL" to make sure PID is calculated every time it is called
+	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		// Set PID update time to "PID_UPDATE_INTERVAL"
 	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
 	PID_SetILimits(&TPID, 0, 0);         					// Set max and min I limit
 	PID_SetIminError(&TPID,PID_ADD_I_MIN_ERROR);
@@ -1607,6 +1631,9 @@ int main(void)
 			previous_sensor_update_low_update = HAL_GetTick();
 		}
 
+		/* Compute PID */
+		PID_Compute(&TPID);
+
 		/* switch */
 		switch(sensor_values.current_state) {
 			case RUN: {
@@ -1675,6 +1702,7 @@ int main(void)
 
 		/* Update display */
 		if(HAL_GetTick() - previous_millis_display >= interval_display){
+			sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0, PID_MAX_OUTPUT);
 			update_display();
 			previous_millis_display = HAL_GetTick();
 		}
