@@ -1398,8 +1398,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		HAL_ADC_Stop_DMA(&hadc1);
 		get_thermocouple_temperature();
 		update_heater_PWM();
-		/* Compute PID */
-		PID_Compute(&TPID);
 		thermocouple_measurement_done = 1;
 	}
 	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
@@ -1529,7 +1527,7 @@ int main(void)
 	/* Initiate PID controller */
 	PID(&TPID, &sensor_values.thermocouple_temperature, &sensor_values.requested_power, &PID_setpoint, 0, 0, 0, _PID_CD_DIRECT); //PID parameters are set depending on detected handle by set_handle_values()
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		//Set PID sample time to "PID_UPDATE_INTERVAL" to make sure PID is calculated every time it is called
+	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		// Set PID update time to "PID_UPDATE_INTERVAL"
 	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
 	PID_SetILimits(&TPID, 0, 0);         					// Set max and min I limit
 	PID_SetIminError(&TPID,PID_ADD_I_MIN_ERROR);
@@ -1632,6 +1630,9 @@ int main(void)
 			get_mcu_temp();
 			previous_sensor_update_low_update = HAL_GetTick();
 		}
+
+		/* Compute PID */
+		PID_Compute(&TPID);
 
 		/* switch */
 		switch(sensor_values.current_state) {
