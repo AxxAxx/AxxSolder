@@ -963,7 +963,7 @@ void LCD_draw_main_screen(){
 		UG_DrawLine(0, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
 
 		if(flash_values.three_button_mode == 1){
-			LCD_PutStr(11, 301, "TEMP         DOWN   UP", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(11, 301, "TEMP          UP   DOWN", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		}
 		else{
 			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
@@ -1036,8 +1036,8 @@ void LCD_draw_main_screen(){
 		UG_DrawLine(316, 0, 316, 240, RGB_to_BRG(C_DARK_SEA_GREEN));
 
 		if(flash_values.three_button_mode == 1){
-			LCD_PutStr(269, 90, "DEC", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-			LCD_PutStr(269, 10, "INC", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(269, 90, "INC", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(269, 10, "DEC", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		}
 		else{
 			LCD_PutStr(285, 75, "P", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
@@ -1183,10 +1183,10 @@ void handle_button_status(){
 	if(SW_2_pressed == 1){
 		SW_2_pressed = 0;
 		if(settings_menu_active == 1){
-			TIM2->CNT -= 2;
+			TIM2->CNT += 2;
 		}
 		else if(flash_values.three_button_mode == 1){
-			TIM2->CNT -= 5;
+			TIM2->CNT += 5;
 		}
 		else{
 			TIM2->CNT = flash_values.preset_temp_1;
@@ -1196,10 +1196,10 @@ void handle_button_status(){
 	if(SW_3_pressed == 1){
 		SW_3_pressed = 0;
 		if(settings_menu_active == 1){
-			TIM2->CNT += 2;
+			TIM2->CNT -= 2;
 		}
 		else if(flash_values.three_button_mode == 1){
-				TIM2->CNT += 5;
+				TIM2->CNT -= 5;
 			}
 		else{
 			TIM2->CNT = flash_values.preset_temp_2;
