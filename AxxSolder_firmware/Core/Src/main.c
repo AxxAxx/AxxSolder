@@ -42,7 +42,7 @@
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  3;
-uint8_t fw_version_patch =  0;
+uint8_t fw_version_patch =  1;
 
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -156,6 +156,9 @@ float TC_temp = 0;
 
 /* Flag to indicate that startup sequence is done */
 uint8_t startup_done = 0;
+
+/* Flag to indicate that settings menu is active */
+settings_menu_active = 0;
 
 /* Variables for thermocouple outlier detection */
 float TC_temp_from_ADC = 0;
@@ -601,6 +604,7 @@ void left_align_float(char* str, float number, int8_t len)
 void settings_menu(){
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
+		settings_menu_active = 1;
 
 		char str[32];
 		memset(&str, '\0', strlen(str));
@@ -630,6 +634,7 @@ void settings_menu(){
 
 		HAL_Delay(500);
 		while(menu_active == 1){
+			handle_button_status();
 			if(menu_level == 0){
 				TIM2->CNT = clamp(TIM2->CNT, 1000, 1000000);
 				menu_cursor_position = (TIM2->CNT - 1000) / 2;
@@ -1177,7 +1182,10 @@ void handle_button_status(){
 	/* Set "set temp" to preset temp 1 */
 	if(SW_2_pressed == 1){
 		SW_2_pressed = 0;
-		if(flash_values.three_button_mode == 1){
+		if(settings_menu_active == 1){
+			TIM2->CNT -= 2;
+		}
+		else if(flash_values.three_button_mode == 1){
 			TIM2->CNT -= 5;
 		}
 		else{
@@ -1187,9 +1195,12 @@ void handle_button_status(){
 	/* Set "set temp" to preset temp 2 */
 	if(SW_3_pressed == 1){
 		SW_3_pressed = 0;
-		if(flash_values.three_button_mode == 1){
-			TIM2->CNT += 5;
+		if(settings_menu_active == 1){
+			TIM2->CNT += 2;
 		}
+		else if(flash_values.three_button_mode == 1){
+				TIM2->CNT += 5;
+			}
 		else{
 			TIM2->CNT = flash_values.preset_temp_2;
 		}
