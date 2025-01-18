@@ -141,7 +141,7 @@ void Error_Handler(void);
 #define SW_3_EXTI_IRQn EXTI9_5_IRQn
 
 /* USER CODE BEGIN Private defines */
-
+void handle_button_status(void);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
