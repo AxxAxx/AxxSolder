@@ -158,7 +158,7 @@ float TC_temp = 0;
 uint8_t startup_done = 0;
 
 /* Flag to indicate that settings menu is active */
-settings_menu_active = 0;
+uint8_t settings_menu_active = 0;
 
 /* Variables for thermocouple outlier detection */
 float TC_temp_from_ADC = 0;
