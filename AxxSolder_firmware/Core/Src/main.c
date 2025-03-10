@@ -606,6 +606,7 @@ void settings_menu(){
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
 		settings_menu_active = 1;
 
+		UG_FillScreen(RGB_to_BRG(C_BLACK));
 		char str[32];
 		memset(&str, '\0', strlen(str));
 		if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
@@ -696,6 +697,7 @@ void settings_menu(){
 			}
 			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-1)){
 				menu_active = 0;
+				HAL_NVIC_SystemReset();
 			}
 			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-2)){
 				menu_active = 0;
@@ -1204,6 +1206,12 @@ void handle_button_status(){
 		else{
 			TIM2->CNT = flash_values.preset_temp_2;
 		}
+	}
+	if(SW_1_pressed_long == 1){
+		SW_1_pressed_long = 0;
+		change_state(EMERGENCY_SLEEP);
+		/* start settings menu */
+		settings_menu();
 	}
 }
 
