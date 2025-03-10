@@ -1192,6 +1192,15 @@ void handle_button_status(){
 			TIM2->CNT = flash_values.preset_temp_1;
 		}
 	}
+	if(SW_2_pressed_long == 1){
+		SW_2_pressed_long = 0;
+		if(flash_values.three_button_mode == 0){
+			flash_values.preset_temp_1 = TIM2->CNT;
+			FlashWrite(&flash_values);
+			LCD_draw_main_screen();
+			sleep_state_written_to_LCD = 0;
+		}
+	}
 	/* Set "set temp" to preset temp 2 */
 	if(SW_3_pressed == 1){
 		SW_3_pressed = 0;
@@ -1203,6 +1212,15 @@ void handle_button_status(){
 			}
 		else{
 			TIM2->CNT = flash_values.preset_temp_2;
+		}
+	}
+	if(SW_3_pressed_long == 1){
+		SW_3_pressed_long = 0;
+		if(flash_values.three_button_mode == 0){
+			flash_values.preset_temp_2 = TIM2->CNT;
+			FlashWrite(&flash_values);
+			LCD_draw_main_screen();
+			sleep_state_written_to_LCD = 0;
 		}
 	}
 }
