@@ -1179,8 +1179,14 @@ void handle_button_status(){
 			change_state(RUN);
 		}
 		previous_millis_heating_halted_update = HAL_GetTick();
-
 	}
+  if(SW_1_pressed_long == 1){
+		SW_1_pressed_long = 0;
+		change_state(EMERGENCY_SLEEP);
+		/* start settings menu */
+		settings_menu();
+	}
+  
 	/* Set "set temp" to preset temp 1 */
 	if(SW_2_pressed == 1){
 		SW_2_pressed = 0;
@@ -1194,6 +1200,16 @@ void handle_button_status(){
 			TIM2->CNT = flash_values.preset_temp_1;
 		}
 	}
+	if(SW_2_pressed_long == 1){
+		SW_2_pressed_long = 0;
+		if(flash_values.three_button_mode == 0){
+			flash_values.preset_temp_1 = TIM2->CNT;
+			FlashWrite(&flash_values);
+			LCD_draw_main_screen();
+			sleep_state_written_to_LCD = 0;
+		}
+	}
+  
 	/* Set "set temp" to preset temp 2 */
 	if(SW_3_pressed == 1){
 		SW_3_pressed = 0;
@@ -1207,12 +1223,14 @@ void handle_button_status(){
 			TIM2->CNT = flash_values.preset_temp_2;
 		}
 	}
-	if(SW_1_pressed_long == 1){
-		SW_1_pressed_long = 0;
-		change_state(EMERGENCY_SLEEP);
-		/* start settings menu */
-		settings_menu();
-	}
+	if(SW_3_pressed_long == 1){
+		SW_3_pressed_long = 0;
+		if(flash_values.three_button_mode == 0){
+			flash_values.preset_temp_2 = TIM2->CNT;
+			FlashWrite(&flash_values);
+			LCD_draw_main_screen();
+			sleep_state_written_to_LCD = 0;
+		}
 }
 
 /* Get the status of handle in/on stand to trigger SLEEP */
