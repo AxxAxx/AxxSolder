@@ -160,6 +160,9 @@ uint8_t startup_done = 0;
 /* Flag to indicate that settings menu is active */
 uint8_t settings_menu_active = 0;
 
+/* Flag to indicate if beep has been done at set temperature */
+uint8_t beeped_at_set_temp = 0;
+
 /* Variables for thermocouple outlier detection */
 float TC_temp_from_ADC = 0;
 float TC_temp_from_ADC_previous = 0;
@@ -296,10 +299,11 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.serial_debug_print = 0,
 											.displayed_temp_filter = 5,
 											.startup_temp_is_previous_temp = 0,
-											.three_button_mode = 0};
+											.three_button_mode = 0,
+											.beep_at_set_temp = 0};
 
 /* List of names for settings menu */
-#define menu_length 27
+#define menu_length 28
 char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp Offset °C      ",
 							"Standby Temp °C   ",
@@ -324,6 +328,7 @@ char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Disp Temp. filter    ",
 							"Start at prev. temp ",
 							"3-button mode        ",
+							"Beep at set temp     ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -461,6 +466,10 @@ void change_state(mainstates new_state){
 	else{
 		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_RESET);
 	}
+	if((sensor_values.previous_state != RUN) && (sensor_values.current_state == RUN)){
+		beeped_at_set_temp = 0;
+	}
+
 }
 
 /* Function to get the filtered MCU temperature */
@@ -648,7 +657,7 @@ void settings_menu(){
 					((float*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
 
-				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20) || (menu_cursor_position == 22) || (menu_cursor_position == 23)){
+				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20) || (menu_cursor_position == 22) || (menu_cursor_position == 23) || (menu_cursor_position == 24)){
 					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
 				else if (menu_cursor_position == 9){
@@ -1327,6 +1336,18 @@ void set_handle_values(){
 	}
 }
 
+void beep_at_set_temp(){
+	if(flash_values.beep_at_set_temp == 1){
+		if(beeped_at_set_temp == 0){
+			if((sensor_values.thermocouple_temperature_filtered > (sensor_values.set_temperature - 5)) && (sensor_values.thermocouple_temperature_filtered < (sensor_values.set_temperature + 5))){
+				beeped_at_set_temp = 1;
+				//beep(flash_values.buzzer_enabled);
+				beep_double(flash_values.buzzer_enabled);
+			}
+		}
+	}
+}
+
 /* Interrupts at button press */
 volatile static uint16_t btnPressed = 0;
 volatile static uint16_t debounceDone = 0;
@@ -1642,7 +1663,7 @@ int main(void)
 	LCD_draw_main_screen();
 
 	/* Start-up beep */
-	beep_startup(flash_values.startup_beep);
+	beep_double(flash_values.startup_beep);
 
 	//Flag to indicate that the startup sequence is done
 	startup_done = 1;
@@ -1665,6 +1686,7 @@ int main(void)
 			get_bus_voltage();
 			get_heater_current();
 			get_mcu_temp();
+			beep_at_set_temp();
 			previous_sensor_update_low_update = HAL_GetTick();
 		}
 

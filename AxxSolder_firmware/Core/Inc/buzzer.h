@@ -11,6 +11,6 @@
 
 /* Function prototypes -------------------------------------------------------*/
 void beep(float buzzer_enabled);
-void beep_startup(float buzzer_enabled);
+void beep_double(float buzzer_enabled);
 
 #endif /* INC_BUZZER_H_ */
