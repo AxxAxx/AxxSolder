@@ -93,6 +93,9 @@ uint32_t interval_sensor_update_high_update = 10;
 uint32_t previous_sensor_update_low_update = 0;
 uint32_t interval_sensor_update_low_update = 100;
 
+uint32_t previous_millis_popup = 0;
+uint32_t interval_popup = 2000;
+
 /* Handles */
 enum handles {
 	NT115,
@@ -162,6 +165,9 @@ uint8_t settings_menu_active = 0;
 
 /* Flag to indicate if beep has been done at set temperature */
 uint8_t beeped_at_set_temp = 0;
+
+/* Flag to indicate if a popup is shown */
+uint8_t popup_shown = 0;
 
 /* Variables for thermocouple outlier detection */
 float TC_temp_from_ADC = 0;
@@ -466,10 +472,9 @@ void change_state(mainstates new_state){
 	else{
 		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_RESET);
 	}
-	if((sensor_values.previous_state != RUN) && (sensor_values.current_state == RUN)){
-		beeped_at_set_temp = 0;
-	}
-
+    if((sensor_values.previous_state != RUN) && (sensor_values.current_state == RUN)){
+            beeped_at_set_temp = 0;
+    }
 }
 
 /* Function to get the filtered MCU temperature */
@@ -615,7 +620,7 @@ void settings_menu(){
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
 		settings_menu_active = 1;
 
-		UG_FillScreen(RGB_to_BRG(C_BLACK));
+        UG_FillScreen(RGB_to_BRG(C_BLACK));
 		char str[32];
 		memset(&str, '\0', strlen(str));
 		if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
@@ -1080,8 +1085,8 @@ void show_popup(char *text){
 	UG_FillFrame(10, 50, 235, 105, RGB_to_BRG(C_ORANGE));
 	UG_FillFrame(15, 55, 230, 100, RGB_to_BRG(C_WHITE));
 	LCD_PutStr(20, 70, text, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_WHITE));
-	HAL_Delay(2000);
-	LCD_draw_main_screen();
+	popup_shown = 1;
+	previous_millis_popup = HAL_GetTick();
 	standby_state_written_to_LCD = 0;
 	sleep_state_written_to_LCD = 0;
 }
@@ -1119,7 +1124,6 @@ void handle_delta_temperature(){
 	if((startup_done == 1) && ((sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous) > MAX_TC_DELTA_FAULTDETECTION)){
 		heater_off();
 		sensor_values.heater_current = 0;
-		update_display();
 		show_popup("No or Faulty tip!");
 		change_state(EMERGENCY_SLEEP);
 	}
@@ -1195,7 +1199,7 @@ void handle_button_status(){
 		/* start settings menu */
 		settings_menu();
 	}
-  
+
 	/* Set "set temp" to preset temp 1 */
 	if(SW_2_pressed == 1){
 		SW_2_pressed = 0;
@@ -1218,7 +1222,7 @@ void handle_button_status(){
 			sleep_state_written_to_LCD = 0;
 		}
 	}
-  
+
 	/* Set "set temp" to preset temp 2 */
 	if(SW_3_pressed == 1){
 		SW_3_pressed = 0;
@@ -1240,6 +1244,7 @@ void handle_button_status(){
 			LCD_draw_main_screen();
 			sleep_state_written_to_LCD = 0;
 		}
+	}
 }
 
 /* Get the status of handle in/on stand to trigger SLEEP */
@@ -1341,7 +1346,6 @@ void beep_at_set_temp(){
 		if(beeped_at_set_temp == 0){
 			if((sensor_values.thermocouple_temperature_filtered > (sensor_values.set_temperature - 5)) && (sensor_values.thermocouple_temperature_filtered < (sensor_values.set_temperature + 5))){
 				beeped_at_set_temp = 1;
-				//beep(flash_values.buzzer_enabled);
 				beep_double(flash_values.buzzer_enabled);
 			}
 		}
@@ -1663,7 +1667,7 @@ int main(void)
 	LCD_draw_main_screen();
 
 	/* Start-up beep */
-	beep_double(flash_values.startup_beep);
+    beep_double(flash_values.startup_beep);
 
 	//Flag to indicate that the startup sequence is done
 	startup_done = 1;
@@ -1759,12 +1763,20 @@ int main(void)
 			sensor_values.heater_current = 1; // If the current is not measured, apply a dummy value to heater_current
 		}
 
-		/* Update display */
-		if(HAL_GetTick() - previous_millis_display >= interval_display){
-			sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0, PID_MAX_OUTPUT);
-			update_display();
-			previous_millis_display = HAL_GetTick();
-		}
+        if(popup_shown == 1){
+                if(HAL_GetTick() - previous_millis_popup >= interval_popup){
+                        popup_shown = 0;
+                        LCD_draw_main_screen();
+                }
+        }
+        else{
+			/* Update display */
+			if(HAL_GetTick() - previous_millis_display >= interval_display){
+				sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0, PID_MAX_OUTPUT);
+				update_display();
+				previous_millis_display = HAL_GetTick();
+			}
+        }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
