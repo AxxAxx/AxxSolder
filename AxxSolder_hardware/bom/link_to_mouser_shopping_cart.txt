@@ -1,4 +1,4 @@
-https://eu.mouser.com/ProjectManager/ProjectDetail.aspx?AccessID=5896be7035
+https://eu.mouser.com/ProjectManager/ProjectDetail.aspx?AccessID=aea6f0f97b
 
 Note that this is components for the PCB + caps for tactile switches and rotary encoder. 
 
