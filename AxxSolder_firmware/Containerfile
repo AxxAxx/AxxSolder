@@ -1,12 +1,12 @@
 #Inspired by https://github.com/jasonyang-ee/STM32-Dockerfile/tree/main
-FROM alpine:3.20.3
+FROM docker.io/alpine:3.21.3
 
 RUN set -eux; \
     apk add --no-cache --virtual build-dependencies \
-	    build-base=0.5-r3 \
-        gcc=13.2.1_git20240309-r0 \
-        gcc-arm-none-eabi=14.1.0-r0 \
-        cmake=3.29.3-r0 \
+        build-base=0.5-r3 \
+        gcc=14.2.0-r4 \
+        gcc-arm-none-eabi=14.2.0-r0 \
+        cmake=3.31.1-r0 \
         newlib=4.4.0.20231231-r0 \
     ;
 
@@ -16,5 +16,4 @@ COPY . .
 
 RUN set -eux; \
     cmake -S . -B build; \
-    cmake --build build -j$(nproc); \
-    ls -al build;
+    cmake --build build -j$(nproc);
