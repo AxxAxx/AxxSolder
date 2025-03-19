@@ -47,7 +47,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 - Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.
 - At start-up any USB-PD source is detected and the highest possible power is negotiated. AxxSolder limits the soldering iron output power to the max output power of the USB-PD source automatically. The maximum power output is displayed at the top of the power bar graph on the display.
 - User settings are stored in non-volatile flash and can be configured via a settings menu described in [SETTINGS](#settings).
-- The two buttons are used to store temperature presets, e.g. 330 deg C and 430 deg C. Both preset temperatures are configurable in the settings menu.
+- The two buttons are used to store temperature presets, e.g. 330 deg C and 430 deg C. Both preset temperatures are configurable in the settings menu. The stored preset temperature can be updated to the current set temperature by long-pressing the preset button.
 - There is a 3.3 V logic level output (GPIO4) that can be configured to go high when the iron is in Run mode, controlling e.g. fume extractor via a MosFET or relay.
 - The TFT display used in this project is a 2 inch 320x240 Color TFT display [2.0" 320x240 Color IPS TFT Display](https://www.adafruit.com/product/4311) and shows information about:
   - Set temperature
@@ -79,6 +79,8 @@ A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown
 # Software Version History and Hardware Compatibility
 | Version | Date  | Hardware Compatibility |
 |---------|------|----------------------|
+
+|[v3.4.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.4.0)|Mar 19, 2025|V3.*|
 |[v3.3.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.3.1)|Jan 18, 2025|V3.*|
 |[v3.3.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.3.0)|Jan 04, 2025|V3.*|
 |[v3.2.5](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.5)|Jan 02, 2025|V3.*|
@@ -170,7 +172,7 @@ If the handle is detected correctly, the Standby function works and the display 
 If you are not 110% sure about your soldering/connections it is wise to be on the safe side and keep your soldering tip in a water bath in over to prevent it from over-heating in an uncontrolled manner. During the development this method was used and saved a few of those expensive JBC cartridges..
 
 # Settings
-To access the user settings the user holds down the encoder button at start-up. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters available.
+To access the user settings the user holds down the encoder button at start-up or long-press the encoder button. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters available.
 | Setting | Description  | Unit | Default |
 |---------|------|----------------------|----------------------|
 |Startup Temp °C|Default temperature selected after boot|deg C|330|
@@ -197,6 +199,7 @@ To access the user settings the user holds down the encoder button at start-up. 
 |Displayed temp filter|Moving average filter length|Lenght|5|
 |Startup temp is previous temp|Startup temp is previous used temp|ON/OFF|OFF|
 |3-button mode|Use 3-button mode|ON/OFF|OFF|
+|Beep at set temp|Beep at set temp|ON/OFF|OFF|
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
