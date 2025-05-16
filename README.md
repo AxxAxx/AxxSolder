@@ -3,9 +3,10 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAxxAxx%2FAxxSolder&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
-  
-Interested in purchasing an AxxSolder 3.1? On [Tindie](https://www.tindie.com/stores/axxaxx/) you can purchase assembled and tested AxxSolder 3.1 boards with connectors and hardware.  
-<a href="https://www.tindie.com/stores/axxaxx/?ref=offsite_badges&utm_source=sellers_AxxAxx&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
+  *** Please from now on, buy from my new website [www.5dimension.se](https://www.5dimensions.se/) instead of Tindie ***
+
+Interested in purchasing an AxxSolder 3.1? On My website [5Dimensions](https://www.5dimensions.se/) you can purchase assembled and tested AxxSolder 3.1 boards with connectors and hardware.  
+![5DimensionsD](./photos/5DIMENSIONS_Logo.png)
 
 # AxxSolder Overview
 AxxSolder is a STM32 based soldering iron controller for JBC C115, C210 and C245 style cartridges.  
