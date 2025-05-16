@@ -3,7 +3,7 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAxxAxx%2FAxxSolder&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
-Interested in purchasing an AxxSolder 3.1? On My website [5Dimensions](https://www.5dimensions.se/) you can purchase assembled and tested AxxSolder 3.1 boards with connectors and hardware.  
+Interested in purchasing an AxxSolder 3.1? On my new website [5Dimensions](https://www.5dimensions.se/) you can purchase assembled and tested AxxSolder 3.1 boards with connectors and hardware.  
 ![5DimensionsD](./photos/5DIMENSIONS_Logo.png)
 
 # AxxSolder Overview
