@@ -42,7 +42,7 @@
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  4;
-uint8_t fw_version_patch =  0;
+uint8_t fw_version_patch =  1;
 
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -616,6 +616,9 @@ void left_align_float(char* str, float number, int8_t len)
 	}
 
 void settings_menu(){
+	change_state(EMERGENCY_SLEEP);
+	sensor_values.requested_power = 0; //Turn of the heating before going into settings menu
+
 	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
 	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
 		settings_menu_active = 1;
@@ -1195,7 +1198,6 @@ void handle_button_status(){
 	}
   if(SW_1_pressed_long == 1){
 		SW_1_pressed_long = 0;
-		change_state(EMERGENCY_SLEEP);
 		/* start settings menu */
 		settings_menu();
 	}
