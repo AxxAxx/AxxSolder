@@ -311,6 +311,15 @@ void LCD_SetRotation(uint8_t m)
     break;
   }
   LCD_WriteCommand(cmd, sizeof(cmd)-1);
+  //Add a piece to correctly render the UG_FillScreen() function.
+  // Display size update
+  if (m % 2 == 1) {
+	  device.x_dim = LCD_HEIGHT;
+	  device.y_dim = LCD_WIDTH;
+  } else {
+	  device.x_dim = LCD_WIDTH;
+	  device.y_dim = LCD_HEIGHT;
+  }
 }
 
 
