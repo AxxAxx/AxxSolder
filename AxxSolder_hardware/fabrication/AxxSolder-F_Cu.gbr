@@ -1,12 +1,12 @@
 %TF.GenerationSoftware,KiCad,Pcbnew,7.0.10*%
-%TF.CreationDate,2025-03-18T18:42:47+01:00*%
+%TF.CreationDate,2025-06-09T21:16:15+02:00*%
 %TF.ProjectId,AxxSolder,41787853-6f6c-4646-9572-2e6b69636164,rev?*%
 %TF.SameCoordinates,Original*%
 %TF.FileFunction,Copper,L1,Top*%
 %TF.FilePolarity,Positive*%
 %FSLAX46Y46*%
 G04 Gerber Fmt 4.6, Leading zero omitted, Abs format (unit mm)*
-G04 Created by KiCad (PCBNEW 7.0.10) date 2025-03-18 18:42:47*
+G04 Created by KiCad (PCBNEW 7.0.10) date 2025-06-09 21:16:15*
 %MOMM*%
 %LPD*%
 G01*
@@ -792,6 +792,20 @@ X193033082Y-143714042D01*
 X193033082Y-145942614D01*
 G37*
 D11*
+%TO.P,J6,1,Pin_1*%
+%TO.N,unconnected-(J6-Pin_1-Pad1)*%
+X198750000Y-72925000D03*
+%TO.P,J6,2,Pin_2*%
+%TO.N,unconnected-(J6-Pin_2-Pad2)*%
+X198750000Y-75465000D03*
+%TD*%
+%TO.P,J5,1,Pin_1*%
+%TO.N,unconnected-(J5-Pin_1-Pad1)*%
+X162250000Y-72925000D03*
+%TO.P,J5,2,Pin_2*%
+%TO.N,unconnected-(J5-Pin_2-Pad2)*%
+X162250000Y-75465000D03*
+%TD*%
 %TO.P,TP18,1,1*%
 %TO.N,/SD_CS*%
 X190660000Y-124080000D03*
@@ -956,21 +970,6 @@ X162500000Y-119470000D03*
 %TO.P,J4,6,Pin_6*%
 %TO.N,/USART_TX*%
 X162500000Y-122010000D03*
-%TD*%
-D11*
-%TO.P,J6,1,Pin_1*%
-%TO.N,unconnected-(J6-Pin_1-Pad1)*%
-X198750000Y-72925000D03*
-%TO.P,J6,2,Pin_2*%
-%TO.N,unconnected-(J6-Pin_2-Pad2)*%
-X198750000Y-75465000D03*
-%TD*%
-%TO.P,J5,1,Pin_1*%
-%TO.N,unconnected-(J5-Pin_1-Pad1)*%
-X162250000Y-72925000D03*
-%TO.P,J5,2,Pin_2*%
-%TO.N,unconnected-(J5-Pin_2-Pad2)*%
-X162250000Y-75465000D03*
 %TD*%
 D21*
 %TO.N,+3.3V*%
