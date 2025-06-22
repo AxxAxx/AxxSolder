@@ -306,10 +306,11 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.displayed_temp_filter = 5,
 											.startup_temp_is_previous_temp = 0,
 											.three_button_mode = 0,
-											.beep_at_set_temp = 0};
+											.beep_at_set_temp = 0,
+											.beep_tone = 0};
 
 /* List of names for settings menu */
-#define menu_length 28
+#define menu_length 29
 char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp Offset °C      ",
 							"Standby Temp °C   ",
@@ -335,6 +336,7 @@ char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Start at prev. temp ",
 							"3-button mode        ",
 							"Beep at set temp     ",
+							"Beep tone               ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -673,6 +675,9 @@ void settings_menu(){
 				}
 				else if (menu_cursor_position == 21){
 					((float*)&flash_values)[menu_cursor_position] = 1 + fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 10)), 10);
+				}
+				else if (menu_cursor_position == 25){
+					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 4)), 4);
 				}
 				else if (menu_cursor_position == 1){
 					((float*)&flash_values)[menu_cursor_position] = round(((float*)&flash_values)[menu_cursor_position]);
@@ -1672,8 +1677,12 @@ int main(void)
 	/* Draw the main screen decoration */
 	LCD_draw_main_screen();
 
+	/* Set beep tone */
+	__HAL_TIM_SET_PRESCALER(&htim4, 10000+flash_values.beep_tone*40000);
+
 	/* Start-up beep */
     beep_double(flash_values.startup_beep);
+
 
 	//Flag to indicate that the startup sequence is done
 	startup_done = 1;
