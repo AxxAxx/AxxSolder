@@ -1217,11 +1217,13 @@ void handle_button_status(){
 	}
 	if(SW_2_pressed_long == 1){
 		SW_2_pressed_long = 0;
-		if(flash_values.three_button_mode == 0){
-			flash_values.preset_temp_1 = TIM2->CNT;
-			FlashWrite(&flash_values);
-			LCD_draw_main_screen();
-			sleep_state_written_to_LCD = 0;
+		if(settings_menu_active == 0){
+			if(flash_values.three_button_mode == 0){
+				flash_values.preset_temp_1 = TIM2->CNT;
+				FlashWrite(&flash_values);
+				LCD_draw_main_screen();
+				sleep_state_written_to_LCD = 0;
+			}
 		}
 	}
 
@@ -1240,11 +1242,13 @@ void handle_button_status(){
 	}
 	if(SW_3_pressed_long == 1){
 		SW_3_pressed_long = 0;
-		if(flash_values.three_button_mode == 0){
-			flash_values.preset_temp_2 = TIM2->CNT;
-			FlashWrite(&flash_values);
-			LCD_draw_main_screen();
-			sleep_state_written_to_LCD = 0;
+		if(settings_menu_active == 0){
+			if(flash_values.three_button_mode == 0){
+				flash_values.preset_temp_2 = TIM2->CNT;
+				FlashWrite(&flash_values);
+				LCD_draw_main_screen();
+				sleep_state_written_to_LCD = 0;
+			}
 		}
 	}
 }
