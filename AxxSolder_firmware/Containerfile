@@ -1,13 +1,13 @@
 #Inspired by https://github.com/jasonyang-ee/STM32-Dockerfile/tree/main
-FROM docker.io/alpine:3.21.3
+FROM docker.io/alpine:3.22.0
 
 RUN set -eux; \
     apk add --no-cache --virtual build-dependencies \
         build-base=0.5-r3 \
-        gcc=14.2.0-r4 \
-        gcc-arm-none-eabi=14.2.0-r0 \
-        cmake=3.31.1-r0 \
-        newlib=4.4.0.20231231-r0 \
+        gcc=14.2.0-r6 \
+        gcc-arm-none-eabi=15.1.0-r0 \
+        cmake=3.31.7-r1 \
+        newlib=4.5.0.20241231-r0 \
     ;
 
 WORKDIR /app
