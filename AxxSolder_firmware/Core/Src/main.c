@@ -1406,8 +1406,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	/* Beep length timer */
 	if (htim == &htim17){
-		HAL_TIM_Base_Stop_IT(&htim17);
 		HAL_TIM_PWM_Stop_IT(&htim4, TIM_CHANNEL_2);
+		HAL_TIM_Base_Stop_IT(&htim17);
+
 	}
 
 	/* Button De-bounce timer (50 ms) */
@@ -1500,6 +1501,7 @@ void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* hadc __unused){
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -1531,12 +1533,12 @@ int main(void)
   MX_TIM4_Init();
   MX_SPI2_Init();
   MX_I2C1_Init();
-  MX_TIM17_Init();
   MX_USART1_UART_Init();
   MX_TIM7_Init();
   MX_TIM8_Init();
   MX_TIM6_Init();
   MX_TIM16_Init();
+  MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
 
 	set_heater_duty(0);		//Set heater duty to zero to ensure zero startup current
@@ -1544,7 +1546,7 @@ int main(void)
 
 	HAL_TIM_Encoder_Start_IT(&htim2, TIM_CHANNEL_ALL);
 	HAL_TIM_PWM_Start_IT(&htim1, TIM_CHANNEL_1);
-	__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, 5); //Set BUZZER duty to 50%
+	__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, 50); //Set BUZZER duty to 50%
 	HAL_TIM_Base_Start_IT(&htim6);
 
 	__HAL_TIM_ENABLE_IT(&htim7, TIM_IT_UPDATE);
@@ -1676,13 +1678,30 @@ int main(void)
 
 	/* Draw the main screen decoration */
 	LCD_draw_main_screen();
+	HAL_Delay(500);
 
 	/* Set beep tone */
-	__HAL_TIM_SET_PRESCALER(&htim4, 10000+flash_values.beep_tone*40000);
+	switch((int)flash_values.beep_tone){
+		case 0: {
+			set_tone(1500, 10);
+			break;
+		}
+		case 1: {
+			set_tone(1500, 50);
+			break;
+		}
+		case 2: {
+			set_tone(800, 10);
+			break;
+		}
+		case 3: {
+			set_tone(800, 50);
+			break;
+		}
+	}
 
-	/* Start-up beep */
-    beep_double(flash_values.startup_beep);
-
+    /* Start-up beep */
+	beep_double(flash_values.startup_beep);
 
 	//Flag to indicate that the startup sequence is done
 	startup_done = 1;
@@ -2061,7 +2080,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x30A0A7FB;
+  hi2c1.Init.Timing = 0x40B285C2;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -2277,9 +2296,9 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 10000-1;
+  htim4.Init.Prescaler = 1700-1;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 10;
+  htim4.Init.Period = 100;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_PWM_Init(&htim4) != HAL_OK)
@@ -2476,7 +2495,7 @@ static void MX_TIM17_Init(void)
 
   /* USER CODE END TIM17_Init 1 */
   htim17.Instance = TIM17;
-  htim17.Init.Prescaler = 17000-1;
+  htim17.Init.Prescaler = 17000;
   htim17.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim17.Init.Period = 49;
   htim17.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -2575,8 +2594,8 @@ static void MX_DMA_Init(void)
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
+  /* USER CODE BEGIN MX_GPIO_Init_1 */
+  /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -2635,8 +2654,8 @@ static void MX_GPIO_Init(void)
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
-/* USER CODE BEGIN MX_GPIO_Init_2 */
-/* USER CODE END MX_GPIO_Init_2 */
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+  /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
@@ -2672,8 +2691,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
