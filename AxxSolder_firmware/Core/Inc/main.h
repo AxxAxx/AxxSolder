@@ -58,6 +58,7 @@ typedef struct{
 	float startup_temp_is_previous_temp;
 	float three_button_mode;
 	float beep_at_set_temp;
+	float beep_tone;
 }Flash_values;
 
 /* USER CODE END Includes */

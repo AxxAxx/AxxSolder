@@ -12,5 +12,6 @@
 /* Function prototypes -------------------------------------------------------*/
 void beep(float buzzer_enabled);
 void beep_double(float buzzer_enabled);
+void set_tone(float frequency, float time_ms);
 
 #endif /* INC_BUZZER_H_ */
