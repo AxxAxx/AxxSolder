@@ -2,7 +2,7 @@
 
 ![Stand_Render](Geeboon_Stand_Render.png)
 
-This is an enclosure for AxxSolder which fits the Geeboon SDC02 handpiece stand.
+This is an enclosure for AxxSolder which fits the [Geeboon SDC02 handpiece stand](https://www.aliexpress.us/item/3256808635827814.html).
 
 It was [designed in FreeCAD](https://www.freecad.org)
 
