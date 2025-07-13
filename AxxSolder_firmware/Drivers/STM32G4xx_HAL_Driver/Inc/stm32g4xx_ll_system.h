@@ -208,6 +208,8 @@ extern "C" {
 #define LL_SYSCFG_CCMSRAMWRP_PAGE17        SYSCFG_SWPR_PAGE17 /*!< CCMSRAM Write protection page 17 */
 #define LL_SYSCFG_CCMSRAMWRP_PAGE18        SYSCFG_SWPR_PAGE18 /*!< CCMSRAM Write protection page 18 */
 #define LL_SYSCFG_CCMSRAMWRP_PAGE19        SYSCFG_SWPR_PAGE19 /*!< CCMSRAM Write protection page 19 */
+#endif /* SYSCFG_SWPR_PAGE10 */
+#if defined(SYSCFG_SWPR_PAGE20)
 #define LL_SYSCFG_CCMSRAMWRP_PAGE20        SYSCFG_SWPR_PAGE20 /*!< CCMSRAM Write protection page 20 */
 #define LL_SYSCFG_CCMSRAMWRP_PAGE21        SYSCFG_SWPR_PAGE21 /*!< CCMSRAM Write protection page 21 */
 #define LL_SYSCFG_CCMSRAMWRP_PAGE22        SYSCFG_SWPR_PAGE22 /*!< CCMSRAM Write protection page 22 */
@@ -220,7 +222,7 @@ extern "C" {
 #define LL_SYSCFG_CCMSRAMWRP_PAGE29        SYSCFG_SWPR_PAGE29 /*!< CCMSRAM Write protection page 29 */
 #define LL_SYSCFG_CCMSRAMWRP_PAGE30        SYSCFG_SWPR_PAGE30 /*!< CCMSRAM Write protection page 30 */
 #define LL_SYSCFG_CCMSRAMWRP_PAGE31        SYSCFG_SWPR_PAGE31 /*!< CCMSRAM Write protection page 31 */
-#endif /* SYSCFG_SWPR_PAGE10 */
+#endif /* SYSCFG_SWPR_PAGE20 */
 /**
   * @}
   */
@@ -261,7 +263,9 @@ extern "C" {
 #if defined(I2C2)
 #define LL_DBGMCU_APB1_GRP1_I2C2_STOP      DBGMCU_APB1FZR1_DBG_I2C2_STOP   /*!< The I2C2 SMBus timeout is frozen*/
 #endif /* I2C2 */
+#if defined(I2C3)
 #define LL_DBGMCU_APB1_GRP1_I2C3_STOP      DBGMCU_APB1FZR1_DBG_I2C3_STOP   /*!< The I2C3 SMBus timeout is frozen*/
+#endif /* I2C3 */
 #define LL_DBGMCU_APB1_GRP1_LPTIM1_STOP    DBGMCU_APB1FZR1_DBG_LPTIM1_STOP /*!< The counter clock of LPTIM1 is stopped when the core is halted*/
 /**
   * @}
@@ -902,7 +906,6 @@ __STATIC_INLINE void LL_SYSCFG_UnlockCCMSRAMWRP(void)
   WRITE_REG(SYSCFG->SKR, 0xCA);
   WRITE_REG(SYSCFG->SKR, 0x53);
 }
-
 /**
   * @}
   */

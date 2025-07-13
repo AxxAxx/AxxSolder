@@ -3,12 +3,12 @@
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
 Interested in purchasing an AxxSolder 3.1?  
-On my new website [5Dimensions](https://www.5dimensions.se/) you can purchase assembled and tested AxxSolder 3.1 boards with connectors and hardware.  
+On my website [5Dimensions](https://www.5dimensions.se/) you can purchase assembled and tested AxxSolder 3.1 boards with connectors and hardware.  
 <img src="./photos/5DIMENSIONS_Logo.png" alt="drawing" width="200"/>
 
 # AxxSolder Overview
 AxxSolder is a STM32 based soldering iron controller for JBC C115, C210 and C245 style cartridges.  
-Two different versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The AxxSodler hardware takes a DC input source of 9-24V OR a USB-C Power Delivery source. The recommended power supply is a Meanwell [LRS-150-24](#recommended-power-supply) which can power all compatible JBC irons at full power. If a 65W, 20V USB-PD supply is used then NT115 and T210 handles can be powered at full power and T245 at limited power. The power limiting is automatic and AxxSolder reads the power capability of the USB-PD source during the negotiating phase and reduces the output power accordingly.  
+Two different versions are designed around the same PCB and software - one soldering station based on the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html) and one portable version. The AxxSolder hardware takes a DC input source of 9-24V OR a USB-C Power Delivery source. The recommended power supply is a Meanwell [LRS-150-24](#recommended-power-supply) which can power all compatible JBC irons at full power. If a 65W, 20V USB-PD supply is used then NT115 and T210 handles can be powered at full power and T245 at limited power. The power limiting is automatic and AxxSolder reads the power capability of the USB-PD source during the negotiating phase and reduces the output power accordingly.  
 The software is written for the [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html) and implements a PID controller for temperature regulation, TFT display driver, sleep functions for when the handle is at rest and various user settings to name a few.  
 Enclosures for both station and portable versions are 3D printed and design files are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). A video showing the AxxSolder station can be found under [DEMO](#demo). A *bill of materials* (BOM) with individual component prices can be found under [/bom](https://github.com/AxxAxx/AxxSolder/tree/main/AxxSolder_hardware/bom).  
 ![coverphoto](./photos/AxxSolder_cover.jpg)
@@ -132,9 +132,6 @@ Failing to detect the handle type may cause permanent damage to the cartridge as
 
 # Firmware update
 Flashing or updating the firmware on the STM32 MCU can be done in two ways, by using a SWD programmer or directly via USB. 
-There is a bug in the new ST Programmer software version 2.17 throwing the error: "Error: Database: There's no active configuration for this device.  All the 3 configurations are disabled!" when trying to connect to the MCU.  
-Download version 2.15 instead:
-![STprogrammer_2_15](./photos/STprogrammer_2_15.png)
 
 ## SWD programmer
 These come in a variety of models and are available from several different places online. In the below example a [STLINK-V3MINIE](https://www.st.com/en/development-tools/stlink-v3minie.html) SWD programmer is used. The MCU is programmed by the following steps:

@@ -48,11 +48,11 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /**
-  * @brief STM32G4xx HAL Driver version number V1.2.3
+  * @brief STM32G4xx HAL Driver version number V1.2.5
   */
 #define __STM32G4xx_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
 #define __STM32G4xx_HAL_VERSION_SUB1   (0x02U) /*!< [23:16] sub1 version */
-#define __STM32G4xx_HAL_VERSION_SUB2   (0x03U) /*!< [15:8]  sub2 version */
+#define __STM32G4xx_HAL_VERSION_SUB2   (0x05U) /*!< [15:8]  sub2 version */
 #define __STM32G4xx_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
 #define __STM32G4xx_HAL_VERSION         ((__STM32G4xx_HAL_VERSION_MAIN << 24U)\
                                          |(__STM32G4xx_HAL_VERSION_SUB1 << 16U)\
@@ -594,7 +594,6 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void)
 @endverbatim
   * @{
   */
-
 /**
   * @brief  Start a hardware CCMSRAM erase operation.
   * @note   As long as CCMSRAM is not erased the CCMER bit will be set.
@@ -767,7 +766,6 @@ void HAL_SYSCFG_DisableIOSwitchVDD(void)
   CLEAR_BIT(SYSCFG->CFGR1, SYSCFG_CFGR1_ANASWVDD);
 }
 
-
 /** @brief  CCMSRAM page write protection enable
   * @param Page: This parameter is a long 32bit value and can be a value of @ref SYSCFG_CCMSRAMWRP
   * @note   write protection can only be disabled by a system reset
@@ -779,7 +777,6 @@ void HAL_SYSCFG_CCMSRAM_WriteProtectionEnable(uint32_t Page)
 
   SET_BIT(SYSCFG->SWPR, (uint32_t)(Page));
 }
-
 
 /**
   * @}
