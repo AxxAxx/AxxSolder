@@ -96,6 +96,9 @@ uint32_t interval_sensor_update_low_update = 100;
 uint32_t previous_millis_popup = 0;
 uint32_t interval_popup = 2000;
 
+uint32_t previous_stand_debounce = 0;
+uint32_t interval_stand_debounce = 100;
+
 /* Handles */
 enum handles {
 	NT115,
@@ -153,6 +156,10 @@ uint16_t ADC1_BUF[ADC1_BUF_LEN];
 
 /* RAW ADC from current measurement */
 uint16_t current_raw = 0;
+
+/* Stand toggle variables */
+uint8_t previous_stand_status = 0;
+uint8_t stand_debounced_flag = 0;
 
 /* Thermocouple temperature */
 float TC_temp = 0;
@@ -272,7 +279,7 @@ struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
 											.heater_current = 0,
 											.leak_current = 0,
 											.mcu_temperature = 0.0,
-											.in_stand = 0.0,
+											.in_stand = 1.0,
 											.handle1_sense  = 0.0,
 											.handle2_sense  = 0.0,
 											.current_state = SLEEP,
@@ -307,10 +314,11 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.startup_temp_is_previous_temp = 0,
 											.three_button_mode = 0,
 											.beep_at_set_temp = 0,
-											.beep_tone = 0};
+											.beep_tone = 0,
+											.momentary_stand = 0};
 
 /* List of names for settings menu */
-#define menu_length 29
+#define menu_length 30
 char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"Temp Offset °C      ",
 							"Standby Temp °C   ",
@@ -337,6 +345,7 @@ char menu_names[menu_length][30] = { "Startup Temp °C    ",
 							"3-button mode        ",
 							"Beep at set temp     ",
 							"Beep tone               ",
+							"Momentary Stand  ",
 							"-Load Default-       ",
 							"-Save and Reboot- ",
 							"-Exit no Save-        "};
@@ -667,7 +676,7 @@ void settings_menu(){
 					((float*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
 				}
 
-				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20) || (menu_cursor_position == 22) || (menu_cursor_position == 23) || (menu_cursor_position == 24)){
+				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20) || (menu_cursor_position == 22) || (menu_cursor_position == 23) || (menu_cursor_position == 24) || (menu_cursor_position == 26)){
 					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 2)), 2);
 				}
 				else if (menu_cursor_position == 9){
@@ -1261,13 +1270,41 @@ void handle_button_status(){
 /* Get the status of handle in/on stand to trigger SLEEP */
 void get_stand_status(){
 	uint8_t stand_status;
+
 	if(HAL_GPIO_ReadPin (GPIOA, STAND_INP_Pin) == 0){
 		stand_status = 1;
 	}
 	else{
 		stand_status = 0;
 	}
-	sensor_values.in_stand = Moving_Average_Compute(stand_status, &stand_sense_filterStruct); /* Moving average filter */
+
+	/* If the momentary stand function is not used */
+	if(flash_values.momentary_stand == 0){
+		sensor_values.in_stand = Moving_Average_Compute(stand_status, &stand_sense_filterStruct); /* Moving average filter */
+	}
+	/* If the momentary stand function is used, de-bounce the stand input */
+	else{
+		if(stand_status != previous_stand_status){ // If the stand status changed, due to noise or pressing:
+			previous_stand_debounce = HAL_GetTick(); // reset the debouncing timer
+			previous_stand_status = stand_status;
+			stand_debounced_flag = 0;
+		}
+
+		else if(!stand_debounced_flag && (HAL_GetTick() - previous_stand_debounce) > interval_stand_debounce){
+			stand_debounced_flag = 1;
+			if(stand_status == 1){
+				if(sensor_values.in_stand == 0){
+					beep(flash_values.buzzer_enabled);
+					sensor_values.in_stand = 1;
+				}
+				else{
+					beep_double(flash_values.buzzer_enabled);
+					sensor_values.in_stand = 0;
+				}
+			}
+	    }
+	}
+
 
 	/* If handle is in stand set state to STANDBY */
 	if(sensor_values.in_stand >= 0.2){

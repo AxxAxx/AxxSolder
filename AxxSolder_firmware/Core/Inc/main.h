@@ -59,6 +59,7 @@ typedef struct{
 	float three_button_mode;
 	float beep_at_set_temp;
 	float beep_tone;
+	float momentary_stand;
 }Flash_values;
 
 /* USER CODE END Includes */
