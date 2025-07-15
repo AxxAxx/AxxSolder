@@ -65,6 +65,7 @@ DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 
 /* General PID parameters */
 #define PID_MAX_OUTPUT 500
+#define FIXED_MEASURE_DUTY (PID_MAX_OUTPUT / 2)
 #define PID_UPDATE_INTERVAL 25
 #define PID_ADD_I_MIN_ERROR 75
 float PID_NEG_ERROR_I_MULT = 7;
@@ -155,7 +156,9 @@ char DISPLAY_buffer[40];
 uint16_t ADC1_BUF[ADC1_BUF_LEN];
 
 /* RAW ADC from current measurement */
+uint16_t adc2_dma_buffer[2]; // [0] = channel 2, [1] = channel 10
 uint16_t current_raw = 0;
+uint16_t current_leak = 0;
 
 /* Stand toggle variables */
 uint8_t previous_stand_status = 0;
@@ -354,7 +357,7 @@ char menu_names[menu_length][30] = { "Startup Temp °C    ",
 float PID_setpoint = 0.0;
 
 /* Flags for temp and current measurements */
-uint8_t current_measurement_requested = 0;
+volatile uint8_t current_measurement_requested = 0;
 uint8_t current_measurement_done = 1;
 uint8_t thermocouple_measurement_requested = 0;
 uint8_t thermocouple_measurement_done = 1;
@@ -388,6 +391,7 @@ Hysteresis_FilterTypeDef thermocouple_temperature_filtered_hysteresis;
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
 DMA_HandleTypeDef hdma_adc1;
+DMA_HandleTypeDef hdma_adc2;
 
 CRC_HandleTypeDef hcrc;
 
@@ -424,12 +428,12 @@ static void MX_TIM2_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_I2C1_Init(void);
-static void MX_TIM17_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM6_Init(void);
 static void MX_TIM16_Init(void);
+static void MX_TIM17_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -451,16 +455,28 @@ float min(float a, float b) {
 
 /* Returns the average of 100 readings of the index+3*n value in the ADC_buffer vector */
 float get_mean_ADC_reading_indexed(uint8_t index){
-	float ADC_filter_mean = 0;
-	for(int n=index;n<ADC1_BUF_LEN;n=n+3){
-		ADC_filter_mean += ADC1_BUF[n];
-	}
-	return ADC_filter_mean/(ADC1_BUF_LEN/3.0);
+
+	if (index > 2) return 0.0f;  // Incorrect Index Protection
+
+    float ADC_filter_mean = 0.0f;
+    int count = 0;
+
+    for (int n = index; n < ADC1_BUF_LEN; n += 3) {
+        ADC_filter_mean += ADC1_BUF[n];
+        count++;
+    }
+
+    return (count > 0) ? (ADC_filter_mean / (float)count) : 0.0f;
 }
 
 /* Function to get the hardware version based on version bit pins */
 uint8_t get_hw_version(){
-	return 3 + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_3_Pin) << 2) + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_2_Pin) << 1) + (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_1_Pin)); //version counting starts at version 3
+    uint8_t version_bits =
+        (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_3_Pin) << 2) |
+        (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_2_Pin) << 1) |
+        (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_1_Pin) << 0);
+
+    return 3 + version_bits;
 }
 
 /* Convert RGB colour to BRG color */
@@ -504,10 +520,11 @@ void get_heater_current(){
 }
 
 void get_thermocouple_temperature(){
-	/* Thermocouple outlier detection and filter */
+	/* --- Step 1: Outlier filter on raw ADC data --- */
 	TC_temp_from_ADC_previous = TC_temp_from_ADC;
 	TC_temp_from_ADC = get_mean_ADC_reading_indexed(1);
 	TC_temp_from_ADC_diff = fabs(TC_temp_from_ADC_previous - TC_temp_from_ADC);
+
 	if((TC_temp_from_ADC_diff > TC_OUTLIERS_THRESHOLD) && (TC_outliers_detected < 2)){
 		TC_outliers_detected++;
 		if(TC_outliers_detected < 2){
@@ -518,9 +535,10 @@ void get_thermocouple_temperature(){
 		TC_outliers_detected = 0;
 	}
 
-	/* Compute moving average of Thermocouple measurements */
+	/* --- Step 2: Moving average filter --- */
 	TC_temp = Moving_Average_Compute(TC_temp_from_ADC, &thermocouple_temperature_filter_struct); /* Moving average */
 
+	/* --- Step 3: Apply handle-specific compensation polynomial --- */
 	if(attached_handle == T210){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_T210 + TC_temp*TC_COMPENSATION_X1_T210 + TC_COMPENSATION_X0_T210;
 	}
@@ -531,7 +549,7 @@ void get_thermocouple_temperature(){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_NT115 + TC_temp*TC_COMPENSATION_X1_NT115 + TC_COMPENSATION_X0_NT115;
 	}
 
-	/* Adjust measured temperature to fit calibrated values */
+	/* --- Step 4: Adjust measured temperature to fit calibrated values */
 	if(sensor_values.thermocouple_temperature < 100){
 		sensor_values.thermocouple_temperature = sensor_values.thermocouple_temperature*(flash_values.temp_cal_100)/100.0f;
 		}
@@ -561,13 +579,18 @@ void get_thermocouple_temperature(){
 /* Sets the duty cycle of timer controlling the heater */
 void set_heater_duty(uint16_t dutycycle){
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, dutycycle);
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dutycycle*0.3);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint16_t)(dutycycle * 0.3f));
 }
 
 /* Update the duty cycle of timer controlling the heater PWM */
 void update_heater_PWM(){
-	float duty_cycle = sensor_values.requested_power*(sensor_values.max_power_watt*POWER_CONVERSION_FACTOR/sensor_values.bus_voltage);
-	set_heater_duty(clamp(duty_cycle, 0.0, PID_MAX_OUTPUT));
+	if (sensor_values.bus_voltage <= 0.0f) return;
+
+    float current = (sensor_values.max_power_watt * POWER_CONVERSION_FACTOR) / sensor_values.bus_voltage;
+    float duty_cycle = sensor_values.requested_power * current;
+
+    duty_cycle = clamp(duty_cycle, 0.0f, PID_MAX_OUTPUT);
+    set_heater_duty(duty_cycle);
 }
 
 /* Disable the duty cycle of timer controlling the heater PWM*/
@@ -663,6 +686,7 @@ void settings_menu(){
 
 		HAL_Delay(500);
 		while(menu_active == 1){
+
 			handle_button_status();
 			if(menu_level == 0){
 				TIM2->CNT = clamp(TIM2->CNT, 1000, 1000000);
@@ -1138,9 +1162,12 @@ void get_set_temperature(){
 
 /* Function to check if the delta temperature is larger than expected */
 void handle_delta_temperature(){
-	if((startup_done == 1) && ((sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous) > MAX_TC_DELTA_FAULTDETECTION)){
-		heater_off();
-		sensor_values.heater_current = 0;
+	if ((startup_done == 1) &&
+		    ( (sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous > MAX_TC_DELTA_FAULTDETECTION) ||
+		      (sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous < -MAX_TC_DELTA_FAULTDETECTION) )){
+		//heater_off();
+		sensor_values.requested_power = 0;
+		//sensor_values.heater_current = 0;
 		show_popup("No or Faulty tip!");
 		change_state(EMERGENCY_SLEEP);
 	}
@@ -1330,23 +1357,11 @@ void get_stand_status(){
 
 /* Automatically detect handle type, NT115, T210 or T245 based on HANDLE_INP_1_Pin and HANDLE_INP_2_Pin.*/
 void get_handle_type(){
-	uint8_t handle_status;
-	if(HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_1_Pin) == 0){
-		handle_status = 0;
-	}
-	else{
-		handle_status = 1;
-	}
-	sensor_values.handle1_sense = Moving_Average_Compute(handle_status, &handle1_sense_filterStruct); /* Moving average filter */
+	uint8_t handle1_status = (HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_1_Pin) == GPIO_PIN_RESET) ? 0 : 1;
+	sensor_values.handle1_sense = Moving_Average_Compute(handle1_status, &handle1_sense_filterStruct); /* Moving average filter */
 
-	if(HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_2_Pin) == 0){
-		handle_status = 0;
-	}
-	else{
-		handle_status = 1;
-	}
-	sensor_values.handle2_sense = Moving_Average_Compute(handle_status, &handle2_sense_filterStruct); /* Moving average filter */
-
+	uint8_t handle2_status = (HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_2_Pin) == GPIO_PIN_RESET) ? 0 : 1;
+	sensor_values.handle2_sense = Moving_Average_Compute(handle2_status, &handle2_sense_filterStruct); /* Moving average filter */
 
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
@@ -1390,13 +1405,16 @@ void set_handle_values(){
 }
 
 void beep_at_set_temp(){
-	if(flash_values.beep_at_set_temp == 1){
-		if(beeped_at_set_temp == 0){
-			if((sensor_values.thermocouple_temperature_filtered > (sensor_values.set_temperature - 5)) && (sensor_values.thermocouple_temperature_filtered < (sensor_values.set_temperature + 5))){
-				beeped_at_set_temp = 1;
-				beep_double(flash_values.buzzer_enabled);
-			}
-		}
+    if (!flash_values.beep_at_set_temp) return;
+    if (beeped_at_set_temp) return;
+
+    float temp = sensor_values.thermocouple_temperature_filtered;
+    float target = sensor_values.set_temperature;
+    float delta = fabsf(temp - target);
+
+    if (delta <= 5.0f){
+		beeped_at_set_temp = 1;
+		beep_double(flash_values.buzzer_enabled);
 	}
 }
 
@@ -1422,11 +1440,24 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 
 /* Timer Callbacks */
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim){
-	if (((htim == &htim1) && (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)) && (current_measurement_requested == 1)){
-		current_measurement_requested = 0;
-		current_measurement_done = 0;
-		HAL_ADC_Start_IT(&hadc2);
-	}
+    if (htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+    {
+        if (current_measurement_requested == 1 && current_measurement_done == 0)
+        {
+        	uint32_t duty_now = __HAL_TIM_GET_COMPARE(&htim1, TIM_CHANNEL_3);
+
+        	if ( duty_now == FIXED_MEASURE_DUTY )
+        	{   // check: is the level high on HEATER_Pin (CH3)
+        		if ( (HAL_GPIO_ReadPin(HEATER_GPIO_Port, HEATER_Pin) == GPIO_PIN_SET) )
+        		{
+        			//HAL_GPIO_WritePin(USR_1_GPIO_Port, USR_1_Pin, GPIO_PIN_SET);
+        			current_measurement_requested = 0;
+
+        			HAL_ADC_Start_DMA(&hadc2, (uint32_t*)adc2_dma_buffer, 2);
+        		}
+        	}
+        }
+    }
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
@@ -1506,17 +1537,27 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 /* ADC conversion completed Callbacks */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	if ((hadc->Instance == ADC1) && (thermocouple_measurement_done == 0)){
+		//HAL_GPIO_WritePin(USR_1_GPIO_Port, USR_1_Pin, GPIO_PIN_SET);
 		HAL_ADC_Stop_DMA(&hadc1);
+		//HAL_GPIO_WritePin(USR_1_GPIO_Port, USR_1_Pin, GPIO_PIN_RESET);
+
 		get_thermocouple_temperature();
 		update_heater_PWM();
 		thermocouple_measurement_done = 1;
+
 	}
-	if ((hadc->Instance == ADC2) && (current_measurement_done == 0)){
-		sensor_values.leak_current = HAL_ADC_GetValue(&hadc2);
-		current_raw = HAL_ADC_GetValue(&hadc2);
-		update_heater_PWM();
-		current_measurement_done = 1;
-	}
+   	if ((hadc->Instance == ADC2) && (current_measurement_done == 0))
+    {
+        current_measurement_done = 1;
+
+   		current_leak = adc2_dma_buffer[0];  // channel 2
+        current_raw  = adc2_dma_buffer[1];  // channel 10
+
+        sensor_values.leak_current = current_leak;
+
+        update_heater_PWM();  //
+
+    }
 }
 
 /* ADC watchdog Callback */
@@ -1628,7 +1669,7 @@ int main(void)
 	Moving_Average_Init(&requested_power_filtered_filter_struct,(uint32_t)20);
 	Moving_Average_Init(&mcu_temperature_filter_struct,(uint32_t)100);
 	Moving_Average_Init(&input_voltage_filterStruct,(uint32_t)25);
-	Moving_Average_Init(&current_filterStruct,(uint32_t)5);
+	Moving_Average_Init(&current_filterStruct,(uint32_t)2);
 	Moving_Average_Init(&stand_sense_filterStruct,(uint32_t)20);
 	Moving_Average_Init(&handle1_sense_filterStruct,(uint32_t)20);
 	Moving_Average_Init(&handle2_sense_filterStruct,(uint32_t)20);
@@ -1746,6 +1787,7 @@ int main(void)
 
 	while (1){
 		if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
+
 			get_stand_status();
 			get_handle_type();
 			set_handle_values();
@@ -1821,10 +1863,15 @@ int main(void)
 
 		/* Detect if a tip is present by sending a short voltage pulse and sense current */
 		if (flash_values.current_measurement == 1){
-			if(HAL_GetTick() - previous_measure_current_update >= interval_measure_current){
-				if(thermocouple_measurement_done == 1){ //Only take current measurement if thermocouple measurement is not ongoing
+
+			if (HAL_GetTick() - previous_measure_current_update >= interval_measure_current) {
+				if (thermocouple_measurement_done == 1) {
+
+					set_heater_duty(FIXED_MEASURE_DUTY);
+					// Force the timer to update immediately so that the new value takes effect immediately
+					htim1.Instance->EGR |= TIM_EGR_UG;  // Apply duty cycle immediately
+
 					current_measurement_done = 0;
-					set_heater_duty(PID_MAX_OUTPUT/2);
 					current_measurement_requested = 1;
 					previous_measure_current_update = HAL_GetTick();
 				}
@@ -2021,7 +2068,7 @@ static void MX_ADC2_Init(void)
   hadc2.Init.DiscontinuousConvMode = DISABLE;
   hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc2.Init.DMAContinuousRequests = DISABLE;
+  hadc2.Init.DMAContinuousRequests = ENABLE;
   hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc2.Init.OversamplingMode = DISABLE;
   if (HAL_ADC_Init(&hadc2) != HAL_OK)
@@ -2620,6 +2667,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+  /* DMA1_Channel4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
 
 }
 
