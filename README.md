@@ -73,7 +73,7 @@ The PCBs are designed in KiCad and manufactured by [PCBWay](https://www.pcbway.c
 Printed Circuit Boards with assembled components are shown in the image below.
 ![PCB_image](./photos/PCB_image.jpg)
 A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown below. 
-![PCB_3D](./photos/PCB_3D.jpg)
+![PCB_3D](./photos/AxxSolder_V_3_0_PCB_3D.jpg)
 
 # Software Version History and Hardware Compatibility
 | Version | Date  | Hardware Compatibility |
