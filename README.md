@@ -106,8 +106,9 @@ The preferred setup is to pair AxxSolder with the [JBC ADS stand](https://www.jb
 The JBC ADS stand comes with a silicone cable fitted with two Binder 99-0621-00-07 connectors. In order to use this cable a Binder 99-0624-00-07 is mounted into the AxxSolder enclosure and wired as the image below:  
 ![AxxSolder_station](./photos/Station_connections.jpg)  
 By default, the stand separates the two signals coming from the "tool rest position" and the "tip change position" and does NOT have two separate connections for tip sensing 1 and 2 as is needed if NT115, T210 and T245 handles should all be automatically detected. Therefore, a modification is done to the PCB inside the JBC ADS stand in order to combine the "tool rest position" and the "tip change position" sense into one connection and separate the two tip sense connections. This is shown in the image above. The stand is held together with two PH0 screws from the side.  
-NOTE: This modification of the stand is NOT necessary if you know that you will not be using NT115 handles and only require automatic detection of T210 and T245 handles.  
-The JBC ADS stand is a expensice piece and thankfully there are many alternatives online for the one who wants to save some money. The community on the AxxSolder Discord channel has created many enclosures for alternative stands.
+NOTE: This modification of the stand is NOT necessary if you know that you will not be using NT115 handles and only require automatic detection of T210 and T245 handles. 
+ 
+The JBC ADS stand is an expensive piece and thankfully there are many alternatives online for the one who wants to save some money. The community on the AxxSolder Discord channel has created many enclosures for alternative stands such as the GEEBOON SDC02, and some of the AiXun stands. Some of the models are availible under [Alternative stands](https://github.com/AxxAxx/AxxSolder/tree/main/CAD/Alternative_enclosures_and_designs) .
 
 # AxxSolder Portable
 It is often nice to have a compact and portable soldering iron controller for when you are away from your comfortable desk. A neat powerful package with the same capabilities as your main soldering station. This is why AxxSolder Portable was designed. The only difference between AxxSolder station and Portable is the enclosure.  
