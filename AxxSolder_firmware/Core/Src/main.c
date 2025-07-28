@@ -1134,6 +1134,7 @@ void show_popup(char *text){
 
 void LCD_draw_earth_fault_popup(){
 	heater_off();
+	sensor_values.requested_power = 0;
 
 	UG_FillFrame(10, 50, 205, 205, RGB_to_BRG(C_ORANGE));
 	UG_FillFrame(15, 55, 200, 200, RGB_to_BRG(C_WHITE));
