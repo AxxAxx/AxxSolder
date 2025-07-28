@@ -32,6 +32,7 @@
 #include "stusb4500.h"
 #include "buzzer.h"
 #include "debug.h"
+#include "menu_settings.h"
 #include <math.h>
 #include <stdio.h>
 #include <float.h>
@@ -100,37 +101,11 @@ uint32_t interval_popup = 2000;
 uint32_t previous_stand_debounce = 0;
 uint32_t interval_stand_debounce = 100;
 
-/* Handles */
-enum handles {
-	NT115,
-	T210,
-	T245
-} attached_handle;
-
-/* power sources */
-typedef enum {
-	POWER_DC,
-	POWER_USB,
-	POWER_BAT //Future feature
-}power_source_t;
-power_source_t power_source = POWER_DC;
-
-/* states for runtime switch */
-typedef enum {
-    RUN,
-	STANDBY,
-	SLEEP,
-	EMERGENCY_SLEEP,
-	HALTED
-} mainstates;
-
-/* states for cartridge */
-typedef enum {
-	ATTACHED,
-	DETACHED
-} cartridge_state_t;
 cartridge_state_t cartridge_state = ATTACHED;
 cartridge_state_t previous_cartridge_state = ATTACHED;
+
+/* power sources */
+power_source_t power_source = POWER_DC;
 
 uint8_t sleep_state_written_to_LCD = 0;
 uint8_t standby_state_written_to_LCD = 0;
@@ -207,10 +182,6 @@ uint16_t TC_outliers_detected = 0;
 #define T245_MAX_POWER 	130
 #define MAX_POWER 		150
 
-/* Min and Max selectable values */
-#define MIN_SELECTABLE_TEMPERATURE 20
-#define MAX_SELECTABLE_TEMPERATURE 450
-
 /* TC Compensation constants */
 #define TC_COMPENSATION_X2_NT115 (5.1026665462522864e-05)
 #define TC_COMPENSATION_X1_NT115 0.42050803230712813
@@ -250,6 +221,8 @@ uint8_t UART_transmit_buffer[MAX_BUFFER_LEN];
 uint8_t UART_packet_index = 0;
 uint8_t UART_packet_length = 0;
 
+enum handles attached_handle;
+
 /* Struct to hold sensor values */
 struct sensor_values_struct {
 	float set_temperature;
@@ -272,23 +245,25 @@ struct sensor_values_struct {
 };
 
 /* Struct to hold sensor values */
-struct sensor_values_struct sensor_values  = {.set_temperature = 0.0,
-        									.thermocouple_temperature = 0.0,
-        									.thermocouple_temperature_previous = 0.0,
-											.thermocouple_temperature_filtered = 0,
-											.requested_power = 0.0,
-											.requested_power_filtered = 0.0,
-											.bus_voltage = 0.0,
-											.heater_current = 0,
-											.leak_current = 0,
-											.mcu_temperature = 0.0,
-											.in_stand = 1.0,
-											.handle1_sense  = 0.0,
-											.handle2_sense  = 0.0,
-											.current_state = SLEEP,
-											.previous_state = SLEEP,
-											.max_power_watt = 0,
-											.USB_PD_power_limit = DBL_MAX};
+sensor_values_struct sensor_values = {
+    .set_temperature = 0.0f,
+    .thermocouple_temperature = 0.0f,
+    .thermocouple_temperature_previous = 0.0f,
+    .thermocouple_temperature_filtered = 0.0f,
+    .requested_power = 0.0f,
+    .requested_power_filtered = 0.0f,
+    .bus_voltage = 0.0f,
+    .heater_current = 0.0f,
+    .leak_current = 0,
+    .mcu_temperature = 0.0f,
+    .in_stand = 0.0f,
+    .handle1_sense = 0.0f,
+    .handle2_sense = 0.0f,
+    .current_state = SLEEP,
+    .previous_state = SLEEP,
+    .max_power_watt = 0.0f,
+    .USB_PD_power_limit = DBL_MAX
+};
 
 /* Struct to hold flash values */
 Flash_values flash_values;
@@ -320,38 +295,6 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.beep_tone = 0,
 											.momentary_stand = 0};
 
-/* List of names for settings menu */
-#define menu_length 30
-char menu_names[menu_length][30] = { "Startup Temp °C    ",
-							"Temp Offset °C      ",
-							"Standby Temp °C   ",
-							"Standby Time [min]  ",
-							"Sleep Time [min]    ",
-							"Buzzer Enabled      ",
-							"Preset Temp 1 °C   ",
-							"Preset Temp 2 °C   ",
-							"GPIO4 ON at run    ",
-							"Screen Rotation     ",
-							"Limit Power [W]     ",
-							"I Measurement       ",
-							"Startup Beep         ",
-							"Temp in Celsius     ",
-							"Temp cal 100         ",
-							"Temp cal 200         ",
-							"Temp cal 300         ",
-							"Temp cal 350         ",
-							"Temp cal 400         ",
-							"Temp cal 450         ",
-							"Serial DEBUG        ",
-							"Disp Temp. filter    ",
-							"Start at prev. temp ",
-							"3-button mode        ",
-							"Beep at set temp     ",
-							"Beep tone               ",
-							"Momentary Stand  ",
-							"-Load Default-       ",
-							"-Save and Reboot- ",
-							"-Exit no Save-        "};
 
 /* PID data */
 float PID_setpoint = 0.0;
@@ -608,189 +551,6 @@ float convert_temperature(float temperature){
 	}
 }
 
-/* Function to left align a string from float */
-void left_align_float(char* str, float number, int8_t len)
-	{
-		char tempstring[len];
-		memset(&tempstring, '\0', len);
-		sprintf(tempstring, "%.0f", number);
-
-		if(number < -99.5){
-			;
-		}
-		else if(number < -9.5){
-			tempstring[3] = 32;
-			tempstring[4] = 32;
-		}
-		else if(number < 0){
-			tempstring[2] = 32;
-			tempstring[3] = 32;
-			tempstring[4] = 32;
-			tempstring[5] = 32;
-		}
-		else if(number < 9.5){
-			tempstring[1] = 32;
-			tempstring[2] = 32;
-			tempstring[3] = 32;
-			tempstring[4] = 32;
-			tempstring[5] = 32;
-			tempstring[6] = 32;
-		}
-		else if(number < 99.5){
-			tempstring[2] = 32;
-			tempstring[3] = 32;
-			tempstring[4] = 32;
-			tempstring[5] = 32;
-		}
-		else if(number < 999.5){
-			tempstring[3] = 32;
-			tempstring[4] = 32;
-		}
-		strcpy(str, tempstring);
-	}
-
-void settings_menu(){
-	change_state(EMERGENCY_SLEEP);
-	sensor_values.requested_power = 0; //Turn of the heating before going into settings menu
-
-	/* If SW_1 is pressed during startup - Show SETTINGS and allow to release button. */
-	if (HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){
-		settings_menu_active = 1;
-
-        UG_FillScreen(RGB_to_BRG(C_BLACK));
-		char str[32];
-		memset(&str, '\0', strlen(str));
-		if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
-			sprintf(str, "fw: %d.%d.%d     hw: %d", fw_version_major,fw_version_minor, fw_version_patch, get_hw_version());
-			LCD_PutStr(6, 300, str, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_BLACK));
-		}
-		else{
-			sprintf(str, "fw: %d.%d.%d     hw: %d", fw_version_major,fw_version_minor, fw_version_patch, get_hw_version());
-			LCD_PutStr(6, 215, str, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_BLACK));
-		}
-
-		TIM2->CNT = 1000;
-		uint16_t menu_cursor_position = 0;
-		uint16_t old_menu_cursor_position = 0;
-		uint16_t menu_start = 0;
-		uint16_t menu_level = 0;
-		uint16_t menu_active = 1;
-		float old_value = 0;
-
-		LCD_PutStr(70, 15, "SETTINGS", FONT_arial_20X23, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
-		LCD_DrawLine(0,40,240,40,RGB_to_BRG(C_YELLOW));
-		LCD_DrawLine(0,41,240,41,RGB_to_BRG(C_YELLOW));
-		LCD_DrawLine(0,42,240,42,RGB_to_BRG(C_YELLOW));
-
-		while(HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1){} // Wait until user releases button
-
-		HAL_Delay(500);
-		while(menu_active == 1){
-
-			handle_button_status();
-			if(menu_level == 0){
-				TIM2->CNT = clamp(TIM2->CNT, 1000, 1000000);
-				menu_cursor_position = (TIM2->CNT - 1000) / 2;
-			}
-			if (menu_level == 1){
-				if (menu_cursor_position == 10){
-					((float*)&flash_values)[menu_cursor_position] = (float)old_value + round(((float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position)) * 5;
-				}
-				else{
-					((float*)&flash_values)[menu_cursor_position] = (float)old_value + (float)(TIM2->CNT - 1000.0) / 2.0 - (float)menu_cursor_position;
-				}
-
-				if ((menu_cursor_position == 5) || (menu_cursor_position == 8) || (menu_cursor_position == 11) || (menu_cursor_position == 12) || (menu_cursor_position == 13) || (menu_cursor_position == 20) || (menu_cursor_position == 22) || (menu_cursor_position == 23) || (menu_cursor_position == 24) || (menu_cursor_position == 26)){
-					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 2)), 2);
-				}
-				else if (menu_cursor_position == 9){
-					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 4)), 4);
-				}
-				else if (menu_cursor_position == 21){
-					((float*)&flash_values)[menu_cursor_position] = 1 + fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 10)), 10);
-				}
-				else if (menu_cursor_position == 25){
-					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), 4)), 4);
-				}
-				else if (menu_cursor_position == 1){
-					((float*)&flash_values)[menu_cursor_position] = round(((float*)&flash_values)[menu_cursor_position]);
-				}
-				else if ((menu_cursor_position == 0)  || (menu_cursor_position == 1) || (menu_cursor_position == 2) || (menu_cursor_position == 6) || (menu_cursor_position == 7)){
-					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), MAX_SELECTABLE_TEMPERATURE + 1)), MAX_SELECTABLE_TEMPERATURE + 1);
-				}
-				else if (menu_cursor_position == 10){
-					((float*)&flash_values)[menu_cursor_position] = fmod(round(fmod(fabs(((float*)&flash_values)[menu_cursor_position]), MAX_POWER + 5)), MAX_POWER + 5);
-				}
-				else {
-					((float*)&flash_values)[menu_cursor_position] = fabs(((float*)&flash_values)[menu_cursor_position]);
-				}
-			}
-
-			if(menu_cursor_position > menu_length-1){
-							menu_cursor_position = menu_length-1;
-							TIM2->CNT = 1000 + (menu_length-1)*2;
-			}
-
-			if(menu_cursor_position >= 6){
-				menu_start = menu_cursor_position-6;
-			}
-			else{
-				menu_start = 0;
-			}
-
-			if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position < menu_length-3)){
-				if(menu_level == 0){
-					old_value = ((float*)&flash_values)[menu_cursor_position];
-					old_menu_cursor_position = menu_cursor_position;
-				}
-				if(menu_level == 1){
-					TIM2->CNT = old_menu_cursor_position*2 + 1000;
-				}
-
-				menu_level = abs(menu_level-1);
-				HAL_Delay(200);
-			}
-			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-1)){
-				menu_active = 0;
-				HAL_NVIC_SystemReset();
-			}
-			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-2)){
-				menu_active = 0;
-				FlashWrite(&flash_values);
-				HAL_NVIC_SystemReset();
-			}
-			else if((HAL_GPIO_ReadPin (GPIOB, SW_1_Pin) == 1) && (menu_cursor_position == menu_length-3)){
-				flash_values = default_flash_values;
-			}
-
-			for(int i = menu_start;i<=menu_start+6;i++){
-
-				if((i == menu_cursor_position) && (menu_level == 0)){
-					LCD_PutStr(5, 45+(i-menu_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
-				}
-				else{
-					LCD_PutStr(5, 45+(i-menu_start)*25, menu_names[i], FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-				}
-
-				char string[10];
-				memset(&string, '\0', 10);
-				if(i < menu_length-3){
-					if((i == menu_cursor_position) && (menu_level == 1)){
-						left_align_float(string, (((float*)&flash_values)[i]), strlen(string));
-						LCD_PutStr(190, 45+(i-menu_start)*25, string, FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
-					}
-					else{
-						left_align_float(string, (((float*)&flash_values)[i]), strlen(string));
-						LCD_PutStr(190, 45+(i-menu_start)*25, string, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-					}
-				}
-				if(i >= menu_length-3){
-					LCD_PutStr(190, 45+(i-menu_start)*25, "        ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-				}
-			}
-		}
-	}
-}
 
 void update_display(){
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
@@ -1657,9 +1417,6 @@ int main(void)
 
 	/* Set startup state */
 	change_state(HALTED);
-
-	/* start settings menu */
-	settings_menu();
 
 	/* Set initial encoder timer value */
 	TIM2->CNT = flash_values.startup_temperature;
