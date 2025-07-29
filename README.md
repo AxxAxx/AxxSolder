@@ -23,7 +23,6 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 - [DEMO](#demo)
 - [Schematic](#schematic)
 - [PCB](#pcb)
-- [Software Version History and Hardware Compatibility](#software-version-history-and-hardware-compatibility)
 - [AxxSolder Station](#axxsolder-station)
 - [AxxSolder Portable](#axxsolder-portable)
 - [Recommended power supply for tip grounding](#recommended-power-supply-for-tip-grounding)
@@ -74,31 +73,6 @@ Printed Circuit Boards with assembled components are shown in the image below.
 ![PCB_image](./photos/PCB_image.jpg)
 A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown below. 
 ![PCB_3D](./photos/AxxSolder_V_3_0_PCB_3D.jpg)
-
-# Software Version History and Hardware Compatibility
-| Version | Date  | Hardware Compatibility |
-|---------|------|----------------------|
-|[v3.4.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.4.0)|Mar 19, 2025|V3.*|
-|[v3.3.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.3.1)|Jan 18, 2025|V3.*|
-|[v3.3.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.3.0)|Jan 04, 2025|V3.*|
-|[v3.2.5](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.5)|Jan 02, 2025|V3.*|
-|[v3.2.4](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.4)|Dec 26, 2024|V3.*|
-|[v3.2.3](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.3)|Dec 05, 2024|V3.*|
-|[v3.2.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.2)|Nov 15, 2024|V3.*|
-|[v3.2.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.1)|Sep 21, 2024|V3.*|
-|[v3.2.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.2.0)|Aug 13, 2024|V3.*|
-|[v3.1.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.1.0)|Jun 5, 2024|V3.*|
-|[v3.0.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Apr 25, 2024|V3.*|
-|[v3.0.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.1)|Mar 26, 2024|V3.*|
-|[v3.0.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v3.0.0)|Mar 02, 2024|V3.*|
-|[v2.2.4](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.2)|Dec 11, 2023|V2.*|
-|[v2.2.4](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.2)|Nov 28, 2023|V2.*|
-|[v2.2.3](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.2)|Nov 25, 2023|V2.*|
-|[v2.2.2](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.2)|Oct 24, 2023|V2.*|
-|[v2.2.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.2.0)|Oct 20, 2023|V2.*|
-|[v2.1.3-revC](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.3-revC)|Oct 16, 2023|V2.*|
-|[v2.1.1](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.1)|Oct 7, 2023|V2.*|
-|[v2.1.0](https://github.com/AxxAxx/AxxSolder/releases/tag/v2.1.0)|Oct 7, 2023|V2.*|
 
 # AxxSolder Station
 The preferred setup is to pair AxxSolder with the [JBC ADS stand](https://www.jbctools.com/ad-sf-stand-for-t210-t245-handles-product-2018.html). This makes a very nice, compact and powerful soldering station. The JBC ADS stand is paired with a custom 3D printed enclosure for AxxSolder and the PCB is mounted with two mounting brackets. All 3D printed parts are available under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD). 
