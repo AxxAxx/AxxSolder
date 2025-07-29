@@ -150,26 +150,28 @@ To access the user settings the user holds down the encoder button at start-up o
 |Standby Temp °C|Temperature to go to after handle is set in stand|deg C|150|
 |Standby Time [min]|Time for which standby temperature is held before cooling down|minutes|10|
 |Sleep Time [min]|Time that the iron can be ON before cooling down (safety feature)|minutes|30|
-|Buzzer Enable|Enable or Disable the buzzer|ON/OFF|ON|
+|Buzzer Enable|Enable or Disable the buzzer|YES/NO|YES|
 |Preset Temp 1 °C|Preset temperature for button 1|deg C|330|
 |Preset Temp 2 °C|Preset temperature for button 2|deg C|430|
-|GPIO4 ON at run|Enable 3.3V output on GPIO4 when the iron is in run mode|ON/OFF|OFF|
-|Screen rotation|Rotate the screen|"0"=-180 deg, "1"=-90 deg, "2"=0 deg, "3"=90 deg|2|
+|GPIO4 ON at run|Enable 3.3V output on GPIO4 when the iron is in run mode|YES/NO|NO|
+|Screen rotation|Rotate the screen|0 deg, 90 deg, 180 deg, 270 deg|0 deg|
 |Limit Power [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
-|I measurement|Measure the heater current|ON/OFF|ON
-|Startup beep|Beep after startup|ON/OFF|ON
-|Temp in celcius|Show temperatures in Celcius and not Fahrenheit|ON/OFF|ON
+|I measurement|Measure the heater current|YES/NO|YES|
+|Startup beep|Beep after startup|YES/NO|YES|
+|Temp in celcius|Show temperatures in Celcius and not Fahrenheit|YES/NO|YES|
 |Temp cal 100 °C|Actual temperature at 100 °C|deg C|100|
 |Temp cal 200 °C|Actual temperature at 200 °C|deg C|200|
 |Temp cal 300 °C|Actual temperature at 300 °C|deg C|300|
 |Temp cal 350 °C|Actual temperature at 350 °C|deg C|350|
 |Temp cal 400 °C|Actual temperature at 400 °C|deg C|400|
 |Temp cal 450 °C|Actual temperature at 450 °C|deg C|450|
-|Serial DEBUG|Print debug over serial|ON/OFF|OFF|
+|Serial DEBUG|Print debug over serial|YES/NO|NO|
 |Displayed temp filter|Moving average filter length|Lenght|5|
-|Startup temp is previous temp|Startup temp is previous used temp|ON/OFF|OFF|
-|3-button mode|Use 3-button mode|ON/OFF|OFF|
-|Beep at set temp|Beep at set temp|ON/OFF|OFF|
+|Startup temp is previous temp|Startup temp is previous used temp|YES/NO|NO|
+|3-button mode|Use 3-button mode|YES/NOF|NO|
+|Beep at set temp|Beep at set temp|YES/NO|YES|
+|Beep tone|Beep tone|0,1,2,3|0|
+|Momentary stand|use the stand as momentary switch|YES/NO|NO|
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
