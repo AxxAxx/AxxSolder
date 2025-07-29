@@ -38,7 +38,7 @@ char menu_names[menu_length][30] = {
 };
 
 
-redraw_menu_screen = 0;
+uint8_t redraw_menu_screen = 0;
 
 /* Function to left align a string from float */
 void left_align_float(char* str, float number, int8_t len)
