@@ -201,7 +201,7 @@ uint16_t TC_outliers_detected = 0;
 #define Avg_Slope 	0.0025 			// 2.5mV from datasheet
 
 /* Largest delta temperature before detecting a faulty or missing cartridge */
-#define MAX_TC_DELTA_FAULTDETECTION 25
+#define MAX_TC_DELTA_FAULTDETECTION 50
 
 /* Define time for long button press */
 #define BTN_LONG_PRESS 15 //*50ms (htim16 interval) --> 15 = 750ms
@@ -937,8 +937,8 @@ void handle_delta_temperature(){
 		//heater_off();
 		sensor_values.requested_power = 0;
 		//sensor_values.heater_current = 0;
-		show_popup("No or Faulty tip!");
 		change_state(EMERGENCY_SLEEP);
+		//show_popup("No or Faulty tip!");
 	}
 	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
 }
@@ -1314,6 +1314,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		update_heater_PWM();
 		thermocouple_measurement_done = 1;
 
+		handle_delta_temperature();
+
 	}
    	if ((hadc->Instance == ADC2) && (current_measurement_done == 0))
     {
@@ -1552,6 +1554,7 @@ int main(void)
 	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
 
 	while (1){
+
 		if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
 
 			get_stand_status();
@@ -1561,7 +1564,6 @@ int main(void)
 			handle_button_status();
 			handle_emergency_shutdown();
 			handle_cartridge_presence();
-			//handle_delta_temperature();
 			previous_sensor_update_high_update = HAL_GetTick();
 		}
 
