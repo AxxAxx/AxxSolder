@@ -47,9 +47,7 @@ enum handles {
 	NT115,
 	T210,
 	T245,
-	//////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	No_name
-	//////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 };
 // extern declaration (only a declaration)
 extern enum handles attached_handle;
@@ -193,8 +191,6 @@ extern float TC_temp;
 extern uint16_t current_raw;
 
 extern uint16_t current_leak;
-
-extern bool Flag_ALARM;
 
 /* USER CODE END Includes */
 

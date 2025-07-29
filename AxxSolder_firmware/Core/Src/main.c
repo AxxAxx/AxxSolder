@@ -396,7 +396,14 @@ float min(float a, float b) {
   return a < b ? a : b;
 }
 
-/* Returns the average of 100 readings of the index+3*n value in the ADC_buffer vector */
+/**
+ * @brief Returns the average value of 100 readings at index + 3*n in the ADC_buffer vector.
+ * It is assumed that ADC1_BUF contains data from 3 channels, collected sequentially.
+ * For example, if index == 0, elements 0, 3, 6, ... are used;
+ * if index == 1, then 1, 4, 7, ... and so on.
+ * @param index Channel index (0, 1, or 2)
+ * @return Average value for that channel
+ */
 float get_mean_ADC_reading_indexed(uint8_t index){
 
 	if (index > 2) return 0.0f;  // Incorrect Index Protection
@@ -412,7 +419,17 @@ float get_mean_ADC_reading_indexed(uint8_t index){
     return (count > 0) ? (ADC_filter_mean / (float)count) : 0.0f;
 }
 
-/* Function to get the hardware version based on version bit pins */
+/**
+ * @brief Retrieves the hardware version of the device based on the state of 3 input pins.
+ * The states of the VERSION_BIT_1..3 pins form a 3-bit number:
+ *     VERSION_BIT_3 - most significant bit (MSB)
+ *     VERSION_BIT_2 - middle bit
+ *     VERSION_BIT_1 - least significant bit (LSB)
+ *
+ * Version numbering starts from 3, i.e., version = 3 + [bit value]
+ *
+ * @return uint8_t Hardware version number (3..10)
+ */
 uint8_t get_hw_version(){
     uint8_t version_bits =
         (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_3_Pin) << 2) |
@@ -429,19 +446,23 @@ uint16_t RGB_to_BRG(uint16_t color){
 
 /* Function to change the main state */
 void change_state(mainstates new_state){
+    // Save the previous state
 	sensor_values.previous_state = sensor_values.current_state;
+	// Set the new current state
 	sensor_values.current_state = new_state;
-	// If transitioning to RUN and temperature should be saved for use as start-up temp
+    // If transitioning TO RUN STATE and the current temperature should be saved as the startup temperature
 	if((sensor_values.previous_state != RUN) && (sensor_values.current_state == RUN) && (flash_values.startup_temp_is_previous_temp == 1)){
 		flash_values.startup_temperature = sensor_values.set_temperature;
 		FlashWrite(&flash_values);
 	}
+	// Enable GPIO4 when transitioning to RUN, if the corresponding setting is active
 	if((sensor_values.current_state == RUN) && (flash_values.GPIO4_ON_at_run == 1)){
-		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_SET); // Set the USR_4 output to high level
 	}
 	else{
-		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, USR_4_Pin, GPIO_PIN_RESET); // Set the USR_4 output to low level
 	}
+    // Reset the beep flag upon reaching the temperature — only when entering RUN
     if((sensor_values.previous_state != RUN) && (sensor_values.current_state == RUN)){
             beeped_at_set_temp = 0;
     }
@@ -919,7 +940,6 @@ void get_set_temperature(){
 			sensor_values.set_temperature = (uint16_t)(TIM2->CNT);
 		}
 		else{
-			//sensor_values.set_temperature = (uint16_t)(TIM2->CNT / 2) * 2;
 			sensor_values.set_temperature = (uint16_t)((TIM2->CNT) & ~1);
 		}
 		// Reset the flag if the set temperature has changed, so it beeps when reached
@@ -1065,14 +1085,8 @@ void handle_button_status(){
 
 /* Get the status of handle in/on stand to trigger SLEEP */
 void get_stand_status(){
-	uint8_t stand_status;
-
-	if(HAL_GPIO_ReadPin (GPIOA, STAND_INP_Pin) == 0){
-		stand_status = 1;
-	}
-	else{
-		stand_status = 0;
-	}
+	// Read stand input: low level = handle is in the stand
+	uint8_t stand_status = (HAL_GPIO_ReadPin(GPIOA, STAND_INP_Pin) == GPIO_PIN_RESET) ? 1 : 0;
 
 	/* If the momentary stand function is not used */
 	if(flash_values.momentary_stand == 0){
@@ -1103,7 +1117,7 @@ void get_stand_status(){
 
 
 	/* If handle is in stand set state to STANDBY */
-	if(sensor_values.in_stand >= 0.2){
+	if(sensor_values.in_stand >= 0.2f){
 		if (sensor_values.current_state == RUN){
 			change_state(STANDBY);
 			previous_millis_standby = HAL_GetTick();
@@ -1133,11 +1147,11 @@ void get_handle_type(){
 	sensor_values.handle2_sense = Moving_Average_Compute(handle2_status, &handle2_sense_filterStruct); /* Moving average filter */
 
 	/* Determine if NT115 handle is detected */
-	if((sensor_values.handle1_sense >= 0.5) && (sensor_values.handle2_sense < 0.5)){
+	if((sensor_values.handle1_sense >= 0.5f) && (sensor_values.handle2_sense < 0.5f)){
 		attached_handle = NT115;
 	}
 	/* Determine if T210 handle is detected */
-	else if((sensor_values.handle1_sense < 0.5) && (sensor_values.handle2_sense >= 0.5)){
+	else if((sensor_values.handle1_sense < 0.5f) && (sensor_values.handle2_sense >= 0.5f)){
 		attached_handle = T210;
 	}
 	/* Determine if T245 handle is detected */
@@ -1148,31 +1162,38 @@ void get_handle_type(){
 
 /* Function to set heating values depending on detected handle */
 void set_handle_values(){
-	if(attached_handle == NT115){
-		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
-		sensor_values.max_power_watt = min(sensor_values.USB_PD_power_limit, NT115_MAX_POWER);
-		PID_SetTunings(&TPID, KP_NT115, KI_NT115, KD_NT115); // Update PID parameters based on handle type
-		PID_SetILimits(&TPID, -MAX_I_NT115, MAX_I_NT115); 	// Set max and min I limit
-	}
-	else if(attached_handle == T210){
-		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
-		sensor_values.max_power_watt = min(sensor_values.USB_PD_power_limit, T210_MAX_POWER);
-		PID_SetTunings(&TPID, KP_T210, KI_T210, KD_T210); // Update PID parameters based on handle type
-		PID_SetILimits(&TPID, -MAX_I_T210, MAX_I_T210); 	// Set max and min I limit
-	}
-	else if(attached_handle == T245){
-		/* Set the max power to the lowest value from USB_PD and HANDLE_MAX_POWER */
-		sensor_values.max_power_watt = min(sensor_values.USB_PD_power_limit, T245_MAX_POWER);
-		PID_SetTunings(&TPID, KP_T245, KI_T245, KD_T245); // Update PID parameters based on handle type
-		PID_SetILimits(&TPID, -MAX_I_T245, MAX_I_T245); 	// Set max and min I limit
+	uint16_t usb_limit = sensor_values.USB_PD_power_limit;
+
+	switch (attached_handle) {
+		case NT115:
+			sensor_values.max_power_watt = min(usb_limit, NT115_MAX_POWER);
+			PID_SetTunings(&TPID, KP_NT115, KI_NT115, KD_NT115);
+			PID_SetILimits(&TPID, -MAX_I_NT115, MAX_I_NT115);
+			break;
+
+		case T210:
+			sensor_values.max_power_watt = min(usb_limit, T210_MAX_POWER);
+			PID_SetTunings(&TPID, KP_T210, KI_T210, KD_T210);
+			PID_SetILimits(&TPID, -MAX_I_T210, MAX_I_T210);
+			break;
+
+		case T245:
+			sensor_values.max_power_watt = min(usb_limit, T245_MAX_POWER);
+			PID_SetTunings(&TPID, KP_T245, KI_T245, KD_T245);
+			PID_SetILimits(&TPID, -MAX_I_T245, MAX_I_T245);
+			break;
+
+		case No_name:
+			break;
 	}
 
-	/* If a custom power limit is specified in user flash, use this limit */
-	if(flash_values.power_limit != 0){
+	// Override from flash if specified
+	if (flash_values.power_limit != 0) {
 		sensor_values.max_power_watt = flash_values.power_limit;
 	}
 }
 
+// Signal that the set temperature has been reached
 void beep_at_set_temp(){
     if (!flash_values.beep_at_set_temp) return;
     if (beeped_at_set_temp) return;
@@ -1456,15 +1477,15 @@ int main(void)
 
 	/* Init and fill filter structures with initial values */
 	for (int i = 0; i<200;i++){
-		get_bus_voltage();
-		get_heater_current();
-		get_mcu_temp();
-		get_thermocouple_temperature();
-		get_handle_type();
-		set_handle_values();
-		get_stand_status();
-		handle_button_status();
-		handle_cartridge_presence();
+		get_bus_voltage(); // Function to retrieve the filtered bus voltage
+		get_heater_current(); // Function to retrieve the filtered heater current
+		get_mcu_temp(); // Function to retrieve the MCU temperature
+		get_thermocouple_temperature(); // Get thermocouple temperature
+		get_handle_type(); // Get the handle type attached
+		set_handle_values(); // Function to set heating values depending on the detected handle
+		get_stand_status(); // Get handle stand status to activate SLEEP
+		handle_button_status(); // Function to get button status
+		handle_cartridge_presence(); // Function to monitor cartridge presence
 	}
 
 	/* check STUSB4500 */
@@ -1633,6 +1654,7 @@ int main(void)
 		if (flash_values.current_measurement == 1){
 
 			if (HAL_GetTick() - previous_measure_current_update >= interval_measure_current) {
+				// Perform current measurement only if thermocouple measurement is not in progress.
 				if (thermocouple_measurement_done == 1) {
 
 					set_heater_duty(FIXED_MEASURE_DUTY);
@@ -1640,7 +1662,7 @@ int main(void)
 					htim1.Instance->EGR |= TIM_EGR_UG;  // Apply duty cycle immediately
 
 					current_measurement_done = 0;
-					current_measurement_requested = 1;
+					current_measurement_requested = 1; // Measurement needs to be performed
 					previous_measure_current_update = HAL_GetTick();
 				}
 			}
@@ -1652,7 +1674,7 @@ int main(void)
         if(popup_shown == 1){
                 if(HAL_GetTick() - previous_millis_popup >= interval_popup){
                         popup_shown = 0;
-                        LCD_draw_main_screen();
+                        LCD_draw_main_screen(); // Clear the area where the emergency message is displayed
                 }
         }
         else{
