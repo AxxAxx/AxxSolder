@@ -291,7 +291,7 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 											.displayed_temp_filter = 5,
 											.startup_temp_is_previous_temp = 0,
 											.three_button_mode = 0,
-											.beep_at_set_temp = 0,
+											.beep_at_set_temp = 1,
 											.beep_tone = 0,
 											.momentary_stand = 0};
 
