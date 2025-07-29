@@ -911,12 +911,20 @@ void LCD_draw_earth_fault_popup(){
 /* Get encoder value (Set temp.) and limit */
 void get_set_temperature(){
 	if(custom_temperature_on == 0){
+		uint16_t prev_temp = sensor_values.set_temperature;
+
 		TIM2->CNT = clamp(TIM2->CNT, MIN_SELECTABLE_TEMPERATURE, MAX_SELECTABLE_TEMPERATURE);
+
 		if(flash_values.three_button_mode == 1){
 			sensor_values.set_temperature = (uint16_t)(TIM2->CNT);
 		}
 		else{
-			sensor_values.set_temperature = (uint16_t)(TIM2->CNT/2) * 2;
+			//sensor_values.set_temperature = (uint16_t)(TIM2->CNT / 2) * 2;
+			sensor_values.set_temperature = (uint16_t)((TIM2->CNT) & ~1);
+		}
+		// Reset the flag if the set temperature has changed, so it beeps when reached
+		if(sensor_values.set_temperature != prev_temp){
+			beeped_at_set_temp = 0;  //
 		}
 	}
 }
