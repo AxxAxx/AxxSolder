@@ -47,7 +47,7 @@ void left_align_float(char* str, float number, int8_t len)
 	}
 
 // ==== Перечислимые строки ====
-const char* bool_str[] = { " No", " Yes" };
+const char* bool_str[] = { "No", "Yes" };
 const char* screen_rotation_str[] = { "0°", "90°", "180°", "270°" };
 
 const char* bool_language_str[] = { " UA", " EN" };
@@ -124,11 +124,11 @@ static void display_menu_value_line(uint8_t line_pos, uint16_t index,
 
     if (editing && !prev_editing) {
         // Вход в режим редактирования: заливаем белым
-        UG_FillFrame(x, y, x + MENU_VALUE_W, y + MENU_VALUE_H, C_WHITE);
+        UG_FillFrame(x, y, x + MENU_VALUE_W, y + MENU_VALUE_H, RGB_to_BRG(C_WHITE));
     }
     else if (!editing && prev_editing && selected) {
         // Выход из редактирования, если остаётся выбранным: заливаем чёрным
-        UG_FillFrame(x, y, x + MENU_VALUE_W, y + MENU_VALUE_H, C_BLACK);
+        UG_FillFrame(x, y, x + MENU_VALUE_W, y + MENU_VALUE_H, RGB_to_BRG(C_BLACK));
     }
 
     // === Отрисовка текста, если значение или флаги изменились ===
@@ -136,8 +136,8 @@ static void display_menu_value_line(uint8_t line_pos, uint16_t index,
         strncpy(prev_buf_screen[line_pos], buf, sizeof(buf));
         prev_flags_screen[line_pos] = flags;
 
-        uint16_t fg = (selected && editing) ? C_BLACK : fg_def;
-        uint16_t bg = (selected && editing) ? C_WHITE : bg_def;
+        uint16_t fg = (selected && editing) ? RGB_to_BRG(C_BLACK) : fg_def;
+        uint16_t bg = (selected && editing) ? RGB_to_BRG(C_WHITE) : bg_def;
 
         UG_FillFrame(x, y, 190 + MENU_VALUE_W, y + MENU_VALUE_H, bg);
         LCD_PutStr(x, y, buf, FONT_arial_20X23, fg, bg);
@@ -206,7 +206,7 @@ void settings_menu()
     sensor_values.requested_power = 0; // отключить нагрев перед входом в меню
 
     settings_menu_active = 1; // флаг активности меню
-    UG_FillScreen(C_BLACK);               // Очистка экрана
+    UG_FillScreen(RGB_to_BRG(C_BLACK));               // Очистка экрана
     UG_FontSetTransparency(1);              // Установка прозрачности фона текста
 
 
@@ -217,21 +217,21 @@ void settings_menu()
     char str[64] = {0};
     if ((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)) {
         menu_lines_on_screen = 10;
-    	sprintf(str, "fw mod: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
+    	sprintf(str, "fw: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
 		LCD_PutStr(6, 300, str, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_BLACK));
 
     } else {
         menu_lines_on_screen = 7;
-    	sprintf(str, "fw mod: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
+    	sprintf(str, "fw: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
 		LCD_PutStr(6, 215, str, FONT_arial_20X23, RGB_to_BRG(C_ORANGE), RGB_to_BRG(C_BLACK));
 
     }
 
     // === Заголовок меню ===
-    LCD_PutStr(50, 5, "S E T T I N G S", FONT_arial_20X23, C_FOREST_GREEN, C_BLACK);
-    LCD_DrawLine(0, 25, 240, 25, C_FOREST_GREEN);
-    LCD_DrawLine(0, 26, 240, 26, C_FOREST_GREEN);
-    //LCD_DrawLine(0, 27, 240, 27, B_FOREST_GREEN);
+    LCD_PutStr(70, 5, "SETTINGS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+    LCD_DrawLine(0, 25, 240, 25, RGB_to_BRG(C_DARK_SEA_GREEN));
+    LCD_DrawLine(0, 26, 240, 26, RGB_to_BRG(C_DARK_SEA_GREEN));
+    LCD_DrawLine(0, 27, 240, 27, RGB_to_BRG(C_DARK_SEA_GREEN));
 
     // Начальное значение энкодера
     TIM2->CNT = 1000;
@@ -287,7 +287,7 @@ void settings_menu()
                     true,   // selected
                     true,   // editing
                     190, line_y,
-                    C_WHITE, C_BLACK
+                    RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
                 );
 
                 prev_displayed_value = norm_val;
@@ -335,7 +335,7 @@ void settings_menu()
 
         // === Перерисовка новой страницы меню при смене "экрана" ===
         if (new_menu_start != prev_menu_start) {
-            UG_FillFrame(0, 30, 239, 30 + menu_lines_on_screen * 25, C_BLACK); // очистка области
+            UG_FillFrame(0, 30, 239, 30 + menu_lines_on_screen * 25, RGB_to_BRG(C_BLACK)); // очистка области
             prev_menu_start = new_menu_start;
 
             // очистка кэша строк
@@ -349,8 +349,8 @@ void settings_menu()
                 uint16_t index = new_menu_start + line;
                 uint16_t line_y = 35 + line * 25;
 
-                UG_FillFrame(5, line_y, 187, line_y + MENU_VALUE_H, C_BLACK);
-                LCD_PutStr(5, line_y, menu_names[index], FONT_arial_20X23, C_WHITE, C_BLACK);
+                UG_FillFrame(5, line_y, 187, line_y + MENU_VALUE_H, RGB_to_BRG(C_BLACK));
+                LCD_PutStr(5, line_y, menu_names[index], FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
                 if (index < menu_length - 3) {
                     display_menu_value_line(
@@ -359,7 +359,7 @@ void settings_menu()
                         ((float*)&flash_values)[index],
                         false, false,
                         190, line_y,
-						C_WHITE, C_BLACK
+						RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
                     );
                 }
             }
@@ -373,8 +373,8 @@ void settings_menu()
                 uint8_t prev_line = prev_cursor_position % menu_lines_on_screen;
                 uint16_t prev_line_y = 35 + prev_line * 25;
 
-                UG_DrawFrame(0, prev_line_y - 4, 239, prev_line_y + 2 + MENU_VALUE_H, C_BLACK);
-                UG_DrawFrame(1, prev_line_y - 3, 238, prev_line_y + 1 + MENU_VALUE_H, C_BLACK);
+                UG_DrawFrame(2, prev_line_y - 4, 237, prev_line_y + 2 + MENU_VALUE_H, RGB_to_BRG(C_BLACK));
+                UG_DrawFrame(3, prev_line_y - 3, 236, prev_line_y + 1 + MENU_VALUE_H, RGB_to_BRG(C_BLACK));
 
                 // обновляем значение
                 if (prev_cursor_position < menu_length - 3) {
@@ -384,7 +384,7 @@ void settings_menu()
                         ((float*)&flash_values)[prev_cursor_position],
                         false, false,
                         190, prev_line_y,
-						C_WHITE, C_BLACK
+						RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
                     );
                 }
             }
@@ -396,8 +396,8 @@ void settings_menu()
 
                 if (menu_level == 0) {
                     // курсор — рамка
-                    UG_DrawFrame(0, line_y - 4, 239, line_y + 2 + MENU_VALUE_H, C_YELLOW);
-                    UG_DrawFrame(1, line_y - 3, 238, line_y + 1 + MENU_VALUE_H, C_YELLOW);
+                    UG_DrawFrame(2, line_y - 4, 237, line_y + 2 + MENU_VALUE_H, RGB_to_BRG(C_YELLOW));
+                    UG_DrawFrame(3, line_y - 3, 236, line_y + 1 + MENU_VALUE_H, RGB_to_BRG(C_YELLOW));
 
                 } else {
                     // редактирование — подсветка значения
@@ -407,7 +407,7 @@ void settings_menu()
                         ((float*)&flash_values)[menu_cursor_position],
                         true, true,
                         190, line_y,
-						C_WHITE, C_BLACK
+						RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
                     );
                 }
             }
