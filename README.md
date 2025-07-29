@@ -2,7 +2,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
-Interested in purchasing an AxxSolder 3.1?  
+Interested in purchasing an AxxSolder 3.2?  
 On my website [5Dimensions](https://www.5dimensions.se/) you can purchase assembled and tested AxxSolder 3.1 boards with connectors and hardware.  
 <img src="./photos/5DIMENSIONS_Logo.png" alt="drawing" width="200"/>
 
