@@ -281,28 +281,28 @@ void LCD_SetRotation(uint8_t m)
 
   switch (m)
   {
-  case 0:
+  case 2:
 #if LCD_IS_160X80
     cmd[1] = CMD_MADCTL_MX | CMD_MADCTL_MY | CMD_MADCTL_BGR;
 #else
     cmd[1] = CMD_MADCTL_MX | CMD_MADCTL_MY | CMD_MADCTL_RGB;
 #endif
     break;
-  case 1:
+  case 3:
 #if CMD_IS_160X80
     cmd[1] = CMD_MADCTL_MY | CMD_MADCTL_MV | CMD_MADCTL_BGR;
 #else
     cmd[1] = CMD_MADCTL_MY | CMD_MADCTL_MV | CMD_MADCTL_RGB;
 #endif
     break;
-  case 2:
+  case 0:
 #if CMD_IS_160X80
     cmd[1] = CMD_MADCTL_BGR;
 #else
     cmd[1] = CMD_MADCTL_RGB;
 #endif
     break;
-  case 3:
+  case 1:
 #if CMD_IS_160X80
     cmd[1] = CMD_MADCTL_MX | CMD_MADCTL_MV | CMD_MADCTL_BGR;
 #else

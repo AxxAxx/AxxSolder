@@ -56,7 +56,7 @@
   (pad "" np_thru_hole circle (at 15.24 -56.642 90) (size 1.5 1.5) (drill 2.5) (layers "F&B.Cu" "*.Mask")
     (thermal_bridge_angle 90) (tstamp 69fef719-614a-4ad1-a2c4-c5613e0fb3bb))
   (model "${KIPRJMOD}/3rd-parties-libraries/3D-models/4311 2in TFT IPS Display.step"
-    (offset (xyz 17.78 0 4.0894))
+    (offset (xyz 17.78 0 3.5094))
     (scale (xyz 1 1 1))
     (rotate (xyz 0 180 0))
   )
