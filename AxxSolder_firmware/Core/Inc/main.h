@@ -51,15 +51,15 @@ enum handles {
 	No_name
 	//////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 };
-// extern declaration (только объявление)
+// extern declaration (only a declaration)
 extern enum handles attached_handle;
-// Определение enum для источников питания
+// Definition of enum for power sources
 typedef enum {
 	POWER_DC,
 	POWER_USB,
 	POWER_BAT // Future feature
 } power_source_t;
-// Объявление внешней переменной
+// Declaration of external variable
 extern power_source_t power_source;
 
 /* Struct to hold flash_data values */
@@ -93,17 +93,11 @@ typedef struct{
 	float momentary_stand;
 	float language;
 }Flash_values;
-/* Глобальные переменные, определённые в main.c */
+/* Global variables defined in main.c */
 extern Flash_values flash_values;
 extern Flash_values default_flash_values;
 
-
-
-
-
-
-
-// Структура значений датчиков
+// Sensor values structure
 typedef struct {
     float set_temperature;
     float thermocouple_temperature;
@@ -123,33 +117,24 @@ typedef struct {
     float max_power_watt;
     float USB_PD_power_limit;
 } sensor_values_struct;
-/* Глобальная переменная, определена в main.c */
+/* Global variable, defined in main.c */
 extern sensor_values_struct sensor_values;
 
-// Определение enum
+// Enum definition
 typedef enum {
 	ATTACHED,
 	DETACHED
 } cartridge_state_t;
-// Объявление внешних переменных
+// Declaration of external variables
 extern cartridge_state_t cartridge_state;
 extern cartridge_state_t previous_cartridge_state;
-
 
 extern uint8_t sleep_state_written_to_LCD;
 extern uint8_t standby_state_written_to_LCD;
 
-
-
-
-
 extern uint8_t fw_version_major;
 extern uint8_t fw_version_minor;
 extern uint8_t fw_version_patch;
-
-
-
-
 
 /* Flag to indicate that settings menu is active */
 extern uint8_t settings_menu_active;
@@ -160,10 +145,9 @@ extern uint8_t settings_menu_active;
 #define MIN_SELECTABLE_TEMPERATURE 20
 #define MAX_SELECTABLE_TEMPERATURE 450
 
-
 /* General PID parameters */
 #define PID_MAX_OUTPUT 500
-#define FIXED_MEASURE_DUTY (PID_MAX_OUTPUT / 2)  // то есть 250 / 2 = 250
+#define FIXED_MEASURE_DUTY (PID_MAX_OUTPUT / 2)  // i.e. 250 / 2 = 250
 #define PID_UPDATE_INTERVAL 25
 #define PID_ADD_I_MIN_ERROR 75
 extern float PID_NEG_ERROR_I_MULT;
@@ -202,24 +186,15 @@ extern uint32_t interval_sensor_update_low_update;
 extern uint32_t previous_millis_popup;
 extern uint32_t interval_popup;
 
-
-
-/* Thermocouple temperature
- * Температура термопары
-*/
+/* Thermocouple temperature */
 extern float TC_temp;
 
-
-
-/* RAW ADC from current measurement
- * необработанный АЦП из текущего измерения
-*/
+/* RAW ADC from current measurement */
 extern uint16_t current_raw;
 
 extern uint16_t current_leak;
 
 extern bool Flag_ALARM;
-
 
 /* USER CODE END Includes */
 
@@ -245,38 +220,35 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 
-
-
 /* Return the temperature in the correct unit */
 float convert_temperature(float temperature);
 
-
 void handle_button_status(void);
-/* Disable the duty cycle of timer controlling the heater PWM*/
+/* Disable the duty cycle of timer controlling the heater PWM */
 void heater_off();
 
-/* Функция смены основного состояния устройства */
+/* Function to change the main device state */
 void change_state(mainstates new_state);
 
 
 /**
- * @brief Получает аппаратную версию устройства по состоянию 3 входных пинов.
- * Состояния пинов VERSION_BIT_1..3 формируют 3-битное число:
- *     VERSION_BIT_3 - старший бит (MSB)
- *     VERSION_BIT_2 - средний бит
- *     VERSION_BIT_1 - младший бит (LSB)
+ * @brief Gets the hardware version of the device from the state of 3 input pins.
+ * The states of VERSION_BIT_1..3 form a 3-bit number:
+ *     VERSION_BIT_3 - most significant bit (MSB)
+ *     VERSION_BIT_2 - middle bit
+ *     VERSION_BIT_1 - least significant bit (LSB)
  *
- * Нумерация версий начинается с 3, т.е. версия = 3 + [состояние битов]
+ * Version numbering starts from 3, i.e. version = 3 + [bit state]
  *
- * @return uint8_t Номер аппаратной версии (3..10)
+ * @return uint8_t Hardware version number (3..10)
  */
 uint8_t get_hw_version(void);
 
 /* Function to clamp d between the limits min and max */
 float clamp(float d, float min, float max);
 
-
-
+/* Function to convert RGB to BRG */
+uint16_t RGB_to_BRG(uint16_t color);
 
 /* USER CODE END EFP */
 

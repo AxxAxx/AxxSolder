@@ -1514,7 +1514,7 @@ int main(void)
 
 	/* Draw the main screen decoration */
 	LCD_draw_main_screen();
-	HAL_Delay(500);
+	HAL_Delay(250);
 
 	/* Set beep tone */
 	switch((int)flash_values.beep_tone){
