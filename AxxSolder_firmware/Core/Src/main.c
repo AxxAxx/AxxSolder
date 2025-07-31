@@ -573,61 +573,57 @@ float convert_temperature(float temperature){
 }
 
 /* formatting float into a string as right-aligned, by adding spaces on the left */
-char* format_number_right(float input) {
+void format_number_right(float input, char* buffer) {
     int rounded = (int)roundf(input);
-    clamp(rounded, 0, 100);
+    clamp(rounded, 0, 999);
 
-    char number_str[4];
+    char number_str[4]; // Enough for "100" + '\0'
     sprintf(number_str, "%d", rounded);
 
     int num_digits = strlen(number_str);
     int padding_spaces = (3 - num_digits) * 2;
 
-    // Allocate final string: padding + digits + null terminator
-    char* result = malloc(padding_spaces + num_digits + 1);
-    if (!result) return NULL;
+    // Fill padding spaces first
+    memset(buffer, ' ', padding_spaces);
+    // Copy the number after the padding
+    strcpy(buffer + padding_spaces, number_str);
 
-    // Fill left with spaces
-    memset(result, ' ', padding_spaces);
-    // Copy number string after the spaces
-    strcpy(result + padding_spaces, number_str);
-
-    return result;
+    // Null terminate the full string
+    buffer[padding_spaces + num_digits] = '\0';
 }
 
 /* formatting float into a string as left-aligned, by adding spaces on the right */
-char* format_number_left(float input) {
+void format_number_left(float input, char* buffer) {
     int rounded = (int)roundf(input);
-    clamp(rounded, 0, 100);
+    clamp(rounded, 0, 999);
 
-    char number_str[4];
+    char number_str[4]; // "100" + '\0'
     sprintf(number_str, "%d", rounded);
 
     int num_digits = strlen(number_str);
     int padding_spaces = (3 - num_digits) * 2;
 
-    // Allocate enough space for number + spaces + null terminator
-    char* result = malloc(num_digits + padding_spaces + 1);
-    if (!result) return NULL;
+    // Copy number into buffer
+    strcpy(buffer, number_str);
 
-    // Copy number
-    strcpy(result, number_str);
-    // Pad with spaces to the right
-    memset(result + num_digits, ' ', padding_spaces);
-    result[num_digits + padding_spaces] = '\0';
-
-    return result;
+    // Add spaces to the right
+    memset(buffer + num_digits, ' ', padding_spaces);
+    buffer[num_digits + padding_spaces] = '\0';
 }
 
 void update_display(){
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
-		LCD_PutStr(19, 70, format_number_left(convert_temperature(sensor_values.set_temperature)), FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		format_number_left(convert_temperature(sensor_values.set_temperature), DISPLAY_buffer);
+		LCD_PutStr(19, 70, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(cartridge_state == DETACHED) {
 			LCD_PutStr(15, 160, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
-			LCD_PutStr(19, 160, format_number_left(convert_temperature(sensor_values.thermocouple_temperature_filtered)), FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+			format_number_left(convert_temperature(sensor_values.thermocouple_temperature_filtered), DISPLAY_buffer);
+			LCD_PutStr(19, 160, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
@@ -661,7 +657,9 @@ void update_display(){
 		}
 		LCD_PutStr(185, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		LCD_PutStr(190, 275, format_number_right(100*sensor_values.requested_power_filtered/PID_MAX_OUTPUT), FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		format_number_right(100*sensor_values.requested_power_filtered/PID_MAX_OUTPUT, DISPLAY_buffer);
+		LCD_PutStr(190, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
@@ -695,13 +693,17 @@ void update_display(){
 		}
 	}
 	else{
-		LCD_PutStr(64, 35, format_number_left(convert_temperature(sensor_values.set_temperature)), FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		format_number_left(convert_temperature(sensor_values.set_temperature), DISPLAY_buffer);
+		LCD_PutStr(64, 35, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(cartridge_state == DETACHED) {
 			LCD_PutStr(60, 115, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
-			LCD_PutStr(64, 115, format_number_left(convert_temperature(sensor_values.thermocouple_temperature_filtered)), FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+			format_number_left(convert_temperature(sensor_values.thermocouple_temperature_filtered), DISPLAY_buffer);
+			LCD_PutStr(64, 115, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
@@ -735,7 +737,9 @@ void update_display(){
 		}
 		LCD_PutStr(2, 10, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		LCD_PutStr(5, 215, format_number_left(100*sensor_values.requested_power_filtered/PID_MAX_OUTPUT), FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		format_number_left(100*sensor_values.requested_power_filtered/PID_MAX_OUTPUT, DISPLAY_buffer);
+		LCD_PutStr(5, 215, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(10,32,30,209, RGB_to_BRG(C_ORANGE));
