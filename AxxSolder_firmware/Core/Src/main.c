@@ -572,48 +572,62 @@ float convert_temperature(float temperature){
 	}
 }
 
-/* formatting temp into a string as right-aligned, by adding spaces on the left */
-void format_string(float number, char *out_buf) {
-    char num[8];
-    sprintf(num, "%.0f", number);
-    if (strlen(num) == 2) {
-        out_buf[0] = ' ';
-        out_buf[1] = ' ';
-        strcpy(&out_buf[2], num);
-    }
-    else if (strlen(num) == 1) {
-    	        out_buf[0] = ' ';
-    	        out_buf[1] = ' ';
-    	        out_buf[2] = ' ';
-    	        out_buf[3] = ' ';
-    	        strcpy(&out_buf[4], num);
-    }
-    else {
-        strcpy(out_buf, num);
-    }
+/* formatting float into a string as right-aligned, by adding spaces on the left */
+char* format_number_right(float input) {
+    int rounded = (int)roundf(input);
+    clamp(rounded, 0, 100);
+
+    char number_str[4];
+    sprintf(number_str, "%d", rounded);
+
+    int num_digits = strlen(number_str);
+    int padding_spaces = (3 - num_digits) * 2;
+
+    // Allocate final string: padding + digits + null terminator
+    char* result = malloc(padding_spaces + num_digits + 1);
+    if (!result) return NULL;
+
+    // Fill left with spaces
+    memset(result, ' ', padding_spaces);
+    // Copy number string after the spaces
+    strcpy(result + padding_spaces, number_str);
+
+    return result;
+}
+
+/* formatting float into a string as left-aligned, by adding spaces on the right */
+char* format_number_left(float input) {
+    int rounded = (int)roundf(input);
+    clamp(rounded, 0, 100);
+
+    char number_str[4];
+    sprintf(number_str, "%d", rounded);
+
+    int num_digits = strlen(number_str);
+    int padding_spaces = (3 - num_digits) * 2;
+
+    // Allocate enough space for number + spaces + null terminator
+    char* result = malloc(num_digits + padding_spaces + 1);
+    if (!result) return NULL;
+
+    // Copy number
+    strcpy(result, number_str);
+    // Pad with spaces to the right
+    memset(result + num_digits, ' ', padding_spaces);
+    result[num_digits + padding_spaces] = '\0';
+
+    return result;
 }
 
 void update_display(){
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
-		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.set_temperature));
-		if(convert_temperature(sensor_values.set_temperature) < 99.5){
-			DISPLAY_buffer[2] = 32;
-			DISPLAY_buffer[3] = 32;
-		}
-		LCD_PutStr(19, 70, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(19, 70, format_number_left(convert_temperature(sensor_values.set_temperature)), FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(cartridge_state == DETACHED) {
 			LCD_PutStr(15, 160, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
-			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.thermocouple_temperature_filtered));
-			if(convert_temperature(sensor_values.thermocouple_temperature_filtered) < 99.5){
-				DISPLAY_buffer[2] = 32;
-				DISPLAY_buffer[3] = 32;
-			}
-			LCD_PutStr(19, 160, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(19, 160, format_number_left(convert_temperature(sensor_values.thermocouple_temperature_filtered)), FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
@@ -647,9 +661,7 @@ void update_display(){
 		}
 		LCD_PutStr(185, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		format_string(100*sensor_values.requested_power_filtered/PID_MAX_OUTPUT, DISPLAY_buffer);
-		LCD_PutStr(190, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(190, 275, format_number_right(100*sensor_values.requested_power_filtered/PID_MAX_OUTPUT), FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
@@ -683,25 +695,13 @@ void update_display(){
 		}
 	}
 	else{
-		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.set_temperature));
-		if(convert_temperature(sensor_values.set_temperature) < 99.5){
-			DISPLAY_buffer[2] = 32;
-			DISPLAY_buffer[3] = 32;
-		}
-		LCD_PutStr(64, 35, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(64, 35, format_number_left(convert_temperature(sensor_values.set_temperature)), FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(cartridge_state == DETACHED) {
 			LCD_PutStr(60, 115, " ---  ", FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
-			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.f", convert_temperature(sensor_values.thermocouple_temperature_filtered));
-			if(convert_temperature(sensor_values.thermocouple_temperature_filtered) < 99.5){
-				DISPLAY_buffer[2] = 32;
-				DISPLAY_buffer[3] = 32;
-			}
-			LCD_PutStr(64, 115, DISPLAY_buffer, FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(64, 115, format_number_left(convert_temperature(sensor_values.thermocouple_temperature_filtered)), FONT_arial_36X44_NUMBERS, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
@@ -734,6 +734,8 @@ void update_display(){
 			sprintf(DISPLAY_buffer, "%.0f W", sensor_values.max_power_watt);
 		}
 		LCD_PutStr(2, 10, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+		LCD_PutStr(5, 215, format_number_left(100*sensor_values.requested_power_filtered/PID_MAX_OUTPUT), FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(10,32,30,209, RGB_to_BRG(C_ORANGE));
@@ -893,7 +895,6 @@ void LCD_draw_main_screen(){
 			break;
 		}
 
-
 		UG_DrawLine(265, 0, 265, 240, RGB_to_BRG(C_DARK_SEA_GREEN));
 		UG_DrawLine(266, 0, 266, 240, RGB_to_BRG(C_DARK_SEA_GREEN));
 		UG_DrawLine(315, 0, 315, 240, RGB_to_BRG(C_DARK_SEA_GREEN));
@@ -919,12 +920,10 @@ void LCD_draw_main_screen(){
 			LCD_PutStr(272, 10, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		}
 
-
-
 		UG_DrawFrame(8, 30, 32, 212, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(9, 31, 31, 211, RGB_to_BRG(C_WHITE));
 
-		LCD_PutStr(5, 215, "0 W", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(34, 215, "%", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 	}
 }
