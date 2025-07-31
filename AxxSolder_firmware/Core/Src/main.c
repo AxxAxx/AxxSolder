@@ -268,33 +268,32 @@ sensor_values_struct sensor_values = {
 /* Struct to hold flash values */
 Flash_values flash_values;
 Flash_values default_flash_values = {.startup_temperature = 330,
-											.temperature_offset = 0,
-											.standby_temp = 150,
-											.standby_time = 10,
-											.emergency_time = 30,
-											.buzzer_enabled = 1,
-											.preset_temp_1 = 330,
-											.preset_temp_2 = 430,
-											.GPIO4_ON_at_run = 0,
-											.screen_rotation = 0,
-											.power_limit = 0,
-											.current_measurement = 1,
-											.startup_beep = 1,
-											.deg_celsius = 1,
-											.temp_cal_100 = 100,
-											.temp_cal_200 = 200,
-											.temp_cal_300 = 300,
-											.temp_cal_350 = 350,
-											.temp_cal_400 = 400,
-											.temp_cal_450 = 450,
-											.serial_debug_print = 0,
-											.displayed_temp_filter = 5,
-											.startup_temp_is_previous_temp = 0,
-											.three_button_mode = 0,
-											.beep_at_set_temp = 1,
-											.beep_tone = 0,
-											.momentary_stand = 0};
-
+									.temperature_offset = 0,
+									.standby_temp = 150,
+									.standby_time = 10,
+									.emergency_time = 30,
+									.buzzer_enabled = 1,
+									.preset_temp_1 = 330,
+									.preset_temp_2 = 430,
+									.GPIO4_ON_at_run = 0,
+									.screen_rotation = 0,
+									.power_limit = 0,
+									.current_measurement = 1,
+									.startup_beep = 1,
+									.deg_celsius = 1,
+									.temp_cal_100 = 100,
+									.temp_cal_200 = 200,
+									.temp_cal_300 = 300,
+									.temp_cal_350 = 350,
+									.temp_cal_400 = 400,
+									.temp_cal_450 = 450,
+									.serial_debug_print = 0,
+									.displayed_temp_filter = 5,
+									.startup_temp_is_previous_temp = 0,
+									.three_button_mode = 0,
+									.beep_at_set_temp = 1,
+									.beep_tone = 0,
+									.momentary_stand = 0};
 
 /* PID data */
 float PID_setpoint = 0.0;
@@ -405,7 +404,6 @@ float min(float a, float b) {
  * @return Average value for that channel
  */
 float get_mean_ADC_reading_indexed(uint8_t index){
-
 	if (index > 2) return 0.0f;  // Incorrect Index Protection
 
     float ADC_filter_mean = 0.0f;
@@ -532,12 +530,13 @@ void get_thermocouple_temperature(){
 	else{
 		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 400.0f)*(flash_values.temp_cal_450-flash_values.temp_cal_400)/50.0f + flash_values.temp_cal_400;
 		}
+	// Add temperature offset value
+	sensor_values.thermocouple_temperature += flash_values.temperature_offset;
+	// Clamp
+	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,500);
 
-	sensor_values.thermocouple_temperature += flash_values.temperature_offset; // Add temperature offset value
-	sensor_values.thermocouple_temperature = clamp(sensor_values.thermocouple_temperature ,0 ,500); // Clamp
-
-	sensor_values.thermocouple_temperature_filtered = Moving_Average_Compute(sensor_values.thermocouple_temperature, &thermocouple_temperature_filtered_filter_struct); 	/* Moving average filter */
-	sensor_values.thermocouple_temperature_filtered = Hysteresis_Add(sensor_values.thermocouple_temperature_filtered, &thermocouple_temperature_filtered_hysteresis);		/* Hysteresis filter */
+	sensor_values.thermocouple_temperature_filtered = Moving_Average_Compute(sensor_values.thermocouple_temperature, &thermocouple_temperature_filtered_filter_struct); // Moving average filter
+	sensor_values.thermocouple_temperature_filtered = Hysteresis_Add(sensor_values.thermocouple_temperature_filtered, &thermocouple_temperature_filtered_hysteresis); // Hysteresis filter
 }
 
 /* Sets the duty cycle of timer controlling the heater */
@@ -572,7 +571,7 @@ float convert_temperature(float temperature){
 	}
 }
 
-/* formatting float into a string as right-aligned, by adding spaces on the left */
+/* Formatting float into a string as right-aligned, by adding spaces on the left */
 void format_number_right(float input, char* buffer) {
     int rounded = (int)roundf(input);
     clamp(rounded, 0, 999);
@@ -592,7 +591,7 @@ void format_number_right(float input, char* buffer) {
     buffer[padding_spaces + num_digits] = '\0';
 }
 
-/* formatting float into a string as left-aligned, by adding spaces on the right */
+/* Formatting float into a string as left-aligned, by adding spaces on the right */
 void format_number_left(float input, char* buffer) {
     int rounded = (int)roundf(input);
     clamp(rounded, 0, 999);
@@ -1119,12 +1118,12 @@ void get_stand_status(){
 
 	/* If the momentary stand function is not used */
 	if(flash_values.momentary_stand == 0){
-		sensor_values.in_stand = Moving_Average_Compute(stand_status, &stand_sense_filterStruct); /* Moving average filter */
+		sensor_values.in_stand = Moving_Average_Compute(stand_status, &stand_sense_filterStruct); // Moving average filter
 	}
 	/* If the momentary stand function is used, de-bounce the stand input */
 	else{
 		if(stand_status != previous_stand_status){ // If the stand status changed, due to noise or pressing:
-			previous_stand_debounce = HAL_GetTick(); // reset the debouncing timer
+			previous_stand_debounce = HAL_GetTick(); // reset the de-bouncing timer
 			previous_stand_status = stand_status;
 			stand_debounced_flag = 0;
 		}
@@ -1170,10 +1169,10 @@ void get_stand_status(){
 /* Automatically detect handle type, NT115, T210 or T245 based on HANDLE_INP_1_Pin and HANDLE_INP_2_Pin.*/
 void get_handle_type(){
 	uint8_t handle1_status = (HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_1_Pin) == GPIO_PIN_RESET) ? 0 : 1;
-	sensor_values.handle1_sense = Moving_Average_Compute(handle1_status, &handle1_sense_filterStruct); /* Moving average filter */
+	sensor_values.handle1_sense = Moving_Average_Compute(handle1_status, &handle1_sense_filterStruct); // Moving average filter
 
 	uint8_t handle2_status = (HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_2_Pin) == GPIO_PIN_RESET) ? 0 : 1;
-	sensor_values.handle2_sense = Moving_Average_Compute(handle2_status, &handle2_sense_filterStruct); /* Moving average filter */
+	sensor_values.handle2_sense = Moving_Average_Compute(handle2_status, &handle2_sense_filterStruct); // Moving average filte
 
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5f) && (sensor_values.handle2_sense < 0.5f)){
@@ -1222,7 +1221,7 @@ void set_handle_values(){
 	}
 }
 
-// Signal that the set temperature has been reached
+/* Signal that the set temperature has been reached */
 void beep_at_set_temp(){
     if (!flash_values.beep_at_set_temp) return;
     if (beeped_at_set_temp) return;
