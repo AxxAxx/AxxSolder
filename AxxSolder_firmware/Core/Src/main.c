@@ -688,8 +688,8 @@ void update_display(){
 			sleep_state_written_to_LCD = 0;
 		}
 		else if(sensor_values.current_state == RUN){
-			UG_FillFrame(210, 268-filtered_power_percent*202, 	230, 	268,									RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(210, 66, 									230, 	268-filtered_power_percent*202, 	RGB_to_BRG(C_BLACK));
+			UG_FillFrame(210, 268-filtered_power_percent*202, 	230, 	268,								RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(210, 66, 								230, 	268-filtered_power_percent*202, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -767,8 +767,8 @@ void update_display(){
 			sleep_state_written_to_LCD = 0;
 		}
 		else if(sensor_values.current_state == RUN){
-			UG_FillFrame(10, 209-filtered_power_percent*177, 	30, 	209, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(10, 32, 									30, 	209-filtered_power_percent*177, 	RGB_to_BRG(C_BLACK));
+			UG_FillFrame(10, 209-filtered_power_percent*177, 	30, 	209, 								RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(10, 32, 								30, 	209-filtered_power_percent*177, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -783,7 +783,6 @@ void LCD_draw_main_screen(){
 		LCD_DrawLine(0,36,240,36,RGB_to_BRG(C_YELLOW));
 		LCD_DrawLine(0,37,240,37,RGB_to_BRG(C_YELLOW));
 		LCD_DrawLine(0,38,240,38,RGB_to_BRG(C_YELLOW));
-
 
 		LCD_PutStr(19, 45, "Set temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		UG_DrawCircle(128, 76, 5, RGB_to_BRG(C_WHITE));

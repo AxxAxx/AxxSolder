@@ -153,7 +153,7 @@ static void display_menu_value_line(uint8_t line_pos, uint16_t index,
         if (selected && editing) {
                 fg = RGB_to_BRG(C_BLACK);
         } else if (is_value_different_from_default(index, value)) {
-                fg = RGB_to_BRG(C_ORANGE);  // Red for non-default values
+                fg = RGB_to_BRG(C_GOLD);  // Red for non-default values
         } else {
                 fg = fg_def;  // Default color for default values
         }
