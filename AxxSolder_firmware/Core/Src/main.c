@@ -386,8 +386,9 @@ PID_TypeDef TPID;
 
 /* Function to clamp d between the limits min and max */
 float clamp(float d, float min, float max) {
-  const float t = d < min ? min : d;
-  return t > max ? max : t;
+    if (d < min) return min;
+    if (d > max) return max;
+    return d;
 }
 
 /* Function to get min value of a and b */
