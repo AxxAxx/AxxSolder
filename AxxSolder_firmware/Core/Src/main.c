@@ -612,6 +612,8 @@ void format_number_left(float input, char* buffer) {
 }
 
 void update_display(){
+	float filtered_power_percent = clamp(sensor_values.requested_power_filtered/PID_MAX_OUTPUT, 0.0f, 1.0f);
+
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		format_number_left(convert_temperature(sensor_values.set_temperature), DISPLAY_buffer);
@@ -658,13 +660,13 @@ void update_display(){
 		LCD_PutStr(185, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		format_number_right(100*sensor_values.requested_power_filtered/PID_MAX_OUTPUT, DISPLAY_buffer);
+		format_number_right(100*filtered_power_percent, DISPLAY_buffer);
 		LCD_PutStr(190, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(214, 73,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(216, 99, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(216, 99,  "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(214, 129, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(216, 158, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(214, 191, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -676,7 +678,7 @@ void update_display(){
 		else if((sensor_values.current_state == STANDBY) && !standby_state_written_to_LCD){
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(213, 73,  "S", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(213, 102,  "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(213, 102, "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(213, 131, "A", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(213, 160, "N", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(213, 189, "D", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -686,8 +688,8 @@ void update_display(){
 			sleep_state_written_to_LCD = 0;
 		}
 		else if(sensor_values.current_state == RUN){
-			UG_FillFrame(210, 268-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*202, 	230, 	268,									RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(210, 66, 									230, 	268-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*202, 	RGB_to_BRG(C_BLACK));
+			UG_FillFrame(210, 268-filtered_power_percent*202, 	230, 	268,									RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(210, 66, 									230, 	268-filtered_power_percent*202, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -738,14 +740,14 @@ void update_display(){
 		LCD_PutStr(2, 10, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		format_number_left(100*sensor_values.requested_power_filtered/PID_MAX_OUTPUT, DISPLAY_buffer);
+		format_number_left(100*filtered_power_percent, DISPLAY_buffer);
 		LCD_PutStr(5, 215, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(10,32,30,209, RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(14, 41,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(16, 68, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(14, 95, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(16, 68,  "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(14, 95,  "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(16, 122, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(14, 149, "Z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(16, 176, "z", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -756,7 +758,7 @@ void update_display(){
 			UG_FillFrame(10,32,30,209, RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(14, 41,  "S", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(14, 63,  "T", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(14, 85, "A", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(14, 85,  "A", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(14, 107, "N", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(14, 129, "D", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			LCD_PutStr(14, 151, "B", FONT_arial_20X23, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -765,8 +767,8 @@ void update_display(){
 			sleep_state_written_to_LCD = 0;
 		}
 		else if(sensor_values.current_state == RUN){
-			UG_FillFrame(10, 209-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*177, 	30, 	209, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(10, 32, 									30, 	209-(sensor_values.requested_power_filtered/PID_MAX_OUTPUT)*177, 	RGB_to_BRG(C_BLACK));
+			UG_FillFrame(10, 209-filtered_power_percent*177, 	30, 	209, 									RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(10, 32, 									30, 	209-filtered_power_percent*177, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
