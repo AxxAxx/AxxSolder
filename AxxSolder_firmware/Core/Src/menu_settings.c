@@ -104,6 +104,17 @@ static uint8_t  prev_flags_screen[MAX_MENU_LINES]   = {0};
 
 uint8_t menu_lines_on_screen = 7; // dynamically changes based on screen rotation
 
+
+// ==== Function to check if value differs from default ====
+static uint8_t is_value_different_from_default(uint16_t index, float current_value) {
+        if (index >= menu_length - 3) return 0; // Skip special menu items
+
+        float default_value = ((float*)&default_flash_values)[index];
+
+        // Compare with small tolerance for floating point values
+        return (fabsf(current_value - default_value) > 0.1f);
+}
+
 /* Display value of a parameter with caching to avoid unnecessary redraw */
 static void display_menu_value_line(uint8_t line_pos, uint16_t index,
 									float value, uint8_t selected, uint8_t editing,
@@ -131,13 +142,23 @@ static void display_menu_value_line(uint8_t line_pos, uint16_t index,
 		UG_FillFrame(x, y, x + MENU_VALUE_W, y + MENU_VALUE_H, RGB_to_BRG(C_BLACK));
 	}
 
-	// === Drawing text if value or flags have changed ===
+	/* Drawing text if value or flags have changed */
 	if (strcmp(buf, prev_buf_screen[line_pos]) != 0 || prev_flags != flags) {
 		strncpy(prev_buf_screen[line_pos], buf, sizeof(buf));
 		prev_flags_screen[line_pos] = flags;
 
-		uint16_t fg = (selected && editing) ? RGB_to_BRG(C_BLACK) : fg_def;
-		uint16_t bg = (selected && editing) ? RGB_to_BRG(C_WHITE) : bg_def;
+        // Determine text color based on whether value differs from default
+        uint16_t fg;
+        fg = (selected && editing) ? RGB_to_BRG(C_BLACK) : fg_def;
+        if (selected && editing) {
+                fg = RGB_to_BRG(C_BLACK);
+        } else if (is_value_different_from_default(index, value)) {
+                fg = RGB_to_BRG(C_GOLD);  // Red for non-default values
+        } else {
+                fg = fg_def;  // Default color for default values
+        }
+
+        uint16_t bg = (selected && editing) ? RGB_to_BRG(C_WHITE) : bg_def;
 
 		UG_FillFrame(x, y, 190 + MENU_VALUE_W, y + MENU_VALUE_H, bg);
 		LCD_PutStr(x, y, buf, FONT_arial_20X23, fg, bg);
