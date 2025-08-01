@@ -784,6 +784,7 @@ void LCD_draw_main_screen(){
 		LCD_DrawLine(0,37,240,37,RGB_to_BRG(C_YELLOW));
 		LCD_DrawLine(0,38,240,38,RGB_to_BRG(C_YELLOW));
 
+
 		LCD_PutStr(19, 45, "Set temp", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		UG_DrawCircle(128, 76, 5, RGB_to_BRG(C_WHITE));
 		UG_DrawCircle(128, 76, 4, RGB_to_BRG(C_WHITE));
@@ -1145,7 +1146,6 @@ void get_stand_status(){
 	    }
 	}
 
-
 	/* If handle is in stand set state to STANDBY */
 	if(sensor_values.in_stand >= 0.2f){
 		if (sensor_values.current_state == RUN){
@@ -1377,7 +1377,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 
         sensor_values.leak_current = current_leak;
 
-        update_heater_PWM();  //
+        update_heater_PWM();
 
     }
 }
@@ -1402,44 +1402,44 @@ void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* hadc __unused){
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	/* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_ADC1_Init();
-  MX_ADC2_Init();
-  MX_CRC_Init();
-  MX_TIM1_Init();
-  MX_TIM2_Init();
-  MX_TIM4_Init();
-  MX_SPI2_Init();
-  MX_I2C1_Init();
-  MX_USART1_UART_Init();
-  MX_TIM7_Init();
-  MX_TIM8_Init();
-  MX_TIM6_Init();
-  MX_TIM16_Init();
-  MX_TIM17_Init();
-  /* USER CODE BEGIN 2 */
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_DMA_Init();
+	MX_ADC1_Init();
+	MX_ADC2_Init();
+	MX_CRC_Init();
+	MX_TIM1_Init();
+	MX_TIM2_Init();
+	MX_TIM4_Init();
+	MX_SPI2_Init();
+	MX_I2C1_Init();
+	MX_USART1_UART_Init();
+	MX_TIM7_Init();
+	MX_TIM8_Init();
+	MX_TIM6_Init();
+	MX_TIM16_Init();
+	MX_TIM17_Init();
+	/* USER CODE BEGIN 2 */
 
 	set_heater_duty(0);		//Set heater duty to zero to ensure zero startup current
 	HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_3);
@@ -1456,10 +1456,10 @@ int main(void)
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
 
-  /* USER CODE END 2 */
+	/* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
 	HAL_Delay(200);
 
 	// Check if user data in flash is valid, if not - write default parameters
@@ -1607,7 +1607,6 @@ int main(void)
 	while (1){
 
 		if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
-
 			get_stand_status();
 			get_handle_type();
 			set_handle_values();
