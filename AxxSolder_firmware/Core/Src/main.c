@@ -65,7 +65,7 @@ DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 #define MAX_I_T245 					300
 
 /* General PID parameters */
-#define PID_MAX_OUTPUT 500
+#define PID_MAX_OUTPUT 500.0f
 #define FIXED_MEASURE_DUTY (PID_MAX_OUTPUT / 2)
 #define PID_UPDATE_INTERVAL 25
 #define PID_ADD_I_MIN_ERROR 75
@@ -296,7 +296,7 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 									.momentary_stand = 0};
 
 /* PID data */
-float PID_setpoint = 0.0;
+float PID_setpoint = 0.0f;
 
 /* Flags for temp and current measurements */
 volatile uint8_t current_measurement_requested = 0;
@@ -612,7 +612,7 @@ void format_number_left(float input, char* buffer) {
 }
 
 void update_display(){
-	float filtered_power_percent = clamp(sensor_values.requested_power_filtered/PID_MAX_OUTPUT, 0.0f, 1.0f);
+	float filtered_power_percent = sensor_values.requested_power_filtered/PID_MAX_OUTPUT;
 
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
@@ -660,14 +660,8 @@ void update_display(){
 		LCD_PutStr(185, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		if(sensor_values.current_state == RUN || sensor_values.current_state == STANDBY){
-			format_number_right(100*filtered_power_percent, DISPLAY_buffer);
-			LCD_PutStr(190, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		}
-		else{
-			format_number_right(0.0f, DISPLAY_buffer);
-			LCD_PutStr(190, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		}
+		format_number_right(100*filtered_power_percent, DISPLAY_buffer);
+		LCD_PutStr(190, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
@@ -746,14 +740,8 @@ void update_display(){
 		LCD_PutStr(2, 10, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		if(sensor_values.current_state == RUN || sensor_values.current_state == STANDBY){
-			format_number_right(100*filtered_power_percent, DISPLAY_buffer);
-			LCD_PutStr(5, 215, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		}
-		else{
-			format_number_right(0.0f, DISPLAY_buffer);
-			LCD_PutStr(5, 215, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		}
+		format_number_left(100*filtered_power_percent, DISPLAY_buffer);
+		LCD_PutStr(5, 215, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(10,32,30,209, RGB_to_BRG(C_ORANGE));
@@ -958,7 +946,7 @@ void show_popup(char *text){
 
 void LCD_draw_earth_fault_popup(){
 	heater_off();
-	sensor_values.requested_power = 0;
+	sensor_values.requested_power = 0.0f;
 
 	UG_FillFrame(10, 50, 205, 205, RGB_to_BRG(C_ORANGE));
 	UG_FillFrame(15, 55, 200, 200, RGB_to_BRG(C_WHITE));
@@ -998,7 +986,7 @@ void handle_delta_temperature(){
 		    ( (sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous > MAX_TC_DELTA_FAULTDETECTION) ||
 		      (sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous < -MAX_TC_DELTA_FAULTDETECTION) )){
 		//heater_off();
-		sensor_values.requested_power = 0;
+		sensor_values.requested_power = 0.0f;
 		//sensor_values.heater_current = 0;
 		change_state(EMERGENCY_SLEEP);
 		//show_popup("No or Faulty tip!");
@@ -1508,15 +1496,6 @@ int main(void)
 	/* initialize hysteresis functions */
 	Hysteresis_Init(&thermocouple_temperature_filtered_hysteresis, 0.5);
 
-	/* Initiate PID controller */
-	PID(&TPID, &sensor_values.thermocouple_temperature, &sensor_values.requested_power, &PID_setpoint, 0, 0, 0, _PID_CD_DIRECT); //PID parameters are set depending on detected handle by set_handle_values()
-	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		// Set PID update time to "PID_UPDATE_INTERVAL"
-	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
-	PID_SetILimits(&TPID, 0, 0);         					// Set max and min I limit
-	PID_SetIminError(&TPID,PID_ADD_I_MIN_ERROR);
-	PID_SetNegativeErrorIgainMult(&TPID, PID_NEG_ERROR_I_MULT, PID_NEG_ERROR_I_BIAS); // Set un-symmetric I gain parameters
-
 	/* Init and fill filter structures with initial values */
 	for (int i = 0; i<200;i++){
 		get_bus_voltage(); // Function to retrieve the filtered bus voltage
@@ -1529,6 +1508,15 @@ int main(void)
 		handle_button_status(); // Function to get button status
 		handle_cartridge_presence(); // Function to monitor cartridge presence
 	}
+
+	/* Initiate PID controller */
+	PID(&TPID, &sensor_values.thermocouple_temperature, &sensor_values.requested_power, &PID_setpoint, 0, 0, 0, _PID_CD_DIRECT); //PID parameters are set depending on detected handle by set_handle_values()
+	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
+	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		// Set PID update time to "PID_UPDATE_INTERVAL"
+	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
+	PID_SetILimits(&TPID, 0, 0);         					// Set max and min I limit
+	PID_SetIminError(&TPID,PID_ADD_I_MIN_ERROR);			// Set I min Error
+	PID_SetNegativeErrorIgainMult(&TPID, PID_NEG_ERROR_I_MULT, PID_NEG_ERROR_I_BIAS); // Set un-symmetric I gain parameters
 
 	/* check STUSB4500 */
 	HAL_StatusTypeDef halStatus;
@@ -1616,6 +1604,9 @@ int main(void)
 	startup_done = 1;
 	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
 
+	/* Initiate the PID controller to zero*/
+	//PID_Init_Zero();
+
 	while (1){
 
 		if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
@@ -1679,11 +1670,11 @@ int main(void)
 				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.thermocouple_temperature);
 				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.thermocouple_temperature_filtered);
 				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_setpoint);
-				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power/PID_MAX_OUTPUT*100.0);
-				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power_filtered/PID_MAX_OUTPUT*100.0);
-				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetPpart(&TPID)/10.0);
-				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetIpart(&TPID)/10.0);
-				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetDpart(&TPID)/10.0);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power/PID_MAX_OUTPUT*100.0f);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.requested_power_filtered/PID_MAX_OUTPUT*100.0f);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetPpart(&TPID)/10.0f);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetIpart(&TPID)/10.0f);
+				pack_float(UART_transmit_buffer, &UART_packet_index, (float)PID_GetDpart(&TPID)/10.0f);
 				pack_float(UART_transmit_buffer, &UART_packet_index, (float)sensor_values.heater_current);
 
 				HAL_UART_Transmit_DMA(&huart1,(uint8_t*)UART_transmit_buffer, UART_packet_length+2); // Add two for starting bit and packet length
@@ -1721,7 +1712,7 @@ int main(void)
         else{
 			/* Update display */
 			if(HAL_GetTick() - previous_millis_display >= interval_display){
-				sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0, PID_MAX_OUTPUT);
+				sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0.0f, PID_MAX_OUTPUT);
 				update_display();
 				previous_millis_display = HAL_GetTick();
 			}
