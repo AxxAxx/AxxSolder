@@ -613,6 +613,7 @@ void format_number_left(float input, char* buffer) {
 void update_display(){
 	float filtered_power_percent = sensor_values.requested_power_filtered/PID_MAX_OUTPUT;
 	float filtered_power_watt = sensor_values.max_power_watt*filtered_power_percent;
+	uint16_t bar_top = 0;
 
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
@@ -693,8 +694,9 @@ void update_display(){
 			sleep_state_written_to_LCD = 0;
 		}
 		else if(sensor_values.current_state == RUN){
-			UG_FillFrame(210, 268-filtered_power_percent*202, 	230, 	268,								RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(210, 66, 								230, 	268-filtered_power_percent*202, 	RGB_to_BRG(C_BLACK));
+			bar_top = 268-(uint16_t)(filtered_power_percent*202.0f);
+			UG_FillFrame(210, bar_top, 	230, 	268,		RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(210, 66,		230, 	bar_top, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -777,8 +779,9 @@ void update_display(){
 			sleep_state_written_to_LCD = 0;
 		}
 		else if(sensor_values.current_state == RUN){
-			UG_FillFrame(10, 209-filtered_power_percent*177, 	30, 	209, 								RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(10, 32, 								30, 	209-filtered_power_percent*177, 	RGB_to_BRG(C_BLACK));
+			bar_top = 209-(uint16_t)(filtered_power_percent * 177.0f);
+			UG_FillFrame(10, bar_top, 	30, 	209, 		RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(10, 32, 		30, 	bar_top, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
