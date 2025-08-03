@@ -171,7 +171,8 @@ To access the user settings the user holds down the encoder button at start-up o
 |3-button mode|Use 3-button mode|YES/NOF|NO|
 |Beep at set temp|Beep at set temp|YES/NO|YES|
 |Beep tone|Beep tone|0,1,2,3|0|
-|Momentary stand|use the stand as momentary switch|YES/NO|NO|
+|Momentary stand|Use the stand as momentary switch to go between modes (useful on AxxSolder Portable)|YES/NO|NO|
+|Show power|Current power under the bar graph is displayed in|W/%|W|
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
