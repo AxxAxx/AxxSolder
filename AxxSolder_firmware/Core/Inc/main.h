@@ -89,6 +89,7 @@ typedef struct{
 	float beep_at_set_temp;
 	float beep_tone;
 	float momentary_stand;
+	float power_unit;
 	float language;
 }Flash_values;
 /* Global variables defined in main.c */

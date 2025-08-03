@@ -3,7 +3,7 @@
 #include "menu_settings.h"
 
 /* List of names for settings menu */
-#define menu_length 30
+#define menu_length 31
 char menu_names[menu_length][30] = {
 		"Startup Temp °C",
 		"Temp Offset °C",
@@ -32,6 +32,7 @@ char menu_names[menu_length][30] = {
 		"Beep at set temp",
 		"Beep tone",
 		"Momentary stand",
+		"Show power",
 		"-Load Default-",
 		"-Save and Reboot-",
 		"-Exit no Save-"
@@ -52,6 +53,7 @@ void left_align_float(char* str, float number, int8_t len)
 // ==== Enumerated strings ====
 const char* bool_str[] = { "No", "Yes" };
 const char* screen_rotation_str[] = { "0°", "90°", "180°", "270°" };
+const char* show_power_str[] = { "W", "%"};
 
 // ==== Table of enumerated parameters ====
 typedef struct {
@@ -70,8 +72,9 @@ EnumParam enum_params[] = {
 	{22,  bool_str, 2 },    // Start at previous temp
 	{23,  bool_str, 2 },    // 3-button mode
 	{24,  bool_str, 2 },    // Beep at set temp
-	{9, screen_rotation_str, 4 },  // Screen rotation
-	{26,  bool_str, 2 }     // Momentary stand
+	{9,   screen_rotation_str, 4 },  // Screen rotation
+	{26,  bool_str, 2 },     // Momentary stand
+	{27,  show_power_str, 2 }
 };
 
 #define ENUM_PARAM_COUNT (sizeof(enum_params) / sizeof(enum_params[0]))
@@ -180,7 +183,7 @@ void normalize_param(uint16_t index) {
 	switch(index) {
 		// --- Boolean or binary parameters: constrained to 0 or 1
 		case 5: case 8: case 11: case 12:
-		case 13: case 20: case 22: case 23: case 24: case 26: case 28:
+		case 13: case 20: case 22: case 23: case 24: case 26: case 27:
 			*p = normalize_enum(*p, 2);  // 0/1, cyclic
 			break;
 
