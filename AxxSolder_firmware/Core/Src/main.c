@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file           : main.c
   * @author  		: Axel Johansson, Stockholm, Sweden
-  * @brief          : Main program body of AxxSodler
+  * @brief          : Main program body of AxxSolder
   ******************************************************************************
   * @attention
   *
