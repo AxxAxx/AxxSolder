@@ -293,7 +293,7 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 									.beep_tone = 0,
 									.momentary_stand = 0,
 									.power_unit = 0,
-									.detect_nt115 = 0};
+									.detect_nt115 = 1};
 
 /* PID data */
 float PID_setpoint = 0.0f;
