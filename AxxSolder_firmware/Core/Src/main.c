@@ -292,7 +292,8 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 									.beep_at_set_temp = 1,
 									.beep_tone = 0,
 									.momentary_stand = 0,
-									.power_unit = 0};
+									.power_unit = 0,
+									.detect_nt115 = 0};
 
 /* PID data */
 float PID_setpoint = 0.0f;
@@ -1139,7 +1140,13 @@ void handle_button_status(){
 /* Get the status of handle in/on stand to trigger SLEEP */
 void get_stand_status(){
 	// Read stand input: low level = handle is in the stand
-	uint8_t stand_status = (HAL_GPIO_ReadPin(GPIOA, STAND_INP_Pin) == GPIO_PIN_RESET) ? 1 : 0;
+	uint8_t stand_status = 0;
+	if(flash_values.detect_nt115 == 1){
+		stand_status = (HAL_GPIO_ReadPin(GPIOA, STAND_INP_Pin) == GPIO_PIN_RESET) ? 1 : 0;
+	}
+	else{
+		stand_status = ((HAL_GPIO_ReadPin(GPIOA, STAND_INP_Pin) == GPIO_PIN_RESET) || (HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_2_Pin) == GPIO_PIN_RESET)) ? 1 : 0;
+	}
 
 	/* If the momentary stand function is not used */
 	if(flash_values.momentary_stand == 0){
@@ -1199,7 +1206,7 @@ void get_handle_type(){
 	sensor_values.handle2_sense = Moving_Average_Compute(handle2_status, &handle2_sense_filterStruct); // Moving average filte
 
 	/* Determine if NT115 handle is detected */
-	if((sensor_values.handle1_sense >= 0.5f) && (sensor_values.handle2_sense < 0.5f)){
+	if((sensor_values.handle1_sense >= 0.5f) && (sensor_values.handle2_sense < 0.5f) && (flash_values.detect_nt115 == 1)){
 		attached_handle = NT115;
 	}
 	/* Determine if T210 handle is detected */
