@@ -173,6 +173,7 @@ To access the user settings the user holds down the encoder button at start-up o
 |Beep tone|Beep tone|0,1,2,3|0|
 |Momentary stand|Use the stand as momentary switch to go between modes (useful on AxxSolder Portable)|YES/NO|NO|
 |Show power|Current power under the bar graph is displayed in|W/%|W|
+|Detect NT115|Detect NT115 handles or not. Useful to turn OFF for un-modified JBC SDA stands|YES/NO|YES|
 |-Load Default-|Load default parameters|N/A|N/A|
 |-Save and Reboot-|Exit and Save|N/A|N/A|
 |-Exit no Save-|Exit without Save|N/A|N/A|
