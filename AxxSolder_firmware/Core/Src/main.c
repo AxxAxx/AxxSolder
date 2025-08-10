@@ -1204,8 +1204,13 @@ void get_handle_type(){
 	uint8_t handle2_status = (HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_2_Pin) == GPIO_PIN_RESET) ? 0 : 1;
 	sensor_values.handle2_sense = Moving_Average_Compute(handle2_status, &handle2_sense_filterStruct); // Moving average filte
 
+	/* If NT115 should not be detected, force 1 to sensor_values.handle2_sense*/
+	if(flash_values.detect_nt115 == 0){
+		sensor_values.handle2_sense = 1;
+	}
+
 	/* Determine if NT115 handle is detected */
-	if((sensor_values.handle1_sense >= 0.5f) && (sensor_values.handle2_sense < 0.5f) && (flash_values.detect_nt115 == 1)){
+	if((sensor_values.handle1_sense >= 0.5f) && (sensor_values.handle2_sense < 0.5f)){
 		attached_handle = NT115;
 	}
 	/* Determine if T210 handle is detected */
