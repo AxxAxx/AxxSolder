@@ -178,7 +178,6 @@ uint16_t TC_outliers_detected = 0;
 #define NT115_MAX_POWER 22
 #define T210_MAX_POWER 	65
 #define T245_MAX_POWER 	130
-#define MAX_POWER 		150
 
 /* TC Compensation constants */
 #define TC_COMPENSATION_X2_NT115 (5.1026665462522864e-05)
@@ -1246,10 +1245,12 @@ void set_handle_values(){
 			break;
 	}
 
-	// Override from flash if specified
-	if (flash_values.power_limit != 0) {
-		sensor_values.max_power_watt = flash_values.power_limit;
-	}
+    // Override from flash if specified
+    if (flash_values.power_limit != 0) {
+        if(flash_values.power_limit < sensor_values.max_power_watt){
+            sensor_values.max_power_watt = flash_values.power_limit;
+        }
+    }
 }
 
 /* Signal that the set temperature has been reached */
