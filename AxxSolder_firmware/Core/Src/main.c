@@ -658,7 +658,7 @@ void update_display(){
 		else{
 			sprintf(DISPLAY_buffer, "%.0f W", sensor_values.max_power_watt);
 		}
-		LCD_PutStr(185, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(183, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		if(flash_values.power_unit == 0){
@@ -667,7 +667,7 @@ void update_display(){
 		else{
 			format_number_right(100*filtered_power_percent, DISPLAY_buffer);
 		}
-		LCD_PutStr(190, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(186, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
@@ -829,24 +829,24 @@ void LCD_draw_main_screen(){
 		else{
 			LCD_PutStr(11, 275, "MCU:      °F", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
-		LCD_PutStr(108, 275, "SRC:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(105, 275, "SRC:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		switch(power_source){
 		case POWER_DC:
-			LCD_PutStr(154, 275, "DC", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(150, 275, "DC", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 			break;
 		case POWER_USB:
-			LCD_PutStr(154, 275, "USB", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(150, 275, "USB", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 			break;
 		case POWER_BAT:
-			LCD_PutStr(154, 275, "BAT", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(150, 275, "BAT", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 			break;
 		}
 
 		if(flash_values.power_unit == 0){ // power unit is set to W
-			LCD_PutStr(223, 275, "W", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(219, 275, "W", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 		else{
-			LCD_PutStr(223, 275, "%", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(219, 275, "%", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
 
 		UG_DrawLine(0, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
