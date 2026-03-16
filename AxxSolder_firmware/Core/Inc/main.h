@@ -72,7 +72,7 @@ typedef struct{
 	float preset_temp_2;
 	float GPIO4_ON_at_run;
 	float screen_rotation;
-	float power_limit;
+	float momentary_stand;
 	float current_measurement;
 	float startup_beep;
 	float deg_celsius;
@@ -88,9 +88,13 @@ typedef struct{
 	float three_button_mode;
 	float beep_at_set_temp;
 	float beep_tone;
-	float momentary_stand;
 	float power_unit;
 	float detect_nt115;
+    float power_limit_T245;
+    float power_limit_T210;
+    float power_limit_NT115;
+    float power_limit_No_name;
+    float display_graph;
 }Flash_values;
 /* Global variables defined in main.c */
 extern Flash_values flash_values;

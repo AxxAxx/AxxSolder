@@ -64,6 +64,11 @@ DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 #define KD_T245 					0.5
 #define MAX_I_T245 					300
 
+#define KP_No_name 					8
+#define KI_No_name 					2
+#define KD_No_name 					0.5
+#define MAX_I_No_name 				300
+
 /* General PID parameters */
 #define PID_UPDATE_INTERVAL 25
 #define PID_ADD_I_MIN_ERROR 75
@@ -175,9 +180,10 @@ uint16_t TC_outliers_detected = 0;
 #define USB_PD_POWER_REDUCTION_FACTOR 1.0
 
 /* Max allowed power per handle type */
-#define NT115_MAX_POWER 22
-#define T210_MAX_POWER 	65
-#define T245_MAX_POWER 	130
+#define NT115_MAX_POWER 	22
+#define T210_MAX_POWER 		65
+#define T245_MAX_POWER 		130
+#define No_name_MAX_POWER 	150
 
 /* TC Compensation constants */
 #define TC_COMPENSATION_X2_NT115 (5.1026665462522864e-05)
@@ -274,7 +280,7 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 									.preset_temp_2 = 430,
 									.GPIO4_ON_at_run = 0,
 									.screen_rotation = 0,
-									.power_limit = 0,
+									.momentary_stand = 0,
 									.current_measurement = 1,
 									.startup_beep = 1,
 									.deg_celsius = 1,
@@ -290,9 +296,13 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 									.three_button_mode = 0,
 									.beep_at_set_temp = 1,
 									.beep_tone = 0,
-									.momentary_stand = 0,
 									.power_unit = 0,
-									.detect_nt115 = 1};
+									.detect_nt115 = 1,
+								    .power_limit_T245 = 0,
+								    .power_limit_T210 = 0,
+								    .power_limit_NT115 = 0,
+									.power_limit_No_name = 0,
+									.display_graph = 0};
 
 /* PID data */
 float PID_setpoint = 0.0f;
@@ -393,6 +403,11 @@ float clamp(float d, float min, float max) {
 /* Function to get min value of a and b */
 float min(float a, float b) {
   return a < b ? a : b;
+}
+
+/* Function to get min value of a,b and c */
+float min3(float a, float b, float c) {
+	return (a < b ? (a < c ? a : c) : (b < c ? b : c));
 }
 
 /**
@@ -1226,36 +1241,43 @@ void get_handle_type(){
 /* Function to set heating values depending on detected handle */
 void set_handle_values(){
 	uint16_t usb_limit = sensor_values.USB_PD_power_limit;
+    uint16_t WATT;
+    uint16_t flash_limit;
 
 	switch (attached_handle) {
-		case NT115:
-			sensor_values.max_power_watt = min(usb_limit, NT115_MAX_POWER);
-			PID_SetTunings(&TPID, KP_NT115, KI_NT115, KD_NT115);
-			PID_SetILimits(&TPID, -MAX_I_NT115, MAX_I_NT115);
-			break;
+    case NT115:
+        flash_limit = (uint16_t)flash_values.power_limit_NT115;
+        WATT = (flash_limit != 0) ? flash_limit : NT115_MAX_POWER;
+        sensor_values.max_power_watt = min3(usb_limit, NT115_MAX_POWER, WATT);
+        PID_SetTunings(&TPID, KP_NT115, KI_NT115, KD_NT115);
+        PID_SetILimits(&TPID, -MAX_I_NT115, MAX_I_NT115);
+        break;
 
-		case T210:
-			sensor_values.max_power_watt = min(usb_limit, T210_MAX_POWER);
-			PID_SetTunings(&TPID, KP_T210, KI_T210, KD_T210);
-			PID_SetILimits(&TPID, -MAX_I_T210, MAX_I_T210);
-			break;
+    case T210:
+        flash_limit = (uint16_t)flash_values.power_limit_T210;
+        WATT = (flash_limit != 0) ? flash_limit : T210_MAX_POWER;
+        sensor_values.max_power_watt = min3(usb_limit, T210_MAX_POWER, WATT);
+        PID_SetTunings(&TPID, KP_T210, KI_T210, KD_T210);
+        PID_SetILimits(&TPID, -MAX_I_T210, MAX_I_T210);
+        break;
 
-		case T245:
-			sensor_values.max_power_watt = min(usb_limit, T245_MAX_POWER);
-			PID_SetTunings(&TPID, KP_T245, KI_T245, KD_T245);
-			PID_SetILimits(&TPID, -MAX_I_T245, MAX_I_T245);
-			break;
+    case T245:
+        flash_limit = (uint16_t)flash_values.power_limit_T245;
+        WATT = (flash_limit != 0) ? flash_limit : T245_MAX_POWER;
+        sensor_values.max_power_watt = min3(usb_limit, T245_MAX_POWER, WATT);
+        PID_SetTunings(&TPID, KP_T245, KI_T245, KD_T245);
+        PID_SetILimits(&TPID, -MAX_I_T245, MAX_I_T245);
+        break;
 
-		case No_name:
-			break;
+    case No_name:
+    default:
+        flash_limit = (uint16_t)flash_values.power_limit_No_name;
+        WATT = (flash_limit != 0) ? flash_limit : No_name_MAX_POWER;
+        sensor_values.max_power_watt = min3(usb_limit, No_name_MAX_POWER, WATT);
+        PID_SetTunings(&TPID, KP_No_name, KI_No_name, KD_No_name);
+        PID_SetILimits(&TPID, -MAX_I_No_name, MAX_I_No_name);
+        break;
 	}
-
-    // Override from flash if specified
-    if (flash_values.power_limit != 0) {
-        if(flash_values.power_limit < sensor_values.max_power_watt){
-            sensor_values.max_power_watt = flash_values.power_limit;
-        }
-    }
 }
 
 /* Signal that the set temperature has been reached */
