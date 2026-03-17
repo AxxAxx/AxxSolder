@@ -656,7 +656,7 @@ void update_graph_display(){
 	UG_DrawFrame(208, 44, 229, 109, RGB_to_BRG(C_WHITE));
 
 	if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
-		UG_FillFrame(208,44,229,109, RGB_to_BRG(C_ORANGE));
+		UG_FillFrame(209,45,228,108, RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 50,  "Z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(215, 69,  "z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 90, "Z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -664,7 +664,7 @@ void update_graph_display(){
 		standby_state_written_to_LCD = 0;
 	}
 	else if((sensor_values.current_state == STANDBY) && !standby_state_written_to_LCD){
-		UG_FillFrame(208,44,229,109, RGB_to_BRG(C_ORANGE));
+		UG_FillFrame(209,45,228,108, RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 50, "S", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 70, "T", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 		LCD_PutStr(214, 90, "B", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
@@ -672,7 +672,7 @@ void update_graph_display(){
 		sleep_state_written_to_LCD = 0;
 	}
 	else if(sensor_values.current_state == RUN){
-		UG_FillFrame(208,44,229,109,RGB_to_BRG(C_LIGHT_SKY_BLUE));
+		UG_FillFrame(209,45,228,108,RGB_to_BRG(C_LIGHT_SKY_BLUE));
 		standby_state_written_to_LCD = 0;
 		sleep_state_written_to_LCD = 0;
 	}
