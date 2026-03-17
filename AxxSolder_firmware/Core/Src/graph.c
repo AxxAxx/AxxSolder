@@ -16,7 +16,8 @@
 #define GRAPH_HEIGHT 150
 
 #define TEMP_MIN 0
-#define TEMP_MAX 450
+#define TEMP_MAX_C 450
+#define TEMP_MAX_F 850
 #define POWER_MIN 0
 #define POWER_MAX 100
 
@@ -53,7 +54,13 @@ typedef struct {
 
 void add_data_point(uint16_t temp, uint16_t power) {
 
-	if (temp>450) temp =450; // Clamp value to keep the line within graph bounds
+	// Clamp value to keep the line within graph bounds
+	if(flash_values.deg_celsius == 1){
+		temp = clamp(temp, 0, TEMP_MAX_C);
+	}
+	else{
+		temp = clamp(temp, 0, TEMP_MAX_F);
+	}
 
 	temp_array[index_graph] = temp;
     power_array[index_graph] = power;
@@ -355,11 +362,17 @@ void draw_axis_labels(void) {
     uint16_t color_power_label = GRAPH_Color_POWER;
 
     // Value arrays for the temperature and power axes
-    int temp_values[] = {0, 90, 180, 270, 360, 450};
+    int temp_values_C[] = {0, 90, 180, 270, 360, 450};
+    int temp_values_F[] = {0, 170, 340, 510, 680, 850};
     int power_values[] = {0, 20, 40, 60, 80, 100};
 
     // Draw the left temperature axis (with °C symbol on the minimum value)
-    draw_axis(temp_values, sizeof(temp_values)/sizeof(temp_values[0]), 2, true, color_temp_label, "°C", NULL);
+    if(flash_values.deg_celsius == 1){
+    	draw_axis(temp_values_C, sizeof(temp_values_C)/sizeof(temp_values_C[0]), 2, true, color_temp_label, "°C", NULL);
+    }
+    else{
+    	draw_axis(temp_values_F, sizeof(temp_values_F)/sizeof(temp_values_F[0]), 2, true, color_temp_label, "°F", NULL);
+    }
 
     // Draw the right power axis (with % on the minimum value)
     draw_axis(power_values, sizeof(power_values)/sizeof(power_values[0]), GRAPH_X0 + GRAPH_WIDTH + 3, false, color_power_label, "%", "");
@@ -396,8 +409,16 @@ void draw_graph_update(void) {
         int x_prev_temp = GRAPH_X0 + ((i - 1) * GRAPH_WIDTH) / (GRAPH_POINTS - 1);
         int x_curr_temp = GRAPH_X0 + (i * GRAPH_WIDTH) / (GRAPH_POINTS - 1);
 
-        int y_prev_temp = GRAPH_Y0 - ((temp_array[idx_prev] - TEMP_MIN) * GRAPH_HEIGHT) / (TEMP_MAX - TEMP_MIN);
-        int y_curr_temp = GRAPH_Y0 - ((temp_array[idx_curr] - TEMP_MIN) * GRAPH_HEIGHT) / (TEMP_MAX - TEMP_MIN);
+        int y_prev_temp = 0;
+        int y_curr_temp = 0;
+    	if(flash_values.deg_celsius == 1){
+    		y_prev_temp = GRAPH_Y0 - ((temp_array[idx_prev] - TEMP_MIN) * GRAPH_HEIGHT) / (TEMP_MAX_C - TEMP_MIN);
+    		y_curr_temp = GRAPH_Y0 - ((temp_array[idx_curr] - TEMP_MIN) * GRAPH_HEIGHT) / (TEMP_MAX_C - TEMP_MIN);
+    	}
+    	else{
+    		y_prev_temp = GRAPH_Y0 - ((temp_array[idx_prev] - TEMP_MIN) * GRAPH_HEIGHT) / (TEMP_MAX_F - TEMP_MIN);
+    		y_curr_temp = GRAPH_Y0 - ((temp_array[idx_curr] - TEMP_MIN) * GRAPH_HEIGHT) / (TEMP_MAX_F - TEMP_MIN);
+    	}
 
         Line new_temp_line = {x_prev_temp, y_prev_temp, x_curr_temp, y_curr_temp, color_temp};
         Line *old_temp_line = &temp_lines_prev[i - 1];
