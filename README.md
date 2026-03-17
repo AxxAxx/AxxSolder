@@ -23,7 +23,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 - [AxxSolder Overview](#axxsolder-overview)
 - [Questions and support](#questions-and-support)
 - [Features](#features)
-- [DEMO](#demo)
+- [VIDEOS](#demo)
 - [Schematic](#schematic)
 - [PCB](#pcb)
 - [AxxSolder Station](#axxsolder-station)
@@ -63,7 +63,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
   - Current power source USB-PD / DC
   - Graph over current temperature and power
 
-# DEMO
+# VIDEOS
 [![YouTube](./photos/YouTube.PNG)](https://www.youtube.com/watch?v=I5uLvEM9wpY)
 [https://www.youtube.com/watch?v=I5uLvEM9wpY](https://www.youtube.com/watch?v=I5uLvEM9wpY)
 
