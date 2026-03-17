@@ -120,7 +120,7 @@ char menu_names[menu_length][37] = {
 		"Momentary stand",//10
 		"I Measurement",//11
 		"Startup Beep",//12
-		"Temp in Celsius",//13
+		"Temperature unit",//13
 		"Temp cal 100",//14
 		"Temp cal 200",//15
 		"Temp cal 300",//16
@@ -160,6 +160,7 @@ void left_align_float(char* str, float number, int8_t len)
 const char* bool_str[] = { "No ", "Yes " };
 const char* screen_rotation_str[] = { "0°", "90°", "180°", "270°" };
 const char* show_power_str[] = { "W", "%"};
+const char* temp_unit_str[] = { "°F", "°C"};
 
 // ==== Table of enumerated parameters ====
 typedef struct {
@@ -175,7 +176,7 @@ EnumParam enum_params[] = {
 	{10,  bool_str, 2 },    	// Momentary stand
     {11,  bool_str, 2 },    	// I Measurement
     {12,  bool_str, 2 },    	// Startup Beep
-    {13,  bool_str, 2 },    	// Temp in Celsius
+    {13,  temp_unit_str, 2 },  	// Temp in Celsius
     {20,  bool_str, 2 },    	// Serial DEBUG
     {22,  bool_str, 2 },    	// Start at previous temp
     {23,  bool_str, 2 },    	// 3-button mode
