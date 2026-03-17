@@ -18,7 +18,7 @@ typedef struct {
 
 
 /* Mode / Behavior */
-static const uint8_t GRP_MODE[]        = {0, 1, 2, 3, 4, 8, 10, 11, 20, 22, 23};
+static const uint8_t GRP_MODE[]        = {0, 1, 2, 3, 4, 8, 10, 11, 20, 22, 23, 33};
 
 /* Presets */
 static const uint8_t GRP_PRESETS[]     = {6, 7};
@@ -105,8 +105,8 @@ static inline int16_t enc_to_sel_bounded(uint32_t cnt0, volatile uint32_t* pCnt,
 }
 
 /* List of names for settings menu */
-#define menu_length 36
-char menu_names[menu_length][36] = {
+#define menu_length 37
+char menu_names[menu_length][37] = {
 		"Startup Temp °C",//0
 		"Temp Offset °C",//1
 		"Standby Temp °C",//2
@@ -140,9 +140,10 @@ char menu_names[menu_length][36] = {
 	    "Power lim NT115",//30
 		"Power lim Nn",//31
 		"Display graph",//32
-		"-Load Default-",//33
-		"-Save and Reboot-",//34
-		"-Exit no Save-"//35
+		"Delta T detect",//33
+		"-Load Default-",//34
+		"-Save and Reboot-",//35
+		"-Exit no Save-"//36
 };
 
 /* Function to left align a string from float */
@@ -168,20 +169,21 @@ typedef struct {
 } EnumParam;
 
 EnumParam enum_params[] = {
-    { 5,  bool_str, 2 },    // Buzzer Enabled
-    { 8,  bool_str, 2 },    // GPIO4 ON at run
+    { 5,  bool_str, 2 },    	// Buzzer Enabled
+    { 8,  bool_str, 2 },    	// GPIO4 ON at run
 	{ 9, screen_rotation_str, 4 },  // Screen rotation
-	{10,  bool_str, 2 },    // Momentary stand
-    {11,  bool_str, 2 },    // I Measurement
-    {12,  bool_str, 2 },    // Startup Beep
-    {13,  bool_str, 2 },    // Temp in Celsius
-    {20,  bool_str, 2 },    // Serial DEBUG
-    {22,  bool_str, 2 },    // Start at previous temp
-    {23,  bool_str, 2 },    // 3-button mode
-    {24,  bool_str, 2 },    // Beep at set temp
+	{10,  bool_str, 2 },    	// Momentary stand
+    {11,  bool_str, 2 },    	// I Measurement
+    {12,  bool_str, 2 },    	// Startup Beep
+    {13,  bool_str, 2 },    	// Temp in Celsius
+    {20,  bool_str, 2 },    	// Serial DEBUG
+    {22,  bool_str, 2 },    	// Start at previous temp
+    {23,  bool_str, 2 },    	// 3-button mode
+    {24,  bool_str, 2 },    	// Beep at set temp
 	{26,  show_power_str, 2 }, 	// Power unit on screen
-	{27,  bool_str, 2 },			// Detect the NT115 handle
-    {32,  bool_str, 2 }     // Displaying a graph
+	{27,  bool_str, 2 },		// Detect the NT115 handle
+	{32,  bool_str, 2 },     	// Displaying a graph
+    {33,  bool_str, 2 }     	// Delta T detection
 };
 
 #define ENUM_PARAM_COUNT (sizeof(enum_params) / sizeof(enum_params[0]))
@@ -290,7 +292,8 @@ void normalize_param(uint16_t index) {
 
         // --- Boolean or binary parameters: clamped to 0 or 1
         case 5: case 8: case 10: case 11: case 12:
-        case 13: case 20: case 22: case 23: case 24: case 26: case 27: case 32:
+        case 13: case 20: case 22: case 23: case 24:
+        case 26: case 27: case 32: case 33:
             *p = normalize_enum(*p, 2);  // 0/1, cyclic
             break;
 
@@ -543,14 +546,14 @@ void settings_menu()
                     // Regular parameter or system action
                     uint8_t abs_index = MENU_GROUPS[current_group].idx[cursor];
 
-                    if (abs_index == 35) {                // -Exit no Save-
+                    if (abs_index == 36) {                // -Exit no Save-
                         settings_menu_active = 0;
                         HAL_NVIC_SystemReset();
-                    } else if (abs_index == 34) {         // -Save and Reboot-
+                    } else if (abs_index == 35) {         // -Save and Reboot-
                         FlashWrite(&flash_values);
                         settings_menu_active = 0;
                         HAL_NVIC_SystemReset();
-                    } else if (abs_index == 33) {         // -Load Default-
+                    } else if (abs_index == 34) {         // -Load Default-
                         flash_values = default_flash_values;
                         redraw_page = 1; // values changed - redraw
                     } else {

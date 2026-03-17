@@ -95,6 +95,7 @@ typedef struct{
     float power_limit_NT115;
     float power_limit_No_name;
     float display_graph;
+    float delta_t_detection;
 }Flash_values;
 /* Global variables defined in main.c */
 extern Flash_values flash_values;

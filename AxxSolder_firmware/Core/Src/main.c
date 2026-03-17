@@ -303,7 +303,8 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 								    .power_limit_T210 = 0,
 								    .power_limit_NT115 = 0,
 									.power_limit_No_name = 0,
-									.display_graph = 0};
+									.display_graph = 0,
+									.delta_t_detection = 1};
 
 /* PID data */
 float PID_setpoint = 0.0f;
@@ -1474,7 +1475,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		update_heater_PWM();
 		thermocouple_measurement_done = 1;
 
-		handle_delta_temperature();
+		if(flash_values.delta_t_detection == 1){
+			handle_delta_temperature();
+		}
 
 	}
    	if ((hadc->Instance == ADC2) && (current_measurement_done == 0))
