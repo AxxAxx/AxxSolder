@@ -72,7 +72,7 @@ typedef struct{
 	float preset_temp_2;
 	float GPIO4_ON_at_run;
 	float screen_rotation;
-	float power_limit;
+	float momentary_stand;
 	float current_measurement;
 	float startup_beep;
 	float deg_celsius;
@@ -88,8 +88,14 @@ typedef struct{
 	float three_button_mode;
 	float beep_at_set_temp;
 	float beep_tone;
-	float momentary_stand;
-	float language;
+	float power_unit;
+	float detect_nt115;
+    float power_limit_T245;
+    float power_limit_T210;
+    float power_limit_NT115;
+    float power_limit_No_name;
+    float display_graph;
+    float delta_t_detection;
 }Flash_values;
 /* Global variables defined in main.c */
 extern Flash_values flash_values;
@@ -144,7 +150,7 @@ extern uint8_t settings_menu_active;
 #define MAX_SELECTABLE_TEMPERATURE 450
 
 /* General PID parameters */
-#define PID_MAX_OUTPUT 500
+#define PID_MAX_OUTPUT 500.0f
 #define FIXED_MEASURE_DUTY (PID_MAX_OUTPUT / 2)  // i.e. 250 / 2 = 250
 #define PID_UPDATE_INTERVAL 25
 #define PID_ADD_I_MIN_ERROR 75

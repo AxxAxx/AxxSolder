@@ -3,7 +3,7 @@
   ******************************************************************************
   * @file           : main.c
   * @author  		: Axel Johansson, Stockholm, Sweden
-  * @brief          : Main program body of AxxSodler
+  * @brief          : Main program body of AxxSolder
   ******************************************************************************
   * @attention
   *
@@ -36,14 +36,15 @@
 #include <math.h>
 #include <stdio.h>
 #include <float.h>
+#include "graph.h"
 //#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
-uint8_t fw_version_minor =  5;
-uint8_t fw_version_patch =  1;
+uint8_t fw_version_minor =  6;
+uint8_t fw_version_patch =  0;
 
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -64,9 +65,12 @@ DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 #define KD_T245 					0.5
 #define MAX_I_T245 					300
 
+#define KP_No_name 					8
+#define KI_No_name 					2
+#define KD_No_name 					0.5
+#define MAX_I_No_name 				300
+
 /* General PID parameters */
-#define PID_MAX_OUTPUT 500.0f
-#define FIXED_MEASURE_DUTY (PID_MAX_OUTPUT / 2)
 #define PID_UPDATE_INTERVAL 25
 #define PID_ADD_I_MIN_ERROR 75
 float PID_NEG_ERROR_I_MULT = 7;
@@ -74,7 +78,7 @@ float PID_NEG_ERROR_I_BIAS = 1;
 
 /* Timing constants */
 uint32_t previous_millis_display = 0;
-uint32_t interval_display = 40;
+uint32_t interval_display = 15;
 
 uint32_t previous_millis_debug = 0;
 uint32_t interval_debug = 50;
@@ -177,10 +181,10 @@ uint16_t TC_outliers_detected = 0;
 #define USB_PD_POWER_REDUCTION_FACTOR 1.0
 
 /* Max allowed power per handle type */
-#define NT115_MAX_POWER 22
-#define T210_MAX_POWER 	65
-#define T245_MAX_POWER 	130
-#define MAX_POWER 		150
+#define NT115_MAX_POWER 	22
+#define T210_MAX_POWER 		65
+#define T245_MAX_POWER 		130
+#define No_name_MAX_POWER 	150
 
 /* TC Compensation constants */
 #define TC_COMPENSATION_X2_NT115 (5.1026665462522864e-05)
@@ -277,7 +281,7 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 									.preset_temp_2 = 430,
 									.GPIO4_ON_at_run = 0,
 									.screen_rotation = 0,
-									.power_limit = 0,
+									.momentary_stand = 0,
 									.current_measurement = 1,
 									.startup_beep = 1,
 									.deg_celsius = 1,
@@ -293,7 +297,14 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 									.three_button_mode = 0,
 									.beep_at_set_temp = 1,
 									.beep_tone = 0,
-									.momentary_stand = 0};
+									.power_unit = 0,
+									.detect_nt115 = 1,
+								    .power_limit_T245 = 0,
+								    .power_limit_T210 = 0,
+								    .power_limit_NT115 = 0,
+									.power_limit_No_name = 0,
+									.display_graph = 0,
+									.delta_t_detection = 1};
 
 /* PID data */
 float PID_setpoint = 0.0f;
@@ -394,6 +405,11 @@ float clamp(float d, float min, float max) {
 /* Function to get min value of a and b */
 float min(float a, float b) {
   return a < b ? a : b;
+}
+
+/* Function to get min value of a,b and c */
+float min3(float a, float b, float c) {
+	return (a < b ? (a < c ? a : c) : (b < c ? b : c));
 }
 
 /**
@@ -610,9 +626,62 @@ void format_number_left(float input, char* buffer) {
     memset(buffer + num_digits, ' ', padding_spaces);
     buffer[num_digits + padding_spaces] = '\0';
 }
+void update_graph_display(){
+	memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+	format_number_left(convert_temperature(sensor_values.set_temperature), DISPLAY_buffer);
+	LCD_PutStr(140, 45, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
+	if(cartridge_state == DETACHED) {
+		LCD_PutStr(140, 70, " ---  ", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+	}
+	else{
+		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+		format_number_left(convert_temperature(sensor_values.thermocouple_temperature_filtered), DISPLAY_buffer);
+		LCD_PutStr(140, 70, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+	}
+
+	memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+	sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+	LCD_PutStr(162, 95, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+	if(attached_handle == T210){
+		LCD_PutStr(75, 95, "T210  ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+	}
+	else if(attached_handle == T245){
+		LCD_PutStr(75, 95, "T245  ", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+	}
+	else if(attached_handle == NT115){
+		LCD_PutStr(75, 95, "NT115", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+	}
+	UG_DrawFrame(208, 44, 229, 109, RGB_to_BRG(C_WHITE));
+
+	if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
+		UG_FillFrame(209,45,228,108, RGB_to_BRG(C_ORANGE));
+		LCD_PutStr(214, 50,  "Z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+		LCD_PutStr(215, 69,  "z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+		LCD_PutStr(214, 90, "Z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+		sleep_state_written_to_LCD = 1;
+		standby_state_written_to_LCD = 0;
+	}
+	else if((sensor_values.current_state == STANDBY) && !standby_state_written_to_LCD){
+		UG_FillFrame(209,45,228,108, RGB_to_BRG(C_ORANGE));
+		LCD_PutStr(214, 50, "S", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+		LCD_PutStr(214, 70, "T", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+		LCD_PutStr(214, 90, "B", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+		standby_state_written_to_LCD = 1;
+		sleep_state_written_to_LCD = 0;
+	}
+	else if(sensor_values.current_state == RUN){
+		UG_FillFrame(209,45,228,108,RGB_to_BRG(C_LIGHT_SKY_BLUE));
+		standby_state_written_to_LCD = 0;
+		sleep_state_written_to_LCD = 0;
+	}
+
+}
 void update_display(){
 	float filtered_power_percent = sensor_values.requested_power_filtered/PID_MAX_OUTPUT;
+	float filtered_power_watt = sensor_values.max_power_watt*filtered_power_percent;
+	uint16_t bar_top = 0;
 
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
@@ -657,11 +726,16 @@ void update_display(){
 		else{
 			sprintf(DISPLAY_buffer, "%.0f W", sensor_values.max_power_watt);
 		}
-		LCD_PutStr(185, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(183, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		format_number_right(100*filtered_power_percent, DISPLAY_buffer);
-		LCD_PutStr(190, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(flash_values.power_unit == 0){
+			format_number_right(filtered_power_watt, DISPLAY_buffer);
+		}
+		else{
+			format_number_right(100*filtered_power_percent, DISPLAY_buffer);
+		}
+		LCD_PutStr(186, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(210,66,230,268, RGB_to_BRG(C_ORANGE));
@@ -688,8 +762,9 @@ void update_display(){
 			sleep_state_written_to_LCD = 0;
 		}
 		else if(sensor_values.current_state == RUN){
-			UG_FillFrame(210, 268-filtered_power_percent*202, 	230, 	268,								RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(210, 66, 								230, 	268-filtered_power_percent*202, 	RGB_to_BRG(C_BLACK));
+			bar_top = 268-(uint16_t)(filtered_power_percent*202.0f);
+			UG_FillFrame(210, bar_top, 	230, 	268,		RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(210, 66,		230, 	bar_top, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -740,7 +815,12 @@ void update_display(){
 		LCD_PutStr(2, 10, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		format_number_left(100*filtered_power_percent, DISPLAY_buffer);
+		if(flash_values.power_unit == 0){ // power unit is set to W
+			format_number_right(filtered_power_watt, DISPLAY_buffer);
+		}
+		else{
+			format_number_right(100*filtered_power_percent, DISPLAY_buffer);
+		}
 		LCD_PutStr(5, 215, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
@@ -767,8 +847,9 @@ void update_display(){
 			sleep_state_written_to_LCD = 0;
 		}
 		else if(sensor_values.current_state == RUN){
-			UG_FillFrame(10, 209-filtered_power_percent*177, 	30, 	209, 								RGB_to_BRG(C_LIGHT_SKY_BLUE));
-			UG_FillFrame(10, 32, 								30, 	209-filtered_power_percent*177, 	RGB_to_BRG(C_BLACK));
+			bar_top = 209-(uint16_t)(filtered_power_percent * 177.0f);
+			UG_FillFrame(10, bar_top, 	30, 	209, 		RGB_to_BRG(C_LIGHT_SKY_BLUE));
+			UG_FillFrame(10, 32, 		30, 	bar_top, 	RGB_to_BRG(C_BLACK));
 			standby_state_written_to_LCD = 0;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -816,21 +897,25 @@ void LCD_draw_main_screen(){
 		else{
 			LCD_PutStr(11, 275, "MCU:      °F", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
-		LCD_PutStr(108, 275, "SRC:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(105, 275, "SRC:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		switch(power_source){
 		case POWER_DC:
-			LCD_PutStr(154, 275, "DC", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(150, 275, "DC", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 			break;
 		case POWER_USB:
-			LCD_PutStr(154, 275, "USB", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(150, 275, "USB", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 			break;
 		case POWER_BAT:
-			LCD_PutStr(154, 275, "BAT", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(150, 275, "BAT", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 			break;
 		}
 
-		LCD_PutStr(222, 275, "%", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-
+		if(flash_values.power_unit == 0){ // power unit is set to W
+			LCD_PutStr(219, 275, "W", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(219, 275, "%", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
 
 		UG_DrawLine(0, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
 		UG_DrawLine(0, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
@@ -929,7 +1014,12 @@ void LCD_draw_main_screen(){
 		UG_DrawFrame(8, 30, 32, 212, RGB_to_BRG(C_WHITE));
 		UG_DrawFrame(9, 31, 31, 211, RGB_to_BRG(C_WHITE));
 
-		LCD_PutStr(34, 215, "%", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(flash_values.power_unit == 0){ // power unit is set to W
+			LCD_PutStr(37, 215, "W", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(37, 215, "%", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
 
 	}
 }
@@ -1117,7 +1207,13 @@ void handle_button_status(){
 /* Get the status of handle in/on stand to trigger SLEEP */
 void get_stand_status(){
 	// Read stand input: low level = handle is in the stand
-	uint8_t stand_status = (HAL_GPIO_ReadPin(GPIOA, STAND_INP_Pin) == GPIO_PIN_RESET) ? 1 : 0;
+	uint8_t stand_status = 0;
+	if(flash_values.detect_nt115 == 1){
+		stand_status = (HAL_GPIO_ReadPin(GPIOA, STAND_INP_Pin) == GPIO_PIN_RESET) ? 1 : 0;
+	}
+	else{
+		stand_status = ((HAL_GPIO_ReadPin(GPIOA, STAND_INP_Pin) == GPIO_PIN_RESET) || (HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_2_Pin) == GPIO_PIN_RESET)) ? 1 : 0;
+	}
 
 	/* If the momentary stand function is not used */
 	if(flash_values.momentary_stand == 0){
@@ -1176,6 +1272,11 @@ void get_handle_type(){
 	uint8_t handle2_status = (HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_2_Pin) == GPIO_PIN_RESET) ? 0 : 1;
 	sensor_values.handle2_sense = Moving_Average_Compute(handle2_status, &handle2_sense_filterStruct); // Moving average filte
 
+	/* If NT115 should not be detected, force 1 to sensor_values.handle2_sense*/
+	if(flash_values.detect_nt115 == 0){
+		sensor_values.handle2_sense = 1;
+	}
+
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5f) && (sensor_values.handle2_sense < 0.5f)){
 		attached_handle = NT115;
@@ -1193,33 +1294,42 @@ void get_handle_type(){
 /* Function to set heating values depending on detected handle */
 void set_handle_values(){
 	uint16_t usb_limit = sensor_values.USB_PD_power_limit;
+    uint16_t WATT;
+    uint16_t flash_limit;
 
 	switch (attached_handle) {
-		case NT115:
-			sensor_values.max_power_watt = min(usb_limit, NT115_MAX_POWER);
-			PID_SetTunings(&TPID, KP_NT115, KI_NT115, KD_NT115);
-			PID_SetILimits(&TPID, -MAX_I_NT115, MAX_I_NT115);
-			break;
+    case NT115:
+        flash_limit = (uint16_t)flash_values.power_limit_NT115;
+        WATT = (flash_limit != 0) ? flash_limit : NT115_MAX_POWER;
+        sensor_values.max_power_watt = min3(usb_limit, NT115_MAX_POWER, WATT);
+        PID_SetTunings(&TPID, KP_NT115, KI_NT115, KD_NT115);
+        PID_SetILimits(&TPID, -MAX_I_NT115, MAX_I_NT115);
+        break;
 
-		case T210:
-			sensor_values.max_power_watt = min(usb_limit, T210_MAX_POWER);
-			PID_SetTunings(&TPID, KP_T210, KI_T210, KD_T210);
-			PID_SetILimits(&TPID, -MAX_I_T210, MAX_I_T210);
-			break;
+    case T210:
+        flash_limit = (uint16_t)flash_values.power_limit_T210;
+        WATT = (flash_limit != 0) ? flash_limit : T210_MAX_POWER;
+        sensor_values.max_power_watt = min3(usb_limit, T210_MAX_POWER, WATT);
+        PID_SetTunings(&TPID, KP_T210, KI_T210, KD_T210);
+        PID_SetILimits(&TPID, -MAX_I_T210, MAX_I_T210);
+        break;
 
-		case T245:
-			sensor_values.max_power_watt = min(usb_limit, T245_MAX_POWER);
-			PID_SetTunings(&TPID, KP_T245, KI_T245, KD_T245);
-			PID_SetILimits(&TPID, -MAX_I_T245, MAX_I_T245);
-			break;
+    case T245:
+        flash_limit = (uint16_t)flash_values.power_limit_T245;
+        WATT = (flash_limit != 0) ? flash_limit : T245_MAX_POWER;
+        sensor_values.max_power_watt = min3(usb_limit, T245_MAX_POWER, WATT);
+        PID_SetTunings(&TPID, KP_T245, KI_T245, KD_T245);
+        PID_SetILimits(&TPID, -MAX_I_T245, MAX_I_T245);
+        break;
 
-		case No_name:
-			break;
-	}
-
-	// Override from flash if specified
-	if (flash_values.power_limit != 0) {
-		sensor_values.max_power_watt = flash_values.power_limit;
+    case No_name:
+    default:
+        flash_limit = (uint16_t)flash_values.power_limit_No_name;
+        WATT = (flash_limit != 0) ? flash_limit : No_name_MAX_POWER;
+        sensor_values.max_power_watt = min3(usb_limit, No_name_MAX_POWER, WATT);
+        PID_SetTunings(&TPID, KP_No_name, KI_No_name, KD_No_name);
+        PID_SetILimits(&TPID, -MAX_I_No_name, MAX_I_No_name);
+        break;
 	}
 }
 
@@ -1365,7 +1475,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		update_heater_PWM();
 		thermocouple_measurement_done = 1;
 
-		handle_delta_temperature();
+		if(flash_values.delta_t_detection == 1){
+			handle_delta_temperature();
+		}
 
 	}
    	if ((hadc->Instance == ADC2) && (current_measurement_done == 0))
@@ -1474,10 +1586,16 @@ int main(void)
 
 	/* Initiate display */
 	LCD_init();
-	LCD_SetRotation(flash_values.screen_rotation);
+
+	/* If graph should be displayed - default to rotation 0 */
+	if (flash_values.display_graph == 0){
+		LCD_SetRotation(flash_values.screen_rotation);
+	}
+	else{
+		LCD_SetRotation(0);
+	}
 
 	/* Set startup state */
-	change_state(HALTED);
 
 	/* Set initial encoder timer value */
 	TIM2->CNT = flash_values.startup_temperature;
@@ -1574,7 +1692,13 @@ int main(void)
 	}
 
 	/* Draw the main screen decoration */
-	LCD_draw_main_screen();
+	if (flash_values.display_graph == 0){
+		LCD_draw_main_screen();
+	}
+	else{
+		//UG_FillScreen(background);
+		draw_graph_init();
+	}
 	HAL_Delay(250);
 
 	/* Set beep tone */
@@ -1706,14 +1830,32 @@ int main(void)
         if(popup_shown == 1){
                 if(HAL_GetTick() - previous_millis_popup >= interval_popup){
                         popup_shown = 0;
-                        LCD_draw_main_screen(); // Clear the area where the emergency message is displayed
+
+        				if (flash_values.display_graph == 0){
+        					LCD_draw_main_screen(); // Clear the area where the emergency message is displayed
+        				}
+        				else{
+        					UG_FillScreen(background);
+        					draw_graph_init();
+        				}
                 }
         }
         else{
 			/* Update display */
 			if(HAL_GetTick() - previous_millis_display >= interval_display){
 				sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0.0f, PID_MAX_OUTPUT);
-				update_display();
+
+				if (flash_values.display_graph == 0){
+					update_display();
+				}
+				else{
+					float graf_percent = sensor_values.requested_power_filtered / (PID_MAX_OUTPUT/100);
+
+					add_data_point((uint16_t) convert_temperature(sensor_values.thermocouple_temperature_filtered), (uint16_t) graf_percent);
+					draw_graph_update();
+					update_graph_display();
+				}
+
 				previous_millis_display = HAL_GetTick();
 			}
         }
