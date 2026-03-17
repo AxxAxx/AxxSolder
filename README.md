@@ -61,10 +61,14 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
   - Current detected handle type
   - Current max power output
   - Current power source USB-PD / DC
+  - Graph over current temperature and power
 
 # DEMO
 [![YouTube](./photos/YouTube.PNG)](https://www.youtube.com/watch?v=I5uLvEM9wpY)
 [https://www.youtube.com/watch?v=I5uLvEM9wpY](https://www.youtube.com/watch?v=I5uLvEM9wpY)
+
+[![YouTubeGraph](./photos/Graphing.PNG)](https://www.youtube.com/watch?v=BTZFAHj0sKs)
+[https://www.youtube.com/watch?v=BTZFAHj0sKs](https://www.youtube.com/watch?v=BTZFAHj0sKs)
 
 # Schematic
 The schematic for AxxSolder is shown below. Both station and portable versions use the same PCB and software. The MCU is a [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html). 
@@ -153,41 +157,46 @@ If the handle is detected correctly, the Standby function works and the display 
 If you are not 110% sure about your soldering/connections it is wise to be on the safe side and keep your soldering tip in a water bath in over to prevent it from over-heating in an uncontrolled manner. During the development this method was used and saved a few of those expensive JBC cartridges..
 
 # Settings
-To access the user settings the user holds down the encoder button at start-up or long-press the encoder button. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters available.
-| Setting | Description  | Unit | Default |
-|---------|------|----------------------|----------------------|
-|Startup Temp °C|Default temperature selected after boot|deg C|330|
-|Temp Offset °C|Temperature offset applied to measured temperature|deg C|0|
-|Standby Temp °C|Temperature to go to after handle is set in stand|deg C|150|
-|Standby Time [min]|Time for which standby temperature is held before cooling down|minutes|10|
-|Sleep Time [min]|Time that the iron can be ON before cooling down (safety feature)|minutes|30|
-|Buzzer Enable|Enable or Disable the buzzer|YES/NO|YES|
-|Preset Temp 1 °C|Preset temperature for button 1|deg C|330|
-|Preset Temp 2 °C|Preset temperature for button 2|deg C|430|
-|GPIO4 ON at run|Enable 3.3V output on GPIO4 when the iron is in run mode|YES/NO|NO|
-|Screen rotation|Rotate the screen|0 deg, 90 deg, 180 deg, 270 deg|0 deg|
-|Limit Power [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
-|I measurement|Measure the heater current|YES/NO|YES|
-|Startup beep|Beep after startup|YES/NO|YES|
-|Temp in celcius|Show temperatures in Celcius and not Fahrenheit|YES/NO|YES|
-|Temp cal 100 °C|Actual temperature at 100 °C|deg C|100|
-|Temp cal 200 °C|Actual temperature at 200 °C|deg C|200|
-|Temp cal 300 °C|Actual temperature at 300 °C|deg C|300|
-|Temp cal 350 °C|Actual temperature at 350 °C|deg C|350|
-|Temp cal 400 °C|Actual temperature at 400 °C|deg C|400|
-|Temp cal 450 °C|Actual temperature at 450 °C|deg C|450|
-|Serial DEBUG|Print debug over serial|YES/NO|NO|
-|Displayed temp filter|Moving average filter length|Lenght|5|
-|Startup temp is previous temp|Startup temp is previous used temp|YES/NO|NO|
-|3-button mode|Use 3-button mode|YES/NOF|NO|
-|Beep at set temp|Beep at set temp|YES/NO|YES|
-|Beep tone|Beep tone|0,1,2,3|0|
-|Momentary stand|Use the stand as momentary switch to go between modes (useful on AxxSolder Portable)|YES/NO|NO|
-|Show power|Current power under the bar graph is displayed in this unit|W/%|W|
-|Detect NT115|Detect NT115 handles or not. Useful to turn OFF for un-modified JBC SDA stands|YES/NO|YES|
-|-Load Default-|Load default parameters|N/A|N/A|
-|-Save and Reboot-|Exit and Save|N/A|N/A|
-|-Exit no Save-|Exit without Save|N/A|N/A|
+To access the user settings the user holds down the encoder button at start-up or long-press the encoder button. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters available grouped together under MODE, PRESETS, TIS, CALIBRATION, DISPLAY, SOUND and SYSTEM.
+| Group | Setting | Description  | Unit | Default |
+|----|---------|------|----------------------|----------------------|
+|MODE|Startup Temp °C|Default temperature selected after boot|deg C|330|
+|MODE|Temp Offset °C|Temperature offset applied to measured temperature|deg C|0|
+|MODE|Standby Temp °C|Temperature to go to after handle is set in stand|deg C|150|
+|MODE|Standby Time [min]|Time for which standby temperature is held before cooling down|minutes|10|
+|MODE|Sleep Time [min]|Time that the iron can be ON before cooling down (safety feature)|minutes|30|
+|SOUND|Buzzer Enable|Enable or Disable the buzzer|YES/NO|YES|
+|PRESET|Preset Temp 1 °C|Preset temperature for button 1|deg C|330|
+|PRESET|Preset Temp 2 °C|Preset temperature for button 2|deg C|430|
+|MODE|GPIO4 ON at run|Enable 3.3V output on GPIO4 when the iron is in run mode|YES/NO|NO|
+|DISPLAY|Screen rotation|Rotate the screen|0 deg, 90 deg, 180 deg, 270 deg|0 deg|
+|MODE|Momentary stand|Use the stand as momentary switch to go between modes (useful on AxxSolder Portable)|YES/NO|NO|
+|MODE|I measurement|Measure the heater current|YES/NO|YES|
+|SOUND|Startup beep|Beep after startup|YES/NO|YES|
+|DISPLAY|Temp in celcius|Show temperatures in Celcius and not Fahrenheit|YES/NO|YES|
+|CALIBRATION|Temp cal 100 °C|Actual temperature at 100 °C|deg C|100|
+|CALIBRATION|Temp cal 200 °C|Actual temperature at 200 °C|deg C|200|
+|CALIBRATION|Temp cal 300 °C|Actual temperature at 300 °C|deg C|300|
+|CALIBRATION|Temp cal 350 °C|Actual temperature at 350 °C|deg C|350|
+|CALIBRATION|Temp cal 400 °C|Actual temperature at 400 °C|deg C|400|
+|CALIBRATION|Temp cal 450 °C|Actual temperature at 450 °C|deg C|450|
+|MODE|Serial DEBUG|Print debug over serial|YES/NO|NO|
+|DISPLAY|Displayed temp filter|Moving average filter length|Lenght|5|
+|MODE|Startup temp is previous temp|Startup temp is previous used temp|YES/NO|NO|
+|MODE|3-button mode|Use 3-button mode|YES/NOF|NO|
+|SOUND|Beep at set temp|Beep at set temp|YES/NO|YES|
+|SOUND|Beep tone|Beep tone|0,1,2,3|0|
+|DISPLAY|Show power|Current power under the bar graph is displayed in this unit|W/%|W|
+|MODE|Detect NT115|Detect NT115 handles or not. Useful to turn OFF for un-modified JBC SDA stands|YES/NO|YES|
+|TIPS|Limit Power T245 [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
+|TIPS|Limit Power T210 [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
+|TIPS|Limit Power NT115 [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
+|TIPS|Limit Power No name [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
+|DISPLAY|Display graph|Display the Graph view|YES/NO|NO|
+|MODE|Delta T detect|Detect too large delta temperatures|YES/NO|YES|
+|SYSTEM|-Load Default-|Load default parameters|N/A|N/A|
+|SYSTEM|-Save and Reboot-|Exit and Save|N/A|N/A|
+|SYSTEM|-Exit no Save-|Exit without Save|N/A|N/A|
 
 # PID control
 The thermal mass and heat convection differs between different tip designs. Therefore the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good thermal performance in conducted tests.
