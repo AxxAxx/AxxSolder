@@ -161,26 +161,26 @@ If you are not 110% sure about your soldering/connections it is wise to be on th
 To access the user settings the user holds down the encoder button at start-up or long-press the encoder button. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters available grouped together under MODE, PRESETS, TIS, CALIBRATION, DISPLAY, SOUND and SYSTEM.
 | Group | Setting | Description  | Unit | Default |
 |----|---------|------|----------------------|----------------------|
-|MODE|Startup Temp °C|Default temperature selected after boot|deg C|330|
-|MODE|Temp Offset °C|Temperature offset applied to measured temperature|deg C|0|
-|MODE|Standby Temp °C|Temperature to go to after handle is set in stand|deg C|150|
+|MODE|Startup Temp °C|Default temperature selected after boot|°C|330|
+|MODE|Temp Offset °C|Temperature offset applied to measured temperature|°C|0|
+|MODE|Standby Temp °C|Temperature to go to after handle is set in stand|°C|150|
 |MODE|Standby Time [min]|Time for which standby temperature is held before cooling down|minutes|10|
 |MODE|Sleep Time [min]|Time that the iron can be ON before cooling down (safety feature)|minutes|30|
 |SOUND|Buzzer Enable|Enable or Disable the buzzer|YES/NO|YES|
-|PRESET|Preset Temp 1 °C|Preset temperature for button 1|deg C|330|
-|PRESET|Preset Temp 2 °C|Preset temperature for button 2|deg C|430|
+|PRESET|Preset Temp 1|Preset temperature for button 1|°C|330|
+|PRESET|Preset Temp 2|Preset temperature for button 2|°C|430|
 |MODE|GPIO4 ON at run|Enable 3.3V output on GPIO4 when the iron is in run mode|YES/NO|NO|
-|DISPLAY|Screen rotation|Rotate the screen|0 deg, 90 deg, 180 deg, 270 deg|0 deg|
+|DISPLAY|Screen rotation|Rotate the screen|0°, 90°, 180°, 270°|0°|
 |MODE|Momentary stand|Use the stand as momentary switch to go between modes (useful on AxxSolder Portable)|YES/NO|NO|
 |MODE|I measurement|Measure the heater current|YES/NO|YES|
 |SOUND|Startup beep|Beep after startup|YES/NO|YES|
-|DISPLAY|Temp in celcius|Show temperatures in Celcius and not Fahrenheit|YES/NO|YES|
-|CALIBRATION|Temp cal 100 °C|Actual temperature at 100 °C|deg C|100|
-|CALIBRATION|Temp cal 200 °C|Actual temperature at 200 °C|deg C|200|
-|CALIBRATION|Temp cal 300 °C|Actual temperature at 300 °C|deg C|300|
-|CALIBRATION|Temp cal 350 °C|Actual temperature at 350 °C|deg C|350|
-|CALIBRATION|Temp cal 400 °C|Actual temperature at 400 °C|deg C|400|
-|CALIBRATION|Temp cal 450 °C|Actual temperature at 450 °C|deg C|450|
+|DISPLAY|Temperature unit|Show temperatures in Celcius or Fahrenheit|°F/°C|°C|
+|CALIBRATION|Temp cal 100 °C|Actual temperature at 100 °C|°C|100|
+|CALIBRATION|Temp cal 200 °C|Actual temperature at 200 °C|°C|200|
+|CALIBRATION|Temp cal 300 °C|Actual temperature at 300 °C|°C|300|
+|CALIBRATION|Temp cal 350 °C|Actual temperature at 350 °C|°C|350|
+|CALIBRATION|Temp cal 400 °C|Actual temperature at 400 °C|°C|400|
+|CALIBRATION|Temp cal 450 °C|Actual temperature at 450 °C|°C|450|
 |MODE|Serial DEBUG|Print debug over serial|YES/NO|NO|
 |DISPLAY|Displayed temp filter|Moving average filter length|Lenght|5|
 |MODE|Startup temp is previous temp|Startup temp is previous used temp|YES/NO|NO|
