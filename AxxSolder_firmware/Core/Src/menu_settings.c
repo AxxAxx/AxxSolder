@@ -36,7 +36,7 @@ static const uint8_t GRP_DISPLAY[]     = {9, 13, 21, 26, 27, 32};
 static const uint8_t GRP_SOUND[]       = {5, 12, 24, 25};
 
 /* System (actions) */
-static const uint8_t GRP_SYSTEM[]      = {33, 34, 35}; // -Load Default-, -Save and Reboot-, -Exit no Save-
+static const uint8_t GRP_SYSTEM[]      = {34, 35, 36}; // -Load Default-, -Save and Reboot-, -Exit no Save-
 
 static const MenuGroup MENU_GROUPS[] = {
     { "Mode",        GRP_MODE,        sizeof(GRP_MODE)        },
