@@ -18,7 +18,7 @@ typedef struct {
 
 
 /* Mode / Behavior */
-static const uint8_t GRP_MODE[]        = {0, 1, 2, 3, 4, 8, 10, 11, 20, 22, 23, 32};
+static const uint8_t GRP_MODE[]        = {0, 1, 2, 3, 4, 8, 10, 11, 20, 22, 23};
 
 /* Presets */
 static const uint8_t GRP_PRESETS[]     = {6, 7};
@@ -30,7 +30,7 @@ static const uint8_t GRP_TIPS[]        = {28, 29, 30, 31};
 static const uint8_t GRP_CALIBRATION[] = {14, 15, 16, 17, 18, 19};
 
 /* Display */
-static const uint8_t GRP_DISPLAY[]     = {9, 13, 21, 26, 27};
+static const uint8_t GRP_DISPLAY[]     = {9, 13, 21, 26, 27, 32};
 
 /* Sound */
 static const uint8_t GRP_SOUND[]       = {5, 12, 24, 25};
