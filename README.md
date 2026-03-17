@@ -195,7 +195,7 @@ To access the user settings the user holds down the encoder button at start-up o
 |TIPS|Limit Power NT115 [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
 |TIPS|Limit Power No name [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
 |DISPLAY|Display graph|Display the Graph view|YES/NO|NO|
-|MODE|Delta T detect|Detect too large delta temperatures|YES/NO|YES|
+|MODE|Delta T detect|Detect too large delta temperatures and stop heating|YES/NO|YES|
 |SYSTEM|-Load Default-|Load default parameters|N/A|N/A|
 |SYSTEM|-Save and Reboot-|Exit and Save|N/A|N/A|
 |SYSTEM|-Exit no Save-|Exit without Save|N/A|N/A|
