@@ -658,9 +658,9 @@ void update_graph_display(){
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
 			UG_FillFrame(209,45,228,108, RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(213, 50,  "Z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(214, 69,  "z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
-			LCD_PutStr(213, 90, "Z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 50,  "Z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(215, 69,  "z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
+			LCD_PutStr(214, 90, "Z", FONT_arial_17X18, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_ORANGE));
 			sleep_state_written_to_LCD = 1;
 			standby_state_written_to_LCD = 0;
 		}
