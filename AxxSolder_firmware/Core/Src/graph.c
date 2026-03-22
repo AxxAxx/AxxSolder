@@ -10,10 +10,20 @@
 #include "ugui.h"
 
 // Functions responsible for displaying graphs on the display.
-#define GRAPH_X0  38
-#define GRAPH_Y0  270
-#define GRAPH_WIDTH  160
-#define GRAPH_HEIGHT 150
+#define GRAPH_X0_vertical  38
+#define GRAPH_Y0_vertical  270
+#define GRAPH_WIDTH_vertical  160
+#define GRAPH_HEIGHT_vertical 150
+
+#define GRAPH_X0_horizontal  38
+#define GRAPH_Y0_horizontal  215
+#define GRAPH_WIDTH_horizontal  245
+#define GRAPH_HEIGHT_horizontal 100
+
+uint16_t GRAPH_X0;
+uint16_t GRAPH_Y0;
+uint16_t GRAPH_WIDTH;
+uint16_t GRAPH_HEIGHT;
 
 #define TEMP_MIN 0
 #define TEMP_MAX_C 450
@@ -104,49 +114,132 @@ void draw_dashed_line_fillframe(int x1, int y1, int x2, int y2, uint16_t color,
 }
 
 void draw_graph_init(void) {
-    // Background, grid, and labels are drawn once
-    UG_FillFrame(GRAPH_X0, GRAPH_Y0 - GRAPH_HEIGHT , GRAPH_X0 + GRAPH_WIDTH, GRAPH_Y0, background);
+	// Background, grid, and labels are drawn once
+	UG_FillFrame(GRAPH_X0, GRAPH_Y0 - GRAPH_HEIGHT , GRAPH_X0 + GRAPH_WIDTH, GRAPH_Y0, background);
 
-	LCD_PutStr(53, 8, "AxxSolder", FONT_arial_19X22, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
-	LCD_DrawLine(0,36,240,36,RGB_to_BRG(C_YELLOW));
-	LCD_DrawLine(0,37,240,37,RGB_to_BRG(C_YELLOW));
-	LCD_DrawLine(0,38,240,38,RGB_to_BRG(C_YELLOW));
+	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
+		GRAPH_X0 = GRAPH_X0_vertical;
+		GRAPH_Y0 = GRAPH_Y0_vertical;
+		GRAPH_WIDTH = GRAPH_WIDTH_vertical;
+		GRAPH_HEIGHT = GRAPH_HEIGHT_vertical;
 
-	UG_DrawLine(0, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
-	UG_DrawLine(0, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
+		LCD_PutStr(53, 8, "AxxSolder", FONT_arial_19X22, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+		LCD_DrawLine(0,36,240,36,RGB_to_BRG(C_YELLOW));
+		LCD_DrawLine(0,37,240,37,RGB_to_BRG(C_YELLOW));
+		LCD_DrawLine(0,38,240,38,RGB_to_BRG(C_YELLOW));
 
-	LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-	if(flash_values.deg_celsius == 1){
-		LCD_PutStr(180, 45, "°C", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(flash_values.deg_celsius == 1){
+			LCD_PutStr(180, 45, "°C", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(180, 45, "°F", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(flash_values.deg_celsius == 1){
+			LCD_PutStr(180, 70, "°C", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(180, 70, "°F", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+
+		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(127, 95, "Vin:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+		UG_DrawLine(0, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
+		UG_DrawLine(0, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
+
+		if(flash_values.three_button_mode == 1){
+			LCD_PutStr(11, 301, "TEMP          UP   DOWN", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_1));
+			LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
+			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_2));
+			LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+		}
+
+		// Time axis labels (X axis, in seconds)
+	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)interval_display / 500.0f);
+
+	    for (int i = 0; i <= 5; i++) {
+	        int x_pos = GRAPH_X0 + i * (GRAPH_WIDTH / 5);
+	        char buf[12];
+
+	        if (i == 0) {
+	            snprintf(buf, sizeof(buf), "0s");
+	        } else {
+	            // Format time without decimal places
+	            snprintf(buf, sizeof(buf), "%.0f", i * step_time_sec);
+	        }
+
+	        int y_pos = GRAPH_Y0 + 4;
+
+	        // Shift the last label left by 5 pixels
+	        int x_draw = (i == 5) ? (x_pos - 5) : x_pos;
+
+	        LCD_PutStr(x_draw, y_pos, buf, FONT_arial_17X18, Color_TIME, background);
+	    }
 	}
 	else{
-		LCD_PutStr(180, 45, "°F", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-	}
-	LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-	if(flash_values.deg_celsius == 1){
-		LCD_PutStr(180, 70, "°C", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-	}
-	else{
-		LCD_PutStr(180, 70, "°F", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		GRAPH_X0 = GRAPH_X0_horizontal;
+		GRAPH_Y0 = GRAPH_Y0_horizontal;
+		GRAPH_WIDTH = GRAPH_WIDTH_horizontal;
+		GRAPH_HEIGHT = GRAPH_HEIGHT_horizontal;
+
+		LCD_PutStr(90, 8, "AxxSolder", FONT_arial_19X22, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+		LCD_DrawLine(0,36,310,36,RGB_to_BRG(C_YELLOW));
+		LCD_DrawLine(0,37,310,37,RGB_to_BRG(C_YELLOW));
+		LCD_DrawLine(0,38,310,38,RGB_to_BRG(C_YELLOW));
+
+		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(flash_values.deg_celsius == 1){
+			LCD_PutStr(180, 45, "°C", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(180, 45, "°F", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		if(flash_values.deg_celsius == 1){
+			LCD_PutStr(180, 70, "°C", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+		else{
+			LCD_PutStr(180, 70, "°F", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		}
+
+		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(126, 95, "Vin:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+
+		//LCD_PutStr(205, 95, "AxxSolder", FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+
+		// Time axis labels (X axis, in seconds)
+	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)interval_display / 750.0f);
+
+	    for (int i = 0; i <= 5; i++) {
+	        int x_pos = GRAPH_X0 + i * (GRAPH_WIDTH / 5);
+	        char buf[12];
+
+	        if (i == 0) {
+	            snprintf(buf, sizeof(buf), "0s");
+	        } else {
+	            // Format time without decimal places
+	            snprintf(buf, sizeof(buf), "%.0f", i * step_time_sec);
+	        }
+
+	        int y_pos = GRAPH_Y0 + 4;
+
+	        // Shift the last label left by 5 pixels
+	        int x_draw = (i == 5) ? (x_pos - 5) : x_pos;
+
+	        LCD_PutStr(x_draw, y_pos, buf, FONT_arial_17X18, Color_TIME, background);
+	    }
 	}
 
-	LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-	LCD_PutStr(126, 95, "Vin:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
-	UG_DrawFrame(207, 43, 230, 110, RGB_to_BRG(C_WHITE));
 
-	if(flash_values.three_button_mode == 1){
-		LCD_PutStr(11, 301, "TEMP          UP   DOWN", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-	}
-	else{
-		LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_1));
-		LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-		memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_2));
-		LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-	}
 
 
     // Draw horizontal dashed lines
@@ -161,27 +254,6 @@ void draw_graph_init(void) {
         		DASH_LEN_COLOR, DASH_LEN, GAP_LEN, THICKNESS_LEN);
     }
 
-    // Time axis labels (X axis, in seconds)
-    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)interval_display / 500.0f);
-
-    for (int i = 0; i <= 5; i++) {
-        int x_pos = GRAPH_X0 + i * (GRAPH_WIDTH / 5);
-        char buf[12];
-
-        if (i == 0) {
-            snprintf(buf, sizeof(buf), "0s");
-        } else {
-            // Format time without decimal places
-            snprintf(buf, sizeof(buf), "%.0f", i * step_time_sec);
-        }
-
-        int y_pos = GRAPH_Y0 + 4;
-
-        // Shift the last label left by 5 pixels
-        int x_draw = (i == 5) ? (x_pos - 5) : x_pos;
-
-        LCD_PutStr(x_draw, y_pos, buf, FONT_arial_17X18, Color_TIME, background);
-    }
 
 
     initialized = 1;
