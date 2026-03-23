@@ -1977,7 +1977,7 @@ int main(void)
 				else{
 					float graf_percent = sensor_values.requested_power_filtered / (PID_MAX_OUTPUT/100);
 
-					add_data_point((uint16_t) convert_temperature(sensor_values.thermocouple_temperature_filtered), (uint16_t) graf_percent);
+					add_data_point((uint16_t) convert_temperature(sensor_values.thermocouple_temperature_filtered), (uint16_t) graf_percent, (uint16_t) sensor_values.set_temperature);
 					draw_graph_update();
 					update_graph_display();
 				}

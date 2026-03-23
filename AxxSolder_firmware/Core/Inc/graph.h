@@ -35,7 +35,7 @@ void LCD_draw_earth_fault_popup();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void add_data_point(uint16_t temp, uint16_t power);
+void add_data_point(uint16_t temp, uint16_t power, uint16_t set_temp);
 
 void draw_graph_update(void);
 

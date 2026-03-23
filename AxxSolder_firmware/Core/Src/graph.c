@@ -35,6 +35,7 @@ uint16_t GRAPH_HEIGHT;
 
 
 #define GRAPH_Color_TEMP        RGB_to_BRG(C_CORN_FLOWER_BLUE);          // Color of the temperature axis and graph in RUN mode
+#define GRAPH_Color_SET_TEMP    RGB_to_BRG(C_WHITE_SMOKE);          // Color of the temperature axis and graph in RUN mode
 #define GRAPH_Color_POWER       RGB_to_BRG(C_YELLOW);     // Color of the power axis and graph in RUN mode
 
 #define Color_TEMP_SLEEP        RGB_to_BRG(C_GREEN)         // Color of the temperature axis and graph in SLEEP mode
@@ -48,8 +49,10 @@ uint16_t GRAPH_HEIGHT;
 #define THICKNESS_LEN  1               // Line thickness in pixels
 
 uint16_t temp_array[GRAPH_POINTS];
+uint16_t set_temp_array[GRAPH_POINTS];
 uint16_t power_array[GRAPH_POINTS];
 uint16_t prev_temp_array[GRAPH_POINTS];
+uint16_t prev_set_temp_array[GRAPH_POINTS];
 uint16_t prev_power_array[GRAPH_POINTS];
 uint8_t index_graph = 0;
 
@@ -62,23 +65,27 @@ typedef struct {
 } Line;
 
 
-void add_data_point(uint16_t temp, uint16_t power) {
+void add_data_point(uint16_t temp, uint16_t power, uint16_t set_temp) {
 
 	// Clamp value to keep the line within graph bounds
 	if(flash_values.deg_celsius == 1){
 		temp = clamp(temp, 0, TEMP_MAX_C);
+		set_temp = clamp(set_temp, 0, TEMP_MAX_C);
 	}
 	else{
 		temp = clamp(temp, 0, TEMP_MAX_F);
+		set_temp = clamp(set_temp, 0, TEMP_MAX_F);
 	}
 
 	temp_array[index_graph] = temp;
     power_array[index_graph] = power;
+    set_temp_array[index_graph] = set_temp;
     index_graph++;
     if (index_graph >= GRAPH_POINTS) index_graph = 0; // Circular buffer
 }
 
 static Line temp_lines_prev[GRAPH_POINTS - 1] = {0};
+static Line set_temp_lines_prev[GRAPH_POINTS - 1] = {0};
 static Line power_lines_prev[GRAPH_POINTS - 1] = {0};
 
 // Universal dashed line using UG_FillFrame()
@@ -237,10 +244,6 @@ void draw_graph_init(void) {
 	        LCD_PutStr(x_draw, y_pos, buf, FONT_arial_17X18, Color_TIME, background);
 	    }
 	}
-
-
-
-
 
     // Draw horizontal dashed lines
     for (int y = 0; y <= GRAPH_HEIGHT; y += GRAPH_HEIGHT / 5) {
@@ -431,6 +434,7 @@ void draw_axis_labels(void) {
     //uint16_t color_temp_label = (sensor_values.current_state == RUN) ? GRAPH_Color_TEMP : Color_TEMP_SLEEP;
     //uint16_t color_power_label = (sensor_values.current_state == RUN) ? GRAPH_Color_POWER : Color_POWER_SLEEP;
     uint16_t color_temp_label = GRAPH_Color_TEMP;
+    uint16_t color_set_temp_label = GRAPH_Color_SET_TEMP;
     uint16_t color_power_label = GRAPH_Color_POWER;
 
     // Value arrays for the temperature and power axes
@@ -469,6 +473,7 @@ void draw_graph_update(void) {
     //uint16_t color_temp = (sensor_values.current_state == RUN) ? GRAPH_Color_TEMP : Color_TEMP_SLEEP;
     //uint16_t color_power = (sensor_values.current_state == RUN) ? GRAPH_Color_POWER : Color_POWER_SLEEP;
     uint16_t color_temp = GRAPH_Color_TEMP;
+    uint16_t color_set_temp = GRAPH_Color_SET_TEMP;
     uint16_t color_power = GRAPH_Color_POWER;
 
     // Update temperature and power lines with partial erasing
@@ -481,6 +486,10 @@ void draw_graph_update(void) {
         int x_prev_temp = GRAPH_X0 + ((i - 1) * GRAPH_WIDTH) / (GRAPH_POINTS - 1);
         int x_curr_temp = GRAPH_X0 + (i * GRAPH_WIDTH) / (GRAPH_POINTS - 1);
 
+        int x_prev_set_temp = GRAPH_X0 + ((i - 1) * GRAPH_WIDTH) / (GRAPH_POINTS - 1);
+        int x_curr_set_temp = GRAPH_X0 + (i * GRAPH_WIDTH) / (GRAPH_POINTS - 1);
+
+        // Temp lines
         int y_prev_temp = 0;
         int y_curr_temp = 0;
     	if(flash_values.deg_celsius == 1){
@@ -494,6 +503,22 @@ void draw_graph_update(void) {
 
         Line new_temp_line = {x_prev_temp, y_prev_temp, x_curr_temp, y_curr_temp, color_temp};
         Line *old_temp_line = &temp_lines_prev[i - 1];
+
+        // Set_Temp lines
+        int y_prev_set_temp = 0;
+        int y_curr_set_temp = 0;
+    	if(flash_values.deg_celsius == 1){
+    		y_prev_set_temp = GRAPH_Y0 - ((set_temp_array[idx_prev] - TEMP_MIN) * GRAPH_HEIGHT) / (TEMP_MAX_C - TEMP_MIN);
+    		y_curr_set_temp = GRAPH_Y0 - ((set_temp_array[idx_curr] - TEMP_MIN) * GRAPH_HEIGHT) / (TEMP_MAX_C - TEMP_MIN);
+    	}
+    	else{
+    		y_prev_set_temp = GRAPH_Y0 - ((set_temp_array[idx_prev] - TEMP_MIN) * GRAPH_HEIGHT) / (TEMP_MAX_F - TEMP_MIN);
+    		y_curr_set_temp = GRAPH_Y0 - ((set_temp_array[idx_curr] - TEMP_MIN) * GRAPH_HEIGHT) / (TEMP_MAX_F - TEMP_MIN);
+    	}
+
+        Line new_set_temp_line = {x_prev_set_temp, y_prev_set_temp, x_curr_set_temp, y_curr_set_temp, color_set_temp};
+        Line *old_set_temp_line = &set_temp_lines_prev[i - 1];
+
 
         // Power lines
         int x_prev_power = x_prev_temp;
@@ -509,15 +534,20 @@ void draw_graph_update(void) {
                                  (old_temp_line->x2 != new_temp_line.x2) || (old_temp_line->y2 != new_temp_line.y2) ||
                                  (old_temp_line->color != new_temp_line.color);
 
+        bool set_temp_line_changed = (old_set_temp_line->x1 != new_set_temp_line.x1) || (old_set_temp_line->y1 != new_set_temp_line.y1) ||
+                                 (old_set_temp_line->x2 != new_set_temp_line.x2) || (old_set_temp_line->y2 != new_set_temp_line.y2) ||
+                                 (old_set_temp_line->color != new_set_temp_line.color);
+
         bool power_line_changed = (old_power_line->x1 != new_power_line.x1) || (old_power_line->y1 != new_power_line.y1) ||
                                   (old_power_line->x2 != new_power_line.x2) || (old_power_line->y2 != new_power_line.y2) ||
                                   (old_power_line->color != new_power_line.color);
 
         // Check for overlap between old lines if at least one line has changed
-        if (temp_line_changed || power_line_changed) {
+        if (temp_line_changed || set_temp_line_changed || power_line_changed) {
             bool overlap = false;
 
             if ((old_temp_line->x1 || old_temp_line->y1 || old_temp_line->x2 || old_temp_line->y2) &&
+            	(old_set_temp_line->x1 || old_set_temp_line->y1 || old_set_temp_line->x2 || old_set_temp_line->y2) &&
                 (old_power_line->x1 || old_power_line->y1 || old_power_line->x2 || old_power_line->y2)) {
                 overlap = lines_overlap(old_temp_line, old_power_line, 2);
             }
@@ -525,11 +555,15 @@ void draw_graph_update(void) {
             if (overlap) {
                 // Erase both lines and restore the grid
                 erase_line_and_restore_grid(old_temp_line->x1, old_temp_line->y1, old_temp_line->x2, old_temp_line->y2);
+                erase_line_and_restore_grid(old_set_temp_line->x1, old_set_temp_line->y1, old_set_temp_line->x2, old_set_temp_line->y2);
                 erase_line_and_restore_grid(old_power_line->x1, old_power_line->y1, old_power_line->x2, old_power_line->y2);
             } else {
                 // Erase only the changed lines individually
                 if (temp_line_changed && (old_temp_line->x1 || old_temp_line->y1 || old_temp_line->x2 || old_temp_line->y2)) {
                     erase_line_and_restore_grid(old_temp_line->x1, old_temp_line->y1, old_temp_line->x2, old_temp_line->y2);
+                }
+                if (set_temp_line_changed && (old_set_temp_line->x1 || old_set_temp_line->y1 || old_set_temp_line->x2 || old_set_temp_line->y2)) {
+                    erase_line_and_restore_grid(old_set_temp_line->x1, old_set_temp_line->y1, old_set_temp_line->x2, old_set_temp_line->y2);
                 }
                 if (power_line_changed && (old_power_line->x1 || old_power_line->y1 || old_power_line->x2 || old_power_line->y2)) {
                     erase_line_and_restore_grid(old_power_line->x1, old_power_line->y1, old_power_line->x2, old_power_line->y2);
@@ -538,11 +572,13 @@ void draw_graph_update(void) {
         }
 
         // Draw new lines
+        draw_line_with_thickness(new_set_temp_line.x1, new_set_temp_line.y1, new_set_temp_line.x2, new_set_temp_line.y2, new_set_temp_line.color, 2);
         draw_line_with_thickness(new_temp_line.x1, new_temp_line.y1, new_temp_line.x2, new_temp_line.y2, new_temp_line.color, 2);
         draw_line_with_thickness(new_power_line.x1, new_power_line.y1, new_power_line.x2, new_power_line.y2, new_power_line.color, 2);
 
         // Save new lines to prev
         temp_lines_prev[i - 1] = new_temp_line;
+        set_temp_lines_prev[i - 1] = new_set_temp_line;
         power_lines_prev[i - 1] = new_power_line;
     }
 }
