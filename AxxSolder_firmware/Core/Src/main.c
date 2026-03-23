@@ -90,6 +90,8 @@ uint32_t previous_millis_left_stand = 0;
 
 uint32_t previous_millis_standby = 0;
 
+uint32_t previous_millis_prestandby = 0;
+
 uint32_t previous_measure_current_update = 0;
 uint32_t interval_measure_current = 250;
 
@@ -104,6 +106,9 @@ uint32_t interval_popup = 2000;
 
 uint32_t previous_stand_debounce = 0;
 uint32_t interval_stand_debounce = 100;
+
+uint32_t time_to_standby_ms = 0;
+uint32_t time_to_sleep_ms   = 0;
 
 cartridge_state_t cartridge_state = ATTACHED;
 cartridge_state_t previous_cartridge_state = ATTACHED;
@@ -129,6 +134,8 @@ char UART_buffer[40];
 
 /* Buffer for UART print */
 char DISPLAY_buffer[40];
+
+uint8_t timer_cleaned = 0;
 
 /* ADC Buffer */
 #define ADC1_BUF_LEN 57 //3*19
@@ -304,7 +311,8 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 								    .power_limit_NT115 = 0,
 									.power_limit_No_name = 0,
 									.display_graph = 0,
-									.delta_t_detection = 1};
+									.delta_t_detection = 1,
+									.standby_delay = 0};
 
 /* PID data */
 float PID_setpoint = 0.0f;
@@ -732,6 +740,9 @@ void update_graph_display(){
 
 }
 void update_display(){
+	if(flash_values.screen_rotation == 0){
+		update_standby_sleep_display();
+	}
 	float filtered_power_percent = sensor_values.requested_power_filtered/PID_MAX_OUTPUT;
 	float filtered_power_watt = sensor_values.max_power_watt*filtered_power_percent;
 	uint16_t bar_top = 0;
@@ -939,8 +950,8 @@ void LCD_draw_main_screen(){
 		else{
 			LCD_PutStr(135, 160, "F", FONT_arial_36X44_F, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		}
-		UG_DrawFrame(11, 129, 187, 215, RGB_to_BRG(C_WHITE));
-		UG_DrawFrame(10, 128, 188, 216, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(11, 129, 187, 211, RGB_to_BRG(C_WHITE));
+		UG_DrawFrame(10, 128, 188, 212, RGB_to_BRG(C_WHITE));
 
 		LCD_PutStr(11, 235, "Handle type:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 		LCD_PutStr(11, 255, "Input voltage:         V", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
@@ -1170,6 +1181,49 @@ void handle_emergency_shutdown(){
 	}
 }
 
+void update_standby_sleep_display() {
+    uint32_t now = HAL_GetTick();
+    uint32_t countdown_ms = 0;
+    char label[16] = {0};
+    char display_buffer[30]  = {0};
+    // clean field
+    if((sensor_values.current_state == SLEEP) || sensor_values.current_state == RUN){
+    	LCD_PutStr(11, 215, "                        ", FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+    }
+
+    switch(sensor_values.current_state) {
+        case PRESTANDBY:
+            // Countdown to STANDBY
+            countdown_ms = flash_values.standby_delay * 1000UL - (now - previous_millis_prestandby);
+            if(countdown_ms > flash_values.standby_delay * 1000UL) countdown_ms = 0; // sanity
+            strcpy(label, "To Standby");
+            break;
+
+        case STANDBY:
+            // Countdown to SLEEP
+            countdown_ms = flash_values.standby_time * 60000UL - (now - previous_millis_standby);
+            if(countdown_ms > flash_values.standby_time * 60000UL) countdown_ms = 0; // sanity
+            strcpy(label, "To Sleep");
+            break;
+
+        default:
+            countdown_ms = 0;
+            label[0] = '\0'; // no label
+            break;
+    }
+
+    if(countdown_ms > 0 && label[0] != '\0') {
+        uint32_t min = countdown_ms / 60000UL;
+        uint32_t sec = (countdown_ms % 60000UL) / 1000UL;
+        sprintf(display_buffer, "%s: %02lu:%02lu     ", label, min, sec);
+    } else {
+        strcpy(display_buffer, "                    "); // clear display or show nothing
+    }
+	LCD_PutStr(11, 215, display_buffer, FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+
+}
+
+
 /* Function to handle the cartridge presence */
 void handle_cartridge_presence(){
 	if((sensor_values.heater_current < 1) || (TC_temp > 4096-10)) { //NT115 at 9V draws 2.3
@@ -1265,21 +1319,21 @@ void get_stand_status(){
 		stand_status = (HAL_GPIO_ReadPin(GPIOA, STAND_INP_Pin) == GPIO_PIN_RESET) ? 1 : 0;
 	}
 	else{
-		stand_status = ((HAL_GPIO_ReadPin(GPIOA, STAND_INP_Pin) == GPIO_PIN_RESET) || (HAL_GPIO_ReadPin (GPIOA, HANDLE_INP_2_Pin) == GPIO_PIN_RESET)) ? 1 : 0;
+		stand_status = ((HAL_GPIO_ReadPin(GPIOA, STAND_INP_Pin) == GPIO_PIN_RESET) ||
+		                (HAL_GPIO_ReadPin(GPIOA, HANDLE_INP_2_Pin) == GPIO_PIN_RESET)) ? 1 : 0;
 	}
 
 	/* If the momentary stand function is not used */
 	if(flash_values.momentary_stand == 0){
-		sensor_values.in_stand = Moving_Average_Compute(stand_status, &stand_sense_filterStruct); // Moving average filter
+		sensor_values.in_stand = Moving_Average_Compute(stand_status, &stand_sense_filterStruct);
 	}
 	/* If the momentary stand function is used, de-bounce the stand input */
 	else{
-		if(stand_status != previous_stand_status){ // If the stand status changed, due to noise or pressing:
-			previous_stand_debounce = HAL_GetTick(); // reset the de-bouncing timer
+		if(stand_status != previous_stand_status){
+			previous_stand_debounce = HAL_GetTick();
 			previous_stand_status = stand_status;
 			stand_debounced_flag = 0;
 		}
-
 		else if(!stand_debounced_flag && (HAL_GetTick() - previous_stand_debounce) > interval_stand_debounce){
 			stand_debounced_flag = 1;
 			if(stand_status == 1){
@@ -1295,23 +1349,47 @@ void get_stand_status(){
 	    }
 	}
 
-	/* If handle is in stand set state to STANDBY */
+	/* Handle stand logic */
 	if(sensor_values.in_stand >= 0.2f){
-		if (sensor_values.current_state == RUN){
+
+		/* RUN -> PRESTANDBY or STANDBY */
+		if(sensor_values.current_state == RUN){
+			if(flash_values.standby_delay != 0){
+				change_state(PRESTANDBY);
+				previous_millis_prestandby = HAL_GetTick();
+			}
+			else{
+				change_state(STANDBY);
+				previous_millis_standby = HAL_GetTick();
+			}
+		}
+
+		/* PRESTANDBY -> STANDBY after delay */
+		if((sensor_values.current_state == PRESTANDBY) &&
+		   (HAL_GetTick() - previous_millis_prestandby >= flash_values.standby_delay * 1000.0)){
 			change_state(STANDBY);
 			previous_millis_standby = HAL_GetTick();
 		}
-		if((HAL_GetTick()-previous_millis_standby >= flash_values.standby_time*60000.0) && (sensor_values.current_state == STANDBY)){
+
+		/* STANDBY -> SLEEP */
+		if((sensor_values.current_state == STANDBY) &&
+		   (HAL_GetTick() - previous_millis_standby >= flash_values.standby_time * 60000.0)){
 			change_state(SLEEP);
 		}
-		if ((sensor_values.current_state == EMERGENCY_SLEEP) || (sensor_values.current_state == HALTED)){
+
+		/* Force sleep from emergency states */
+		if ((sensor_values.current_state == EMERGENCY_SLEEP) ||
+		    (sensor_values.current_state == HALTED)){
 			change_state(SLEEP);
 		}
 	}
 
-	/* If handle is NOT in stand and state is SLEEP, change state to RUN */
+	/* Handle removed from stand → always go to RUN */
 	if(sensor_values.in_stand < 0.2){
-		if ((sensor_values.current_state == SLEEP) || (sensor_values.current_state == STANDBY) || (sensor_values.current_state == RUN)){
+		if ((sensor_values.current_state == SLEEP) ||
+		    (sensor_values.current_state == STANDBY) ||
+		    (sensor_values.current_state == PRESTANDBY) ||
+		    (sensor_values.current_state == RUN)){
 			change_state(RUN);
 		}
 	}
@@ -1567,44 +1645,44 @@ void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* hadc __unused){
 int main(void)
 {
 
-	/* USER CODE BEGIN 1 */
+  /* USER CODE BEGIN 1 */
 
-	/* USER CODE END 1 */
+  /* USER CODE END 1 */
 
-	/* MCU Configuration--------------------------------------------------------*/
+  /* MCU Configuration--------------------------------------------------------*/
 
-	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	HAL_Init();
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
 
-	/* USER CODE BEGIN Init */
+  /* USER CODE BEGIN Init */
 
-	/* USER CODE END Init */
+  /* USER CODE END Init */
 
-	/* Configure the system clock */
-	SystemClock_Config();
+  /* Configure the system clock */
+  SystemClock_Config();
 
-	/* USER CODE BEGIN SysInit */
+  /* USER CODE BEGIN SysInit */
 
-	/* USER CODE END SysInit */
+  /* USER CODE END SysInit */
 
-	/* Initialize all configured peripherals */
-	MX_GPIO_Init();
-	MX_DMA_Init();
-	MX_ADC1_Init();
-	MX_ADC2_Init();
-	MX_CRC_Init();
-	MX_TIM1_Init();
-	MX_TIM2_Init();
-	MX_TIM4_Init();
-	MX_SPI2_Init();
-	MX_I2C1_Init();
-	MX_USART1_UART_Init();
-	MX_TIM7_Init();
-	MX_TIM8_Init();
-	MX_TIM6_Init();
-	MX_TIM16_Init();
-	MX_TIM17_Init();
-	/* USER CODE BEGIN 2 */
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_ADC1_Init();
+  MX_ADC2_Init();
+  MX_CRC_Init();
+  MX_TIM1_Init();
+  MX_TIM2_Init();
+  MX_TIM4_Init();
+  MX_SPI2_Init();
+  MX_I2C1_Init();
+  MX_USART1_UART_Init();
+  MX_TIM7_Init();
+  MX_TIM8_Init();
+  MX_TIM6_Init();
+  MX_TIM16_Init();
+  MX_TIM17_Init();
+  /* USER CODE BEGIN 2 */
 
 	set_heater_duty(0);		//Set heater duty to zero to ensure zero startup current
 	HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_3);
@@ -1621,10 +1699,10 @@ int main(void)
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC1_BUF, (uint32_t)ADC1_BUF_LEN);	//Start ADC DMA mode
 
-	/* USER CODE END 2 */
+  /* USER CODE END 2 */
 
-	/* Infinite loop */
-	/* USER CODE BEGIN WHILE */
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
 	HAL_Delay(200);
 
 	// Check if user data in flash is valid, if not - write default parameters
@@ -1804,7 +1882,8 @@ int main(void)
 
 		/* switch */
 		switch(sensor_values.current_state) {
-			case RUN: {
+			case RUN:
+			case PRESTANDBY: {
 				PID_setpoint = sensor_values.set_temperature;
 				break;
 			}

@@ -18,7 +18,7 @@ typedef struct {
 
 
 /* Mode / Behavior */
-static const uint8_t GRP_MODE[]        = {0, 1, 2, 3, 4, 8, 10, 11, 20, 22, 23, 27, 33};
+static const uint8_t GRP_MODE[]        = {0, 1, 2, 34, 3, 4, 8, 10, 11, 20, 22, 23, 27, 33};
 
 /* Presets */
 static const uint8_t GRP_PRESETS[]     = {6, 7};
@@ -36,7 +36,7 @@ static const uint8_t GRP_DISPLAY[]     = {9, 13, 21, 26, 32};
 static const uint8_t GRP_SOUND[]       = {5, 12, 24, 25};
 
 /* System (actions) */
-static const uint8_t GRP_SYSTEM[]      = {34, 35, 36}; // -Load Default-, -Save and Reboot-, -Exit no Save-
+static const uint8_t GRP_SYSTEM[]      = {35, 36, 37}; // -Load Default-, -Save and Reboot-, -Exit no Save-
 
 static const MenuGroup MENU_GROUPS[] = {
     { "Mode",        GRP_MODE,        sizeof(GRP_MODE)        },
@@ -105,8 +105,8 @@ static inline int16_t enc_to_sel_bounded(uint32_t cnt0, volatile uint32_t* pCnt,
 }
 
 /* List of names for settings menu */
-#define menu_length 37
-char menu_names[menu_length][37] = {
+#define menu_length 38
+char menu_names[menu_length][38] = {
 		"Startup Temp °C",//0
 		"Temp Offset °C",//1
 		"Standby Temp °C",//2
@@ -141,9 +141,10 @@ char menu_names[menu_length][37] = {
 		"Power lim Nn",//31
 		"Display graph",//32
 		"Delta T detect",//33
-		"-Load Default-",//34
-		"-Save and Reboot-",//35
-		"-Exit no Save-"//36
+		"Standby delay [s]",//34
+		"-Load Default-",//35
+		"-Save and Reboot-",//36
+		"-Exit no Save-"//37
 };
 
 /* Function to left align a string from float */
@@ -547,14 +548,14 @@ void settings_menu()
                     // Regular parameter or system action
                     uint8_t abs_index = MENU_GROUPS[current_group].idx[cursor];
 
-                    if (abs_index == 36) {                // -Exit no Save-
+                    if (abs_index == 37) {                // -Exit no Save-
                         settings_menu_active = 0;
                         HAL_NVIC_SystemReset();
-                    } else if (abs_index == 35) {         // -Save and Reboot-
+                    } else if (abs_index == 36) {         // -Save and Reboot-
                         FlashWrite(&flash_values);
                         settings_menu_active = 0;
                         HAL_NVIC_SystemReset();
-                    } else if (abs_index == 34) {         // -Load Default-
+                    } else if (abs_index == 35) {         // -Load Default-
                         flash_values = default_flash_values;
                         redraw_page = 1; // values changed - redraw
                     } else {
