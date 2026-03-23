@@ -1187,8 +1187,8 @@ void update_standby_sleep_display() {
     char label[16] = {0};
     char display_buffer[30]  = {0};
     // clean field
-    if((sensor_values.current_state == SLEEP) || sensor_values.current_state == RUN){
-    	LCD_PutStr(11, 215, "                        ", FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+    if(sensor_values.current_state == SLEEP || sensor_values.current_state == RUN || sensor_values.current_state == HALTED || sensor_values.current_state == EMERGENCY_SLEEP){
+    	LCD_PutStr(11, 215, "                            ", FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
     }
 
     switch(sensor_values.current_state) {
