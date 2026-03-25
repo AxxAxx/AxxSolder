@@ -61,7 +61,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
   - Current detected handle type
   - Current max power output
   - Current power source USB-PD / DC
-  - Graph over current temperature and power
+  - Graph showing set temperature, current temperature and power
 
 # DEMO
 [![YouTube](./photos/YouTube.PNG)](https://www.youtube.com/watch?v=I5uLvEM9wpY)  
