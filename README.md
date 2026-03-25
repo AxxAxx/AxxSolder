@@ -164,6 +164,7 @@ To access the user settings the user holds down the encoder button at start-up o
 |MODE|Startup Temp °C|Default temperature selected after boot|°C|330|
 |MODE|Temp Offset °C|Temperature offset applied to measured temperature|°C|0|
 |MODE|Standby Temp °C|Temperature to go to after handle is set in stand|°C|150|
+|MODE|Standby Delay [s]|Time between putting the handle in the stad to going into standby mode|seconds|0|
 |MODE|Standby Time [min]|Time for which standby temperature is held before cooling down|minutes|10|
 |MODE|Sleep Time [min]|Time that the iron can be ON before cooling down (safety feature)|minutes|30|
 |SOUND|Buzzer Enable|Enable or Disable the buzzer|YES/NO|YES|
