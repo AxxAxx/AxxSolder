@@ -634,6 +634,50 @@ void format_number_left(float input, char* buffer) {
     memset(buffer + num_digits, ' ', padding_spaces);
     buffer[num_digits + padding_spaces] = '\0';
 }
+
+/* Function to update the stnadby and sleet timer countdown */
+void update_standby_sleep_display() {
+    uint32_t now = HAL_GetTick();
+    uint32_t countdown_ms = 0;
+    char label[16] = {0};
+    char display_buffer[30]  = {0};
+    // clean field
+    if(sensor_values.current_state == SLEEP || sensor_values.current_state == RUN || sensor_values.current_state == HALTED || sensor_values.current_state == EMERGENCY_SLEEP){
+    	LCD_PutStr(11, 215, "                            ", FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+    }
+
+    switch(sensor_values.current_state) {
+        case PRESTANDBY:
+            // Countdown to STANDBY
+            countdown_ms = flash_values.standby_delay * 1000UL - (now - previous_millis_prestandby);
+            if(countdown_ms > flash_values.standby_delay * 1000UL) countdown_ms = 0; // sanity
+            strcpy(label, "To Standby");
+            break;
+
+        case STANDBY:
+            // Countdown to SLEEP
+            countdown_ms = flash_values.standby_time * 60000UL - (now - previous_millis_standby);
+            if(countdown_ms > flash_values.standby_time * 60000UL) countdown_ms = 0; // sanity
+            strcpy(label, "To Sleep");
+            break;
+
+        default:
+            countdown_ms = 0;
+            label[0] = '\0'; // no label
+            break;
+    }
+
+    if(countdown_ms > 0 && label[0] != '\0') {
+        uint32_t min = countdown_ms / 60000UL;
+        uint32_t sec = (countdown_ms % 60000UL) / 1000UL;
+        sprintf(display_buffer, "%s: %02lu:%02lu     ", label, min, sec);
+    } else {
+        strcpy(display_buffer, "                    "); // clear display or show nothing
+    }
+	LCD_PutStr(11, 215, display_buffer, FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+
+}
+
 void update_graph_display(){
 	if((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)){
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
@@ -739,6 +783,7 @@ void update_graph_display(){
 	}
 
 }
+
 void update_display(){
 	if(flash_values.screen_rotation == 0){
 		update_standby_sleep_display();
@@ -1181,47 +1226,7 @@ void handle_emergency_shutdown(){
 	}
 }
 
-void update_standby_sleep_display() {
-    uint32_t now = HAL_GetTick();
-    uint32_t countdown_ms = 0;
-    char label[16] = {0};
-    char display_buffer[30]  = {0};
-    // clean field
-    if(sensor_values.current_state == SLEEP || sensor_values.current_state == RUN || sensor_values.current_state == HALTED || sensor_values.current_state == EMERGENCY_SLEEP){
-    	LCD_PutStr(11, 215, "                            ", FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
-    }
 
-    switch(sensor_values.current_state) {
-        case PRESTANDBY:
-            // Countdown to STANDBY
-            countdown_ms = flash_values.standby_delay * 1000UL - (now - previous_millis_prestandby);
-            if(countdown_ms > flash_values.standby_delay * 1000UL) countdown_ms = 0; // sanity
-            strcpy(label, "To Standby");
-            break;
-
-        case STANDBY:
-            // Countdown to SLEEP
-            countdown_ms = flash_values.standby_time * 60000UL - (now - previous_millis_standby);
-            if(countdown_ms > flash_values.standby_time * 60000UL) countdown_ms = 0; // sanity
-            strcpy(label, "To Sleep");
-            break;
-
-        default:
-            countdown_ms = 0;
-            label[0] = '\0'; // no label
-            break;
-    }
-
-    if(countdown_ms > 0 && label[0] != '\0') {
-        uint32_t min = countdown_ms / 60000UL;
-        uint32_t sec = (countdown_ms % 60000UL) / 1000UL;
-        sprintf(display_buffer, "%s: %02lu:%02lu     ", label, min, sec);
-    } else {
-        strcpy(display_buffer, "                    "); // clear display or show nothing
-    }
-	LCD_PutStr(11, 215, display_buffer, FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
-
-}
 
 
 /* Function to handle the cartridge presence */
