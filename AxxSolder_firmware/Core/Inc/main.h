@@ -36,6 +36,7 @@ extern "C" {
 /* states for runtime switch */
 typedef enum {
     RUN,
+	PRESTANDBY,
 	STANDBY,
 	SLEEP,
 	EMERGENCY_SLEEP,
@@ -96,6 +97,7 @@ typedef struct{
     float power_limit_No_name;
     float display_graph;
     float delta_t_detection;
+    float standby_delay;
 }Flash_values;
 /* Global variables defined in main.c */
 extern Flash_values flash_values;
