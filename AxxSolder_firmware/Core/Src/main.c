@@ -1284,7 +1284,13 @@ void handle_button_status(){
 			if(flash_values.three_button_mode == 0){
 				flash_values.preset_temp_1 = TIM2->CNT;
 				FlashWrite(&flash_values);
-				LCD_draw_main_screen();
+				/* Draw the main screen decoration */
+				if (flash_values.display_graph == 0){
+					LCD_draw_main_screen();
+				}
+				else{
+					draw_graph_init();
+				}
 				sleep_state_written_to_LCD = 0;
 			}
 		}
@@ -1309,7 +1315,13 @@ void handle_button_status(){
 			if(flash_values.three_button_mode == 0){
 				flash_values.preset_temp_2 = TIM2->CNT;
 				FlashWrite(&flash_values);
-				LCD_draw_main_screen();
+				/* Draw the main screen decoration */
+				if (flash_values.display_graph == 0){
+					LCD_draw_main_screen();
+				}
+				else{
+					draw_graph_init();
+				}
 				sleep_state_written_to_LCD = 0;
 			}
 		}

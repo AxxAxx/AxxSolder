@@ -394,6 +394,7 @@ void settings_menu()
 
     while (settings_menu_active)
     {
+    	handle_button_status(); // process SW_2/SW_3 button presses (up/down navigation)
         // ---- Current list length ----
         uint16_t list_len = 0;
         if (level == 0) {
