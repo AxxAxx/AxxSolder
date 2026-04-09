@@ -77,6 +77,7 @@ uint32_t Flash_Write_Data (uint32_t StartPageAddress, uint32_t *Data, uint16_t n
 	int sofar=0;
 
 	  /* Unlock the Flash to enable the flash control register access *************/
+	   __disable_irq();
 	   HAL_FLASH_Unlock();
 
 	   /* Erase the user Flash area*/
@@ -118,6 +119,7 @@ uint32_t Flash_Write_Data (uint32_t StartPageAddress, uint32_t *Data, uint16_t n
 	   /* Lock the Flash to disable the flash control register access (recommended
 	      to protect the FLASH memory against possible unwanted operation) *********/
 	   HAL_FLASH_Lock();
+	   __enable_irq();
 
 	   return 0;
 }
@@ -143,6 +145,7 @@ bool FlashWrite(Flash_values *flash_values){
 
 	uwCRCValue = HAL_CRC_Calculate(&hcrc, (uint32_t*) bufferFlash, bufLength);
 
+	__disable_irq();
 	HAL_FLASH_Unlock();
 
 	/* Clear OPTVERR bit set on virgin samples */
@@ -186,6 +189,7 @@ bool FlashWrite(Flash_values *flash_values){
 				if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, Address, uwCRCValue) == HAL_OK)
 				{
 					HAL_FLASH_Lock();
+					__enable_irq();
 					flashWriting = 0;
 					return true;
 				}
@@ -201,6 +205,7 @@ bool FlashWrite(Flash_values *flash_values){
 	/* Lock the Flash to disable the flash control register access (recommended
 	 to protect the FLASH memory against possible unwanted operation) *********/
 	HAL_FLASH_Lock();
+	__enable_irq();
 
 	flashWriting = 0;
 	return false;
