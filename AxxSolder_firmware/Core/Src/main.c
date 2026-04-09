@@ -535,6 +535,10 @@ void get_thermocouple_temperature(){
 	else if(attached_handle == NT115){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_NT115 + TC_temp*TC_COMPENSATION_X1_NT115 + TC_COMPENSATION_X0_NT115;
 	}
+	else{
+		/* Unknown handle - report temperature as setpoint so PID output is zero (heater off) */
+		sensor_values.thermocouple_temperature = sensor_values.set_temperature;
+	}
 
 	/* --- Step 4: Adjust measured temperature to fit calibrated values */
 	if(sensor_values.thermocouple_temperature < 100){
