@@ -97,6 +97,8 @@ uint32_t Flash_Write_Data (uint32_t StartPageAddress, uint32_t *Data, uint16_t n
 	   if (HAL_FLASHEx_Erase(&EraseInitStruct, &PageError) != HAL_OK)
 	   {
 	     /*Error occurred while page erase.*/
+		  HAL_FLASH_Lock();
+		  __enable_irq();
 		  return HAL_FLASH_GetError();
 	   }
 
@@ -112,6 +114,8 @@ uint32_t Flash_Write_Data (uint32_t StartPageAddress, uint32_t *Data, uint16_t n
 	     else
 	     {
 	       /* Error occurred while writing data in Flash memory*/
+	    	 HAL_FLASH_Lock();
+	    	 __enable_irq();
 	    	 return HAL_FLASH_GetError ();
 	     }
 	   }
