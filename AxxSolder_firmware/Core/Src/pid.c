@@ -65,6 +65,10 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 
 	if ((timeChange >= uPID->SampleTime) || (uPID->updateOnEveryCall))
 	{
+		/* Guard against division by zero when called multiple times per tick */
+		if (timeChange == 0){
+			return 0;
+		}
 		timeChange_in_seconds = timeChange/1000.0;
 		/* Compute all the working error variables */
 		input   = *uPID->MyInput;
