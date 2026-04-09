@@ -1794,9 +1794,14 @@ int main(void)
 		//1. check if cable is connected
 		if(stusb_is_sink_connected()){
 
-			//2. wait for sink to get ready
+			//2. wait for sink to get ready (with timeout to prevent infinite hang)
+			uint32_t sink_ready_timeout = HAL_GetTick() + 3000;
 			while(!stusb_is_sink_ready()){
 				debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
+				if(HAL_GetTick() > sink_ready_timeout){
+					debug_print_str(DEBUG_ERROR,"Sink ready timeout");
+					break;
+				}
 			}
 			//if we are on USB-PD the sink needs some time to start
 			HAL_Delay(500);
