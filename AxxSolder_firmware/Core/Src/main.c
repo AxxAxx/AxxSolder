@@ -1561,7 +1561,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	/* Button De-bounce timer (50 ms) */
 	static uint8_t timerCycles = 0;
-	if(SW_ready == 0 && debounceDone == 0){
+	if(htim == &htim16 && SW_ready == 0 && debounceDone == 0){
 		timerCycles = 0;
 		if((btnPressed == SW_1_Pin && HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) ||
 				(btnPressed == SW_2_Pin && HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin) == GPIO_PIN_SET) ||
