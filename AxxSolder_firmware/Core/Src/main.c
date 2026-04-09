@@ -256,7 +256,7 @@ struct sensor_values_struct {
 };
 
 /* Struct to hold sensor values */
-sensor_values_struct sensor_values = {
+volatile sensor_values_struct sensor_values = {
     .set_temperature = 0.0f,
     .thermocouple_temperature = 0.0f,
     .thermocouple_temperature_previous = 0.0f,
@@ -273,7 +273,7 @@ sensor_values_struct sensor_values = {
     .current_state = SLEEP,
     .previous_state = SLEEP,
     .max_power_watt = 0.0f,
-    .USB_PD_power_limit = DBL_MAX
+    .USB_PD_power_limit = FLT_MAX
 };
 
 /* Struct to hold flash values */
@@ -319,9 +319,9 @@ float PID_setpoint = 0.0f;
 
 /* Flags for temp and current measurements */
 volatile uint8_t current_measurement_requested = 0;
-uint8_t current_measurement_done = 1;
-uint8_t thermocouple_measurement_requested = 0;
-uint8_t thermocouple_measurement_done = 1;
+volatile uint8_t current_measurement_done = 1;
+volatile uint8_t thermocouple_measurement_requested = 0;
+volatile uint8_t thermocouple_measurement_done = 1;
 
 /* Moving average filters for sensor data */
 FilterTypeDef thermocouple_temperature_filter_struct;

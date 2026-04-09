@@ -124,7 +124,7 @@ typedef struct {
     float USB_PD_power_limit;
 } sensor_values_struct;
 /* Global variable, defined in main.c */
-extern sensor_values_struct sensor_values;
+extern volatile sensor_values_struct sensor_values;
 
 // Enum definition
 typedef enum {
