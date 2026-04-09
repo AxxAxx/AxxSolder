@@ -38,6 +38,8 @@
   */
 void Moving_Average_Init(FilterTypeDef* filter_struct, uint32_t window_length)
 {
+	if (window_length == 0) window_length = 1;
+	if (window_length > Max_WindowLength) window_length = Max_WindowLength;
 	filter_struct->WindowLength = window_length;
 
 	filter_struct->Sum = 0;
