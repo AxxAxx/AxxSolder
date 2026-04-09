@@ -434,7 +434,6 @@ void draw_axis_labels(void) {
     //uint16_t color_temp_label = (sensor_values.current_state == RUN) ? GRAPH_Color_TEMP : Color_TEMP_SLEEP;
     //uint16_t color_power_label = (sensor_values.current_state == RUN) ? GRAPH_Color_POWER : Color_POWER_SLEEP;
     uint16_t color_temp_label = GRAPH_Color_TEMP;
-    uint16_t color_set_temp_label = GRAPH_Color_SET_TEMP;
     uint16_t color_power_label = GRAPH_Color_POWER;
 
     // Value arrays for the temperature and power axes
