@@ -1211,8 +1211,13 @@ void handle_emergency_shutdown(){
 		change_state(EMERGENCY_SLEEP);
 		show_popup("Inp. Voltage too low");
 	}
+	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
+	if((sensor_values.thermocouple_temperature_filtered > EMERGENCY_SHUTDOWN_TEMPERATURE) && (sensor_values.current_state == RUN)){
+		change_state(EMERGENCY_SLEEP);
+		show_popup("OVERTEMP");
+	}
 	/* Set state to EMERGENCY_SLEEP if input power is too low */
-	if((sensor_values.max_power_watt <= MIN_BUSPOWER) && (sensor_values.current_state == RUN)){
+	else if((sensor_values.max_power_watt <= MIN_BUSPOWER) && (sensor_values.current_state == RUN)){
 		change_state(EMERGENCY_SLEEP);
 		show_popup("Inp. Power too low");
 	}
@@ -1220,11 +1225,6 @@ void handle_emergency_shutdown(){
 	else if((sensor_values.heater_current < 1) && (sensor_values.current_state == RUN)){ //NT115 at 9V draws 2.3
 		change_state(EMERGENCY_SLEEP);
 		show_popup("No tip detected");
-	}
-	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
-	else if((sensor_values.thermocouple_temperature_filtered > EMERGENCY_SHUTDOWN_TEMPERATURE) && (sensor_values.current_state == RUN)){
-		change_state(EMERGENCY_SLEEP);
-		show_popup("OVERTEMP");
 	}
 }
 
