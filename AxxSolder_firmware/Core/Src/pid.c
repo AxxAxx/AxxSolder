@@ -236,14 +236,11 @@ void PID_SetSampleTime(PID_TypeDef *uPID, int32_t NewSampleTime, int32_t updateO
 		updateOnCall = 1;
 	}
 	uPID->updateOnEveryCall = updateOnCall;
-	float ratio;
 
 	/* Check value */
 	if (NewSampleTime > 0){
-		ratio = (float)NewSampleTime / (float)uPID->SampleTime;
-
-		uPID->Ki *= ratio;
-		uPID->Kd /= ratio;
+		/* No gain scaling needed — PID_Compute uses actual elapsed time (timeChange_in_seconds)
+		   for integration and differentiation, so Ki/Kd are time-independent */
 		uPID->SampleTime = (uint32_t)NewSampleTime;
 	}
 }
