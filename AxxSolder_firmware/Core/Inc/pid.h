@@ -46,9 +46,9 @@ typedef struct{
 	float          DispKi_part;
 	float          DispKd_part;
 
-	float          *MyInput;
-	float          *MyOutput;
-	float          *MySetpoint;
+	volatile float *MyInput;
+	volatile float *MyOutput;
+	volatile float *MySetpoint;
 
 	float          OutputSum;
 	float          LastInput;
@@ -69,7 +69,7 @@ typedef struct{
 /* Init */
 void PID_Init(PID_TypeDef *uPID);
 
-void PID(PID_TypeDef *uPID, float *Input, float *Output, float *Setpoint, float Kp, float Ki, float Kd, PIDCD_TypeDef ControllerDirection);
+void PID(PID_TypeDef *uPID, volatile float *Input, volatile float *Output, volatile float *Setpoint, float Kp, float Ki, float Kd, PIDCD_TypeDef ControllerDirection);
 
 /* Function to clamp d between the limits min and max */
 float float_clamp(float d, float min, float max);

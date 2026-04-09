@@ -10,7 +10,7 @@ void PID_Init(PID_TypeDef *uPID)
 	uPID->OutputSum = float_clamp(uPID->OutputSum, uPID->OutMin, uPID->OutMax);
 }
 
-void PID(PID_TypeDef *uPID, float *Input, float *Output, float *Setpoint, float Kp, float Ki, float Kd, PIDCD_TypeDef ControllerDirection)
+void PID(PID_TypeDef *uPID, volatile float *Input, volatile float *Output, volatile float *Setpoint, float Kp, float Ki, float Kd, PIDCD_TypeDef ControllerDirection)
 {
 	/* Set parameters */
 	uPID->MyOutput   = Output;
@@ -65,6 +65,10 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 
 	if ((timeChange >= uPID->SampleTime) || (uPID->updateOnEveryCall))
 	{
+		/* Guard against division by zero when called multiple times per tick */
+		if (timeChange == 0){
+			return 0;
+		}
 		timeChange_in_seconds = timeChange/1000.0;
 		/* Compute all the working error variables */
 		input   = *uPID->MyInput;
@@ -232,14 +236,11 @@ void PID_SetSampleTime(PID_TypeDef *uPID, int32_t NewSampleTime, int32_t updateO
 		updateOnCall = 1;
 	}
 	uPID->updateOnEveryCall = updateOnCall;
-	float ratio;
 
 	/* Check value */
 	if (NewSampleTime > 0){
-		ratio = (float)NewSampleTime / (float)uPID->SampleTime;
-
-		uPID->Ki *= ratio;
-		uPID->Kd /= ratio;
+		/* No gain scaling needed — PID_Compute uses actual elapsed time (timeChange_in_seconds)
+		   for integration and differentiation, so Ki/Kd are time-independent */
 		uPID->SampleTime = (uint32_t)NewSampleTime;
 	}
 }

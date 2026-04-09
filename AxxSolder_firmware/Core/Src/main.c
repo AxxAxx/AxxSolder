@@ -44,7 +44,7 @@
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  6;
-uint8_t fw_version_patch =  1;
+uint8_t fw_version_patch =  2;
 
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -256,7 +256,7 @@ struct sensor_values_struct {
 };
 
 /* Struct to hold sensor values */
-sensor_values_struct sensor_values = {
+volatile sensor_values_struct sensor_values = {
     .set_temperature = 0.0f,
     .thermocouple_temperature = 0.0f,
     .thermocouple_temperature_previous = 0.0f,
@@ -273,7 +273,7 @@ sensor_values_struct sensor_values = {
     .current_state = SLEEP,
     .previous_state = SLEEP,
     .max_power_watt = 0.0f,
-    .USB_PD_power_limit = DBL_MAX
+    .USB_PD_power_limit = FLT_MAX
 };
 
 /* Struct to hold flash values */
@@ -319,9 +319,9 @@ float PID_setpoint = 0.0f;
 
 /* Flags for temp and current measurements */
 volatile uint8_t current_measurement_requested = 0;
-uint8_t current_measurement_done = 1;
-uint8_t thermocouple_measurement_requested = 0;
-uint8_t thermocouple_measurement_done = 1;
+volatile uint8_t current_measurement_done = 1;
+volatile uint8_t thermocouple_measurement_requested = 0;
+volatile uint8_t thermocouple_measurement_done = 1;
 
 /* Moving average filters for sensor data */
 FilterTypeDef thermocouple_temperature_filter_struct;
@@ -535,6 +535,10 @@ void get_thermocouple_temperature(){
 	else if(attached_handle == NT115){
 		sensor_values.thermocouple_temperature = TC_temp*TC_temp*TC_COMPENSATION_X2_NT115 + TC_temp*TC_COMPENSATION_X1_NT115 + TC_COMPENSATION_X0_NT115;
 	}
+	else{
+		/* Unknown handle - report temperature as setpoint so PID output is zero (heater off) */
+		sensor_values.thermocouple_temperature = sensor_values.set_temperature;
+	}
 
 	/* --- Step 4: Adjust measured temperature to fit calibrated values */
 	if(sensor_values.thermocouple_temperature < 100){
@@ -598,8 +602,7 @@ float convert_temperature(float temperature){
 
 /* Formatting float into a string as right-aligned, by adding spaces on the left */
 void format_number_right(float input, char* buffer) {
-    int rounded = (int)roundf(input);
-    clamp(rounded, 0, 999);
+    int rounded = (int)clamp(roundf(input), 0, 999);
 
     char number_str[4]; // Enough for "100" + '\0'
     sprintf(number_str, "%d", rounded);
@@ -618,8 +621,7 @@ void format_number_right(float input, char* buffer) {
 
 /* Formatting float into a string as left-aligned, by adding spaces on the right */
 void format_number_left(float input, char* buffer) {
-    int rounded = (int)roundf(input);
-    clamp(rounded, 0, 999);
+    int rounded = (int)clamp(roundf(input), 0, 999);
 
     char number_str[4]; // "100" + '\0'
     sprintf(number_str, "%d", rounded);
@@ -640,7 +642,7 @@ void update_standby_sleep_display() {
     uint32_t now = HAL_GetTick();
     uint32_t countdown_ms = 0;
     char label[16] = {0};
-    char display_buffer[30]  = {0};
+    char display_buffer[40]  = {0};
     // clean field
     if(sensor_values.current_state == SLEEP || sensor_values.current_state == RUN || sensor_values.current_state == HALTED || sensor_values.current_state == EMERGENCY_SLEEP){
     	LCD_PutStr(11, 215, "                            ", FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
@@ -694,7 +696,7 @@ void update_graph_display(){
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+		sprintf(DISPLAY_buffer, "%d.%d", (int)sensor_values.bus_voltage, (int)(sensor_values.bus_voltage * 10) % 10);
 		LCD_PutStr(162, 95, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(attached_handle == T210){
@@ -745,7 +747,7 @@ void update_graph_display(){
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+		sprintf(DISPLAY_buffer, "%d.%d", (int)sensor_values.bus_voltage, (int)(sensor_values.bus_voltage * 10) % 10);
 		LCD_PutStr(162, 95, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(attached_handle == T210){
@@ -807,15 +809,15 @@ void update_display(){
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+		sprintf(DISPLAY_buffer, "%d.%d", (int)sensor_values.bus_voltage, (int)(sensor_values.bus_voltage * 10) % 10);
 		LCD_PutStr(125, 255, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		if(convert_temperature(sensor_values.mcu_temperature) < 99.5){
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(sensor_values.mcu_temperature));
 		}
 		else{
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(sensor_values.mcu_temperature));
 		}
 		LCD_PutStr(59, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
@@ -830,10 +832,10 @@ void update_display(){
 		}
 
 		if(sensor_values.max_power_watt < 100){
-			sprintf(DISPLAY_buffer, "  %.0f W", sensor_values.max_power_watt);
+			sprintf(DISPLAY_buffer, "  %d W", (int)sensor_values.max_power_watt);
 		}
 		else{
-			sprintf(DISPLAY_buffer, "%.0f W", sensor_values.max_power_watt);
+			sprintf(DISPLAY_buffer, "%d W", (int)sensor_values.max_power_watt);
 		}
 		LCD_PutStr(183, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
@@ -893,15 +895,15 @@ void update_display(){
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+		sprintf(DISPLAY_buffer, "%d.%d", (int)sensor_values.bus_voltage, (int)(sensor_values.bus_voltage * 10) % 10);
 		LCD_PutStr(170, 195, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		if(convert_temperature(sensor_values.mcu_temperature) < 99.5){
-			sprintf(DISPLAY_buffer, "  %.0f", convert_temperature(sensor_values.mcu_temperature));
+			sprintf(DISPLAY_buffer, "  %d", (int)convert_temperature(sensor_values.mcu_temperature));
 		}
 		else{
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(sensor_values.mcu_temperature));
 		}
 		LCD_PutStr(102, 215, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
@@ -916,10 +918,10 @@ void update_display(){
 		}
 
 		if(sensor_values.max_power_watt < 100){
-			sprintf(DISPLAY_buffer, "%.0f W  ", sensor_values.max_power_watt);
+			sprintf(DISPLAY_buffer, "%d W  ", (int)sensor_values.max_power_watt);
 		}
 		else{
-			sprintf(DISPLAY_buffer, "%.0f W", sensor_values.max_power_watt);
+			sprintf(DISPLAY_buffer, "%d W", (int)sensor_values.max_power_watt);
 		}
 		LCD_PutStr(2, 10, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
@@ -1035,10 +1037,10 @@ void LCD_draw_main_screen(){
 		else{
 			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_1));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_1));
 			LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_2));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_2));
 			LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		}
 
@@ -1113,10 +1115,10 @@ void LCD_draw_main_screen(){
 			LCD_PutStr(285, 185, "T", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			LCD_PutStr(285, 207, "S", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_1);
+			sprintf(DISPLAY_buffer, "%d", (int)flash_values.preset_temp_1);
 			LCD_PutStr(272, 40, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_2);
+			sprintf(DISPLAY_buffer, "%d", (int)flash_values.preset_temp_2);
 			LCD_PutStr(272, 10, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		}
 
@@ -1209,8 +1211,13 @@ void handle_emergency_shutdown(){
 		change_state(EMERGENCY_SLEEP);
 		show_popup("Inp. Voltage too low");
 	}
+	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
+	if((sensor_values.thermocouple_temperature_filtered > EMERGENCY_SHUTDOWN_TEMPERATURE) && (sensor_values.current_state == RUN)){
+		change_state(EMERGENCY_SLEEP);
+		show_popup("OVERTEMP");
+	}
 	/* Set state to EMERGENCY_SLEEP if input power is too low */
-	if((sensor_values.max_power_watt <= MIN_BUSPOWER) && (sensor_values.current_state == RUN)){
+	else if((sensor_values.max_power_watt <= MIN_BUSPOWER) && (sensor_values.current_state == RUN)){
 		change_state(EMERGENCY_SLEEP);
 		show_popup("Inp. Power too low");
 	}
@@ -1218,11 +1225,6 @@ void handle_emergency_shutdown(){
 	else if((sensor_values.heater_current < 1) && (sensor_values.current_state == RUN)){ //NT115 at 9V draws 2.3
 		change_state(EMERGENCY_SLEEP);
 		show_popup("No tip detected");
-	}
-	/* Set state to EMERGENCY_SLEEP if iron is over max allowed temp */
-	else if((sensor_values.thermocouple_temperature_filtered > EMERGENCY_SHUTDOWN_TEMPERATURE) && (sensor_values.current_state == RUN)){
-		change_state(EMERGENCY_SLEEP);
-		show_popup("OVERTEMP");
 	}
 }
 
@@ -1284,7 +1286,13 @@ void handle_button_status(){
 			if(flash_values.three_button_mode == 0){
 				flash_values.preset_temp_1 = TIM2->CNT;
 				FlashWrite(&flash_values);
-				LCD_draw_main_screen();
+				/* Draw the main screen decoration */
+				if (flash_values.display_graph == 0){
+					LCD_draw_main_screen();
+				}
+				else{
+					draw_graph_init();
+				}
 				sleep_state_written_to_LCD = 0;
 			}
 		}
@@ -1309,7 +1317,13 @@ void handle_button_status(){
 			if(flash_values.three_button_mode == 0){
 				flash_values.preset_temp_2 = TIM2->CNT;
 				FlashWrite(&flash_values);
-				LCD_draw_main_screen();
+				/* Draw the main screen decoration */
+				if (flash_values.display_graph == 0){
+					LCD_draw_main_screen();
+				}
+				else{
+					draw_graph_init();
+				}
 				sleep_state_written_to_LCD = 0;
 			}
 		}
@@ -1547,7 +1561,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	/* Button De-bounce timer (50 ms) */
 	static uint8_t timerCycles = 0;
-	if(SW_ready == 0 && debounceDone == 0){
+	if(htim == &htim16 && SW_ready == 0 && debounceDone == 0){
 		timerCycles = 0;
 		if((btnPressed == SW_1_Pin && HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) ||
 				(btnPressed == SW_2_Pin && HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin) == GPIO_PIN_SET) ||
@@ -1780,9 +1794,14 @@ int main(void)
 		//1. check if cable is connected
 		if(stusb_is_sink_connected()){
 
-			//2. wait for sink to get ready
+			//2. wait for sink to get ready (with timeout to prevent infinite hang)
+			uint32_t sink_ready_timeout = HAL_GetTick() + 3000;
 			while(!stusb_is_sink_ready()){
 				debug_print_str(DEBUG_INFO,"Waiting for sink to get ready");
+				if(HAL_GetTick() > sink_ready_timeout){
+					debug_print_str(DEBUG_ERROR,"Sink ready timeout");
+					break;
+				}
 			}
 			//if we are on USB-PD the sink needs some time to start
 			HAL_Delay(500);

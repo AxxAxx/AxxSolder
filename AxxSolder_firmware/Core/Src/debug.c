@@ -57,7 +57,9 @@ HAL_StatusTypeDef debug_print_pdos(DEBUG_VERBOSITY_t verbosity, PDO_container_t 
 		memset(tx, '\0', sizeof(tx));
 		for(int i = 0 ; i < pdos->numPDOs; i++){
 			memset(buffer, '\0', sizeof(buffer));
-			sprintf(buffer, "%s PDO %i %.2fA %.2fV\n", debug_level_str[verbosity], i, (double)(pdos->pdos[i].current)*0.01, (double)(pdos->pdos[i].voltage)*0.05);
+			int current_int = pdos->pdos[i].current;
+			int voltage_int = pdos->pdos[i].voltage * 5;
+			sprintf(buffer, "%s PDO %i %d.%02dA %d.%02dV\n", debug_level_str[verbosity], i, current_int / 100, current_int % 100, voltage_int / 100, voltage_int % 100);
 			strcat(tx, buffer);
 		}
 		ret = HAL_UART_Transmit(&huart1, (uint8_t *) tx, (uint16_t)strlen(tx),100);

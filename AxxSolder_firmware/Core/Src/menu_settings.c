@@ -152,7 +152,7 @@ void left_align_float(char* str, float number, int8_t len)
 	{
 		char tempstring[len];
 		memset(&tempstring, '\0', len);
-		sprintf(tempstring, "%.0f", number);
+		sprintf(tempstring, "%d", (int)number);
 
 		strcpy(str, tempstring);
 	}
@@ -394,6 +394,7 @@ void settings_menu()
 
     while (settings_menu_active)
     {
+    	handle_button_status(); // process SW_2/SW_3 button presses (up/down navigation)
         // ---- Current list length ----
         uint16_t list_len = 0;
         if (level == 0) {
