@@ -10,7 +10,7 @@ void PID_Init(PID_TypeDef *uPID)
 	uPID->OutputSum = float_clamp(uPID->OutputSum, uPID->OutMin, uPID->OutMax);
 }
 
-void PID(PID_TypeDef *uPID, float *Input, float *Output, float *Setpoint, float Kp, float Ki, float Kd, PIDCD_TypeDef ControllerDirection)
+void PID(PID_TypeDef *uPID, volatile float *Input, volatile float *Output, volatile float *Setpoint, float Kp, float Ki, float Kd, PIDCD_TypeDef ControllerDirection)
 {
 	/* Set parameters */
 	uPID->MyOutput   = Output;

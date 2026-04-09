@@ -642,7 +642,7 @@ void update_standby_sleep_display() {
     uint32_t now = HAL_GetTick();
     uint32_t countdown_ms = 0;
     char label[16] = {0};
-    char display_buffer[30]  = {0};
+    char display_buffer[40]  = {0};
     // clean field
     if(sensor_values.current_state == SLEEP || sensor_values.current_state == RUN || sensor_values.current_state == HALTED || sensor_values.current_state == EMERGENCY_SLEEP){
     	LCD_PutStr(11, 215, "                            ", FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
