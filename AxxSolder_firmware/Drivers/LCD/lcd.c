@@ -621,9 +621,9 @@ static void clearTime(void){
   draw_time=HAL_GetTick();
 }
 static void printTime(void){
-  char str[8];
+  char str[16];
   uint8_t t = UG_FontGetTransparency();
-  sprintf(str,"%lums",HAL_GetTick()-draw_time);
+  snprintf(str, sizeof(str), "%lums", HAL_GetTick()-draw_time);
   UG_FontSelect(DEFAULT_FONT);
   UG_SetForecolor(C_YELLOW);
   UG_SetBackcolor(C_BLACK);
