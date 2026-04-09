@@ -602,8 +602,7 @@ float convert_temperature(float temperature){
 
 /* Formatting float into a string as right-aligned, by adding spaces on the left */
 void format_number_right(float input, char* buffer) {
-    int rounded = (int)roundf(input);
-    clamp(rounded, 0, 999);
+    int rounded = (int)clamp(roundf(input), 0, 999);
 
     char number_str[4]; // Enough for "100" + '\0'
     sprintf(number_str, "%d", rounded);
@@ -622,8 +621,7 @@ void format_number_right(float input, char* buffer) {
 
 /* Formatting float into a string as left-aligned, by adding spaces on the right */
 void format_number_left(float input, char* buffer) {
-    int rounded = (int)roundf(input);
-    clamp(rounded, 0, 999);
+    int rounded = (int)clamp(roundf(input), 0, 999);
 
     char number_str[4]; // "100" + '\0'
     sprintf(number_str, "%d", rounded);
