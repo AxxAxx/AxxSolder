@@ -152,7 +152,7 @@ void left_align_float(char* str, float number, int8_t len)
 	{
 		char tempstring[len];
 		memset(&tempstring, '\0', len);
-		sprintf(tempstring, "%.0f", number);
+		sprintf(tempstring, "%d", (int)number);
 
 		strcpy(str, tempstring);
 	}

@@ -162,10 +162,10 @@ void draw_graph_init(void) {
 		else{
 			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_1));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_1));
 			LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_2));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_2));
 			LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		}
 
@@ -180,7 +180,7 @@ void draw_graph_init(void) {
 	            snprintf(buf, sizeof(buf), "0s");
 	        } else {
 	            // Format time without decimal places
-	            snprintf(buf, sizeof(buf), "%.0f", i * step_time_sec);
+	            snprintf(buf, sizeof(buf), "%d", (int)(i * step_time_sec));
 	        }
 
 	        int y_pos = GRAPH_Y0 + 4;
@@ -233,7 +233,7 @@ void draw_graph_init(void) {
 	            snprintf(buf, sizeof(buf), "0s");
 	        } else {
 	            // Format time without decimal places
-	            snprintf(buf, sizeof(buf), "%.0f", i * step_time_sec);
+	            snprintf(buf, sizeof(buf), "%d", (int)(i * step_time_sec));
 	        }
 
 	        int y_pos = GRAPH_Y0 + 4;

@@ -694,7 +694,7 @@ void update_graph_display(){
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+		sprintf(DISPLAY_buffer, "%d.%d", (int)sensor_values.bus_voltage, (int)(sensor_values.bus_voltage * 10) % 10);
 		LCD_PutStr(162, 95, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(attached_handle == T210){
@@ -745,7 +745,7 @@ void update_graph_display(){
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+		sprintf(DISPLAY_buffer, "%d.%d", (int)sensor_values.bus_voltage, (int)(sensor_values.bus_voltage * 10) % 10);
 		LCD_PutStr(162, 95, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		if(attached_handle == T210){
@@ -807,15 +807,15 @@ void update_display(){
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+		sprintf(DISPLAY_buffer, "%d.%d", (int)sensor_values.bus_voltage, (int)(sensor_values.bus_voltage * 10) % 10);
 		LCD_PutStr(125, 255, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		if(convert_temperature(sensor_values.mcu_temperature) < 99.5){
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(sensor_values.mcu_temperature));
 		}
 		else{
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(sensor_values.mcu_temperature));
 		}
 		LCD_PutStr(59, 275, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
@@ -830,10 +830,10 @@ void update_display(){
 		}
 
 		if(sensor_values.max_power_watt < 100){
-			sprintf(DISPLAY_buffer, "  %.0f W", sensor_values.max_power_watt);
+			sprintf(DISPLAY_buffer, "  %d W", (int)sensor_values.max_power_watt);
 		}
 		else{
-			sprintf(DISPLAY_buffer, "%.0f W", sensor_values.max_power_watt);
+			sprintf(DISPLAY_buffer, "%d W", (int)sensor_values.max_power_watt);
 		}
 		LCD_PutStr(183, 45, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
@@ -893,15 +893,15 @@ void update_display(){
 		}
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		sprintf(DISPLAY_buffer, "%.1f", sensor_values.bus_voltage);
+		sprintf(DISPLAY_buffer, "%d.%d", (int)sensor_values.bus_voltage, (int)(sensor_values.bus_voltage * 10) % 10);
 		LCD_PutStr(170, 195, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 		if(convert_temperature(sensor_values.mcu_temperature) < 99.5){
-			sprintf(DISPLAY_buffer, "  %.0f", convert_temperature(sensor_values.mcu_temperature));
+			sprintf(DISPLAY_buffer, "  %d", (int)convert_temperature(sensor_values.mcu_temperature));
 		}
 		else{
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(sensor_values.mcu_temperature));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(sensor_values.mcu_temperature));
 		}
 		LCD_PutStr(102, 215, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
@@ -916,10 +916,10 @@ void update_display(){
 		}
 
 		if(sensor_values.max_power_watt < 100){
-			sprintf(DISPLAY_buffer, "%.0f W  ", sensor_values.max_power_watt);
+			sprintf(DISPLAY_buffer, "%d W  ", (int)sensor_values.max_power_watt);
 		}
 		else{
-			sprintf(DISPLAY_buffer, "%.0f W", sensor_values.max_power_watt);
+			sprintf(DISPLAY_buffer, "%d W", (int)sensor_values.max_power_watt);
 		}
 		LCD_PutStr(2, 10, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
@@ -1035,10 +1035,10 @@ void LCD_draw_main_screen(){
 		else{
 			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_1));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_1));
 			LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.0f", convert_temperature(flash_values.preset_temp_2));
+			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_2));
 			LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		}
 
@@ -1113,10 +1113,10 @@ void LCD_draw_main_screen(){
 			LCD_PutStr(285, 185, "T", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			LCD_PutStr(285, 207, "S", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_1);
+			sprintf(DISPLAY_buffer, "%d", (int)flash_values.preset_temp_1);
 			LCD_PutStr(272, 40, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 			memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%.0f", flash_values.preset_temp_2);
+			sprintf(DISPLAY_buffer, "%d", (int)flash_values.preset_temp_2);
 			LCD_PutStr(272, 10, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
 		}
 
