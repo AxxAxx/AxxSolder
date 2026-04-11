@@ -307,27 +307,27 @@ void normalize_param(uint16_t index) {
 
         // --- Parameter with range 1 to 10 (10 values)
         case 21:
-            *p = 1 + fmod(round(fmod(fabs(*p), 10)), 10);  // 1..10
+            *p = 1.0f + fmodf(roundf(fmodf(fabsf(*p), 10.0f)), 10.0f);  // 1..10
             break;
 
         // --- Integer parameter (e.g. sensor type, flag)
         case 1:
-            *p = round(*p);  // Round to nearest integer
+            *p = roundf(*p);  // Round to nearest integer
             break;
 
         // --- Temperature parameters: clamped to the allowed range
         case 0: case 2: case 6: case 7:
-            *p = fmod(round(fmod(fabs(*p), MAX_SELECTABLE_TEMPERATURE + 1)), MAX_SELECTABLE_TEMPERATURE + 1);
+            *p = fmodf(roundf(fmodf(fabsf(*p), MAX_SELECTABLE_TEMPERATURE + 1)), MAX_SELECTABLE_TEMPERATURE + 1);
             break;
 
         // --- Power parameter: 0..(MAX_POWER + 4)
        case 28: case 29: case 30: case 31:
-            *p = fmod(round(fmod(fabs(*p), MAX_POWER + 5)), MAX_POWER + 5);
+            *p = fmodf(roundf(fmodf(fabsf(*p), MAX_POWER + 5)), MAX_POWER + 5);
             break;
 
         // --- Default: take absolute value (positive only)
         default:
-            *p = fabs(*p);
+            *p = fabsf(*p);
             break;
     }
 }

@@ -62,12 +62,12 @@ DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 
 #define KP_T245 					8
 #define KI_T245 					2
-#define KD_T245 					0.5
+#define KD_T245 					0.5f
 #define MAX_I_T245 					300
 
 #define KP_No_name 					8
 #define KI_No_name 					2
-#define KD_No_name 					0.5
+#define KD_No_name 					0.5f
 #define MAX_I_No_name 				300
 
 /* General PID parameters */
@@ -176,16 +176,16 @@ uint16_t TC_outliers_detected = 0;
 #define EMERGENCY_SHUTDOWN_TEMPERATURE 490
 
 /* Constants for scaling input voltage ADC value*/
-#define VOLTAGE_COMPENSATION 0.00840442388
-#define CURRENT_COMPENSATION 0.002864
+#define VOLTAGE_COMPENSATION 0.00840442388f
+#define CURRENT_COMPENSATION 0.002864f
 
 /* Constants for scaling power in W to correct duty cycle */
-#define POWER_CONVERSION_FACTOR 0.123
+#define POWER_CONVERSION_FACTOR 0.123f
 
 /* Min allowed bus voltage and power */
-#define MIN_BUSVOLTAGE 8.0
-#define MIN_BUSPOWER 8.0
-#define USB_PD_POWER_REDUCTION_FACTOR 1.0
+#define MIN_BUSVOLTAGE 8.0f
+#define MIN_BUSPOWER 8.0f
+#define USB_PD_POWER_REDUCTION_FACTOR 1.0f
 
 /* Max allowed power per handle type */
 #define NT115_MAX_POWER 	22
@@ -194,22 +194,22 @@ uint16_t TC_outliers_detected = 0;
 #define No_name_MAX_POWER 	150
 
 /* TC Compensation constants */
-#define TC_COMPENSATION_X2_NT115 (5.1026665462522864e-05)
-#define TC_COMPENSATION_X1_NT115 0.42050803230712813
-#define TC_COMPENSATION_X0_NT115 20.14538589052425
+#define TC_COMPENSATION_X2_NT115 (5.1026665462522864e-05f)
+#define TC_COMPENSATION_X1_NT115 0.42050803230712813f
+#define TC_COMPENSATION_X0_NT115 20.14538589052425f
 
-#define TC_COMPENSATION_X2_T210 (4.223931712905644e-06)
-#define TC_COMPENSATION_X1_T210 0.31863796444354214
-#define TC_COMPENSATION_X0_T210 20.968033870812942
+#define TC_COMPENSATION_X2_T210 (4.223931712905644e-06f)
+#define TC_COMPENSATION_X1_T210 0.31863796444354214f
+#define TC_COMPENSATION_X0_T210 20.968033870812942f
 
-#define TC_COMPENSATION_X2_T245 (-4.735112838956741e-07)
-#define TC_COMPENSATION_X1_T245 0.11936452029674384
-#define TC_COMPENSATION_X0_T245 23.777399955382318
+#define TC_COMPENSATION_X2_T245 (-4.735112838956741e-07f)
+#define TC_COMPENSATION_X1_T245 0.11936452029674384f
+#define TC_COMPENSATION_X0_T245 23.777399955382318f
 
 /* Constants for internal MCU temperture */
-#define V30 		0.76 			// from datasheet
-#define VSENSE 		(3.3/4096.0) 	// VSENSE value
-#define Avg_Slope 	0.0025 			// 2.5mV from datasheet
+#define V30 		0.76f 			// from datasheet
+#define VSENSE 		(3.3f/4096.0f) 	// VSENSE value
+#define Avg_Slope 	0.0025f 		// 2.5mV from datasheet
 
 /* Largest delta temperature before detecting a faulty or missing cartridge */
 #define MAX_TC_DELTA_FAULTDETECTION 50
@@ -510,7 +510,7 @@ void get_thermocouple_temperature(){
 	/* --- Step 1: Outlier filter on raw ADC data --- */
 	TC_temp_from_ADC_previous = TC_temp_from_ADC;
 	TC_temp_from_ADC = get_mean_ADC_reading_indexed(1);
-	TC_temp_from_ADC_diff = fabs(TC_temp_from_ADC_previous - TC_temp_from_ADC);
+	TC_temp_from_ADC_diff = fabsf(TC_temp_from_ADC_previous - TC_temp_from_ADC);
 
 	if((TC_temp_from_ADC_diff > TC_OUTLIERS_THRESHOLD) && (TC_outliers_detected < 2)){
 		TC_outliers_detected++;
@@ -813,7 +813,7 @@ void update_display(){
 		LCD_PutStr(125, 255, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		if(convert_temperature(sensor_values.mcu_temperature) < 99.5){
+		if(convert_temperature(sensor_values.mcu_temperature) < 99.5f){
 			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(sensor_values.mcu_temperature));
 		}
 		else{
@@ -899,7 +899,7 @@ void update_display(){
 		LCD_PutStr(170, 195, DISPLAY_buffer, FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
 		memset(&DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-		if(convert_temperature(sensor_values.mcu_temperature) < 99.5){
+		if(convert_temperature(sensor_values.mcu_temperature) < 99.5f){
 			sprintf(DISPLAY_buffer, "  %d", (int)convert_temperature(sensor_values.mcu_temperature));
 		}
 		else{
@@ -1385,14 +1385,14 @@ void get_stand_status(){
 
 		/* PRESTANDBY -> STANDBY after delay */
 		if((sensor_values.current_state == PRESTANDBY) &&
-		   (HAL_GetTick() - previous_millis_prestandby >= flash_values.standby_delay * 1000.0)){
+		   (HAL_GetTick() - previous_millis_prestandby >= flash_values.standby_delay * 1000.0f)){
 			change_state(STANDBY);
 			previous_millis_standby = HAL_GetTick();
 		}
 
 		/* STANDBY -> SLEEP */
 		if((sensor_values.current_state == STANDBY) &&
-		   (HAL_GetTick() - previous_millis_standby >= flash_values.standby_time * 60000.0)){
+		   (HAL_GetTick() - previous_millis_standby >= flash_values.standby_time * 60000.0f)){
 			change_state(SLEEP);
 		}
 
@@ -1404,7 +1404,7 @@ void get_stand_status(){
 	}
 
 	/* Handle removed from stand → always go to RUN */
-	if(sensor_values.in_stand < 0.2){
+	if(sensor_values.in_stand < 0.2f){
 		if ((sensor_values.current_state == SLEEP) ||
 		    (sensor_values.current_state == STANDBY) ||
 		    (sensor_values.current_state == PRESTANDBY) ||
@@ -1756,7 +1756,7 @@ int main(void)
 	Moving_Average_Init(&handle2_sense_filterStruct,(uint32_t)20);
 
 	/* initialize hysteresis functions */
-	Hysteresis_Init(&thermocouple_temperature_filtered_hysteresis, 0.5);
+	Hysteresis_Init(&thermocouple_temperature_filtered_hysteresis, 0.5f);
 
 	/* Init and fill filter structures with initial values */
 	for (int i = 0; i<200;i++){
@@ -1931,7 +1931,7 @@ int main(void)
 		/* PID Tuning manual control */
 		#ifdef PID_TUNING
 		custom_temperature_on = 1;
-		PID_SetTunings(&TPID, Kp_tuning, Ki_tuning, Kd_tuning/100.0);
+		PID_SetTunings(&TPID, Kp_tuning, Ki_tuning, Kd_tuning/100.0f);
 		PID_SetILimits(&TPID, -PID_MAX_I_LIMIT_tuning, PID_MAX_I_LIMIT_tuning); 	// Set max and min I limit
 		sensor_values.set_temperature = temperature_tuning;
 		#endif
