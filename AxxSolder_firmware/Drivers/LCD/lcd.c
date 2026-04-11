@@ -614,6 +614,8 @@ void LCD_init(void)
 }
 
 
+#ifdef LCD_ENABLE_TEST
+
 #define DEFAULT_FONT FONT_6X8
 
 static uint32_t draw_time=0;
@@ -980,3 +982,5 @@ static void window_1_callback(UG_MESSAGE *msg __unused)
     }
 */
 }
+
+#endif /* LCD_ENABLE_TEST */
