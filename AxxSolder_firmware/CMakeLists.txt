@@ -47,6 +47,7 @@ set(CPU_PARAMETERS ${CPU_PARAMETERS}
 
 target_compile_options(${EXECUTABLE} PRIVATE
     ${CPU_PARAMETERS}
+	-Os
 	-Wall
 	-Wpedantic
 	-Wno-unused-parameter
