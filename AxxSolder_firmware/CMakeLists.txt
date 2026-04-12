@@ -33,9 +33,17 @@ add_executable(${EXECUTABLE} ${source_list} ${CMAKE_SOURCE_DIR}/Core/Startup/sta
 
 target_include_directories(${EXECUTABLE} PRIVATE ${include_list})
 
-target_compile_definitions(${EXECUTABLE} PRIVATE 
+# LCD options — defaults match current hardware (ST7789, 240×320, rotation 2)
+set(LCD_CONTROLLER "ST7789"  CACHE STRING "LCD controller (ST7789 or ST7735)")
+set(LCD_SIZE       "240X320" CACHE STRING "LCD panel size: 240X320 240X280 240X240 135X240 160X128 128X128 160X80")
+set(LCD_ROTATION   "2"       CACHE STRING "Default LCD rotation 0-3")
+
+target_compile_definitions(${EXECUTABLE} PRIVATE
     "USE_HAL_DRIVER"
     "STM32G431xx"
+    "USE_${LCD_CONTROLLER}"
+    "LCD_${LCD_SIZE}"
+    "LCD_ROTATION=${LCD_ROTATION}"
 )
 
 set(CPU_PARAMETERS ${CPU_PARAMETERS}
