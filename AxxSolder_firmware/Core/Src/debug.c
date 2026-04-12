@@ -1,4 +1,5 @@
 #include "debug.h"
+#include <stdio.h>
 #include "string.h"
 
 extern UART_HandleTypeDef huart1;
