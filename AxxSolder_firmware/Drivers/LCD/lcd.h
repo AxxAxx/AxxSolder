@@ -274,6 +274,8 @@ void LCD_PutStr(uint16_t x, uint16_t y,  char *str, UG_FONT* font, uint16_t colo
 void LCD_TearEffect(uint8_t tear);
 
 /* Simple test function. */
+#ifdef LCD_ENABLE_TEST
 void LCD_Test(void);
+#endif
 
 #endif // __ST7735_H__

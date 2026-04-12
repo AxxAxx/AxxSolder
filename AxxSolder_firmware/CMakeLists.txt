@@ -47,9 +47,11 @@ set(CPU_PARAMETERS ${CPU_PARAMETERS}
 
 target_compile_options(${EXECUTABLE} PRIVATE
     ${CPU_PARAMETERS}
+	-Os
 	-Wall
 	-Wpedantic
 	-Wno-unused-parameter
+	-Wdouble-promotion
 )
 
 target_link_options(${EXECUTABLE} PRIVATE
@@ -57,7 +59,6 @@ target_link_options(${EXECUTABLE} PRIVATE
 	${CPU_PARAMETERS}
 	-Wl,-Map=${CMAKE_PROJECT_NAME}.map
 	--specs=nosys.specs
-	-u _printf_float                # STDIO float formatting support
 	-Wl,--start-group
 	-lc
 	-lm
