@@ -96,8 +96,13 @@ extern SPI_HandleTypeDef      LCD_HANDLE;
 #  define LCD_ROTATION 2   /* default: 180° */
 #endif
 
+/* Defaults for IDE builds that don't pass CMake defines */
 #if !defined(USE_ST7789) && !defined(USE_ST7735)
-#  error "No LCD controller selected. Pass -DLCD_CONTROLLER=ST7789 (or ST7735) to CMake."
+#  define USE_ST7789
+#endif
+#if !defined(LCD_240X320) && !defined(LCD_240X280) && !defined(LCD_240X240) && !defined(LCD_135X240) && \
+    !defined(LCD_160X128) && !defined(LCD_128X128) && !defined(LCD_160X80)
+#  define LCD_240X320
 #endif
 
 
