@@ -28,7 +28,9 @@
 #include "moving_average.h"
 #include "hysteresis.h"
 #include "type_packers.h"
-#include "flash.h"
+#include "storage.h"
+#include "tip_profile.h"
+#include "menu_profiles.h"
 #include "stusb4500.h"
 #include "buzzer.h"
 #include "debug.h"
@@ -48,27 +50,6 @@ uint8_t fw_version_patch =  2;
 
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
-
-/* Cartridge type specific PID parameters */
-#define KP_NT115 					5
-#define KI_NT115 					2
-#define KD_NT115 					0.3
-#define MAX_I_NT115 				300
-
-#define KP_T210 					7
-#define KI_T210 					4
-#define KD_T210 					0.3
-#define MAX_I_T210 					300
-
-#define KP_T245 					8
-#define KI_T245 					2
-#define KD_T245 					0.5f
-#define MAX_I_T245 					300
-
-#define KP_No_name 					8
-#define KI_No_name 					2
-#define KD_No_name 					0.5f
-#define MAX_I_No_name 				300
 
 /* General PID parameters */
 #define PID_UPDATE_INTERVAL 25
@@ -312,7 +293,8 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 									.power_limit_No_name = 0,
 									.display_graph = 0,
 									.delta_t_detection = 1,
-									.standby_delay = 0};
+									.standby_delay = 0,
+									.show_profile_on_tip_change = 0};
 
 /* PID data */
 float PID_setpoint = 0.0f;
@@ -476,7 +458,7 @@ void change_state(mainstates new_state){
     // If transitioning TO RUN STATE and the current temperature should be saved as the startup temperature
 	if((sensor_values.previous_state != RUN) && (sensor_values.current_state == RUN) && (flash_values.startup_temp_is_previous_temp == 1)){
 		flash_values.startup_temperature = sensor_values.set_temperature;
-		FlashWrite(&flash_values);
+		STORAGE_SETTINGS_DRIVER->write(SETTINGS_PAGE, &flash_values, sizeof(Flash_values));
 	}
 	// Enable GPIO4 when transitioning to RUN, if the corresponding setting is active
 	if((sensor_values.current_state == RUN) && (flash_values.GPIO4_ON_at_run == 1)){
@@ -540,24 +522,31 @@ void get_thermocouple_temperature(){
 		sensor_values.thermocouple_temperature = sensor_values.set_temperature;
 	}
 
-	/* --- Step 4: Adjust measured temperature to fit calibrated values */
+	/* --- Step 4: Adjust measured temperature to fit calibrated values from active tip profile */
+	float cal_100 = tip_profiles_get_cal(attached_handle, 0);
+	float cal_200 = tip_profiles_get_cal(attached_handle, 1);
+	float cal_300 = tip_profiles_get_cal(attached_handle, 2);
+	float cal_350 = tip_profiles_get_cal(attached_handle, 3);
+	float cal_400 = tip_profiles_get_cal(attached_handle, 4);
+	float cal_450 = tip_profiles_get_cal(attached_handle, 5);
+
 	if(sensor_values.thermocouple_temperature < 100){
-		sensor_values.thermocouple_temperature = sensor_values.thermocouple_temperature*(flash_values.temp_cal_100)/100.0f;
+		sensor_values.thermocouple_temperature = sensor_values.thermocouple_temperature*(cal_100)/100.0f;
 		}
 	else if(sensor_values.thermocouple_temperature < 200){
-		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 100.0f)*(flash_values.temp_cal_200-flash_values.temp_cal_100)/100.0f + flash_values.temp_cal_100;
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 100.0f)*(cal_200-cal_100)/100.0f + cal_100;
 		}
 	else if(sensor_values.thermocouple_temperature < 300){
-		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 200.0f)*(flash_values.temp_cal_300-flash_values.temp_cal_200)/100.0f + flash_values.temp_cal_200;
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 200.0f)*(cal_300-cal_200)/100.0f + cal_200;
 	}
 	else if(sensor_values.thermocouple_temperature < 350){
-		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 300.0f)*(flash_values.temp_cal_350-flash_values.temp_cal_300)/50.0f + flash_values.temp_cal_300;
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 300.0f)*(cal_350-cal_300)/50.0f + cal_300;
 		}
 	else if(sensor_values.thermocouple_temperature < 400){
-		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 350.0f)*(flash_values.temp_cal_400-flash_values.temp_cal_350)/50.0f + flash_values.temp_cal_350;
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 350.0f)*(cal_400-cal_350)/50.0f + cal_350;
 		}
 	else{
-		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 400.0f)*(flash_values.temp_cal_450-flash_values.temp_cal_400)/50.0f + flash_values.temp_cal_400;
+		sensor_values.thermocouple_temperature = (sensor_values.thermocouple_temperature - 400.0f)*(cal_450-cal_400)/50.0f + cal_400;
 		}
 	// Add temperature offset value
 	sensor_values.thermocouple_temperature += flash_values.temperature_offset;
@@ -1285,7 +1274,7 @@ void handle_button_status(){
 		if(settings_menu_active == 0){
 			if(flash_values.three_button_mode == 0){
 				flash_values.preset_temp_1 = TIM2->CNT;
-				FlashWrite(&flash_values);
+				STORAGE_SETTINGS_DRIVER->write(SETTINGS_PAGE, &flash_values, sizeof(Flash_values));
 				/* Draw the main screen decoration */
 				if (flash_values.display_graph == 0){
 					LCD_draw_main_screen();
@@ -1316,7 +1305,7 @@ void handle_button_status(){
 		if(settings_menu_active == 0){
 			if(flash_values.three_button_mode == 0){
 				flash_values.preset_temp_2 = TIM2->CNT;
-				FlashWrite(&flash_values);
+				STORAGE_SETTINGS_DRIVER->write(SETTINGS_PAGE, &flash_values, sizeof(Flash_values));
 				/* Draw the main screen decoration */
 				if (flash_values.display_graph == 0){
 					LCD_draw_main_screen();
@@ -1427,6 +1416,8 @@ void get_handle_type(){
 		sensor_values.handle2_sense = 1;
 	}
 
+	enum handles prev_handle = attached_handle;
+
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5f) && (sensor_values.handle2_sense < 0.5f)){
 		attached_handle = NT115;
@@ -1439,48 +1430,34 @@ void get_handle_type(){
 	else{
 		attached_handle = T245;
 	}
+
+	/* Show profile selector popup on handle change */
+	if (attached_handle != prev_handle && flash_values.show_profile_on_tip_change && !settings_menu_active) {
+		profiles_popup(attached_handle);
+	}
 }
 
 /* Function to set heating values depending on detected handle */
 void set_handle_values(){
 	uint16_t usb_limit = sensor_values.USB_PD_power_limit;
     uint16_t WATT;
-    uint16_t flash_limit;
+
+	uint16_t profile_limit = (uint16_t)tip_profiles_get_power_limit(attached_handle);
+	uint16_t handle_max;
 
 	switch (attached_handle) {
-    case NT115:
-        flash_limit = (uint16_t)flash_values.power_limit_NT115;
-        WATT = (flash_limit != 0) ? flash_limit : NT115_MAX_POWER;
-        sensor_values.max_power_watt = min3(usb_limit, NT115_MAX_POWER, WATT);
-        PID_SetTunings(&TPID, KP_NT115, KI_NT115, KD_NT115);
-        PID_SetILimits(&TPID, -MAX_I_NT115, MAX_I_NT115);
-        break;
-
-    case T210:
-        flash_limit = (uint16_t)flash_values.power_limit_T210;
-        WATT = (flash_limit != 0) ? flash_limit : T210_MAX_POWER;
-        sensor_values.max_power_watt = min3(usb_limit, T210_MAX_POWER, WATT);
-        PID_SetTunings(&TPID, KP_T210, KI_T210, KD_T210);
-        PID_SetILimits(&TPID, -MAX_I_T210, MAX_I_T210);
-        break;
-
-    case T245:
-        flash_limit = (uint16_t)flash_values.power_limit_T245;
-        WATT = (flash_limit != 0) ? flash_limit : T245_MAX_POWER;
-        sensor_values.max_power_watt = min3(usb_limit, T245_MAX_POWER, WATT);
-        PID_SetTunings(&TPID, KP_T245, KI_T245, KD_T245);
-        PID_SetILimits(&TPID, -MAX_I_T245, MAX_I_T245);
-        break;
-
+    case NT115:   handle_max = NT115_MAX_POWER;   break;
+    case T210:    handle_max = T210_MAX_POWER;    break;
+    case T245:    handle_max = T245_MAX_POWER;    break;
     case No_name:
-    default:
-        flash_limit = (uint16_t)flash_values.power_limit_No_name;
-        WATT = (flash_limit != 0) ? flash_limit : No_name_MAX_POWER;
-        sensor_values.max_power_watt = min3(usb_limit, No_name_MAX_POWER, WATT);
-        PID_SetTunings(&TPID, KP_No_name, KI_No_name, KD_No_name);
-        PID_SetILimits(&TPID, -MAX_I_No_name, MAX_I_No_name);
-        break;
+    default:      handle_max = No_name_MAX_POWER; break;
 	}
+
+	WATT = (profile_limit != 0) ? profile_limit : handle_max;
+	sensor_values.max_power_watt = min3(usb_limit, handle_max, WATT);
+
+	/* Apply PID from active tip profile */
+	tip_profiles_apply_pid(attached_handle, &TPID);
 }
 
 /* Signal that the set temperature has been reached */
@@ -1725,14 +1702,17 @@ int main(void)
 	HAL_Delay(200);
 
 	// Check if user data in flash is valid, if not - write default parameters
-	if(!FlashCheckCRC()){
-		FlashWrite(&default_flash_values);
+	if(!STORAGE_SETTINGS_DRIVER->verify(SETTINGS_PAGE, sizeof(Flash_values))){
+		STORAGE_SETTINGS_DRIVER->write(SETTINGS_PAGE, &default_flash_values, sizeof(Flash_values));
 		beep(1); //Beep once to indicate default parameters written to flash
 		HAL_Delay(100);
 	}
 
 	/* Read flash data */
-	FlashRead(&flash_values);
+	STORAGE_SETTINGS_DRIVER->read(SETTINGS_PAGE, &flash_values, sizeof(Flash_values));
+
+	/* Load tip profiles from storage */
+	tip_profiles_init(STORAGE_PROFILES_DRIVER);
 
 	/* Initiate display */
 	LCD_init();
