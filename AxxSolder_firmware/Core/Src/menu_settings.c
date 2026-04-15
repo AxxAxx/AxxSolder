@@ -54,7 +54,8 @@ enum {
     MI_BEEP_AT_SET_TEMP   = 402,
     MI_BEEP_TONE          = 403,
 
-    /* ── Calibration, in profiles (500–599) ────────────────────────── */
+    /* ── Calibration (500–599) — deprecated: now managed per-profile in tip_profile.c
+     * Kept for Flash_values backward compatibility (fi indices still valid). */
     MI_TEMP_CAL_100       = 500,
     MI_TEMP_CAL_200       = 501,
     MI_TEMP_CAL_300       = 502,
@@ -62,7 +63,8 @@ enum {
     MI_TEMP_CAL_400       = 504,
     MI_TEMP_CAL_450       = 505,
 
-    /* ── Power limits, in profiles (600–699) ───────────────────────── */
+    /* ── Power limits (600–699) — deprecated: now managed per-profile in tip_profile.c
+     * Kept for Flash_values backward compatibility (fi indices still valid). */
     MI_POWER_LIM_T245     = 600,
     MI_POWER_LIM_T210     = 601,
     MI_POWER_LIM_NT115    = 602,
@@ -120,14 +122,14 @@ static const MI_Entry mi_table[] = {
     { MI_STARTUP_BEEP,       12,         "Startup Beep"         },
     { MI_BEEP_AT_SET_TEMP,   24,         "Beep at set temp"     },
     { MI_BEEP_TONE,          25,         "Beep tone"            },
-    /* Calibration */
+    /* Calibration — deprecated: not in any menu group, kept for fi mapping compatibility */
     { MI_TEMP_CAL_100,       14,         "Temp cal 100"         },
     { MI_TEMP_CAL_200,       15,         "Temp cal 200"         },
     { MI_TEMP_CAL_300,       16,         "Temp cal 300"         },
     { MI_TEMP_CAL_350,       17,         "Temp cal 350"         },
     { MI_TEMP_CAL_400,       18,         "Temp cal 400"         },
     { MI_TEMP_CAL_450,       19,         "Temp cal 450"         },
-    /* Power limits */
+    /* Power limits — deprecated: not in any menu group, kept for fi mapping compatibility */
     { MI_POWER_LIM_T245,     28,         "Power lim T245"       },
     { MI_POWER_LIM_T210,     29,         "Power lim T210"       },
     { MI_POWER_LIM_NT115,    30,         "Power lim NT115"      },
@@ -203,13 +205,15 @@ static const uint16_t GRP_SYSTEM[] = {
     MI_LOAD_DEFAULT, MI_SAVE_REBOOT, MI_EXIT_NO_SAVE
 };
 
-/* Profiles — handled by separate profiles_menu(), idx/count unused */
+/* Profiles — handled by separate profiles_menu().
+ * count == 0 is a sentinel: settings_menu() delegates to profiles_menu() instead of
+ * rendering items inline. The dummy array is unused but required by the struct. */
 static const uint16_t GRP_PROFILES_DUMMY[] = { MI_PROFILE_ON_TIP_CHG };
 
 static const MenuGroup MENU_GROUPS[] = {
     { "Mode",        GRP_MODE,        sizeof(GRP_MODE)    / sizeof(GRP_MODE[0])    },
     { "Presets",     GRP_PRESETS,     sizeof(GRP_PRESETS) / sizeof(GRP_PRESETS[0]) },
-    { "Profiles",    GRP_PROFILES_DUMMY, 0                                         },
+    { "Profiles",    GRP_PROFILES_DUMMY, 0  /* sentinel: delegates to profiles_menu() */ },
     { "Display",     GRP_DISPLAY,     sizeof(GRP_DISPLAY) / sizeof(GRP_DISPLAY[0]) },
     { "Sound",       GRP_SOUND,       sizeof(GRP_SOUND)   / sizeof(GRP_SOUND[0])   },
     { "System",      GRP_SYSTEM,      sizeof(GRP_SYSTEM)  / sizeof(GRP_SYSTEM[0])  },

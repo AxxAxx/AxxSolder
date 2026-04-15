@@ -534,8 +534,11 @@ static void edit_profile(uint8_t prof_idx)
 					break;
 				}
 				case PF_BACK: {
-					tip_profiles_update(prof_idx, &edit);
-					tip_profiles_save();
+					/* Only write flash if profile was actually modified */
+					if (memcmp(&edit, p, sizeof(TipProfile)) != 0) {
+						tip_profiles_update(prof_idx, &edit);
+						tip_profiles_save();
+					}
 					running = 0;
 					break;
 				}
@@ -680,11 +683,16 @@ void profiles_popup(enum handles h)
 
 	if (match_count == 0) return;
 	if (match_count == 1) {
-		/* Only one option — auto-select */
-		tip_profiles_set_active(h, match_idx[0]);
-		tip_profiles_save();
+		/* Only one option — auto-select, skip flash write if already active */
+		if (tip_profiles_get_active(h) != match_idx[0]) {
+			tip_profiles_set_active(h, match_idx[0]);
+			tip_profiles_save();
+		}
 		return;
 	}
+
+	/* Disable heater while popup blocks the main loop */
+	sensor_values.requested_power = 0;
 
 	/* Draw popup */
 	uint16_t popup_x = 10;
@@ -704,9 +712,11 @@ void profiles_popup(enum handles h)
 		LCD_PutStr(popup_x + 10, y, p->name, FONT_arial_20X23, fg, bg);
 	}
 
-	/* Selection */
+	/* Selection with 5-second timeout (500 * 10ms) to prevent
+	 * blocking the main loop indefinitely while heater is off */
 	TIM2->CNT = 1000;
 	int16_t cursor = 0, prev_cursor = -1;
+	uint16_t timeout_ticks = 500;
 
 	while (1) {
 		handle_button_status();
@@ -722,6 +732,7 @@ void profiles_popup(enum handles h)
 			UG_DrawFrame(popup_x + 3, cy - 2, popup_x + popup_w - 3, cy + 22, RGB_to_BRG(C_YELLOW));
 			UG_DrawFrame(popup_x + 4, cy - 1, popup_x + popup_w - 4, cy + 21, RGB_to_BRG(C_YELLOW));
 			prev_cursor = cursor;
+			timeout_ticks = 500; /* reset timeout on user interaction */
 		}
 
 		if (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) {
@@ -736,6 +747,13 @@ void profiles_popup(enum handles h)
 		/* SW_2: cancel — keep current active profile */
 		if (SW_2_pressed) {
 			SW_2_pressed = 0;
+			return;
+		}
+
+		/* Timeout: auto-select current cursor position */
+		if (--timeout_ticks == 0) {
+			tip_profiles_set_active(h, match_idx[cursor]);
+			tip_profiles_save();
 			return;
 		}
 

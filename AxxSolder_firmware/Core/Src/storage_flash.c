@@ -25,6 +25,7 @@ static uint32_t flash_write_dwords(uint32_t addr, const uint32_t *data, uint16_t
 
 	__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR);
 
+	erase.Banks     = FLASH_BANK_1;
 	erase.TypeErase = FLASH_TYPEERASE_PAGES;
 	erase.Page      = start_page;
 	erase.NbPages   = end_page - start_page + 1;
@@ -96,8 +97,10 @@ static StoreResult flash_write(uint32_t addr, const void *buf, uint16_t size)
 	memset(tmp, 0, total_size);
 	memcpy(tmp, buf, size);
 
-	/* Calculate CRC over the original data size */
+	/* Calculate CRC over the original data size (protect CRC peripheral from ISR) */
+	__disable_irq();
 	uint64_t crc = HAL_CRC_Calculate(&hcrc, (uint32_t *)tmp, size);
+	__enable_irq();
 	memcpy(&tmp[crc_offset], &crc, 8);
 
 	/* Write doublewords */
