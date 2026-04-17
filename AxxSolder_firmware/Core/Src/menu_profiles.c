@@ -682,14 +682,6 @@ void profiles_popup(enum handles h)
 	}
 
 	if (match_count == 0) return;
-	if (match_count == 1) {
-		/* Only one option — auto-select, skip flash write if already active */
-		if (tip_profiles_get_active(h) != match_idx[0]) {
-			tip_profiles_set_active(h, match_idx[0]);
-			tip_profiles_save();
-		}
-		return;
-	}
 
 	/* Disable heater while popup blocks the main loop */
 	sensor_values.requested_power = 0;
@@ -712,10 +704,17 @@ void profiles_popup(enum handles h)
 		LCD_PutStr(popup_x + 10, y, p->name, FONT_arial_20X23, fg, bg);
 	}
 
+	/* Pre-select the currently active profile for this handle, if any */
+	uint8_t active_idx = tip_profiles_get_active(h);
+	int16_t initial_cursor = 0;
+	for (uint8_t i = 0; i < match_count; i++) {
+		if (match_idx[i] == active_idx) { initial_cursor = i; break; }
+	}
+
 	/* Selection with 5-second timeout (500 * 10ms) to prevent
 	 * blocking the main loop indefinitely while heater is off */
-	TIM2->CNT = 1000;
-	int16_t cursor = 0, prev_cursor = -1;
+	TIM2->CNT = 1000 + initial_cursor * 2;
+	int16_t cursor = initial_cursor, prev_cursor = -1;
 	uint16_t timeout_ticks = 500;
 
 	while (1) {

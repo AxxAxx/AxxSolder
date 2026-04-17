@@ -1431,9 +1431,10 @@ void get_handle_type(){
 		attached_handle = T245;
 	}
 
-	/* Show profile selector popup on handle change */
-	if (attached_handle != prev_handle && flash_values.show_profile_on_tip_change && !settings_menu_active) {
+	/* Show profile selector popup on handle change (suppressed during boot) */
+	if (startup_done && attached_handle != prev_handle && flash_values.show_profile_on_tip_change && !settings_menu_active) {
 		profiles_popup(attached_handle);
+		LCD_draw_main_screen();
 	}
 }
 
