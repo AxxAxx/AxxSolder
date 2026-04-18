@@ -1,0 +1,7 @@
+### Footprint positions - created on Sun May 18 16:33:15 2025 ###
+### Printed by KiCad version 7.0.10
+## Unit = mm, Angle = deg.
+## Side : bottom
+# Ref     Val             Package                               PosX       PosY       Rot  Side
+J1        Conn_01x08_Pin  PinSocket_1x08_P2.54mm_Vertical   -10.1600     0.0000  -90.0000  bottom
+## End

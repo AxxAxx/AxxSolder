@@ -1,0 +1,4 @@
+"Reference","Value","Footprint","Manufacturer_Part_Number","Qty"
+"C1","10u","Capacitor_SMD:C_0805_2012Metric","EMK212BB7106KG-T","1"
+"R1","10k","Resistor_SMD:R_0805_2012Metric","CR0805-FX-1002ELF","1"
+"R2","10","Resistor_SMD:R_0805_2012Metric","CR0805-FX-10R0ELF","1"

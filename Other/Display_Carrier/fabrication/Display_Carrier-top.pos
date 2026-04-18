@@ -1,0 +1,10 @@
+### Footprint positions - created on Sun May 18 16:33:15 2025 ###
+### Printed by KiCad version 7.0.10
+## Unit = mm, Angle = deg.
+## Side : top
+# Ref     Val             Package                 PosX       PosY       Rot  Side
+C1        10u             C_0805_2012Metric   -13.7500    -0.5000    0.0000  top
+J2        Conn_01x12_Pin  Display_Conn          1.8500    18.4750    0.0000  top
+R1        10k             R_0805_2012Metric   -13.7500     1.4000  180.0000  top
+R2        10              R_0805_2012Metric    11.2000     0.7500    0.0000  top
+## End
