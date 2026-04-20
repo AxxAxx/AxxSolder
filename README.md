@@ -33,6 +33,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 - [Firmware update](#firmware-update)
 - [First start up after build](#first-start-up-after-build)
 - [Settings](#settings)
+- [Profiles](#profiles)
 - [PID control](#pid-control)
 - [Cartridge differences](#cartridge-differences)
 - [Temperature calibration](#temperature-calibration)
@@ -176,12 +177,6 @@ To access the user settings the user holds down the encoder button at start-up o
 |MODE|I measurement|Measure the heater current|YES/NO|YES|
 |SOUND|Startup beep|Beep after startup|YES/NO|YES|
 |DISPLAY|Temperature unit|Show temperatures in Celcius or Fahrenheit|°F/°C|°C|
-|CALIBRATION|Temp cal 100 °C|Actual temperature at 100 °C|°C|100|
-|CALIBRATION|Temp cal 200 °C|Actual temperature at 200 °C|°C|200|
-|CALIBRATION|Temp cal 300 °C|Actual temperature at 300 °C|°C|300|
-|CALIBRATION|Temp cal 350 °C|Actual temperature at 350 °C|°C|350|
-|CALIBRATION|Temp cal 400 °C|Actual temperature at 400 °C|°C|400|
-|CALIBRATION|Temp cal 450 °C|Actual temperature at 450 °C|°C|450|
 |MODE|Serial DEBUG|Print debug over serial|YES/NO|NO|
 |DISPLAY|Displayed temp filter|Moving average filter length|Lenght|5|
 |MODE|Startup temp is previous temp|Startup temp is previous used temp|YES/NO|NO|
@@ -196,12 +191,17 @@ To access the user settings the user holds down the encoder button at start-up o
 |TIPS|Limit Power No name [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
 |DISPLAY|Display graph|Display the Graph view|YES/NO|NO|
 |MODE|Delta T detect|Detect too large delta temperatures and stop heating|YES/NO|YES|
+|MODE|Profile on tip chg.|Show popup when changing tip asking for tip preset|YES/NO|NO|
+|MODE|Change Enc. dir.|Changes the direction of the encoder|YES/NO|NO|
 |SYSTEM|-Load Default-|Load default parameters|N/A|N/A|
 |SYSTEM|-Save and Reboot-|Exit and Save|N/A|N/A|
 |SYSTEM|-Exit no Save-|Exit without Save|N/A|N/A|
 
+# Profiles
+Under the setting menu Profiles the user can select, adjust and create new profiles for the supported cartridge types. name, PID parameters, calibration data and power limits can be set individually for each profile and are saved to flash. A more detailed instruction can be found under [PROFILES.md](./docs/PROFILES.md)
 # PID control
-The thermal mass and heat convection differs between different tip designs. Therefore the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good thermal performance in conducted tests.
+The thermal mass and heat convection differs between different tip designs. Therefore the PID parameters should in theory be adjusted to each different cartridge. This can be done byutilizing custom profiles. The default PID parameters for the supported cartridges has however shown good thermal performance and are a good baseline.
+
 ```c
 /* Cartridge type specific PID parameters */
 #define KP_NT115        5
@@ -231,7 +231,9 @@ double PID_NEG_ERROR_I_BIAS =   1;
 #define T210_MAX_POWER 	        65
 #define T245_MAX_POWER 	        130
 ```
-The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-007 cartridge.  
+The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-002 cartridge.  
+
+The below screenshot if from the serial terminal software [AxxTerm](https://github.com/AxxAxx/AxxTerm)  
 
  ![AxxSolder_pid](./photos/PID_TUNING.png)
 
