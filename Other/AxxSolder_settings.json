@@ -1,0 +1,94 @@
+{
+  "dark_mode": false,
+  "auto_reconnect": true,
+  "plot": {
+    "mode": "Custom Frame",
+    "num_channels": 9,
+    "num_points": 300,
+    "show_plot": true,
+    "show_fft": false,
+    "delimiter": "Auto",
+    "delimiter_custom": "",
+    "channel_names": {
+      "1": "ACTUAL TEMPERATURE Filt",
+      "2": "SETPOINT",
+      "4": "POWER Filt",
+      "5": "P-part",
+      "6": "I-part",
+      "7": "D-part",
+      "8": "Measured current",
+      "0": "ACTUAL TEMPERATURE",
+      "3": "POWER"
+    },
+    "channel_colors": {
+      "2": "#ff00ff",
+      "5": "#0000ff",
+      "3": "#00aa00",
+      "7": "#000000",
+      "8": "#aaaa00",
+      "6": "#ffaa00"
+    },
+    "channel_axes": {},
+    "hidden_channels": [
+      1,
+      4
+    ],
+    "y_auto_scale": false,
+    "y_min": -100.0,
+    "y_max": 400.0,
+    "binary": {
+      "data_type": "float32",
+      "endianness": "little"
+    },
+    "frame": {
+      "data_type": "float32",
+      "endianness": "little",
+      "sync_word": "AA",
+      "size_field": "1-byte",
+      "frame_size": 12,
+      "checksum": false
+    },
+    "math_channels": []
+  },
+  "serial": {
+    "baud_rate": "256000",
+    "data_bits": 3,
+    "parity": 0,
+    "stop_bits": 0,
+    "flow_control": 0
+  },
+  "macros": [
+    {
+      "label": "0x01",
+      "hex": "01"
+    },
+    {
+      "label": "0x02",
+      "hex": "02"
+    },
+    {
+      "label": "0x03",
+      "hex": "03"
+    },
+    {
+      "label": "0x04",
+      "hex": "04"
+    },
+    {
+      "label": "0x05",
+      "hex": "05"
+    },
+    {
+      "label": "0c06",
+      "hex": "06"
+    },
+    {
+      "label": "0x07",
+      "hex": "07"
+    },
+    {
+      "label": "0x08",
+      "hex": "08"
+    }
+  ]
+}
