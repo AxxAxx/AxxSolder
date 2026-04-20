@@ -93,6 +93,7 @@ uint32_t time_to_sleep_ms   = 0;
 
 cartridge_state_t cartridge_state = ATTACHED;
 cartridge_state_t previous_cartridge_state = ATTACHED;
+uint8_t cartridge_first_detect = 1;
 
 /* power sources */
 power_source_t power_source = POWER_DC;
@@ -1235,8 +1236,10 @@ void handle_cartridge_presence(){
 		HAL_Delay(100);
 		Moving_Average_Set_Value(sensor_values.thermocouple_temperature, &thermocouple_temperature_filtered_filter_struct);
 
-		/* Show profile selector popup on tip change */
-		if (startup_done && flash_values.show_profile_on_tip_change && !settings_menu_active) {
+	      /* Show profile selector popup on tip change (skip first detection after boot) */
+	      if (cartridge_first_detect) {
+	    	  cartridge_first_detect = 0;
+	      } else if (startup_done && flash_values.show_profile_on_tip_change && !settings_menu_active) {
 			profiles_popup(attached_handle);
 			LCD_draw_main_screen();
 		}

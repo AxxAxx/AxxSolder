@@ -712,9 +712,10 @@ void profiles_popup(enum handles h)
 
 	/* Selection with 5-second timeout (500 * 10ms) to prevent
 	 * blocking the main loop indefinitely while heater is off */
+	uint32_t saved_cnt = TIM2->CNT;
 	TIM2->CNT = 1000 + initial_cursor * 2;
 	int16_t cursor = initial_cursor, prev_cursor = -1;
-	uint16_t timeout_ticks = 500;
+	uint16_t timeout_ticks = 300;
 
 	while (1) {
 		handle_button_status();
@@ -739,12 +740,14 @@ void profiles_popup(enum handles h)
 
 			tip_profiles_set_active(h, match_idx[cursor]);
 			tip_profiles_save();
+			TIM2->CNT = saved_cnt;
 			return;
 		}
 
 		/* SW_2: cancel — keep current active profile */
 		if (SW_2_pressed) {
 			SW_2_pressed = 0;
+			TIM2->CNT = saved_cnt;
 			return;
 		}
 
@@ -752,6 +755,7 @@ void profiles_popup(enum handles h)
 		if (--timeout_ticks == 0) {
 			tip_profiles_set_active(h, match_idx[cursor]);
 			tip_profiles_save();
+			TIM2->CNT = saved_cnt;
 			return;
 		}
 
