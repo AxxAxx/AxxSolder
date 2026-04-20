@@ -107,12 +107,11 @@ static const MI_Entry mi_table[] = {
     { MI_DETECT_NT115,       27,         "Detect NT115"         },
     { MI_DELTA_T_DETECT,     33,         "Delta T detect"       },
     { MI_STANDBY_DELAY,      34,         "Standby delay [s]"    },
+    { MI_PROFILE_ON_TIP_CHG, 35,         "Profile on tip chg."   },
     { MI_CHANGE_ENC_DIR,     36,         "Change Enc. dir."     },
     /* Presets */
     { MI_PRESET_TEMP_1,      6,          "Preset Temp 1 °C"     },
     { MI_PRESET_TEMP_2,      7,          "Preset Temp 2 °C"     },
-    /* Profiles */
-    { MI_PROFILE_ON_TIP_CHG, 35,         "Profile on tip chg"   },
     /* Display */
     { MI_SCREEN_ROTATION,    9,          "Screen Rotation"      },
     { MI_TEMP_UNIT,          13,         "Temperature unit"     },
