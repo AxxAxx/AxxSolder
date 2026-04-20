@@ -686,13 +686,14 @@ void profiles_popup(enum handles h)
 
 	/* Draw popup */
 	uint16_t popup_x = 10;
-	uint16_t popup_y = 40;
-	uint16_t popup_w = 220;
+	uint16_t popup_y = 50;
+	uint16_t popup_w = 200;
 	uint16_t popup_h = 30 + match_count * 26 + 10;
 
 	UG_FillFrame(popup_x, popup_y, popup_x + popup_w, popup_y + popup_h, bg);
 	UG_DrawFrame(popup_x, popup_y, popup_x + popup_w, popup_y + popup_h, RGB_to_BRG(C_YELLOW));
 	UG_DrawFrame(popup_x + 1, popup_y + 1, popup_x + popup_w - 1, popup_y + popup_h - 1, RGB_to_BRG(C_YELLOW));
+	UG_DrawFrame(popup_x + 2, popup_y + 2, popup_x + popup_w - 2, popup_y + popup_h - 2, RGB_to_BRG(C_YELLOW));
 
 	LCD_PutStr(popup_x + 5, popup_y + 5, "Select profile:", FONT_arial_20X23, fg, bg);
 

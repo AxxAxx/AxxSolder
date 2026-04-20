@@ -294,7 +294,8 @@ Flash_values default_flash_values = {.startup_temperature = 330,
 									.display_graph = 0,
 									.delta_t_detection = 1,
 									.standby_delay = 0,
-									.show_profile_on_tip_change = 0};
+									.show_profile_on_tip_change = 0,
+									.change_enc_dir = 0};
 
 /* PID data */
 float PID_setpoint = 0.0f;
@@ -1233,6 +1234,12 @@ void handle_cartridge_presence(){
 	if ((previous_cartridge_state == DETACHED) && (cartridge_state == ATTACHED)){
 		HAL_Delay(100);
 		Moving_Average_Set_Value(sensor_values.thermocouple_temperature, &thermocouple_temperature_filtered_filter_struct);
+
+		/* Show profile selector popup on tip change */
+		if (startup_done && flash_values.show_profile_on_tip_change && !settings_menu_active) {
+			profiles_popup(attached_handle);
+			LCD_draw_main_screen();
+		}
 	}
 	previous_cartridge_state = cartridge_state;
 }
@@ -1429,12 +1436,6 @@ void get_handle_type(){
 	/* Determine if T245 handle is detected */
 	else{
 		attached_handle = T245;
-	}
-
-	/* Show profile selector popup on handle change (suppressed during boot) */
-	if (startup_done && attached_handle != prev_handle && flash_values.show_profile_on_tip_change && !settings_menu_active) {
-		profiles_popup(attached_handle);
-		LCD_draw_main_screen();
 	}
 }
 
@@ -1719,6 +1720,11 @@ int main(void)
 	LCD_init();
 
 	LCD_SetRotation(flash_values.screen_rotation);
+
+	/* Apply encoder direction setting */
+	if(flash_values.change_enc_dir == 1){
+		MX_TIM2_Init();
+	}
 
 	/* Set startup state */
 
@@ -2451,7 +2457,10 @@ static void MX_TIM2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM2_Init 2 */
-
+  if(flash_values.change_enc_dir == 1){
+	  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+	  HAL_TIM_Encoder_Init(&htim2, &sConfig);
+  }
   /* USER CODE END TIM2_Init 2 */
 
 }

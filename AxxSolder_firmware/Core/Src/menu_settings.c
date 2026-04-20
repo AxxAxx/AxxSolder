@@ -33,6 +33,7 @@ enum {
     MI_DETECT_NT115       = 11,
     MI_DELTA_T_DETECT     = 12,
     MI_STANDBY_DELAY      = 13,
+    MI_CHANGE_ENC_DIR     = 14,
 
     /* ── Presets (100–199) ─────────────────────────────────────────── */
     MI_PRESET_TEMP_1      = 100,
@@ -106,6 +107,7 @@ static const MI_Entry mi_table[] = {
     { MI_DETECT_NT115,       27,         "Detect NT115"         },
     { MI_DELTA_T_DETECT,     33,         "Delta T detect"       },
     { MI_STANDBY_DELAY,      34,         "Standby delay [s]"    },
+    { MI_CHANGE_ENC_DIR,     36,         "Change Enc. dir."     },
     /* Presets */
     { MI_PRESET_TEMP_1,      6,          "Preset Temp 1 °C"     },
     { MI_PRESET_TEMP_2,      7,          "Preset Temp 2 °C"     },
@@ -143,7 +145,7 @@ static const MI_Entry mi_table[] = {
 
 /**
  * @brief Returns the Flash_values field index (fi) for an MI_ identifier.
- * @return 0–35 for data items, MI_NO_FLASH for system actions / unknown IDs.
+ * @return 0–36 for data items, MI_NO_FLASH for system actions / unknown IDs.
  */
 static uint8_t mi_to_fi(uint16_t mi) {
     for (uint8_t i = 0; i < MI_TABLE_COUNT; i++) {
@@ -183,7 +185,8 @@ static const uint16_t GRP_MODE[] = {
     MI_STARTUP_TEMP, MI_TEMP_OFFSET, MI_STANDBY_TEMP, MI_STANDBY_DELAY,
     MI_STANDBY_TIME, MI_SLEEP_TIME, MI_GPIO4_ON_AT_RUN, MI_MOMENTARY_STAND,
     MI_I_MEASUREMENT, MI_SERIAL_DEBUG, MI_START_PREV_TEMP, MI_THREE_BUTTON_MODE,
-    MI_DETECT_NT115, MI_DELTA_T_DETECT, MI_PROFILE_ON_TIP_CHG
+    MI_DETECT_NT115, MI_DELTA_T_DETECT, MI_PROFILE_ON_TIP_CHG,
+    MI_CHANGE_ENC_DIR
 };
 
 /* Presets */
@@ -315,6 +318,7 @@ EnumParam enum_params[] = {
     { MI_DISPLAY_GRAPH,      bool_str, 2 },
     { MI_DELTA_T_DETECT,     bool_str, 2 },
     { MI_PROFILE_ON_TIP_CHG, bool_str, 2 },
+    { MI_CHANGE_ENC_DIR,     bool_str, 2 },
 };
 
 #define ENUM_PARAM_COUNT (sizeof(enum_params) / sizeof(enum_params[0]))
@@ -432,7 +436,7 @@ void normalize_param(uint16_t index) {
         case MI_THREE_BUTTON_MODE: case MI_BEEP_AT_SET_TEMP:
         case MI_SHOW_POWER: case MI_DETECT_NT115:
         case MI_DISPLAY_GRAPH: case MI_DELTA_T_DETECT:
-        case MI_PROFILE_ON_TIP_CHG:
+        case MI_PROFILE_ON_TIP_CHG: case MI_CHANGE_ENC_DIR:
             *p = normalize_enum(*p, 2);
             break;
 
