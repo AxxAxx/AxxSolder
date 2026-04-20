@@ -45,8 +45,8 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 uint8_t fw_version_major =  3;
-uint8_t fw_version_minor =  6;
-uint8_t fw_version_patch =  2;
+uint8_t fw_version_minor =  7;
+uint8_t fw_version_patch =  0;
 
 //#define PID_TUNING
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
@@ -1425,8 +1425,6 @@ void get_handle_type(){
 	if(flash_values.detect_nt115 == 0){
 		sensor_values.handle2_sense = 1;
 	}
-
-	enum handles prev_handle = attached_handle;
 
 	/* Determine if NT115 handle is detected */
 	if((sensor_values.handle1_sense >= 0.5f) && (sensor_values.handle2_sense < 0.5f)){
