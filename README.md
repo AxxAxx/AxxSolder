@@ -176,17 +176,7 @@ To access the user settings the user holds down the encoder button at start-up o
 |MODE|Momentary stand|Use the stand as momentary switch to go between modes (useful on AxxSolder Portable)|YES/NO|NO|
 |MODE|I measurement|Measure the heater current|YES/NO|YES|
 |SOUND|Startup beep|Beep after startup|YES/NO|YES|
-<<<<<<< HEAD
-|DISPLAY|Temperature unit|Show temperatures in Celsius or Fahrenheit|°F/°C|°C|
-|CALIBRATION|Temp cal 100 °C|Actual temperature at 100 °C|°C|100|
-|CALIBRATION|Temp cal 200 °C|Actual temperature at 200 °C|°C|200|
-|CALIBRATION|Temp cal 300 °C|Actual temperature at 300 °C|°C|300|
-|CALIBRATION|Temp cal 350 °C|Actual temperature at 350 °C|°C|350|
-|CALIBRATION|Temp cal 400 °C|Actual temperature at 400 °C|°C|400|
-|CALIBRATION|Temp cal 450 °C|Actual temperature at 450 °C|°C|450|
-=======
 |DISPLAY|Temperature unit|Show temperatures in Celcius or Fahrenheit|°F/°C|°C|
->>>>>>> 1c42a06d9e0e69fb42421f378f49685ded36d986
 |MODE|Serial DEBUG|Print debug over serial|YES/NO|NO|
 |DISPLAY|Displayed temp filter|Moving average filter length|Length|5|
 |MODE|Startup temp is previous temp|Startup temp is previous used temp|YES/NO|NO|
