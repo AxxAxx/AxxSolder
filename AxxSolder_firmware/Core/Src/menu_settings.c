@@ -1,51 +1,222 @@
 /* menu_settings.c*/
 
 #include "menu_settings.h"
+#include "menu_profiles.h"
 
-/* ==== MENU GROUPS (indices correspond to menu_names / flash_values) ==== */
-/* Groups can contain NON-contiguous indices - we use index tables. */
+/* ==== Menu item identifiers
+ * Step-100 layout: each logical group owns a 100-wide range.
+ * Items within a group can be inserted without renumbering other groups.
+ *
+ * Range → group
+ *   0–  99  Mode / Behaviour
+ * 100– 199  Presets
+ * 200– 299  Profiles
+ * 300– 399  Display
+ * 400– 499  Sound
+ * 500– 599  Calibration  (managed by profiles menu)
+ * 600– 699  Power limits (managed by profiles menu)
+ * 700– 799  System actions
+ * ==== */
+enum {
+    /* ── Mode / Behaviour (0–99) ───────────────────────────────────── */
+    MI_STARTUP_TEMP       = 0,
+    MI_TEMP_OFFSET        = 1,
+    MI_STANDBY_TEMP       = 2,
+    MI_STANDBY_TIME       = 3,
+    MI_SLEEP_TIME         = 4,
+    MI_GPIO4_ON_AT_RUN    = 5,
+    MI_MOMENTARY_STAND    = 6,
+    MI_I_MEASUREMENT      = 7,
+    MI_SERIAL_DEBUG       = 8,
+    MI_START_PREV_TEMP    = 9,
+    MI_THREE_BUTTON_MODE  = 10,
+    MI_DETECT_NT115       = 11,
+    MI_DELTA_T_DETECT     = 12,
+    MI_STANDBY_DELAY      = 13,
+
+    /* ── Presets (100–199) ─────────────────────────────────────────── */
+    MI_PRESET_TEMP_1      = 100,
+    MI_PRESET_TEMP_2      = 101,
+
+    /* ── Profiles (200–299) ────────────────────────────────────────── */
+    MI_PROFILE_ON_TIP_CHG = 200,
+
+    /* ── Display (300–399) ─────────────────────────────────────────── */
+    MI_SCREEN_ROTATION    = 300,
+    MI_TEMP_UNIT          = 301,
+    MI_DISP_TEMP_FILTER   = 302,
+    MI_SHOW_POWER         = 303,
+    MI_DISPLAY_GRAPH      = 304,
+
+    /* ── Sound (400–499) ───────────────────────────────────────────── */
+    MI_BUZZER_ENABLED     = 400,
+    MI_STARTUP_BEEP       = 401,
+    MI_BEEP_AT_SET_TEMP   = 402,
+    MI_BEEP_TONE          = 403,
+
+    /* ── Calibration (500–599) — deprecated: now managed per-profile in tip_profile.c
+     * Kept for Flash_values backward compatibility (fi indices still valid). */
+    MI_TEMP_CAL_100       = 500,
+    MI_TEMP_CAL_200       = 501,
+    MI_TEMP_CAL_300       = 502,
+    MI_TEMP_CAL_350       = 503,
+    MI_TEMP_CAL_400       = 504,
+    MI_TEMP_CAL_450       = 505,
+
+    /* ── Power limits (600–699) — deprecated: now managed per-profile in tip_profile.c
+     * Kept for Flash_values backward compatibility (fi indices still valid). */
+    MI_POWER_LIM_T245     = 600,
+    MI_POWER_LIM_T210     = 601,
+    MI_POWER_LIM_NT115    = 602,
+    MI_POWER_LIM_NO_NAME  = 603,
+
+    /* ── System actions (700–799) ──────────────────────────────────── */
+    MI_LOAD_DEFAULT       = 700,
+    MI_SAVE_REBOOT        = 701,
+    MI_EXIT_NO_SAVE       = 702,
+};
+
+/* Sentinel: MI_ value has no Flash_values backing (system action). */
+#define MI_NO_FLASH 0xFF
+
+/* Maps an MI_ identifier to:
+ *   fi   – sequential field index in Flash_values cast to float*
+ *          (MI_NO_FLASH when the item is a system action, not stored in flash)
+ *   name – display string shown in the menu
+ */
+typedef struct {
+    uint16_t    mi;
+    uint8_t     fi;
+    const char *name;
+} MI_Entry;
+
+static const MI_Entry mi_table[] = {
+    /* Mode */
+    { MI_STARTUP_TEMP,       0,          "Startup Temp °C"      },
+    { MI_TEMP_OFFSET,        1,          "Temp Offset °C"       },
+    { MI_STANDBY_TEMP,       2,          "Standby Temp °C"      },
+    { MI_STANDBY_TIME,       3,          "Standby Time [min]"   },
+    { MI_SLEEP_TIME,         4,          "Sleep Time [min]"     },
+    { MI_GPIO4_ON_AT_RUN,    8,          "GPIO4 ON at run"      },
+    { MI_MOMENTARY_STAND,    10,         "Momentary stand"      },
+    { MI_I_MEASUREMENT,      11,         "I Measurement"        },
+    { MI_SERIAL_DEBUG,       20,         "Serial DEBUG"         },
+    { MI_START_PREV_TEMP,    22,         "Start at prev. temp"  },
+    { MI_THREE_BUTTON_MODE,  23,         "3-button mode"        },
+    { MI_DETECT_NT115,       27,         "Detect NT115"         },
+    { MI_DELTA_T_DETECT,     33,         "Delta T detect"       },
+    { MI_STANDBY_DELAY,      34,         "Standby delay [s]"    },
+    /* Presets */
+    { MI_PRESET_TEMP_1,      6,          "Preset Temp 1 °C"     },
+    { MI_PRESET_TEMP_2,      7,          "Preset Temp 2 °C"     },
+    /* Profiles */
+    { MI_PROFILE_ON_TIP_CHG, 35,         "Profile on tip chg"   },
+    /* Display */
+    { MI_SCREEN_ROTATION,    9,          "Screen Rotation"      },
+    { MI_TEMP_UNIT,          13,         "Temperature unit"     },
+    { MI_DISP_TEMP_FILTER,   21,         "Disp Temp. filter"    },
+    { MI_SHOW_POWER,         26,         "Show power"           },
+    { MI_DISPLAY_GRAPH,      32,         "Display graph"        },
+    /* Sound */
+    { MI_BUZZER_ENABLED,     5,          "Buzzer Enabled"       },
+    { MI_STARTUP_BEEP,       12,         "Startup Beep"         },
+    { MI_BEEP_AT_SET_TEMP,   24,         "Beep at set temp"     },
+    { MI_BEEP_TONE,          25,         "Beep tone"            },
+    /* Calibration — deprecated: not in any menu group, kept for fi mapping compatibility */
+    { MI_TEMP_CAL_100,       14,         "Temp cal 100"         },
+    { MI_TEMP_CAL_200,       15,         "Temp cal 200"         },
+    { MI_TEMP_CAL_300,       16,         "Temp cal 300"         },
+    { MI_TEMP_CAL_350,       17,         "Temp cal 350"         },
+    { MI_TEMP_CAL_400,       18,         "Temp cal 400"         },
+    { MI_TEMP_CAL_450,       19,         "Temp cal 450"         },
+    /* Power limits — deprecated: not in any menu group, kept for fi mapping compatibility */
+    { MI_POWER_LIM_T245,     28,         "Power lim T245"       },
+    { MI_POWER_LIM_T210,     29,         "Power lim T210"       },
+    { MI_POWER_LIM_NT115,    30,         "Power lim NT115"      },
+    { MI_POWER_LIM_NO_NAME,  31,         "Power lim Nn"         },
+    /* System actions — no flash backing */
+    { MI_LOAD_DEFAULT,  MI_NO_FLASH,     "-Load Default-"       },
+    { MI_SAVE_REBOOT,   MI_NO_FLASH,     "-Save and Reboot-"    },
+    { MI_EXIT_NO_SAVE,  MI_NO_FLASH,     "-Exit no Save-"       },
+};
+#define MI_TABLE_COUNT (sizeof(mi_table) / sizeof(mi_table[0]))
+
+/**
+ * @brief Returns the Flash_values field index (fi) for an MI_ identifier.
+ * @return 0–35 for data items, MI_NO_FLASH for system actions / unknown IDs.
+ */
+static uint8_t mi_to_fi(uint16_t mi) {
+    for (uint8_t i = 0; i < MI_TABLE_COUNT; i++) {
+        if (mi_table[i].mi == mi) return mi_table[i].fi;
+    }
+    return MI_NO_FLASH;
+}
+
+/**
+ * @brief Returns the display name for an MI_ identifier.
+ * @return Pointer to the name string, or "?" if not found.
+ */
+static const char* mi_name(uint16_t mi) {
+    for (uint8_t i = 0; i < MI_TABLE_COUNT; i++) {
+        if (mi_table[i].mi == mi) return mi_table[i].name;
+    }
+    return "?";
+}
+
+/* ==== MENU GROUPS (idx arrays hold MI_ identifiers, not sequential indices) ==== */
+/* Groups can contain non-contiguous MI_ values. */
 
 typedef struct {
-    char* title;          // Menu group name (displayed at level=0).
+    char* title;           // Menu group name (displayed at level=0).
 
-    const uint8_t* idx;   // Table of absolute menu item indices from the menu_names[] array
-                          // and the flash_values[] structure. Allows building a group from scattered items.
+    const uint16_t* idx;   // Table of MI_ identifiers belonging to this group.
+                           // uint16_t because MI_ values exceed 255.
 
-    uint8_t count;        // Number of items in the group (length of the idx array).
-                          // For each group, 1 "Exit" item is added to count
-                          // in the actual display.
+    uint8_t count;         // Number of items in the group (length of the idx array).
+                           // For each group, 1 "Exit" item is added to count
+                           // in the actual display.
 } MenuGroup;
 
 
 /* Mode / Behavior */
-static const uint8_t GRP_MODE[]        = {0, 1, 2, 34, 3, 4, 8, 10, 11, 20, 22, 23, 27, 33};
+static const uint16_t GRP_MODE[] = {
+    MI_STARTUP_TEMP, MI_TEMP_OFFSET, MI_STANDBY_TEMP, MI_STANDBY_DELAY,
+    MI_STANDBY_TIME, MI_SLEEP_TIME, MI_GPIO4_ON_AT_RUN, MI_MOMENTARY_STAND,
+    MI_I_MEASUREMENT, MI_SERIAL_DEBUG, MI_START_PREV_TEMP, MI_THREE_BUTTON_MODE,
+    MI_DETECT_NT115, MI_DELTA_T_DETECT, MI_PROFILE_ON_TIP_CHG
+};
 
 /* Presets */
-static const uint8_t GRP_PRESETS[]     = {6, 7};
-
-/* Tips (tip shapes) */
-static const uint8_t GRP_TIPS[]        = {28, 29, 30, 31};
-
-/* Calibration */
-static const uint8_t GRP_CALIBRATION[] = {14, 15, 16, 17, 18, 19};
+static const uint16_t GRP_PRESETS[] = { MI_PRESET_TEMP_1, MI_PRESET_TEMP_2 };
 
 /* Display */
-static const uint8_t GRP_DISPLAY[]     = {9, 13, 21, 26, 32};
+static const uint16_t GRP_DISPLAY[] = {
+    MI_SCREEN_ROTATION, MI_TEMP_UNIT, MI_DISP_TEMP_FILTER, MI_SHOW_POWER,
+    MI_DISPLAY_GRAPH
+};
 
 /* Sound */
-static const uint8_t GRP_SOUND[]       = {5, 12, 24, 25};
+static const uint16_t GRP_SOUND[] = {
+    MI_BUZZER_ENABLED, MI_STARTUP_BEEP, MI_BEEP_AT_SET_TEMP, MI_BEEP_TONE
+};
 
 /* System (actions) */
-static const uint8_t GRP_SYSTEM[]      = {35, 36, 37}; // -Load Default-, -Save and Reboot-, -Exit no Save-
+static const uint16_t GRP_SYSTEM[] = {
+    MI_LOAD_DEFAULT, MI_SAVE_REBOOT, MI_EXIT_NO_SAVE
+};
+
+/* Profiles — handled by separate profiles_menu().
+ * count == 0 is a sentinel: settings_menu() delegates to profiles_menu() instead of
+ * rendering items inline. The dummy array is unused but required by the struct. */
+static const uint16_t GRP_PROFILES_DUMMY[] = { MI_PROFILE_ON_TIP_CHG };
 
 static const MenuGroup MENU_GROUPS[] = {
-    { "Mode",        GRP_MODE,        sizeof(GRP_MODE)        },
-    { "Presets",     GRP_PRESETS,     sizeof(GRP_PRESETS)     },
-    { "Tips",        GRP_TIPS,        sizeof(GRP_TIPS)        },
-	{ "Calibration", GRP_CALIBRATION, sizeof(GRP_CALIBRATION) },
-    { "Display",     GRP_DISPLAY,     sizeof(GRP_DISPLAY)     },
-    { "Sound",       GRP_SOUND,       sizeof(GRP_SOUND)       },
-    { "System",      GRP_SYSTEM,      sizeof(GRP_SYSTEM)      },
+    { "Mode",        GRP_MODE,        sizeof(GRP_MODE)    / sizeof(GRP_MODE[0])    },
+    { "Presets",     GRP_PRESETS,     sizeof(GRP_PRESETS) / sizeof(GRP_PRESETS[0]) },
+    { "Profiles",    GRP_PROFILES_DUMMY, 0  /* sentinel: delegates to profiles_menu() */ },
+    { "Display",     GRP_DISPLAY,     sizeof(GRP_DISPLAY) / sizeof(GRP_DISPLAY[0]) },
+    { "Sound",       GRP_SOUND,       sizeof(GRP_SOUND)   / sizeof(GRP_SOUND[0])   },
+    { "System",      GRP_SYSTEM,      sizeof(GRP_SYSTEM)  / sizeof(GRP_SYSTEM[0])  },
 };
 // Number of elements in the MENU_GROUPS array (i.e. the number of menu groups).
 #define GROUPS_COUNT (sizeof(MENU_GROUPS)/sizeof(MENU_GROUPS[0]))
@@ -104,49 +275,6 @@ static inline int16_t enc_to_sel_bounded(uint32_t cnt0, volatile uint32_t* pCnt,
     return sel;
 }
 
-/* List of names for settings menu */
-#define menu_length 38
-char menu_names[menu_length][38] = {
-		"Startup Temp °C",//0
-		"Temp Offset °C",//1
-		"Standby Temp °C",//2
-		"Standby Time [min]",//3
-		"Sleep Time [min]",//4
-		"Buzzer Enabled",//5
-		"Preset Temp 1 °C",//6
-		"Preset Temp 2 °C",//7
-		"GPIO4 ON at run",//8
-		"Screen Rotation",//9
-		"Momentary stand",//10
-		"I Measurement",//11
-		"Startup Beep",//12
-		"Temperature unit",//13
-		"Temp cal 100",//14
-		"Temp cal 200",//15
-		"Temp cal 300",//16
-		"Temp cal 350",//17
-		"Temp cal 400",//18
-		"Temp cal 450",//19
-		"Serial DEBUG",//20
-		"Disp Temp. filter",//21
-		"Start at prev. temp",//22
-		"3-button mode",//23
-		"Beep at set temp",//24
-		"Beep tone",//25
-		"Show power",//26
-		"Detect NT115",//27
-	    "Power lim T245",//28
-	    "Power lim T210",//29
-	    "Power lim NT115",//30
-		"Power lim Nn",//31
-		"Display graph",//32
-		"Delta T detect",//33
-		"Standby delay [s]",//34
-		"-Load Default-",//35
-		"-Save and Reboot-",//36
-		"-Exit no Save-"//37
-};
-
 /* Function to left align a string from float */
 void left_align_float(char* str, float number, int8_t len)
 	{
@@ -165,33 +293,34 @@ const char* temp_unit_str[] = { "°F", "°C"};
 
 // ==== Table of enumerated parameters ====
 typedef struct {
-    uint8_t index;
+    uint16_t index;
     const char** values;
     uint8_t count;
 } EnumParam;
 
 EnumParam enum_params[] = {
-    { 5,  bool_str, 2 },    	// Buzzer Enabled
-    { 8,  bool_str, 2 },    	// GPIO4 ON at run
-	{ 9, screen_rotation_str, 4 },  // Screen rotation
-	{10,  bool_str, 2 },    	// Momentary stand
-    {11,  bool_str, 2 },    	// I Measurement
-    {12,  bool_str, 2 },    	// Startup Beep
-    {13,  temp_unit_str, 2 },  	// Temp in Celsius
-    {20,  bool_str, 2 },    	// Serial DEBUG
-    {22,  bool_str, 2 },    	// Start at previous temp
-    {23,  bool_str, 2 },    	// 3-button mode
-    {24,  bool_str, 2 },    	// Beep at set temp
-	{26,  show_power_str, 2 }, 	// Power unit on screen
-	{27,  bool_str, 2 },		// Detect the NT115 handle
-	{32,  bool_str, 2 },     	// Displaying a graph
-    {33,  bool_str, 2 }     	// Delta T detection
+    { MI_BUZZER_ENABLED,     bool_str, 2 },
+    { MI_GPIO4_ON_AT_RUN,    bool_str, 2 },
+    { MI_SCREEN_ROTATION,    screen_rotation_str, 4 },
+    { MI_MOMENTARY_STAND,    bool_str, 2 },
+    { MI_I_MEASUREMENT,      bool_str, 2 },
+    { MI_STARTUP_BEEP,       bool_str, 2 },
+    { MI_TEMP_UNIT,          temp_unit_str, 2 },
+    { MI_SERIAL_DEBUG,       bool_str, 2 },
+    { MI_START_PREV_TEMP,    bool_str, 2 },
+    { MI_THREE_BUTTON_MODE,  bool_str, 2 },
+    { MI_BEEP_AT_SET_TEMP,   bool_str, 2 },
+    { MI_SHOW_POWER,         show_power_str, 2 },
+    { MI_DETECT_NT115,       bool_str, 2 },
+    { MI_DISPLAY_GRAPH,      bool_str, 2 },
+    { MI_DELTA_T_DETECT,     bool_str, 2 },
+    { MI_PROFILE_ON_TIP_CHG, bool_str, 2 },
 };
 
 #define ENUM_PARAM_COUNT (sizeof(enum_params) / sizeof(enum_params[0]))
 
 // ==== Get string value of a parameter ====
-const char* get_enum_value_str(uint8_t index, float value) {
+const char* get_enum_value_str(uint16_t index, float value) {
     for (uint8_t i = 0; i < ENUM_PARAM_COUNT; i++) {
         if (enum_params[i].index == index) {
             int v = (int)roundf(value);  // safe rounding
@@ -220,12 +349,13 @@ uint8_t menu_lines_on_screen = 7; // dynamically changes depending on screen rot
 
 /* Function to check if value differs from default */
 static uint8_t is_value_different_from_default(uint16_t index, float current_value) {
-        if (index >= menu_length - 3) return 0; // Skip special menu items
+    uint8_t fi = mi_to_fi(index);
+    if (fi == MI_NO_FLASH) return 0; // system actions have no flash backing
 
-        float default_value = ((float*)&default_flash_values)[index];
+    float default_value = ((float*)&default_flash_values)[fi];
 
-        // Compare with small tolerance for floating point values
-        return (fabsf(current_value - default_value) > 0.1f);
+    // Compare with small tolerance for floating point values
+    return (fabsf(current_value - default_value) > 0.1f);
 }
 
 /* Function for rendering a parameter value with caching to avoid unnecessary redraws */
@@ -288,44 +418,52 @@ static inline float normalize_enum(float val, uint8_t count) {
 
 //Menu parameter constraints
 void normalize_param(uint16_t index) {
-    float* p = &((float*)&flash_values)[index];
+    uint8_t fi = mi_to_fi(index);
+    if (fi == MI_NO_FLASH) return;
+    float* p = &((float*)&flash_values)[fi];
 
     switch(index) {
 
         // --- Boolean or binary parameters: clamped to 0 or 1
-        case 5: case 8: case 10: case 11: case 12:
-        case 13: case 20: case 22: case 23: case 24:
-        case 26: case 27: case 32: case 33:
-            *p = normalize_enum(*p, 2);  // 0/1, cyclic
+        case MI_BUZZER_ENABLED: case MI_GPIO4_ON_AT_RUN:
+        case MI_MOMENTARY_STAND: case MI_I_MEASUREMENT:
+        case MI_STARTUP_BEEP: case MI_TEMP_UNIT:
+        case MI_SERIAL_DEBUG: case MI_START_PREV_TEMP:
+        case MI_THREE_BUTTON_MODE: case MI_BEEP_AT_SET_TEMP:
+        case MI_SHOW_POWER: case MI_DETECT_NT115:
+        case MI_DISPLAY_GRAPH: case MI_DELTA_T_DETECT:
+        case MI_PROFILE_ON_TIP_CHG:
+            *p = normalize_enum(*p, 2);
             break;
 
-        // --- Parameters with range 0 to 3 (4 values)
-        case 9:
-        	 *p = normalize_enum(*p, 4);  // 0/1/2/3, cyclic
-
+        // --- Screen rotation: 0..3
+        case MI_SCREEN_ROTATION:
+            *p = normalize_enum(*p, 4);
             break;
 
-        // --- Parameter with range 1 to 10 (10 values)
-        case 21:
-            *p = 1.0f + fmodf(roundf(fmodf(fabsf(*p), 10.0f)), 10.0f);  // 1..10
+        // --- Display temp filter: 1..10
+        case MI_DISP_TEMP_FILTER:
+            *p = 1.0f + fmodf(roundf(fmodf(fabsf(*p), 10.0f)), 10.0f);
             break;
 
-        // --- Integer parameter (e.g. sensor type, flag)
-        case 1:
-            *p = roundf(*p);  // Round to nearest integer
+        // --- Temp offset: integer
+        case MI_TEMP_OFFSET:
+            *p = roundf(*p);
             break;
 
-        // --- Temperature parameters: clamped to the allowed range
-        case 0: case 2: case 6: case 7:
+        // --- Temperature parameters: 0..MAX_SELECTABLE_TEMPERATURE
+        case MI_STARTUP_TEMP: case MI_STANDBY_TEMP:
+        case MI_PRESET_TEMP_1: case MI_PRESET_TEMP_2:
             *p = fmodf(roundf(fmodf(fabsf(*p), MAX_SELECTABLE_TEMPERATURE + 1)), MAX_SELECTABLE_TEMPERATURE + 1);
             break;
 
-        // --- Power parameter: 0..(MAX_POWER + 4)
-       case 28: case 29: case 30: case 31:
+        // --- Power limits: 0..MAX_POWER (step 5)
+        case MI_POWER_LIM_T245: case MI_POWER_LIM_T210:
+        case MI_POWER_LIM_NT115: case MI_POWER_LIM_NO_NAME:
             *p = fmodf(roundf(fmodf(fabsf(*p), MAX_POWER + 5)), MAX_POWER + 5);
             break;
 
-        // --- Default: take absolute value (positive only)
+        // --- Default: absolute value
         default:
             *p = fabsf(*p);
             break;
@@ -354,12 +492,6 @@ void settings_menu()
         sprintf(str, "fw mod: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
         LCD_PutStr(6, 215, str, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
     }
-
-    // Header
-	LCD_PutStr(70, 5, "SETTINGS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-	LCD_DrawLine(0, 25, 240, 25, RGB_to_BRG(C_DARK_SEA_GREEN));
-	LCD_DrawLine(0, 26, 240, 26, RGB_to_BRG(C_DARK_SEA_GREEN));
-	LCD_DrawLine(0, 27, 240, 27, RGB_to_BRG(C_DARK_SEA_GREEN));
 
     // Value rendering cache
     for (int i = 0; i < MAX_MENU_LINES; i++) {
@@ -415,8 +547,18 @@ void settings_menu()
 
         // ---- Full page redraw ----
         if (redraw_page || (new_page_start != page_start)) {
-            UG_FillFrame(0, 30, 239, 31 + menu_lines_on_screen * 26, RGB_to_BRG(C_BLACK));
+            UG_FillFrame(0, 0, 239, 31 + menu_lines_on_screen * 26, RGB_to_BRG(C_BLACK));
             page_start = new_page_start;
+
+            // Redraw header
+            if (level == 0) {
+                LCD_PutStr(5, 5, "SETTINGS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+            } else {
+                LCD_PutStr(5, 5, MENU_GROUPS[current_group].title, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+            }
+            LCD_DrawLine(0, 25, 240, 25, RGB_to_BRG(C_DARK_SEA_GREEN));
+            LCD_DrawLine(0, 26, 240, 26, RGB_to_BRG(C_DARK_SEA_GREEN));
+            LCD_DrawLine(0, 27, 240, 27, RGB_to_BRG(C_DARK_SEA_GREEN));
 
             // Reset value row cache - important so display_menu_value_line() redraws
             for (int i = 0; i < menu_lines_on_screen; i++) {
@@ -439,15 +581,16 @@ void settings_menu()
                 } else {
                     // Group item list + Back
                 	if (pos < MENU_GROUPS[current_group].count) {
-                	    uint8_t abs_index = MENU_GROUPS[current_group].idx[pos];
-                	    LCD_PutStr(5, line_y, menu_names[abs_index], FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+                	    uint16_t abs_mi = MENU_GROUPS[current_group].idx[pos];
+                	    LCD_PutStr(5, line_y, mi_name(abs_mi), FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
 
                 	    // Do not display values for the System group
                 	    if (!(current_group == (GROUPS_COUNT - 1))) {
+                	        uint8_t fi = mi_to_fi(abs_mi);
                 	        display_menu_value_line(
                 	            line,
-                	            abs_index,
-                	            ((float*)&flash_values)[abs_index],
+                	            abs_mi,
+                	            ((float*)&flash_values)[fi],
                 	            0, 0,
                 	            190, line_y,
 								RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
@@ -456,7 +599,7 @@ void settings_menu()
                 	}
                     else if (pos == MENU_GROUPS[current_group].count) {
                         // Back row
-                        LCD_PutStr(5, line_y, "Back", FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+                        LCD_PutStr(5, line_y, "Back", FONT_arial_20X23, RGB_to_BRG(C_LIGHT_GRAY), RGB_to_BRG(C_BLACK));
                     }
                 }
             }
@@ -492,27 +635,29 @@ void settings_menu()
             uint8_t line = editing_index % menu_lines_on_screen;
             uint16_t line_y = 35 + line * 26;
 
-            // Absolute parameter index
-            uint8_t abs_index = MENU_GROUPS[current_group].idx[editing_index];
+            // MI_ identifier of the parameter being edited
+            uint16_t abs_mi = MENU_GROUPS[current_group].idx[editing_index];
+            uint8_t  fi     = mi_to_fi(abs_mi);
 
             // Increment/decrement from the edit "zero"
             int32_t delta = ((int32_t)TIM2->CNT - (int32_t)edit_cnt0) / 2;
 
             float new_val;
-            if (abs_index == 28 || abs_index == 29 || abs_index == 30|| abs_index == 31) { // Limit Power - step 5
+            if (abs_mi == MI_POWER_LIM_T245 || abs_mi == MI_POWER_LIM_T210 ||
+                abs_mi == MI_POWER_LIM_NT115 || abs_mi == MI_POWER_LIM_NO_NAME) {
                 new_val = old_value + (float)delta * 5.0f;
             } else {
                 new_val = old_value + (float)delta;
             }
 
-            ((float*)&flash_values)[abs_index] = new_val;
-            normalize_param(abs_index);  // original normalization/cycling function
-            float norm_val = ((float*)&flash_values)[abs_index];
+            ((float*)&flash_values)[fi] = new_val;
+            normalize_param(abs_mi);  // original normalization/cycling function
+            float norm_val = ((float*)&flash_values)[fi];
 
             // Redraw ONLY the value zone, inverting colors
             display_menu_value_line(
                 line,
-                abs_index,
+                abs_mi,
                 norm_val,
                 1, // selected
                 1, // editing
@@ -527,13 +672,24 @@ void settings_menu()
             if (level == 0) {
                 // Select group
                 current_group = cursor;
-                level = 1;
 
-                // Reset cursor/page for the selected group
-                TIM2->CNT = 1000;
-                cursor = 0;
-                page_start = 0xFFFF;
-                redraw_page = 1;
+                // Profiles group — delegate to separate menu
+                if (MENU_GROUPS[current_group].count == 0) {
+                    wait_button_release();
+                    profiles_menu();
+                    // Return to group list
+                    TIM2->CNT = 1000 + current_group * 2;
+                    cursor = current_group;
+                    page_start = 0xFFFF;
+                    redraw_page = 1;
+                } else {
+                    level = 1;
+                    // Reset cursor/page for the selected group
+                    TIM2->CNT = 1000;
+                    cursor = 0;
+                    page_start = 0xFFFF;
+                    redraw_page = 1;
+                }
 
             } else if (level == 1) {
                 // Press on an item inside a group
@@ -547,21 +703,24 @@ void settings_menu()
                     redraw_page = 1;
                 } else {
                     // Regular parameter or system action
-                    uint8_t abs_index = MENU_GROUPS[current_group].idx[cursor];
+                    uint16_t abs_mi = MENU_GROUPS[current_group].idx[cursor];
 
-                    if (abs_index == 37) {                // -Exit no Save-
+                    if (abs_mi == MI_EXIT_NO_SAVE) {
                         settings_menu_active = 0;
                         HAL_NVIC_SystemReset();
-                    } else if (abs_index == 36) {         // -Save and Reboot-
-                        FlashWrite(&flash_values);
+                    } else if (abs_mi == MI_SAVE_REBOOT) {
+                        STORAGE_SETTINGS_DRIVER->write(SETTINGS_PAGE, &flash_values, sizeof(Flash_values));
+                        profiles_save();
                         settings_menu_active = 0;
                         HAL_NVIC_SystemReset();
-                    } else if (abs_index == 35) {         // -Load Default-
+                    } else if (abs_mi == MI_LOAD_DEFAULT) {
                         flash_values = default_flash_values;
+                        profiles_reset();
                         redraw_page = 1; // values changed - redraw
                     } else {
                         // Enter value editing
-                        old_value = ((float*)&flash_values)[abs_index];
+                        uint8_t fi = mi_to_fi(abs_mi);
+                        old_value = ((float*)&flash_values)[fi];
                         editing_index = cursor;
                         edit_cnt0 = TIM2->CNT;      // "zero" for delta
                         level = 2;
@@ -572,8 +731,8 @@ void settings_menu()
                         uint16_t line_y = 35 + line * 26;
                         display_menu_value_line(
                             line,
-                            abs_index,
-                            ((float*)&flash_values)[abs_index],
+                            abs_mi,
+                            ((float*)&flash_values)[fi],
                             1, 1, 190, line_y,
 							RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
                         );
@@ -595,11 +754,12 @@ void settings_menu()
                 /* After exiting editing the value stays rendered in normal style */
                 uint8_t line = editing_index % menu_lines_on_screen;
                 uint16_t line_y = 35 + line * 26;
-                uint8_t abs_index = MENU_GROUPS[current_group].idx[editing_index];
+                uint16_t abs_mi = MENU_GROUPS[current_group].idx[editing_index];
+                uint8_t  fi     = mi_to_fi(abs_mi);
                 display_menu_value_line(
                     line,
-                    abs_index,
-                    ((float*)&flash_values)[abs_index],
+                    abs_mi,
+                    ((float*)&flash_values)[fi],
                     0, 0,
                     190, line_y,
 					RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
