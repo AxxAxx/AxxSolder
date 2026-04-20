@@ -9,7 +9,7 @@
 #include "moving_average.h"
 #include "hysteresis.h"
 #include "type_packers.h"
-#include "flash.h"
+#include "storage.h"
 #include "stusb4500.h"
 #include "buzzer.h"
 #include "debug.h"
