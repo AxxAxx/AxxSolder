@@ -14,30 +14,26 @@ const float identity_cal[NUM_CAL_POINTS] = {
 /* Default PID values per handle type (moved from main.c #defines) */
 static const TipProfile default_profiles[] = {
 	{
-		.name = "T245 Default",
+		.name = "Default",
 		.handle_type = T245,
+		.def = 1,
 		.kp = 8.0f, .ki = 2.0f, .kd = 0.5f, .max_i = 300.0f,
 		.power_limit = 0.0f,
 		.temp_cal = {100.0f, 200.0f, 300.0f, 350.0f, 400.0f, 450.0f}
 	},
 	{
-		.name = "T210 Default",
+		.name = "Default",
 		.handle_type = T210,
+		.def = 1,
 		.kp = 7.0f, .ki = 4.0f, .kd = 0.3f, .max_i = 300.0f,
 		.power_limit = 0.0f,
 		.temp_cal = {100.0f, 200.0f, 300.0f, 350.0f, 400.0f, 450.0f}
 	},
 	{
-		.name = "NT115 Default",
+		.name = "Default",
 		.handle_type = NT115,
+		.def = 1,
 		.kp = 5.0f, .ki = 2.0f, .kd = 0.3f, .max_i = 300.0f,
-		.power_limit = 0.0f,
-		.temp_cal = {100.0f, 200.0f, 300.0f, 350.0f, 400.0f, 450.0f}
-	},
-	{
-		.name = "No_name Default",
-		.handle_type = No_name,
-		.kp = 8.0f, .ki = 2.0f, .kd = 0.5f, .max_i = 300.0f,
 		.power_limit = 0.0f,
 		.temp_cal = {100.0f, 200.0f, 300.0f, 350.0f, 400.0f, 450.0f}
 	},
@@ -115,9 +111,14 @@ void tip_profiles_init(const StorageDriver *drv)
 	StoreResult res = driver->read(PROFILES_PAGE, &cache, sizeof(ProfileStore));
 
 	if (res != STORE_OK || cache.magic != PROFILES_MAGIC || cache.version != PROFILES_VERSION) {
-		create_defaults();
-		driver->write(PROFILES_PAGE, &cache, sizeof(ProfileStore));
+		tip_profiles_reset();
 	}
+}
+
+StoreResult tip_profiles_reset(void)
+{
+	create_defaults();
+	return driver->write(PROFILES_PAGE, &cache, sizeof(ProfileStore));
 }
 
 StoreResult tip_profiles_save(void)
@@ -152,6 +153,10 @@ StoreResult tip_profiles_add(const TipProfile *p)
 StoreResult tip_profiles_delete(uint8_t index)
 {
 	if (index >= cache.count) {
+		return STORE_ERR_INVALID;
+	}
+
+	if (cache.profiles[index].def == 1) {
 		return STORE_ERR_INVALID;
 	}
 

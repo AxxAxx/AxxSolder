@@ -8,15 +8,16 @@
 
 #define PROFILE_NAME_LEN   24
 #define MAX_PROFILES       24  /* 16 + 24*72 = 1744 bytes, fits in 2 KB PROFILES page */
-#define PROFILES_MAGIC      0x54495031  /* "TIP1" */
-#define PROFILES_VERSION    2
+#define PROFILES_MAGIC      0x54495032  /* "TIP1" */
+#define PROFILES_VERSION    1
 #define NUM_CAL_POINTS      6
 
 /* Single tip profile */
 typedef struct {
 	char    name[PROFILE_NAME_LEN];
 	uint8_t handle_type;             /* enum handles value */
-	uint8_t _pad[3];
+	uint8_t def;
+	uint8_t _pad[2];
 	float   kp;
 	float   ki;
 	float   kd;
@@ -41,6 +42,7 @@ typedef struct {
 
 /* Lifecycle */
 void        tip_profiles_init(const StorageDriver *drv);
+StoreResult tip_profiles_reset(void);
 StoreResult tip_profiles_save(void);
 
 /* CRUD */

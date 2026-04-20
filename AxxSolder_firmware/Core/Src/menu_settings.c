@@ -710,10 +710,12 @@ void settings_menu()
                         HAL_NVIC_SystemReset();
                     } else if (abs_mi == MI_SAVE_REBOOT) {
                         STORAGE_SETTINGS_DRIVER->write(SETTINGS_PAGE, &flash_values, sizeof(Flash_values));
+                        profiles_save();
                         settings_menu_active = 0;
                         HAL_NVIC_SystemReset();
                     } else if (abs_mi == MI_LOAD_DEFAULT) {
                         flash_values = default_flash_values;
+                        profiles_reset();
                         redraw_page = 1; // values changed - redraw
                     } else {
                         // Enter value editing

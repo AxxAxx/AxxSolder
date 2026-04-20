@@ -521,15 +521,15 @@ static void edit_profile(uint8_t prof_idx)
 					break;
 				}
 				case PF_SET_ACTIVE: {
-					tip_profiles_update(prof_idx, &edit);
-					tip_profiles_set_active((enum handles)edit.handle_type, prof_idx);
-					tip_profiles_save();
+					StoreResult res = tip_profiles_update(prof_idx, &edit);
+					if (res == STORE_OK) {
+						tip_profiles_set_active((enum handles)edit.handle_type, prof_idx);
+					}
 					running = 0;
 					break;
 				}
 				case PF_DELETE: {
-					tip_profiles_delete(prof_idx);
-					tip_profiles_save();
+					StoreResult res = tip_profiles_delete(prof_idx);
 					running = 0;
 					break;
 				}
@@ -537,7 +537,6 @@ static void edit_profile(uint8_t prof_idx)
 					/* Only write flash if profile was actually modified */
 					if (memcmp(&edit, p, sizeof(TipProfile)) != 0) {
 						tip_profiles_update(prof_idx, &edit);
-						tip_profiles_save();
 					}
 					running = 0;
 					break;
@@ -592,7 +591,7 @@ void profiles_menu(void)
 					TipProfile *p = tip_profiles_get(li);
 					uint8_t active_for_current = tip_profiles_get_active(attached_handle);
 					char line[38];
-					snprintf(line, sizeof(line), "%s", p->name);
+					snprintf(line, sizeof(line), "%s %s", handle_to_str(p->handle_type), p->name);
 					draw_line(i, line, fg, bg);
 					if (active_for_current == li) {
 						uint16_t y = 35 + i * 26;
@@ -648,7 +647,6 @@ void profiles_menu(void)
 					new_p.temp_cal[ci] = identity_cal[ci];
 
 				tip_profiles_add(&new_p);
-				tip_profiles_save();
 				edit_profile(count); /* count == index of the just-added profile */
 
 				TIM2->CNT = 1000;
@@ -758,4 +756,14 @@ void profiles_popup(enum handles h)
 
 		HAL_Delay(10);
 	}
+}
+
+void profiles_reset(void)
+{
+	tip_profiles_reset();
+}
+
+void profiles_save(void)
+{
+	tip_profiles_save();
 }
