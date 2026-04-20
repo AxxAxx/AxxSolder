@@ -69,7 +69,7 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 		if (timeChange == 0){
 			return 0;
 		}
-		timeChange_in_seconds = timeChange/1000.0;
+		timeChange_in_seconds = timeChange/1000.0f;
 		/* Compute all the working error variables */
 		input   = *uPID->MyInput;
 		error   = *uPID->MySetpoint - input;
@@ -103,7 +103,7 @@ uint8_t PID_Compute(PID_TypeDef *uPID){
 		}
 
 		/* only add I part if error is smaller than IminError and scale it from IminError to 0 */
-		if(error > fabs(uPID->IminError)){
+		if(error > fabsf(uPID->IminError)){
 			uPID->OutputSum = 0;
 		}
 

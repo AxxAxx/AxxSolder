@@ -98,6 +98,8 @@ typedef struct{
     float display_graph;
     float delta_t_detection;
     float standby_delay;
+    float show_profile_on_tip_change;
+    float change_enc_dir;
 }Flash_values;
 /* Global variables defined in main.c */
 extern Flash_values flash_values;

@@ -1,5 +1,5 @@
-#ifndef __ST7735_H__
-#define __ST7735_H__
+#ifndef __LCD_H__
+#define __LCD_H__
 
 #include "images.h"
 #include "ugui.h"
@@ -7,176 +7,6 @@
 
 /* For demo only. Minimum is 32, 128 and higher will enable all tests */
 #define DEMO_FLASH_KB 128
-
-/* choose a Hardware SPI port to use. */
-#define LCD_HANDLE            hspi2
-
-/* Pin connections. Use same names as in CubeMX */
-#define LCD_DC                SPI2_DC_Pin
-#define LCD_RST               SPI2_RST_Pin /* Disable if your display has no RST pin */
-#define LCD_CS                SPI2_CS_Pin  /* Disable if your display has no CS pin */
-//#define LCD_BL              LCD_BL  /* Enable if you need backlight control */
-
-#define USE_DMA                       /* Use DMA for transfers when possible */
-//#define LCD_LOCAL_FB                /* Use local framebuffer. Needs a lot of ram, but removes flickering and redrawing glitches  */
-
-//#define USE_ST7735                    /* LCD Selection */
-#define USE_ST7789
-
-#define LCD_ROTATION 2                /* XY rotation/mirroring. Valid values: 0...3 */
-
-#ifdef USE_ST7735                     /* ST7735 LCD sizes */
-  #define LCD_160X128
-//#define LCD_128X128
-//#define LCD_160X80
-#elif defined USE_ST7789              /* ST7789 LCD sizes */
-//#define LCD_135X240
-//#define LCD_240X240
-//#define LCD_240X280
-#define LCD_240X320
-#endif
-
-
-
-
-#ifdef USE_ST7735
-  #ifdef LCD_160X128
-    #define LCD_X_SHIFT 0
-    #define LCD_Y_SHIFT 0
-    #if (LCD_ROTATION == 0) || (LCD_ROTATION == 2)
-      #define LCD_WIDTH  128
-      #define LCD_HEIGHT 160
-    #elif (LCD_ROTATION == 1) || (LCD_ROTATION == 3)
-      #define LCD_WIDTH  160
-      #define LCD_HEIGHT 128
-    #endif
-  #elif defined LCD_128X128
-    #define LCD_X_SHIFT 0
-    #define LCD_Y_SHIFT 0
-    #define LCD_WIDTH  128
-    #define LCD_HEIGHT 128
-  #elif defined LCD_160X80
-    #define LCD_X_SHIFT 0
-    #define LCD_Y_SHIFT 0
-    #if (LCD_ROTATION == 0) || (LCD_ROTATION == 2)
-      #define LCD_WIDTH  80
-      #define LCD_HEIGHT 160
-    #elif (LCD_ROTATION == 1) || (LCD_ROTATION == 3)
-      #define LCD_WIDTH  160
-      #define LCD_HEIGHT 80
-    #endif
-  #endif
-
-  #if LCD_ROTATION == 0
-    #ifdef LCD_160X80
-      #define LCD_ROTATION_CMD (CMD_MADCTL_MX | CMD_MADCTL_MY | CMD_MADCTL_BGR)
-    #else
-      #define LCD_ROTATION_CMD (CMD_MADCTL_MX | CMD_MADCTL_MY | CMD_MADCTL_RGB)
-    #endif
-  #elif LCD_ROTATION == 1
-    #ifdef LCD_160X80
-      #define LCD_ROTATION_CMD (CMD_MADCTL_MY | CMD_MADCTL_MV | CMD_MADCTL_BGR)
-    #else
-      #define LCD_ROTATION_CMD (CMD_MADCTL_MY | CMD_MADCTL_MV | CMD_MADCTL_RGB)
-    #endif
-  #elif LCD_ROTATION == 2
-    #ifdef LCD_160X80
-      #define LCD_ROTATION_CMD (CMD_MADCTL_BGR)
-    #else
-      #define LCD_ROTATION_CMD (CMD_MADCTL_RGB)
-    #endif
-  #elif LCD_ROTATION == 3
-    #ifdef LCD_160X80
-      #define LCD_ROTATION_CMD (CMD_MADCTL_MX | CMD_MADCTL_MV | CMD_MADCTL_BGR)
-    #else
-      #define LCD_ROTATION_CMD (CMD_MADCTL_MX | CMD_MADCTL_MV | CMD_MADCTL_RGB)
-    #endif
-  #endif
-
-
-#elif defined USE_ST7789
-
-  #ifdef LCD_135X240
-    #if (LCD_ROTATION == 0) || (LCD_ROTATION == 2)
-      #define LCD_WIDTH  135
-      #define LCD_HEIGHT 240
-    #elif (LCD_ROTATION == 1) || (LCD_ROTATION == 3)
-      #define LCD_WIDTH  240
-      #define LCD_HEIGHT 135
-    #endif
-
-  #elif defined LCD_240X240
-    #define LCD_WIDTH  240
-    #define LCD_HEIGHT 240
-    #define LCD_X_SHIFT 0
-    #define LCD_Y_SHIFT 0
-
-  #elif defined LCD_240X280
-    #if (LCD_ROTATION == 0) || (LCD_ROTATION == 2)
-      #define LCD_WIDTH  240
-      #define LCD_HEIGHT 280
-      #define LCD_X_SHIFT 0
-      #define LCD_Y_SHIFT 0
-    #elif (LCD_ROTATION == 1) || (LCD_ROTATION == 3)
-      #define LCD_WIDTH  280
-      #define LCD_HEIGHT 240
-    #endif
-
-  #elif defined LCD_240X320
-    #if (LCD_ROTATION == 0) || (LCD_ROTATION == 2)
-      #define LCD_WIDTH  240
-      #define LCD_HEIGHT 320
-      #define LCD_X_SHIFT 0
-      #define LCD_Y_SHIFT 0
-    #elif (LCD_ROTATION == 1) || (LCD_ROTATION == 3)
-      #define LCD_WIDTH  320
-      #define LCD_HEIGHT 240
-      #define LCD_X_SHIFT 0
-      #define LCD_Y_SHIFT 0
-    #endif
-
-  #endif
-
-
-
-  #if LCD_ROTATION == 0
-    #define LCD_ROTATION_CMD (CMD_MADCTL_MX | CMD_MADCTL_MY | CMD_MADCTL_RGB)
-    #ifdef LCD_135X240
-      #define LCD_X_SHIFT 53
-      #define LCD_Y_SHIFT 40
-
-    #elif defined LCD_240X280
-    #endif
-  #elif LCD_ROTATION == 1
-    #define LCD_ROTATION_CMD (CMD_MADCTL_MY | CMD_MADCTL_MV | CMD_MADCTL_RGB)
-    #ifdef LCD_135X240
-      #define LCD_X_SHIFT 40
-      #define LCD_Y_SHIFT 52
-    #elif defined LCD_240X280
-    #endif
-  #elif LCD_ROTATION == 2
-    #define LCD_ROTATION_CMD (CMD_MADCTL_RGB)
-    #ifdef LCD_135X240
-      #define LCD_X_SHIFT 52
-      #define LCD_Y_SHIFT 40
-    #elif defined LCD_240X280
-      #define LCD_X_SHIFT 20
-      #define LCD_Y_SHIFT 0
-    #elif defined LCD_240X320
-      #define LCD_X_SHIFT 0
-      #define LCD_Y_SHIFT 0
-    #endif
-  #elif LCD_ROTATION == 3
-    #define LCD_ROTATION_CMD (CMD_MADCTL_MX | CMD_MADCTL_MV | CMD_MADCTL_RGB)
-    #ifdef LCD_135X240
-      #define LCD_X_SHIFT 40
-      #define LCD_Y_SHIFT 53
-    #elif defined LCD_240X280
-      #define LCD_X_SHIFT 20
-      #define LCD_Y_SHIFT 0
-    #endif
-  #endif
-#endif
 
 /* LCD Commands */
 typedef enum{
@@ -249,10 +79,39 @@ typedef enum{
 #define color565(r, g, b) (((r & 0xF8) << 8) | ((g & 0xFC) << 3) | ((b & 0xF8) >> 3))
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 
-#define LCD_CON(a,b)  a##b
-//#define LCD_PIN(pin, out) (LCD_CON(pin,_GPIO_Port->BSRR) = (out ? LCD_CON(pin,_Pin) : LCD_CON(pin,_Pin)<<16 ))
+/* ── Hardware ──────────────────────────────────────────── */
+#define LCD_HANDLE            hspi2
+extern SPI_HandleTypeDef      LCD_HANDLE;
 
-extern SPI_HandleTypeDef    LCD_HANDLE;
+#define LCD_DC                SPI2_DC_Pin
+#define LCD_RST               SPI2_RST_Pin
+#define LCD_CS                SPI2_CS_Pin
+
+#define USE_DMA
+/* #define LCD_LOCAL_FB */   /* Uncomment to use local frame buffer (needs ~150 KB RAM) */
+#define DMA_Min_Pixels        32
+
+/* ── Build-time validation ─────────────────────────────── */
+#if !defined(LCD_ROTATION)
+#  define LCD_ROTATION 2   /* default: 180° */
+#endif
+
+/* Defaults for IDE builds that don't pass CMake defines */
+#if !defined(USE_ST7789) && !defined(USE_ST7735)
+#  define USE_ST7789
+#endif
+#if !defined(LCD_240X320) && !defined(LCD_240X280) && !defined(LCD_240X240) && !defined(LCD_135X240) && \
+    !defined(LCD_160X128) && !defined(LCD_128X128) && !defined(LCD_160X80)
+#  define LCD_240X320
+#endif
+
+
+/* ── Controller header (geometry + rotation table + init_cmd) ── */
+#if defined USE_ST7789
+#  include "lcd_st7789.h"
+#elif defined USE_ST7735
+#  include "lcd_st7735.h"
+#endif
 
 void LCD_init(void);
 void LCD_SetRotation(uint8_t m);
@@ -260,20 +119,18 @@ void LCD_DrawPixel(int16_t x, int16_t y, uint16_t color);
 void LCD_DrawPixelFB(int16_t x, int16_t y, uint16_t color);
 int8_t LCD_Fill(uint16_t xSta, uint16_t ySta, uint16_t xEnd, uint16_t yEnd, uint16_t color);
 
-/* Graphical functions. */
 int8_t LCD_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
 void LCD_DrawImage(uint16_t x, uint16_t y, UG_BMP* bmp);
 void LCD_InvertColors(uint8_t invert);
 
-/* Text functions. */
 void LCD_PutChar(uint16_t x, uint16_t y, char ch, UG_FONT* font, uint16_t color, uint16_t bgcolor);
-void LCD_PutStr(uint16_t x, uint16_t y,  char *str, UG_FONT* font, uint16_t color, uint16_t bgcolor);
+void LCD_PutStr(uint16_t x, uint16_t y, char *str, UG_FONT* font, uint16_t color, uint16_t bgcolor);
 
-/* Extended Graphical functions. */
-/* Command functions */
 void LCD_TearEffect(uint8_t tear);
 
 /* Simple test function. */
+#ifdef LCD_ENABLE_TEST
 void LCD_Test(void);
+#endif
 
-#endif // __ST7735_H__
+#endif /* __LCD_H__ */

@@ -33,6 +33,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 - [Firmware update](#firmware-update)
 - [First start up after build](#first-start-up-after-build)
 - [Settings](#settings)
+- [Profiles](#profiles)
 - [PID control](#pid-control)
 - [Cartridge differences](#cartridge-differences)
 - [Temperature calibration](#temperature-calibration)
@@ -61,7 +62,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
   - Current detected handle type
   - Current max power output
   - Current power source USB-PD / DC
-  - Graph over current temperature and power
+  - Graph showing set temperature, current temperature and power
 
 # DEMO
 [![YouTube](./photos/YouTube.PNG)](https://www.youtube.com/watch?v=I5uLvEM9wpY)  
@@ -76,10 +77,10 @@ The schematic for AxxSolder is shown below. Both station and portable versions u
 ![AxxSolder_station](./photos/AxxSolder_Schematic.png)
 
 # PCB
-The PCBs are designed in KiCad and manufactured by [PCBWay](https://www.pcbway.com/). PCBWay has sponsored this project with PCBs and stencils. The support and quality from PCBWay is great and therefore PCBWay is the recommender PCB supplier for this project. As some components have a rather fine pitch (0,5 mm as of the LQFP-48 package of the STM32) and some packages are "no lead" with a bottom thermal pad e.g. the WSON-8 package of the OPA2387 it is recommended to use a stencil to apply solder paste and then reflow the board using either a reflow oven or hot-plate. The boards on the image below were reflowed on a hot-plate (a homemade AxxPlate). A microscope is also recommended and helpful during assembly.
+The PCBs are designed in KiCad and manufactured by [PCBWay](https://www.pcbway.com/). PCBWay has sponsored this project with PCBs and stencils. The support and quality from PCBWay is great and therefore PCBWay is the recommended PCB supplier for this project. As some components have a rather fine pitch (0,5 mm as of the LQFP-48 package of the STM32) and some packages are "no lead" with a bottom thermal pad e.g. the WSON-8 package of the OPA2387 it is recommended to use a stencil to apply solder paste and then reflow the board using either a reflow oven or hot-plate. The boards on the image below were reflowed on a hot-plate (a homemade AxxPlate). A microscope is also recommended and helpful during assembly.
 Printed Circuit Boards with assembled components are shown in the image below.
 ![PCB_image](./photos/PCB_image.jpg)
-A 3D view (from and back) of the AxxSolder PCB is generated with KiCad and shown below. 
+A 3D view (front and back) of the AxxSolder PCB is generated with KiCad and shown below. 
 ![PCB_3D](./photos/AxxSolder_V_3_0_PCB_3D.jpg)
 
 # AxxSolder Station
@@ -90,7 +91,7 @@ The JBC ADS stand comes with a silicone cable fitted with two Binder 99-0621-00-
 By default, the stand separates the two signals coming from the "tool rest position" and the "tip change position" and does NOT have two separate connections for tip sensing 1 and 2 as is needed if NT115, T210 and T245 handles should all be automatically detected. Therefore, a modification is done to the PCB inside the JBC ADS stand in order to combine the "tool rest position" and the "tip change position" sense into one connection and separate the two tip sense connections. This is shown in the image above. The stand is held together with two PH0 screws from the side.  
 NOTE: This modification of the stand is only needed if you want to be able to use NT115, T210 and T245 with your JBC ADS stand. If you know that you will only be using T210 and/or T245 you can change the user setting: Detect NT115 to "NO" in the settings in order for T210 and T245 to be automatically detected with a un-modified JBC ADS stand.
  
-The JBC ADS stand is an expensive piece and thankfully there are many alternatives online for the one who wants to save some money. The community on the AxxSolder Discord channel has created many enclosures for alternative stands such as the GEEBOON SDC02, and some of the AiXun stands. Some of the models are availible under [Alternative stands](https://github.com/AxxAxx/AxxSolder/tree/main/CAD/Alternative_enclosures_and_designs) .
+The JBC ADS stand is an expensive piece and thankfully there are many alternatives online for the one who wants to save some money. The community on the AxxSolder Discord channel has created many enclosures for alternative stands such as the GEEBOON SDC02, and some of the AiXun stands. Some of the models are available under [Alternative stands](https://github.com/AxxAxx/AxxSolder/tree/main/CAD/Alternative_enclosures_and_designs) .
 
 # AxxSolder Portable
 It is often nice to have a compact and portable soldering iron controller for when you are away from your comfortable desk. A neat powerful package with the same capabilities as your main soldering station. This is why AxxSolder Portable was designed. The only difference between AxxSolder station and Portable is the enclosure.  
@@ -101,7 +102,7 @@ The connections from the handle to the PCB through the Hirose RPC1-12RB-6P(71) c
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
 
 # Recommended power supply for tip grounding
-In order to be able to ground the tip of the soldering iron the user MUST use a power supply with a floating output (SELV) and connect protective earth to the ground terminal on AxxSolder. No other devices should share this DC power other than AxxSolder itself. A well-suited power supply with floating output (SELV) is the Meanwell LRS-150-24. It is rated for 156 W at 24 V. By using this kind of power supply, AxxSolder can be connected directly its DC output and to mains earth thus keeping the tip of the soldering iron at earth ground potential. There is a 1A fuse after the earth terminal in paralell with a 1M resistor on the AxxSolder.  
+In order to be able to ground the tip of the soldering iron the user MUST use a power supply with a floating output (SELV) and connect protective earth to the ground terminal on AxxSolder. No other devices should share this DC power other than AxxSolder itself. A well-suited power supply with floating output (SELV) is the Meanwell LRS-150-24. It is rated for 156 W at 24 V. By using this kind of power supply, AxxSolder can be connected directly its DC output and to mains earth thus keeping the tip of the soldering iron at earth ground potential. There is a 1A fuse after the earth terminal in parallel with a 1M resistor on the AxxSolder.  
 A printable cover protecting the terminals of the for LRS-150-24 can be found under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD).  
 ![LRS-150-24](./photos/LRS-150-24.jpg)
 Another suitable power supply is the Meanwell XLG-150-24 which has a slightly different form factor and is fully enclosed.
@@ -155,15 +156,16 @@ These come in a variety of models and are available from several different place
 The first start up after you have built your AxxSolder can be intense. Double check all solder connections under a loupe/microscope. Especially the OPA2387, LTC4440 and the STM32G431 are small packages with tight pad spacing and can have solder bridges. Do also double check the connections to the soldering iron/stand which are shown in this document under [AxxSolder Station](#axxsolder-station) and [AxxSolder Portable](#axxsolder-portable).  
 The first thing to do after you have double-checked everything is to follow the steps under [Firmware update](#firmware-update). It is wise to do the first programming of AxxSolder without any handle piece and with only 3.3 V, not VDD. After the programming is done you can now power up AxxSolder again via either with 3.3 V, this time you can attach your handle. This allows you to test that your handle type is detected correctly (the detected handle type NT115/T210/T245 is shown in the display). The Standby feature can also be tested by touching the stand (STAND Input).  
 If the handle is detected correctly, the Standby function works and the display works you proceed to test the 7.35V DC/DC. This is done by once again disconnect the handle, but this time apply current limited 9-24 V VDD. 100 mA at 24 V is enough to check that the display starts and that you can measure the 3 bus voltages; 3.3V, 7.35V and VDD. If the bus voltages look good and the display shows the main screen you are ready to apply full VDD power and attach the soldering handle.  
-If you are not 110% sure about your soldering/connections it is wise to be on the safe side and keep your soldering tip in a water bath in over to prevent it from over-heating in an uncontrolled manner. During the development this method was used and saved a few of those expensive JBC cartridges..
+If you are not 110% sure about your soldering/connections it is wise to be on the safe side and keep your soldering tip in a water bath in order to prevent it from over-heating in an uncontrolled manner. During the development this method was used and saved a few of those expensive JBC cartridges..
 
 # Settings
-To access the user settings the user holds down the encoder button at start-up or long-press the encoder button. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters available grouped together under MODE, PRESETS, TIS, CALIBRATION, DISPLAY, SOUND and SYSTEM.
+To access the user settings the user holds down the encoder button at start-up or long-press the encoder button. A SETTINGS text is then presented and the button can be released. While in the settings there are several parameters available grouped together under MODE, PRESETS, PROFILES, DISPLAY, SOUND and SYSTEM.
 | Group | Setting | Description  | Unit | Default |
 |----|---------|------|----------------------|----------------------|
 |MODE|Startup Temp °C|Default temperature selected after boot|°C|330|
 |MODE|Temp Offset °C|Temperature offset applied to measured temperature|°C|0|
 |MODE|Standby Temp °C|Temperature to go to after handle is set in stand|°C|150|
+|MODE|Standby Delay [s]|Time between putting the handle in the stand to going into standby mode|seconds|0|
 |MODE|Standby Time [min]|Time for which standby temperature is held before cooling down|minutes|10|
 |MODE|Sleep Time [min]|Time that the iron can be ON before cooling down (safety feature)|minutes|30|
 |SOUND|Buzzer Enable|Enable or Disable the buzzer|YES/NO|YES|
@@ -175,16 +177,10 @@ To access the user settings the user holds down the encoder button at start-up o
 |MODE|I measurement|Measure the heater current|YES/NO|YES|
 |SOUND|Startup beep|Beep after startup|YES/NO|YES|
 |DISPLAY|Temperature unit|Show temperatures in Celcius or Fahrenheit|°F/°C|°C|
-|CALIBRATION|Temp cal 100 °C|Actual temperature at 100 °C|°C|100|
-|CALIBRATION|Temp cal 200 °C|Actual temperature at 200 °C|°C|200|
-|CALIBRATION|Temp cal 300 °C|Actual temperature at 300 °C|°C|300|
-|CALIBRATION|Temp cal 350 °C|Actual temperature at 350 °C|°C|350|
-|CALIBRATION|Temp cal 400 °C|Actual temperature at 400 °C|°C|400|
-|CALIBRATION|Temp cal 450 °C|Actual temperature at 450 °C|°C|450|
 |MODE|Serial DEBUG|Print debug over serial|YES/NO|NO|
-|DISPLAY|Displayed temp filter|Moving average filter length|Lenght|5|
+|DISPLAY|Displayed temp filter|Moving average filter length|Length|5|
 |MODE|Startup temp is previous temp|Startup temp is previous used temp|YES/NO|NO|
-|MODE|3-button mode|Use 3-button mode|YES/NOF|NO|
+|MODE|3-button mode|Use 3-button mode|YES/NO|NO|
 |SOUND|Beep at set temp|Beep at set temp|YES/NO|YES|
 |SOUND|Beep tone|Beep tone|0,1,2,3|0|
 |DISPLAY|Show power|Current power under the bar graph is displayed in this unit|W/%|W|
@@ -195,12 +191,17 @@ To access the user settings the user holds down the encoder button at start-up o
 |TIPS|Limit Power No name [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
 |DISPLAY|Display graph|Display the Graph view|YES/NO|NO|
 |MODE|Delta T detect|Detect too large delta temperatures and stop heating|YES/NO|YES|
+|MODE|Profile on tip chg.|Show popup when changing tip asking for tip preset|YES/NO|NO|
+|MODE|Change Enc. dir.|Changes the direction of the encoder|YES/NO|NO|
 |SYSTEM|-Load Default-|Load default parameters|N/A|N/A|
 |SYSTEM|-Save and Reboot-|Exit and Save|N/A|N/A|
 |SYSTEM|-Exit no Save-|Exit without Save|N/A|N/A|
 
+# Profiles
+Under the setting menu Profiles the user can select, adjust and create new profiles for the supported cartridge types. name, PID parameters, calibration data and power limits can be set individually for each profile and are saved to flash. A more detailed instruction can be found under [PROFILES.md](./docs/PROFILES.md)
 # PID control
-The thermal mass and heat convection differs between different tip designs. Therefore the PID parameters should in theory be adjusted to each different cartridge. As a matter of simplification, the PID parameters are only different between the different handle types, NT115, T210 and T245. This gives a good thermal performance in conducted tests.
+The thermal mass and heat convection differs between different tip designs. Therefore the PID parameters should in theory be adjusted to each different cartridge. This can be done byutilizing custom profiles. The default PID parameters for the supported cartridges has however shown good thermal performance and are a good baseline.
+
 ```c
 /* Cartridge type specific PID parameters */
 #define KP_NT115        5
@@ -230,7 +231,9 @@ double PID_NEG_ERROR_I_BIAS =   1;
 #define T210_MAX_POWER 	        65
 #define T245_MAX_POWER 	        130
 ```
-The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-007 cartridge.  
+The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-002 cartridge.  
+
+The below screenshot if from the serial terminal software [AxxTerm](https://github.com/AxxAxx/AxxTerm)  
 
  ![AxxSolder_pid](./photos/PID_TUNING.png)
 

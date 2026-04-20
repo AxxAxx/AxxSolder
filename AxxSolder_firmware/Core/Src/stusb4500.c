@@ -83,7 +83,7 @@ bool stusb_set_highest_pdo(uint8_t *maxPower, uint8_t currentPdoIndex){
 	uint8_t highPowerPdoIdx = 0;
 	uint8_t maxWattage = 0;
 	for(uint8_t i = 0; i < pdos.numPDOs; i++){
-		uint8_t w = pdos.pdos[i].current*0.05 * pdos.pdos[i].voltage*0.01;
+		uint8_t w = pdos.pdos[i].current*0.05f * pdos.pdos[i].voltage*0.01f;
 		if(w>maxWattage){
 			highPowerPdoIdx = (w>maxWattage) ? i : highPowerPdoIdx;
 			maxWattage = w;

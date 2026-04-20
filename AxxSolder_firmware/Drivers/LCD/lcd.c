@@ -2,59 +2,6 @@
 #include "lcd.h"
 
 
-/* Arg count, CMD, Args if any */
-#if defined USE_ST7735
-const uint8_t init_cmd[] = {
-    0,  CMD_SLPOUT,
-//  3,  CMD_FRMCTR1, 0x01, 0x2C, 0x2D,                     // Standard frame rate
-//  3,  CMD_FRMCTR2, 0x01, 0x2C, 0x2D,                     // Standard frame rate
-//  6,  CMD_FRMCTR3, 0x01, 0x2C, 0x2D, 0x01, 0x2C, 0x2D,   // Standard frame rate
-    3,  CMD_FRMCTR1, 0x01, 0x01, 0x01,                     // Max
-    3,  CMD_FRMCTR2, 0x01, 0x01, 0x01,                     // Max
-    6,  CMD_FRMCTR3, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,   // Max frame rate
-    1,  CMD_INVCTR,  0x07,
-    3,  CMD_PWCTR1,  0xA2, 0x02, 0x84,
-    1,  CMD_PWCTR2,  0xC5,
-    2,  CMD_PWCTR3,  0x0A, 0x00,
-    2,  CMD_PWCTR4,  0x8A, 0x2A,
-    2,  CMD_PWCTR5,  0x8A, 0xEE,
-    1,  CMD_VMCTR1,  0x0E,
-    1,  CMD_INVOFF,  0x00,
-    1,  CMD_COLMOD,  0x05,
-    2,  CMD_CASET,   0x00, LCD_WIDTH-1,
-    2,  CMD_RASET,   0x00, LCD_HEIGHT-1,
-    1,  CMD_MADCTL,  LCD_ROTATION_CMD,
-    16, CMD_GMCTRP1, 0x02, 0x1c, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2d, 0x29, 0x25, 0x2B, 0x39, 0x00, 0x01, 0x03, 0x10,
-    16, CMD_GMCTRN1, 0x03, 0x1d, 0x07, 0x06, 0x2E, 0x2C, 0x29, 0x2D, 0x2E, 0x2E, 0x37, 0x3F, 0x00, 0x00, 0x02, 0x10,
-    0,  CMD_NORON,
-};
-#elif defined USE_ST7789
-const uint8_t init_cmd[] = {
-    0,  CMD_SLPOUT,
-    1,  CMD_COLMOD,  CMD_COLOR_MODE_16bit,
-    5,  CMD_PORCTRL, 0x0C, 0x0C, 0x00, 0x33, 0x33,   // Standard porch
-  //5,  CMD_PORCTRL, 0x01, 0x01, 0x00, 0x11, 0x11,   // Minimum porch (7% faster screen refresh rate)
-    1,  CMD_GCTRL,   0x35,                           // Gate Control, Default value
-    1,  CMD_VCOMS,   0x19,                           // VCOM setting 0.725v (default 0.75v for 0x20)
-    1,  CMD_LCMCTRL, 0X2C,                           // LCMCTRL, Default value
-    1,  CMD_VDVVRHEN,0x01,                           // VDV and VRH command Enable, Default value
-    1,  CMD_VRHS,    0x12,                           // VRH set, +-4.45v (default +-4.1v for 0x0B)
-    1,  CMD_VDVS,    0x20,                           // VDV set, Default value
-    1,  CMD_FRCTRL2, 0x0F,                           // Frame rate control in normal mode, Default refresh rate (60Hz)
-  //1,  CMD_FRCTRL2, 0x01,                           // Frame rate control in normal mode, Max refresh rate (111Hz)
-    2,  CMD_PWCTRL1, 0xA4, 0xA1,
-    1,  CMD_MADCTL,  LCD_ROTATION_CMD,
-    14, CMD_GMCTRP1, 0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23,
-    14, CMD_GMCTRN1, 0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23,
-    0,  CMD_INVON,
-    0,  CMD_NORON
-};
-
-
-
-#endif
-
-
 
 
 static void LCD_Update(void);
@@ -111,7 +58,6 @@ static void setSPI_Size(int8_t size){
 
 
 #ifdef USE_DMA
-#define DMA_Min_Pixels    32             // Don't use DMA for small transfers? Setting this to 1 will always use DMA
 #define mem_increase      1
 #define mem_fixed         0
 
@@ -275,50 +221,16 @@ static void LCD_ReadCmd(uint8_t cmd, uint8_t *data, uint8_t count)
  */
 void LCD_SetRotation(uint8_t m)
 {
-  uint8_t cmd[] = { CMD_MADCTL, 0};
-
-  m = m % 4; // can't be higher than 3
-
-  switch (m)
-  {
-  case 2:
-#if LCD_IS_160X80
-    cmd[1] = CMD_MADCTL_MX | CMD_MADCTL_MY | CMD_MADCTL_BGR;
-#else
-    cmd[1] = CMD_MADCTL_MX | CMD_MADCTL_MY | CMD_MADCTL_RGB;
-#endif
-    break;
-  case 3:
-#if CMD_IS_160X80
-    cmd[1] = CMD_MADCTL_MY | CMD_MADCTL_MV | CMD_MADCTL_BGR;
-#else
-    cmd[1] = CMD_MADCTL_MY | CMD_MADCTL_MV | CMD_MADCTL_RGB;
-#endif
-    break;
-  case 0:
-#if CMD_IS_160X80
-    cmd[1] = CMD_MADCTL_BGR;
-#else
-    cmd[1] = CMD_MADCTL_RGB;
-#endif
-    break;
-  case 1:
-#if CMD_IS_160X80
-    cmd[1] = CMD_MADCTL_MX | CMD_MADCTL_MV | CMD_MADCTL_BGR;
-#else
-    cmd[1] = CMD_MADCTL_MX | CMD_MADCTL_MV | CMD_MADCTL_RGB;
-#endif
-    break;
-  }
+  m = m % 4;
+  uint8_t cmd[] = { CMD_MADCTL, lcd_rotation_cmds[m] };
   LCD_WriteCommand(cmd, sizeof(cmd)-1);
-  //Add a piece to correctly render the UG_FillScreen() function.
-  // Display size update
+
   if (m % 2 == 1) {
-	  device.x_dim = LCD_HEIGHT;
-	  device.y_dim = LCD_WIDTH;
+    device.x_dim = LCD_HEIGHT;
+    device.y_dim = LCD_WIDTH;
   } else {
-	  device.x_dim = LCD_WIDTH;
-	  device.y_dim = LCD_HEIGHT;
+    device.x_dim = LCD_WIDTH;
+    device.y_dim = LCD_HEIGHT;
   }
 }
 
@@ -604,15 +516,17 @@ void LCD_init(void)
 #endif
   UG_FontSetHSpace(0);
   UG_FontSetVSpace(0);
-  for(uint16_t i=0; i<sizeof(init_cmd); ){
-    LCD_WriteCommand((uint8_t*)&init_cmd[i+1], init_cmd[i]);
-    i += init_cmd[i]+2;
+  for(uint16_t i=0; i<sizeof(lcd_init_cmd); ){
+    LCD_WriteCommand((uint8_t*)&lcd_init_cmd[i+1], lcd_init_cmd[i]);
+    i += lcd_init_cmd[i]+2;
   }
   UG_FillScreen(C_BLACK);               //  Clear screen
   LCD_setPower(ENABLE);
   UG_Update();
 }
 
+
+#ifdef LCD_ENABLE_TEST
 
 #define DEFAULT_FONT FONT_6X8
 
@@ -980,3 +894,5 @@ static void window_1_callback(UG_MESSAGE *msg __unused)
     }
 */
 }
+
+#endif /* LCD_ENABLE_TEST */
