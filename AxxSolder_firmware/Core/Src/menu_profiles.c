@@ -3,7 +3,7 @@
 #include "tip_profile.h"
 #include "storage.h"
 #include "lcd.h"
-#include "ugui.h"
+#include "gui.h"
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -39,12 +39,12 @@ static inline int16_t enc_sel(uint32_t cnt0, volatile uint32_t *pCnt, uint16_t m
 
 static void draw_header(const char *title)
 {
-	UG_FillFrame(0, 0, 239, 29, RGB_to_BRG(C_BLACK));
+	UG_FillFrame(0, 0, 239, 29, C_BLACK);
 	LCD_PutStr(5, 5, (char *)title, FONT_arial_20X23,
-	           RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
-	LCD_DrawLine(0, 25, 240, 25, RGB_to_BRG(C_DARK_SEA_GREEN));
-	LCD_DrawLine(0, 26, 240, 26, RGB_to_BRG(C_DARK_SEA_GREEN));
-	LCD_DrawLine(0, 27, 240, 27, RGB_to_BRG(C_DARK_SEA_GREEN));
+	           C_DARK_SEA_GREEN, C_BLACK);
+	LCD_DrawLine(0, 25, 240, 25, C_DARK_SEA_GREEN);
+	LCD_DrawLine(0, 26, 240, 26, C_DARK_SEA_GREEN);
+	LCD_DrawLine(0, 27, 240, 27, C_DARK_SEA_GREEN);
 }
 
 static void draw_line(uint8_t line, const char *text, uint16_t fg, uint16_t bg)
@@ -57,15 +57,15 @@ static void draw_line(uint8_t line, const char *text, uint16_t fg, uint16_t bg)
 static void draw_cursor(uint8_t line)
 {
 	uint16_t y = 35 + line * 26;
-	UG_DrawFrame(0, y - 3, 239, y + 23, RGB_to_BRG(C_YELLOW));
-	UG_DrawFrame(1, y - 2, 238, y + 22, RGB_to_BRG(C_YELLOW));
+	UG_DrawFrame(0, y - 3, 239, y + 23, C_YELLOW);
+	UG_DrawFrame(1, y - 2, 238, y + 22, C_YELLOW);
 }
 
 static void erase_cursor(uint8_t line)
 {
 	uint16_t y = 35 + line * 26;
-	UG_DrawFrame(0, y - 3, 239, y + 23, RGB_to_BRG(C_BLACK));
-	UG_DrawFrame(1, y - 2, 238, y + 22, RGB_to_BRG(C_BLACK));
+	UG_DrawFrame(0, y - 3, 239, y + 23, C_BLACK);
+	UG_DrawFrame(1, y - 2, 238, y + 22, C_BLACK);
 }
 
 /* ---- Handle type to string ---- */
@@ -209,8 +209,8 @@ static uint8_t char_to_charset_idx(char c)
 
 static void draw_name_row(const char *name, uint8_t cursor, uint8_t maxlen)
 {
-    const uint16_t fg = RGB_to_BRG(C_WHITE);
-    const uint16_t bg = RGB_to_BRG(C_BLACK);
+    const uint16_t fg = C_WHITE;
+    const uint16_t bg = C_BLACK;
 
     /* Slide window so cursor stays in view */
     uint8_t win = (cursor >= NAME_WIN) ? cursor - NAME_WIN + 1 : 0;
@@ -233,21 +233,21 @@ static void draw_name_row(const char *name, uint8_t cursor, uint8_t maxlen)
     /* Scroll indicators */
     if (win > 0)
         LCD_PutStr(0, NAME_ROW_Y + NAME_CH + 4, "<",
-                   FONT_arial_12X15, RGB_to_BRG(C_YELLOW), bg);
+                   FONT_arial_12X15, C_YELLOW, bg);
     else
         UG_FillFrame(0, NAME_ROW_Y + NAME_CH + 4, 14, NAME_ROW_Y + NAME_CH + 18, bg);
 
     uint8_t len = (uint8_t)strnlen(name, maxlen - 1);
     if (win + NAME_WIN < len)
         LCD_PutStr(225, NAME_ROW_Y + NAME_CH + 4, ">",
-                   FONT_arial_12X15, RGB_to_BRG(C_YELLOW), bg);
+                   FONT_arial_12X15, C_YELLOW, bg);
     else
         UG_FillFrame(225, NAME_ROW_Y + NAME_CH + 4, 239, NAME_ROW_Y + NAME_CH + 18, bg);
 }
 
 static void edit_name(char *name, uint8_t maxlen)
 {
-    const uint16_t bg = RGB_to_BRG(C_BLACK);
+    const uint16_t bg = C_BLACK;
 
     /* Ensure null termination */
     name[maxlen - 1] = '\0';
@@ -268,14 +268,14 @@ static void edit_name(char *name, uint8_t maxlen)
     TIM2->CNT = 1000 + char_to_charset_idx(name[cursor]) * 2;
 
     /* Full redraw */
-    UG_FillScreen(RGB_to_BRG(C_BLACK));
+    UG_FillScreen(C_BLACK);
     draw_header("EDIT NAME");
 
     /* Hints (static — drawn once) */
     LCD_PutStr(5, 265, "SW1:next  SW2:<  SW3:del",
-               FONT_arial_16X18, RGB_to_BRG(C_DARK_SEA_GREEN), bg);
+               FONT_arial_16X18, C_DARK_SEA_GREEN, bg);
     LCD_PutStr(5, 288, "Hold SW1 to confirm",
-               FONT_arial_16X18, RGB_to_BRG(C_DARK_SEA_GREEN), bg);
+               FONT_arial_16X18, C_DARK_SEA_GREEN, bg);
 
     draw_name_row(name, cursor, maxlen);
 
@@ -362,8 +362,8 @@ static void edit_profile(uint8_t prof_idx)
 	if (!p) return;
 
 	TipProfile edit = *p; /* work on copy */
-	uint16_t fg = RGB_to_BRG(C_WHITE);
-	uint16_t bg = RGB_to_BRG(C_BLACK);
+	uint16_t fg = C_WHITE;
+	uint16_t bg = C_BLACK;
 
 	int16_t cursor = 0, prev_cursor = -1;
 	uint8_t redraw = 1;
@@ -404,13 +404,13 @@ static void edit_profile(uint8_t prof_idx)
 						snprintf(line, sizeof(line), "Name: %s [...]", edit.name);
 					} else if (fi == PF_DELETE) {
 						snprintf(line, sizeof(line), "%s", field_names[fi]);
-						line_fg = RGB_to_BRG(C_RED);
+						line_fg = C_RED;
 					} else if (fi == PF_BACK) {
 						snprintf(line, sizeof(line), "%s", field_names[fi]);
-						line_fg = RGB_to_BRG(C_LIGHT_GRAY);
+						line_fg = C_LIGHT_GRAY;
 					} else {
 						snprintf(line, sizeof(line), "%s", field_names[fi]);
-						line_fg = RGB_to_BRG(C_YELLOW);
+						line_fg = C_YELLOW;
 					}
 					draw_line(i, line, line_fg, bg);
 				} else {
@@ -459,7 +459,7 @@ static void edit_profile(uint8_t prof_idx)
 
 				char val_buf[16];
 				format_prof_value(cursor, &edit, val_buf, sizeof(val_buf));
-				draw_prof_value(vis, val_buf, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
+				draw_prof_value(vis, val_buf, C_BLACK, C_WHITE);
 				draw_cursor(vis);
 			}
 		}
@@ -485,7 +485,7 @@ static void edit_profile(uint8_t prof_idx)
 				case PF_NAME: {
 					edit_name(edit.name, sizeof(edit.name));
 					/* Restore full editor screen after name editing */
-					UG_FillScreen(RGB_to_BRG(C_BLACK));
+					UG_FillScreen(C_BLACK);
 					draw_header(edit.name);
 					redraw = 1;
 					TIM2->CNT = 1000 + cursor * 2;
@@ -515,7 +515,7 @@ static void edit_profile(uint8_t prof_idx)
 						/* Draw value inverted */
 						char val_buf[16];
 						format_prof_value(cursor, &edit, val_buf, sizeof(val_buf));
-						draw_prof_value(vis, val_buf, RGB_to_BRG(C_BLACK), RGB_to_BRG(C_WHITE));
+						draw_prof_value(vis, val_buf, C_BLACK, C_WHITE);
 						draw_cursor(vis);
 					}
 					break;
@@ -554,8 +554,8 @@ static void edit_profile(uint8_t prof_idx)
 /* ---- Main profiles menu ---- */
 void profiles_menu(void)
 {
-	uint16_t fg = RGB_to_BRG(C_WHITE);
-	uint16_t bg = RGB_to_BRG(C_BLACK);
+	uint16_t fg = C_WHITE;
+	uint16_t bg = C_BLACK;
 
 	int16_t cursor = 0, prev_cursor = -1;
 	uint8_t redraw = 1;
@@ -582,7 +582,7 @@ void profiles_menu(void)
 			char cnt[12];
 			snprintf(cnt, sizeof(cnt), "[%d:%d]", count, MAX_PROFILES);
 			LCD_PutStr(239 - (int)strlen(cnt) * 13, 5, cnt,
-			           FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			           FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
 
 			for (uint8_t i = 0; i < menu_lines_on_screen && (page_start + i) < list_len; i++) {
 				uint8_t li = page_start + i;
@@ -595,12 +595,12 @@ void profiles_menu(void)
 					draw_line(i, line, fg, bg);
 					if (active_for_current == li) {
 						uint16_t y = 35 + i * 26;
-						LCD_PutStr(200, y, "[A]", FONT_arial_20X23, RGB_to_BRG(C_YELLOW), bg);
+						LCD_PutStr(200, y, "[A]", FONT_arial_20X23, C_YELLOW, bg);
 					}
 				} else if (can_add && li == add_idx) {
-					draw_line(i, "+ Add New", RGB_to_BRG(C_DARK_SEA_GREEN), bg);
+					draw_line(i, "+ Add New", C_DARK_SEA_GREEN, bg);
 				} else {
-					draw_line(i, "Back", RGB_to_BRG(C_LIGHT_GRAY), bg);
+					draw_line(i, "Back", C_LIGHT_GRAY, bg);
 				}
 			}
 			draw_cursor(cursor - page_start);
@@ -665,8 +665,8 @@ void profiles_menu(void)
 /* ---- Popup: quick profile select on handle change ---- */
 void profiles_popup(enum handles h)
 {
-	uint16_t fg = RGB_to_BRG(C_WHITE);
-	uint16_t bg = RGB_to_BRG(C_BLACK);
+	uint16_t fg = C_WHITE;
+	uint16_t bg = C_BLACK;
 
 	/* Collect profiles matching this handle */
 	uint8_t match_idx[MAX_PROFILES];
@@ -691,9 +691,9 @@ void profiles_popup(enum handles h)
 	uint16_t popup_h = 30 + match_count * 26 + 10;
 
 	UG_FillFrame(popup_x, popup_y, popup_x + popup_w, popup_y + popup_h, bg);
-	UG_DrawFrame(popup_x, popup_y, popup_x + popup_w, popup_y + popup_h, RGB_to_BRG(C_YELLOW));
-	UG_DrawFrame(popup_x + 1, popup_y + 1, popup_x + popup_w - 1, popup_y + popup_h - 1, RGB_to_BRG(C_YELLOW));
-	UG_DrawFrame(popup_x + 2, popup_y + 2, popup_x + popup_w - 2, popup_y + popup_h - 2, RGB_to_BRG(C_YELLOW));
+	UG_DrawFrame(popup_x, popup_y, popup_x + popup_w, popup_y + popup_h, C_YELLOW);
+	UG_DrawFrame(popup_x + 1, popup_y + 1, popup_x + popup_w - 1, popup_y + popup_h - 1, C_YELLOW);
+	UG_DrawFrame(popup_x + 2, popup_y + 2, popup_x + popup_w - 2, popup_y + popup_h - 2, C_YELLOW);
 
 	LCD_PutStr(popup_x + 5, popup_y + 5, "Select profile:", FONT_arial_20X23, fg, bg);
 
@@ -728,8 +728,8 @@ void profiles_popup(enum handles h)
 				UG_DrawFrame(popup_x + 4, py - 1, popup_x + popup_w - 4, py + 21, bg);
 			}
 			uint16_t cy = popup_y + 30 + cursor * 26;
-			UG_DrawFrame(popup_x + 3, cy - 2, popup_x + popup_w - 3, cy + 22, RGB_to_BRG(C_YELLOW));
-			UG_DrawFrame(popup_x + 4, cy - 1, popup_x + popup_w - 4, cy + 21, RGB_to_BRG(C_YELLOW));
+			UG_DrawFrame(popup_x + 3, cy - 2, popup_x + popup_w - 3, cy + 22, C_YELLOW);
+			UG_DrawFrame(popup_x + 4, cy - 1, popup_x + popup_w - 4, cy + 21, C_YELLOW);
 			prev_cursor = cursor;
 			timeout_ticks = 500; /* reset timeout on user interaction */
 		}

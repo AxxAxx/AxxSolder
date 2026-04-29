@@ -47,11 +47,15 @@ static void setSPI_Size(int8_t size){
     config.spi_sz=size;
     if(size==mode_16bit){
       LCD_HANDLE.Init.DataSize = SPI_DATASIZE_16BIT;
-      //LCD_HANDLE.Instance->CR1 |= SPI_CR1_DFF;
+      /* STM32G4: frame size in CR2 DS[3:0] (bits 11:8); 0xF = 16-bit */
+      LCD_HANDLE.Instance->CR2 = (LCD_HANDLE.Instance->CR2 & ~SPI_CR2_DS_Msk)
+                                | (0xFU << SPI_CR2_DS_Pos);
     }
     else{
       LCD_HANDLE.Init.DataSize = SPI_DATASIZE_8BIT;
-      //LCD_HANDLE.Instance->CR1 &= ~(SPI_CR1_DFF);
+      /* 0x7 = 8-bit */
+      LCD_HANDLE.Instance->CR2 = (LCD_HANDLE.Instance->CR2 & ~SPI_CR2_DS_Msk)
+                                | (0x7U << SPI_CR2_DS_Pos);
     }
   }
 }
