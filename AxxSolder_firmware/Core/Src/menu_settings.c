@@ -2,6 +2,7 @@
 
 #include "menu_settings.h"
 #include "menu_profiles.h"
+#include "gui.h"
 
 /* ==== Menu item identifiers
  * Step-100 layout: each logical group owns a 100-wide range.
@@ -381,11 +382,11 @@ static void display_menu_value_line(uint8_t line_pos, uint16_t index,
 
     if (editing && !prev_editing) {
         // Entering edit mode: fill with white
-        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, RGB_to_BRG(C_WHITE));
+        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, C_WHITE);
     }
     else if (!editing && prev_editing && selected) {
         // Exiting edit mode while still selected: fill with black
-        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, RGB_to_BRG(C_BLACK));
+        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, C_BLACK);
     }
 
     // === Redraw text if the value or flags have changed ===
@@ -395,16 +396,16 @@ static void display_menu_value_line(uint8_t line_pos, uint16_t index,
 
         // Determine text color based on whether value differs from default
         uint16_t fg;
-        fg = (selected && editing) ? RGB_to_BRG(C_BLACK) : fg_def;
+        fg = (selected && editing) ? C_BLACK : fg_def;
         if (selected && editing) {
-                fg = RGB_to_BRG(C_BLACK);
+                fg = C_BLACK;
         } else if (is_value_different_from_default(index, value)) {
-                fg = RGB_to_BRG(C_ORANGE);  // Red for non-default values
+                fg = C_ORANGE;  // Red for non-default values
         } else {
                 fg = fg_def;  // Default color for default values
         }
 
-        uint16_t bg = (selected && editing) ? RGB_to_BRG(C_WHITE) : bg_def;
+        uint16_t bg = (selected && editing) ? C_WHITE : bg_def;
 
         UG_FillFrame(x, y-2, 190 + MENU_VALUE_W, y + MENU_VALUE_H+2, bg);
         LCD_PutStr(x+3, y, buf, FONT_arial_20X23, fg, bg);
@@ -481,7 +482,7 @@ void settings_menu()
     settings_menu_active = 1;
 
     LCD_SetRotation(flash_values.screen_rotation);
-    UG_FillScreen(RGB_to_BRG(C_BLACK));
+    UG_FillScreen(C_BLACK);
     UG_FontSetTransparency(1);
 
     // --- Firmware version string ---
@@ -489,11 +490,11 @@ void settings_menu()
     if ((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)) {
         menu_lines_on_screen = 10;
         sprintf(str, "fw mod: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
-        LCD_PutStr(6, 296, str, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+        LCD_PutStr(6, 296, str, FONT_arial_20X23, C_RED, C_BLACK);
     } else {
         menu_lines_on_screen = 7;
         sprintf(str, "fw mod: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
-        LCD_PutStr(6, 215, str, FONT_arial_20X23, RGB_to_BRG(C_RED), RGB_to_BRG(C_BLACK));
+        LCD_PutStr(6, 215, str, FONT_arial_20X23, C_RED, C_BLACK);
     }
 
     // Value rendering cache
@@ -550,18 +551,18 @@ void settings_menu()
 
         // ---- Full page redraw ----
         if (redraw_page || (new_page_start != page_start)) {
-            UG_FillFrame(0, 0, 239, 31 + menu_lines_on_screen * 26, RGB_to_BRG(C_BLACK));
+            UG_FillFrame(0, 0, 239, 31 + menu_lines_on_screen * 26, C_BLACK);
             page_start = new_page_start;
 
             // Redraw header
             if (level == 0) {
-                LCD_PutStr(5, 5, "SETTINGS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+                LCD_PutStr(5, 5, "SETTINGS", FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
             } else {
-                LCD_PutStr(5, 5, MENU_GROUPS[current_group].title, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+                LCD_PutStr(5, 5, MENU_GROUPS[current_group].title, FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
             }
-            LCD_DrawLine(0, 25, 240, 25, RGB_to_BRG(C_DARK_SEA_GREEN));
-            LCD_DrawLine(0, 26, 240, 26, RGB_to_BRG(C_DARK_SEA_GREEN));
-            LCD_DrawLine(0, 27, 240, 27, RGB_to_BRG(C_DARK_SEA_GREEN));
+            LCD_DrawLine(0, 25, 240, 25, C_DARK_SEA_GREEN);
+            LCD_DrawLine(0, 26, 240, 26, C_DARK_SEA_GREEN);
+            LCD_DrawLine(0, 27, 240, 27, C_DARK_SEA_GREEN);
 
             // Reset value row cache - important so display_menu_value_line() redraws
             for (int i = 0; i < menu_lines_on_screen; i++) {
@@ -576,16 +577,16 @@ void settings_menu()
 
                 if (pos >= list_len) break;
 
-                UG_FillFrame(5, line_y, 187, line_y + MENU_VALUE_H, RGB_to_BRG(C_BLACK));
+                UG_FillFrame(5, line_y, 187, line_y + MENU_VALUE_H, C_BLACK);
 
                 if (level == 0) {
                     // Group list - names only
-                    LCD_PutStr(5, line_y, MENU_GROUPS[pos].title, FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+                    LCD_PutStr(5, line_y, MENU_GROUPS[pos].title, FONT_arial_20X23, C_WHITE, C_BLACK);
                 } else {
                     // Group item list + Back
                 	if (pos < MENU_GROUPS[current_group].count) {
                 	    uint16_t abs_mi = MENU_GROUPS[current_group].idx[pos];
-                	    LCD_PutStr(5, line_y, mi_name(abs_mi), FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+                	    LCD_PutStr(5, line_y, mi_name(abs_mi), FONT_arial_20X23, C_WHITE, C_BLACK);
 
                 	    // Do not display values for the System group
                 	    if (!(current_group == (GROUPS_COUNT - 1))) {
@@ -596,13 +597,13 @@ void settings_menu()
                 	            ((float*)&flash_values)[fi],
                 	            0, 0,
                 	            190, line_y,
-								RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
+								C_WHITE, C_BLACK
                 	        );
                 	    }
                 	}
                     else if (pos == MENU_GROUPS[current_group].count) {
                         // Back row
-                        LCD_PutStr(5, line_y, "Back", FONT_arial_20X23, RGB_to_BRG(C_LIGHT_GRAY), RGB_to_BRG(C_BLACK));
+                        LCD_PutStr(5, line_y, "Back", FONT_arial_20X23, C_LIGHT_GRAY, C_BLACK);
                     }
                 }
             }
@@ -619,15 +620,15 @@ void settings_menu()
                 (prev_cursor / menu_lines_on_screen) == (cursor / menu_lines_on_screen)) {
                 uint8_t prev_line = prev_cursor % menu_lines_on_screen;
                 uint16_t prev_y = 35 + prev_line * 26;
-                UG_DrawFrame(0, prev_y - 4, 239, prev_y + 4 + MENU_VALUE_H, RGB_to_BRG(C_BLACK));
-                UG_DrawFrame(1, prev_y - 3, 238, prev_y + 3 + MENU_VALUE_H, RGB_to_BRG(C_BLACK));
+                UG_DrawFrame(0, prev_y - 4, 239, prev_y + 4 + MENU_VALUE_H, C_BLACK);
+                UG_DrawFrame(1, prev_y - 3, 238, prev_y + 3 + MENU_VALUE_H, C_BLACK);
             }
 
             // Draw the new frame
             uint8_t line = cursor % menu_lines_on_screen;
             uint16_t line_y = 35 + line * 26;
-            UG_DrawFrame(0, line_y - 4, 239, line_y + 4 + MENU_VALUE_H, RGB_to_BRG(C_YELLOW));
-            UG_DrawFrame(1, line_y - 3, 238, line_y + 3 + MENU_VALUE_H, RGB_to_BRG(C_YELLOW));
+            UG_DrawFrame(0, line_y - 4, 239, line_y + 4 + MENU_VALUE_H, C_YELLOW);
+            UG_DrawFrame(1, line_y - 3, 238, line_y + 3 + MENU_VALUE_H, C_YELLOW);
 
             prev_cursor = cursor;
         }
@@ -665,7 +666,7 @@ void settings_menu()
                 1, // selected
                 1, // editing
                 190, line_y,
-				RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
+				C_WHITE, C_BLACK
             );
         }
 
@@ -737,7 +738,7 @@ void settings_menu()
                             abs_mi,
                             ((float*)&flash_values)[fi],
                             1, 1, 190, line_y,
-							RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
+							C_WHITE, C_BLACK
                         );
                     }
                 }
@@ -765,7 +766,7 @@ void settings_menu()
                     ((float*)&flash_values)[fi],
                     0, 0,
                     190, line_y,
-					RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK)
+					C_WHITE, C_BLACK
                 );
 
                 /* Restore cursor appearance: draw frame for the current row */

@@ -14,17 +14,17 @@ extern uint16_t FIELD_W_ACT;
 
 extern uint8_t initialized;
 
-#define background RGB_to_BRG(C_BLACK)
-#define color_text RGB_to_BRG(C_WHITE)
+#define background C_BLACK
+#define color_text C_WHITE
 #define color_setup B_SILVER
 
 #define color_actual B_MANGO
                //#define color_FrameActual B_LEMON
 #define color_FrameActual B_WHITE_SMOKE
 
-#define color_text_info      RGB_to_BRG(C_WHITE)
-#define color_text_percent   RGB_to_BRG(C_BLUE)
-#define color_text_power     RGB_to_BRG(C_GREEN)
+#define color_text_info      C_WHITE
+#define color_text_percent   C_BLUE
+#define color_text_power     C_GREEN
 
 /* Function prototypes -------------------------------------------------------*/
 void update_display();

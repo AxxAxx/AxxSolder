@@ -253,8 +253,6 @@ uint8_t get_hw_version(void);
 /* Function to clamp d between the limits min and max */
 float clamp(float d, float min, float max);
 
-/* Function to convert RGB to BRG */
-uint16_t RGB_to_BRG(uint16_t color);
 
 /* USER CODE END EFP */
 
