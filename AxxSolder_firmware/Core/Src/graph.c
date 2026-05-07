@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "ugui.h"
+#include "gui.h"
 
 // Functions responsible for displaying graphs on the display.
 #define GRAPH_X0_vertical  38
@@ -34,16 +34,16 @@ uint16_t GRAPH_HEIGHT;
 #define GRAPH_POINTS 100
 
 
-#define GRAPH_Color_TEMP        RGB_to_BRG(C_CORN_FLOWER_BLUE);          // Color of the temperature axis and graph in RUN mode
-#define GRAPH_Color_SET_TEMP    RGB_to_BRG(C_WHITE_SMOKE);          // Color of the temperature axis and graph in RUN mode
-#define GRAPH_Color_POWER       RGB_to_BRG(C_YELLOW);     // Color of the power axis and graph in RUN mode
+#define GRAPH_Color_TEMP        C_CORN_FLOWER_BLUE;          // Color of the temperature axis and graph in RUN mode
+#define GRAPH_Color_SET_TEMP    C_WHITE_SMOKE;          // Color of the temperature axis and graph in RUN mode
+#define GRAPH_Color_POWER       C_YELLOW;     // Color of the power axis and graph in RUN mode
 
-#define Color_TEMP_SLEEP        RGB_to_BRG(C_GREEN)         // Color of the temperature axis and graph in SLEEP mode
-#define Color_POWER_SLEEP       RGB_to_BRG(C_LAWN_GREEN)    // Color of the power axis and graph in SLEEP mode
+#define Color_TEMP_SLEEP        C_GREEN         // Color of the temperature axis and graph in SLEEP mode
+#define Color_POWER_SLEEP       C_LAWN_GREEN    // Color of the power axis and graph in SLEEP mode
 
-#define Color_TIME              RGB_to_BRG(C_WHITE_SMOKE)   // Color of the time axis
+#define Color_TIME              C_WHITE_SMOKE   // Color of the time axis
 
-#define DASH_LEN_COLOR   RGB_to_BRG(C_DARK_GRAY)   // Color of the dashed coordinate grid
+#define DASH_LEN_COLOR   C_DARK_GRAY   // Color of the dashed coordinate grid
 #define DASH_LEN 5                     // Dash length in pixels
 #define GAP_LEN  5                     // Gap length in pixels
 #define THICKNESS_LEN  1               // Line thickness in pixels
@@ -130,43 +130,43 @@ void draw_graph_init(void) {
 		GRAPH_WIDTH = GRAPH_WIDTH_vertical;
 		GRAPH_HEIGHT = GRAPH_HEIGHT_vertical;
 
-		LCD_PutStr(53, 8, "AxxSolder", FONT_arial_19X22, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
-		LCD_DrawLine(0,36,240,36,RGB_to_BRG(C_YELLOW));
-		LCD_DrawLine(0,37,240,37,RGB_to_BRG(C_YELLOW));
-		LCD_DrawLine(0,38,240,38,RGB_to_BRG(C_YELLOW));
+		LCD_PutStr(53, 8, "AxxSolder", FONT_arial_19X22, C_YELLOW, C_BLACK);
+		LCD_DrawLine(0,36,240,36,C_YELLOW);
+		LCD_DrawLine(0,37,240,37,C_YELLOW);
+		LCD_DrawLine(0,38,240,38,C_YELLOW);
 
-		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, C_WHITE, C_BLACK);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 45, "°C", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(180, 45, "°C", FONT_arial_20X23, C_WHITE, C_BLACK);
 		}
 		else{
-			LCD_PutStr(180, 45, "°F", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(180, 45, "°F", FONT_arial_20X23, C_WHITE, C_BLACK);
 		}
-		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, C_WHITE, C_BLACK);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 70, "°C", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(180, 70, "°C", FONT_arial_20X23, C_WHITE, C_BLACK);
 		}
 		else{
-			LCD_PutStr(180, 70, "°F", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(180, 70, "°F", FONT_arial_20X23, C_WHITE, C_BLACK);
 		}
 
-		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(127, 95, "Vin:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, C_WHITE, C_BLACK);
+		LCD_PutStr(127, 95, "Vin:", FONT_arial_17X18, C_WHITE, C_BLACK);
 
-		UG_DrawLine(0, 296, 240, 296, RGB_to_BRG(C_DARK_SEA_GREEN));
-		UG_DrawLine(0, 297, 240, 297, RGB_to_BRG(C_DARK_SEA_GREEN));
+		UG_DrawLine(0, 296, 240, 296, C_DARK_SEA_GREEN);
+		UG_DrawLine(0, 297, 240, 297, C_DARK_SEA_GREEN);
 
 		if(flash_values.three_button_mode == 1){
-			LCD_PutStr(11, 301, "TEMP          UP   DOWN", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(11, 301, "TEMP          UP   DOWN", FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
 		}
 		else{
-			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
 			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_1));
-			LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
 			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
 			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_2));
-			LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, RGB_to_BRG(C_DARK_SEA_GREEN), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
 		}
 
 		// Time axis labels (X axis, in seconds)
@@ -197,30 +197,30 @@ void draw_graph_init(void) {
 		GRAPH_WIDTH = GRAPH_WIDTH_horizontal;
 		GRAPH_HEIGHT = GRAPH_HEIGHT_horizontal;
 
-		LCD_PutStr(90, 8, "AxxSolder", FONT_arial_19X22, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
-		LCD_DrawLine(0,36,310,36,RGB_to_BRG(C_YELLOW));
-		LCD_DrawLine(0,37,310,37,RGB_to_BRG(C_YELLOW));
-		LCD_DrawLine(0,38,310,38,RGB_to_BRG(C_YELLOW));
+		LCD_PutStr(90, 8, "AxxSolder", FONT_arial_19X22, C_YELLOW, C_BLACK);
+		LCD_DrawLine(0,36,310,36,C_YELLOW);
+		LCD_DrawLine(0,37,310,37,C_YELLOW);
+		LCD_DrawLine(0,38,310,38,C_YELLOW);
 
-		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, C_WHITE, C_BLACK);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 45, "°C", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(180, 45, "°C", FONT_arial_20X23, C_WHITE, C_BLACK);
 		}
 		else{
-			LCD_PutStr(180, 45, "°F", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(180, 45, "°F", FONT_arial_20X23, C_WHITE, C_BLACK);
 		}
-		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, C_WHITE, C_BLACK);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 70, "°C", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(180, 70, "°C", FONT_arial_20X23, C_WHITE, C_BLACK);
 		}
 		else{
-			LCD_PutStr(180, 70, "°F", FONT_arial_20X23, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+			LCD_PutStr(180, 70, "°F", FONT_arial_20X23, C_WHITE, C_BLACK);
 		}
 
-		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
-		LCD_PutStr(126, 95, "Vin:", FONT_arial_17X18, RGB_to_BRG(C_WHITE), RGB_to_BRG(C_BLACK));
+		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, C_WHITE, C_BLACK);
+		LCD_PutStr(126, 95, "Vin:", FONT_arial_17X18, C_WHITE, C_BLACK);
 
-		//LCD_PutStr(205, 95, "AxxSolder", FONT_arial_17X18, RGB_to_BRG(C_YELLOW), RGB_to_BRG(C_BLACK));
+		//LCD_PutStr(205, 95, "AxxSolder", FONT_arial_17X18, C_YELLOW, C_BLACK);
 
 		// Time axis labels (X axis, in seconds)
 	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)interval_display / 750.0f);

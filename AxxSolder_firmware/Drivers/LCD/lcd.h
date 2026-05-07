@@ -2,7 +2,7 @@
 #define __LCD_H__
 
 #include "images.h"
-#include "ugui.h"
+#include "gui.h"
 #include "main.h"
 
 /* For demo only. Minimum is 32, 128 and higher will enable all tests */
