@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Build Docker image
       run: cd AxxSolder_firmware && docker build -t firmware-builder -f Containerfile .
@@ -31,7 +31,7 @@ jobs:
     
     - name: Upload firmware artifact
       if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: firmware
         path: ${{ env.FIRMWARE_PATH }}
@@ -44,12 +44,12 @@ jobs:
 
     steps:
     - name: Download firmware artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
          name: firmware
 
     - name: Create GitHub release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         files: ${{ github.workspace }}/*.bin
       env:
