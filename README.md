@@ -1,4 +1,4 @@
-[![Build Main](https://github.com/AxxAxx/AxxSolder/actions/workflows/build-main.yaml/badge.svg?branch=main&event=push)](https://github.com/AxxAxx/AxxSolder/actions/workflows/build-main.yaml)
+[![Build and Release Firmware](https://github.com/AxxAxx/AxxSolder/actions/workflows/build-release.yaml/badge.svg)](https://github.com/AxxAxx/AxxSolder/actions/workflows/build-release.yaml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <a href='https://ko-fi.com/axxaxx' target='_blank'><img height='35' style='border:0px;height:20px;' src='https://github.com/AxxAxx/kofi-button/blob/main/Ko-fi_Buy-me-a-coffee_button.png?raw=true' border='0' alt='Donate' />  
 
