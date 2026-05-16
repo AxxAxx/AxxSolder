@@ -108,7 +108,7 @@ float Kd_tuning = 0;
 float temperature_tuning = 100;
 float PID_MAX_I_LIMIT_tuning = 0;
 
-/* Allow use of custom temperatue, used for tuning */
+/* Allow use of custom temperature, used for tuning */
 uint8_t custom_temperature_on = 0;
 
 /* Buffer for UART print */
@@ -188,7 +188,7 @@ uint16_t TC_outliers_detected = 0;
 #define TC_COMPENSATION_X1_T245 0.11936452029674384f
 #define TC_COMPENSATION_X0_T245 23.777399955382318f
 
-/* Constants for internal MCU temperture */
+/* Constants for internal MCU temperature */
 #define V30 		0.76f 			// from datasheet
 #define VSENSE 		(3.3f/4096.0f) 	// VSENSE value
 #define Avg_Slope 	0.0025f 		// 2.5mV from datasheet
@@ -628,7 +628,7 @@ void format_number_left(float input, char* buffer) {
     buffer[num_digits + padding_spaces] = '\0';
 }
 
-/* Function to update the stnadby and sleet timer countdown */
+/* Function to update the standby and sleep timer countdown */
 void update_standby_sleep_display() {
     uint32_t now = HAL_GetTick();
     uint32_t countdown_ms = 0;
