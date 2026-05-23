@@ -2,6 +2,7 @@
 #include "menu_settings.h"
 #include "tip_profile.h"
 #include "storage.h"
+#include "buttons.h"   /* buttons_take_press / _long_press / _clear_all */
 #include "lcd.h"
 #include "gui.h"
 #include <stdio.h>
@@ -9,10 +10,6 @@
 #include <math.h>
 
 /* ---- Shared state from menu_settings / main ---- */
-extern volatile uint8_t SW_1_pressed;
-extern volatile uint8_t SW_1_pressed_long;
-extern volatile uint8_t SW_2_pressed;
-extern volatile uint8_t SW_3_pressed;
 extern uint8_t settings_menu_active;
 extern uint8_t menu_lines_on_screen;
 
@@ -258,11 +255,8 @@ static void edit_name(char *name, uint8_t maxlen)
 
     uint8_t cursor = 0;
 
-    /* Clear SW flags so stale presses don't fire immediately */
-    SW_1_pressed      = 0;
-    SW_1_pressed_long = 0;
-    SW_2_pressed      = 0;
-    SW_3_pressed      = 0;
+    /* Clear pending button events so stale presses don't fire immediately */
+    buttons_clear_all();
 
     /* Init encoder to the charset position of the current char */
     TIM2->CNT = 1000 + char_to_charset_idx(name[cursor]) * 2;
@@ -290,9 +284,8 @@ static void edit_name(char *name, uint8_t maxlen)
             draw_name_row(name, cursor, maxlen);
         }
 
-        /* ---- SW_1 short: advance cursor ---- */
-        if (SW_1_pressed) {
-            SW_1_pressed = 0;
+        /* ---- BTN_1 short: advance cursor ---- */
+        if (buttons_take_press(BTN_1)) {
             if (cursor < maxlen - 2) {
                 cursor++;
                 /* Extend string if cursor moved past current end */
@@ -306,9 +299,8 @@ static void edit_name(char *name, uint8_t maxlen)
             }
         }
 
-        /* ---- SW_2: cursor left ---- */
-        if (SW_2_pressed) {
-            SW_2_pressed = 0;
+        /* ---- BTN_2: cursor left ---- */
+        if (buttons_take_press(BTN_2)) {
             if (cursor > 0) {
                 cursor--;
                 TIM2->CNT = 1000 + char_to_charset_idx(name[cursor]) * 2;
@@ -317,9 +309,8 @@ static void edit_name(char *name, uint8_t maxlen)
             }
         }
 
-        /* ---- SW_3: delete char at cursor ---- */
-        if (SW_3_pressed) {
-            SW_3_pressed = 0;
+        /* ---- BTN_3: delete char at cursor ---- */
+        if (buttons_take_press(BTN_3)) {
             uint8_t l = (uint8_t)strnlen(name, maxlen - 1);
             if (l > 1) {
                 /* Shift tail left */
@@ -338,9 +329,8 @@ static void edit_name(char *name, uint8_t maxlen)
             draw_name_row(name, cursor, maxlen);
         }
 
-        /* ---- SW_1 long: confirm ---- */
-        if (SW_1_pressed_long) {
-            SW_1_pressed_long = 0;
+        /* ---- BTN_1 long: confirm ---- */
+        if (buttons_take_long_press(BTN_1)) {
             break;
         }
 
@@ -379,7 +369,7 @@ static void edit_profile(uint8_t prof_idx)
 	TIM2->CNT = 1000;
 
 	while (running) {
-		handle_button_status();
+		buttons_handle();
 
 		/* Encoder controls cursor in browse mode, value in edit mode */
 		if (!editing) {
@@ -564,7 +554,7 @@ void profiles_menu(void)
 	TIM2->CNT = 1000;
 
 	while (running) {
-		handle_button_status();
+		buttons_handle();
 
 		uint8_t count = tip_profiles_count();
 		uint8_t can_add = (count < MAX_PROFILES);
@@ -718,7 +708,7 @@ void profiles_popup(enum handles h)
 	uint16_t timeout_ticks = 300;
 
 	while (1) {
-		handle_button_status();
+		buttons_handle();
 		cursor = enc_sel(1000, &TIM2->CNT, match_count);
 
 		if (cursor != prev_cursor) {
@@ -745,8 +735,7 @@ void profiles_popup(enum handles h)
 		}
 
 		/* SW_2: cancel — keep current active profile */
-		if (SW_2_pressed) {
-			SW_2_pressed = 0;
+		if (buttons_take_press(BTN_2)) {
 			TIM2->CNT = saved_cnt;
 			return;
 		}

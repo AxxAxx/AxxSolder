@@ -27,14 +27,6 @@ extern uint8_t initialized;
 #define color_text_power     C_GREEN
 
 /* Function prototypes -------------------------------------------------------*/
-void update_display();
-void LCD_draw_main_screen();
-
-void LCD_draw_earth_fault_popup();
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 void add_data_point(uint16_t temp, uint16_t power, uint16_t set_temp);
 
 void draw_graph_update(void);

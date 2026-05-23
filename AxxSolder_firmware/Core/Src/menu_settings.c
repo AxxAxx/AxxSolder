@@ -2,6 +2,8 @@
 
 #include "menu_settings.h"
 #include "menu_profiles.h"
+#include "buttons.h"
+#include "version.h"   /* fw_version_*, get_hw_version */
 #include "gui.h"
 
 /* ==== Menu item identifiers
@@ -530,7 +532,7 @@ void settings_menu()
 
     while (settings_menu_active)
     {
-    	handle_button_status(); // process SW_2/SW_3 button presses (up/down navigation)
+    	buttons_handle();       // process SW_2/SW_3 button presses (up/down navigation)
         // ---- Current list length ----
         uint16_t list_len = 0;
         if (level == 0) {
@@ -713,7 +715,7 @@ void settings_menu()
                         settings_menu_active = 0;
                         HAL_NVIC_SystemReset();
                     } else if (abs_mi == MI_SAVE_REBOOT) {
-                        STORAGE_SETTINGS_DRIVER->write(SETTINGS_PAGE, &flash_values, sizeof(Flash_values));
+                        settings_save();
                         profiles_save();
                         settings_menu_active = 0;
                         HAL_NVIC_SystemReset();

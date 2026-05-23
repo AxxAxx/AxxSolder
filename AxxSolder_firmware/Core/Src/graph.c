@@ -1,5 +1,9 @@
 #include "main.h"
 #include "lcd.h"
+#include "display_app.h"   /* convert_temperature */
+#include "settings.h"      /* flash_values */
+#include "handle.h"        /* attached_handle (read by graph rendering) */
+#include "util.h"          /* clamp */
 
 #include "graph.h"
 
@@ -160,17 +164,16 @@ void draw_graph_init(void) {
 			LCD_PutStr(11, 301, "TEMP          UP   DOWN", FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
 		}
 		else{
+			char buf[16];
 			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
-			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_1));
-			LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
-			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_2));
-			LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
+			sprintf(buf, "%d", (int)convert_temperature(flash_values.preset_temp_1));
+			LCD_PutStr(130, 301, buf, FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
+			sprintf(buf, "%d", (int)convert_temperature(flash_values.preset_temp_2));
+			LCD_PutStr(190, 301, buf, FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
 		}
 
 		// Time axis labels (X axis, in seconds)
-	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)interval_display / 500.0f);
+	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)DISPLAY_TICK_INTERVAL_MS / 500.0f);
 
 	    for (int i = 0; i <= 5; i++) {
 	        int x_pos = GRAPH_X0 + i * (GRAPH_WIDTH / 5);
@@ -223,7 +226,7 @@ void draw_graph_init(void) {
 		//LCD_PutStr(205, 95, "AxxSolder", FONT_arial_17X18, C_YELLOW, C_BLACK);
 
 		// Time axis labels (X axis, in seconds)
-	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)interval_display / 750.0f);
+	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)DISPLAY_TICK_INTERVAL_MS / 750.0f);
 
 	    for (int i = 0; i <= 5; i++) {
 	        int x_pos = GRAPH_X0 + i * (GRAPH_WIDTH / 5);
