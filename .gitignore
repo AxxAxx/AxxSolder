@@ -1,0 +1,9 @@
+# Source archives in repo root
+/AxxSolder-main.zip
+/*.zip
+
+# Editor configs
+.vscode/
+.idea/
+.clangd
+.cache/
