@@ -102,11 +102,16 @@ The connections from the handle to the PCB through the Hirose RPC1-12RB-6P(71) c
 ![AxxSolder_portable](./photos/Portable_connections.jpg)
 
 # Recommended power supply for tip grounding
+⚠️ WARNING: Do NOT use power supplies where the DC output is referenced to mains earth (PELV). Due to the internal construction of C245 tips, using a PELV supply can cause a short circuit through the soldering tip. This applies to both DC barrel jack and USB-C power.
+
 In order to be able to ground the tip of the soldering iron the user MUST use a power supply with a floating output (SELV) and connect protective earth to the ground terminal on AxxSolder. No other devices should share this DC power other than AxxSolder itself. A well-suited power supply with floating output (SELV) is the Meanwell LRS-150-24. It is rated for 156 W at 24 V. By using this kind of power supply, AxxSolder can be connected directly its DC output and to mains earth thus keeping the tip of the soldering iron at earth ground potential. There is a 1A fuse after the earth terminal in parallel with a 1M resistor on the AxxSolder.  
 A printable cover protecting the terminals of the for LRS-150-24 can be found under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD).  
 ![LRS-150-24](./photos/LRS-150-24.jpg)
 Another suitable power supply is the Meanwell XLG-150-24 which has a slightly different form factor and is fully enclosed.
 
+## USB-C power
+Most USB-C chargers have floating outputs and work fine. However, some chargers connect the USB-C shell to mains earth — these must not be used as they create the same problem as a PELV DC supply.
+  
 # Handle identification and connections
 In order for AxxSolder to know which type of handle (NT115, T210, T245) is attached specific pins inside the handle connector must be connected (bridged with a jumper wire). By default, the original JBC handle T245 has NO bridged pins while inside the connector of the original JBC T210 the pins 5 and 6 are bridged with a jumper wire. The original NT115 handle from JBC has a different connector and must be modified accordingly. All the necessary connections are shown in the image below.  
 When powering on AxxSolder for the first time after doing these connections inside the handle connector it is wise to attach a handle without its cartridge and ensure that AxxSolder detects and shows the correct handle type on the display.  
