@@ -3,4 +3,6 @@
 
 #include "ugui.h"
 
+#define C_ACCENT C_RED
+
 #endif /* INC_GUI_H_ */

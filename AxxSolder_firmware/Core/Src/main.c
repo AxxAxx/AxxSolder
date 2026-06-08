@@ -699,18 +699,18 @@ void update_graph_display(){
 		UG_DrawFrame(208, 44, 229, 109, C_WHITE);
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
-			UG_FillFrame(209,45,228,108, C_ORANGE);
-			LCD_PutStr(214, 50,  "Z", FONT_arial_17X18, C_BLACK, C_ORANGE);
-			LCD_PutStr(215, 69,  "z", FONT_arial_17X18, C_BLACK, C_ORANGE);
-			LCD_PutStr(214, 90, "Z", FONT_arial_17X18, C_BLACK, C_ORANGE);
+			UG_FillFrame(209,45,228,108, C_ACCENT);
+			LCD_PutStr(214, 50,  "Z", FONT_arial_17X18, C_BLACK, C_ACCENT);
+			LCD_PutStr(215, 69,  "z", FONT_arial_17X18, C_BLACK, C_ACCENT);
+			LCD_PutStr(214, 90, "Z", FONT_arial_17X18, C_BLACK, C_ACCENT);
 			sleep_state_written_to_LCD = 1;
 			standby_state_written_to_LCD = 0;
 		}
 		else if((sensor_values.current_state == STANDBY) && !standby_state_written_to_LCD){
-			UG_FillFrame(209,45,228,108, C_ORANGE);
-			LCD_PutStr(213, 50, "S", FONT_arial_17X18, C_BLACK, C_ORANGE);
-			LCD_PutStr(213, 70, "T", FONT_arial_17X18, C_BLACK, C_ORANGE);
-			LCD_PutStr(213, 90, "B", FONT_arial_17X18, C_BLACK, C_ORANGE);
+			UG_FillFrame(209,45,228,108, C_ACCENT);
+			LCD_PutStr(213, 50, "S", FONT_arial_17X18, C_BLACK, C_ACCENT);
+			LCD_PutStr(213, 70, "T", FONT_arial_17X18, C_BLACK, C_ACCENT);
+			LCD_PutStr(213, 90, "B", FONT_arial_17X18, C_BLACK, C_ACCENT);
 			standby_state_written_to_LCD = 1;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -750,18 +750,18 @@ void update_graph_display(){
 		UG_DrawFrame(288, 44, 310, 109, C_WHITE);
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
-			UG_FillFrame(290,45,309,108, C_ORANGE);
-			LCD_PutStr(294, 50,  "Z", FONT_arial_17X18, C_BLACK, C_ORANGE);
-			LCD_PutStr(295, 69,  "z", FONT_arial_17X18, C_BLACK, C_ORANGE);
-			LCD_PutStr(294, 90, "Z", FONT_arial_17X18, C_BLACK, C_ORANGE);
+			UG_FillFrame(290,45,309,108, C_ACCENT);
+			LCD_PutStr(294, 50,  "Z", FONT_arial_17X18, C_BLACK, C_ACCENT);
+			LCD_PutStr(295, 69,  "z", FONT_arial_17X18, C_BLACK, C_ACCENT);
+			LCD_PutStr(294, 90, "Z", FONT_arial_17X18, C_BLACK, C_ACCENT);
 			sleep_state_written_to_LCD = 1;
 			standby_state_written_to_LCD = 0;
 		}
 		else if((sensor_values.current_state == STANDBY) && !standby_state_written_to_LCD){
-			UG_FillFrame(290,45,309,108, C_ORANGE);
-			LCD_PutStr(294, 50, "S", FONT_arial_17X18, C_BLACK, C_ORANGE);
-			LCD_PutStr(294, 70, "T", FONT_arial_17X18, C_BLACK, C_ORANGE);
-			LCD_PutStr(294, 90, "B", FONT_arial_17X18, C_BLACK, C_ORANGE);
+			UG_FillFrame(290,45,309,108, C_ACCENT);
+			LCD_PutStr(294, 50, "S", FONT_arial_17X18, C_BLACK, C_ACCENT);
+			LCD_PutStr(294, 70, "T", FONT_arial_17X18, C_BLACK, C_ACCENT);
+			LCD_PutStr(294, 90, "B", FONT_arial_17X18, C_BLACK, C_ACCENT);
 			standby_state_written_to_LCD = 1;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -837,26 +837,26 @@ void update_display(){
 		LCD_PutStr(186, 275, DISPLAY_buffer, FONT_arial_17X18, C_WHITE, C_BLACK);
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
-			UG_FillFrame(210,66,230,268, C_ORANGE);
-			LCD_PutStr(214, 73,  "Z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(216, 99,  "z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(214, 129, "Z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(216, 158, "z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(214, 191, "Z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(216, 217, "z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(214, 247, "Z", FONT_arial_20X23, C_BLACK, C_ORANGE);
+			UG_FillFrame(210,66,230,268, C_ACCENT);
+			LCD_PutStr(214, 73,  "Z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(216, 99,  "z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(214, 129, "Z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(216, 158, "z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(214, 191, "Z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(216, 217, "z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(214, 247, "Z", FONT_arial_20X23, C_BLACK, C_ACCENT);
 			sleep_state_written_to_LCD = 1;
 			standby_state_written_to_LCD = 0;
 		}
 		else if((sensor_values.current_state == STANDBY) && !standby_state_written_to_LCD){
-			UG_FillFrame(210,66,230,268, C_ORANGE);
-			LCD_PutStr(213, 73,  "S", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(213, 102, "T", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(213, 131, "A", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(213, 160, "N", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(213, 189, "D", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(213, 218, "B", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(213, 247, "Y", FONT_arial_20X23, C_BLACK, C_ORANGE);
+			UG_FillFrame(210,66,230,268, C_ACCENT);
+			LCD_PutStr(213, 73,  "S", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(213, 102, "T", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(213, 131, "A", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(213, 160, "N", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(213, 189, "D", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(213, 218, "B", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(213, 247, "Y", FONT_arial_20X23, C_BLACK, C_ACCENT);
 			standby_state_written_to_LCD = 1;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -923,25 +923,25 @@ void update_display(){
 		LCD_PutStr(5, 215, DISPLAY_buffer, FONT_arial_17X18, C_WHITE, C_BLACK);
 
 		if((sensor_values.current_state == SLEEP || sensor_values.current_state == EMERGENCY_SLEEP || sensor_values.current_state == HALTED) && !sleep_state_written_to_LCD){
-			UG_FillFrame(10,32,30,209, C_ORANGE);
-			LCD_PutStr(14, 41,  "Z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(16, 68,  "z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(14, 95,  "Z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(16, 122, "z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(14, 149, "Z", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(16, 176, "z", FONT_arial_20X23, C_BLACK, C_ORANGE);
+			UG_FillFrame(10,32,30,209, C_ACCENT);
+			LCD_PutStr(14, 41,  "Z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(16, 68,  "z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(14, 95,  "Z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(16, 122, "z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(14, 149, "Z", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(16, 176, "z", FONT_arial_20X23, C_BLACK, C_ACCENT);
 			sleep_state_written_to_LCD = 1;
 			standby_state_written_to_LCD = 0;
 		}
 		else if((sensor_values.current_state == STANDBY) && !standby_state_written_to_LCD){
-			UG_FillFrame(10,32,30,209, C_ORANGE);
-			LCD_PutStr(14, 41,  "S", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(14, 63,  "T", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(14, 85,  "A", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(14, 107, "N", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(14, 129, "D", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(14, 151, "B", FONT_arial_20X23, C_BLACK, C_ORANGE);
-			LCD_PutStr(14, 173, "Y", FONT_arial_20X23, C_BLACK, C_ORANGE);
+			UG_FillFrame(10,32,30,209, C_ACCENT);
+			LCD_PutStr(14, 41,  "S", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(14, 63,  "T", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(14, 85,  "A", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(14, 107, "N", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(14, 129, "D", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(14, 151, "B", FONT_arial_20X23, C_BLACK, C_ACCENT);
+			LCD_PutStr(14, 173, "Y", FONT_arial_20X23, C_BLACK, C_ACCENT);
 			standby_state_written_to_LCD = 1;
 			sleep_state_written_to_LCD = 0;
 		}
@@ -1124,9 +1124,9 @@ void LCD_draw_main_screen(){
 }
 
 void show_popup(char *text){
-	UG_FillFrame(10, 50, 235, 105, C_ORANGE);
+	UG_FillFrame(10, 50, 235, 105, C_ACCENT);
 	UG_FillFrame(15, 55, 230, 100, C_WHITE);
-	LCD_PutStr(20, 70, text, FONT_arial_20X23, C_ORANGE, C_WHITE);
+	LCD_PutStr(20, 70, text, FONT_arial_20X23, C_ACCENT, C_WHITE);
 	popup_shown = 1;
 	previous_millis_popup = HAL_GetTick();
 	standby_state_written_to_LCD = 0;
@@ -1137,14 +1137,14 @@ void LCD_draw_earth_fault_popup(){
 	heater_off();
 	sensor_values.requested_power = 0.0f;
 
-	UG_FillFrame(10, 50, 205, 205, C_ORANGE);
+	UG_FillFrame(10, 50, 205, 205, C_ACCENT);
 	UG_FillFrame(15, 55, 200, 200, C_WHITE);
-	LCD_PutStr(20, 60, "GROUNDING", FONT_arial_20X23, C_ORANGE, C_WHITE);
-	LCD_PutStr(20, 80, "ERROR", FONT_arial_20X23, C_ORANGE, C_WHITE);
+	LCD_PutStr(20, 60, "GROUNDING", FONT_arial_20X23, C_ACCENT, C_WHITE);
+	LCD_PutStr(20, 80, "ERROR", FONT_arial_20X23, C_ACCENT, C_WHITE);
 
-	LCD_PutStr(20, 120, "CHECK", FONT_arial_20X23, C_ORANGE, C_WHITE);
-	LCD_PutStr(20, 140, "CONNECTIONS", FONT_arial_20X23, C_ORANGE, C_WHITE);
-	LCD_PutStr(20, 160, "AND REBOOT", FONT_arial_20X23, C_ORANGE, C_WHITE);
+	LCD_PutStr(20, 120, "CHECK", FONT_arial_20X23, C_ACCENT, C_WHITE);
+	LCD_PutStr(20, 140, "CONNECTIONS", FONT_arial_20X23, C_ACCENT, C_WHITE);
+	LCD_PutStr(20, 160, "AND REBOOT", FONT_arial_20X23, C_ACCENT, C_WHITE);
 
 	Error_Handler();
 }
