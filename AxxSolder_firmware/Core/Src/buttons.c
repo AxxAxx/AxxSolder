@@ -77,12 +77,18 @@ void buttons_clear_all(void) {
 /* Function to toggle between RUN and HALTED at each press of the encoder button */
 void buttons_handle(void){
 	if(buttons_take_press(BTN_1)){
-		// toggle between RUN and HALTED
-		if ((sensor_values.current_state == RUN) || (sensor_values.current_state == STANDBY)){
+		/* Encoder press: RUN -> HALTED (stop); any standby/sleep/stopped
+		   state -> RUN (wake / start heating). */
+		if (sensor_values.current_state == RUN){
 			change_state(HALTED);
 		}
-		else if ((sensor_values.current_state == HALTED) || (sensor_values.current_state == EMERGENCY_SLEEP)){
+		else{   /* PRESTANDBY, STANDBY, SLEEP, EMERGENCY_SLEEP, HALTED */
 			change_state(RUN);
+		}
+		/* In momentary-stand mode in_stand is a latched flag; clear it so
+		   stand_update() doesn't immediately drive us back toward SLEEP. */
+		if (flash_values.momentary_stand == 1){
+			sensor_values.in_stand = 0;
 		}
 		previous_millis_heating_halted_update = HAL_GetTick();
 	}
