@@ -3,6 +3,11 @@
 
 #include "pid.h"
 
+/* Build-time switch for manual PID tuning. Defined HERE (not in main.c)
+ * so the `#ifdef PID_TUNING` consumer in controller.c — a separate
+ * translation unit — actually sees it. Uncomment to enable tuning mode. */
+//#define PID_TUNING
+
 /* The PID controller instance that drives the heater. Public so
  * handle.c can call tip_profiles_apply_pid(handle, &TPID) and
  * telemetry.c can read P/I/D contributions. */

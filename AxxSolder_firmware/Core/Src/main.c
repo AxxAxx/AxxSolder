@@ -55,7 +55,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-//#define PID_TUNING
+/* PID_TUNING build switch lives in controller.h (its #ifdef consumer is in controller.c) */
 
 uint32_t previous_measure_current_update = 0;
 uint32_t interval_measure_current = 250;

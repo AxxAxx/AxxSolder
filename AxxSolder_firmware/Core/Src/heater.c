@@ -19,7 +19,7 @@ volatile uint8_t current_measurement_done = 1;
 /* Sets the duty cycle of timer controlling the heater */
 void heater_set_duty(uint16_t dutycycle){
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, dutycycle);
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dutycycle * 0.3);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint16_t)(dutycycle * 0.3f));
 }
 
 /* Disable the duty cycle of timer controlling the heater PWM*/
@@ -29,9 +29,7 @@ void heater_off(void){
 
 /* Update the duty cycle of timer controlling the heater PWM */
 void heater_update_pwm(void){
-	if(sensor_values.bus_voltage == 0){
-		return;
-	}
+	if (sensor_values.bus_voltage <= 0.0f) return;
 	float current = (sensor_values.max_power_watt*POWER_CONVERSION_FACTOR) / sensor_values.bus_voltage;
 	float duty_cycle = sensor_values.requested_power * current;
 
