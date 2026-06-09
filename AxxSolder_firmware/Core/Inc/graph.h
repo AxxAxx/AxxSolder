@@ -1,6 +1,6 @@
 #ifndef INC_DISPLAY_H_
 #define INC_DISPLAY_H_
-#include "colors_legacy.h"   /* legacy palette: restore original on-screen colours */
+#include "app_colors.h"   /* AxxSolder UI colour palette */
 
 /* Includes ------------------------------------------------------------------*/
 
@@ -15,17 +15,17 @@ extern uint16_t FIELD_W_ACT;
 
 extern uint8_t initialized;
 
-#define background C_BLACK_LEGACY
-#define color_text C_WHITE_LEGACY
+#define background C_Background
+#define color_text C_Text
 #define color_setup B_SILVER
 
 #define color_actual B_MANGO
                //#define color_FrameActual B_LEMON
 #define color_FrameActual B_WHITE_SMOKE
 
-#define color_text_info      C_WHITE_LEGACY
-#define color_text_percent   C_BLUE_LEGACY
-#define color_text_power     C_GREEN_LEGACY
+#define color_text_info      C_Text
+#define color_text_percent   C_GraphPercent
+#define color_text_power     C_GraphPower
 
 /* Function prototypes -------------------------------------------------------*/
 void add_data_point(uint16_t temp, uint16_t power, uint16_t set_temp);

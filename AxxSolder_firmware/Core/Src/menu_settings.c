@@ -1,7 +1,7 @@
 /* menu_settings.c*/
 
 #include "menu_settings.h"
-#include "colors_legacy.h"   /* legacy palette: restore original on-screen colours */
+#include "app_colors.h"   /* AxxSolder UI colour palette */
 #include "menu_profiles.h"
 #include "buttons.h"
 #include "version.h"   /* fw_version_*, get_hw_version */
@@ -385,11 +385,11 @@ static void display_menu_value_line(uint8_t line_pos, uint16_t index,
 
     if (editing && !prev_editing) {
         // Entering edit mode: fill with white
-        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, C_WHITE_LEGACY);
+        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, C_Text);
     }
     else if (!editing && prev_editing && selected) {
         // Exiting edit mode while still selected: fill with black
-        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, C_BLACK_LEGACY);
+        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, C_Background);
     }
 
     // === Redraw text if the value or flags have changed ===
@@ -399,16 +399,16 @@ static void display_menu_value_line(uint8_t line_pos, uint16_t index,
 
         // Determine text color based on whether value differs from default
         uint16_t fg;
-        fg = (selected && editing) ? C_BLACK_LEGACY : fg_def;
+        fg = (selected && editing) ? C_Background : fg_def;
         if (selected && editing) {
-                fg = C_BLACK_LEGACY;
+                fg = C_Background;
         } else if (is_value_different_from_default(index, value)) {
-                fg = C_ORANGE_LEGACY;  // Red for non-default values
+                fg = C_Highlight;  // Red for non-default values
         } else {
                 fg = fg_def;  // Default color for default values
         }
 
-        uint16_t bg = (selected && editing) ? C_WHITE_LEGACY : bg_def;
+        uint16_t bg = (selected && editing) ? C_Text : bg_def;
 
         UG_FillFrame(x, y-2, 190 + MENU_VALUE_W, y + MENU_VALUE_H+2, bg);
         LCD_PutStr(x+3, y, buf, FONT_arial_20X23, fg, bg);
@@ -485,7 +485,7 @@ void settings_menu()
     settings_menu_active = 1;
 
     LCD_SetRotation(flash_values.screen_rotation);
-    UG_FillScreen(C_BLACK_LEGACY);
+    UG_FillScreen(C_Background);
     UG_FontSetTransparency(1);
 
     // --- Firmware version string ---
@@ -493,11 +493,11 @@ void settings_menu()
     if ((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)) {
         menu_lines_on_screen = 10;
         sprintf(str, "fw mod: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
-        LCD_PutStr(6, 296, str, FONT_arial_20X23, C_RED_LEGACY, C_BLACK_LEGACY);
+        LCD_PutStr(6, 296, str, FONT_arial_20X23, C_Warning, C_Background);
     } else {
         menu_lines_on_screen = 7;
         sprintf(str, "fw mod: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
-        LCD_PutStr(6, 215, str, FONT_arial_20X23, C_RED_LEGACY, C_BLACK_LEGACY);
+        LCD_PutStr(6, 215, str, FONT_arial_20X23, C_Warning, C_Background);
     }
 
     // Value rendering cache
@@ -554,18 +554,18 @@ void settings_menu()
 
         // ---- Full page redraw ----
         if (redraw_page || (new_page_start != page_start)) {
-            UG_FillFrame(0, 0, 239, 31 + menu_lines_on_screen * 26, C_BLACK_LEGACY);
+            UG_FillFrame(0, 0, 239, 31 + menu_lines_on_screen * 26, C_Background);
             page_start = new_page_start;
 
             // Redraw header
             if (level == 0) {
-                LCD_PutStr(5, 5, "SETTINGS", FONT_arial_20X23, C_DARK_SEA_GREEN_LEGACY, C_BLACK_LEGACY);
+                LCD_PutStr(5, 5, "SETTINGS", FONT_arial_20X23, C_Footer, C_Background);
             } else {
-                LCD_PutStr(5, 5, MENU_GROUPS[current_group].title, FONT_arial_20X23, C_DARK_SEA_GREEN_LEGACY, C_BLACK_LEGACY);
+                LCD_PutStr(5, 5, MENU_GROUPS[current_group].title, FONT_arial_20X23, C_Footer, C_Background);
             }
-            LCD_DrawLine(0, 25, 240, 25, C_DARK_SEA_GREEN_LEGACY);
-            LCD_DrawLine(0, 26, 240, 26, C_DARK_SEA_GREEN_LEGACY);
-            LCD_DrawLine(0, 27, 240, 27, C_DARK_SEA_GREEN_LEGACY);
+            LCD_DrawLine(0, 25, 240, 25, C_Footer);
+            LCD_DrawLine(0, 26, 240, 26, C_Footer);
+            LCD_DrawLine(0, 27, 240, 27, C_Footer);
 
             // Reset value row cache - important so display_menu_value_line() redraws
             for (int i = 0; i < menu_lines_on_screen; i++) {
@@ -580,16 +580,16 @@ void settings_menu()
 
                 if (pos >= list_len) break;
 
-                UG_FillFrame(5, line_y, 187, line_y + MENU_VALUE_H, C_BLACK_LEGACY);
+                UG_FillFrame(5, line_y, 187, line_y + MENU_VALUE_H, C_Background);
 
                 if (level == 0) {
                     // Group list - names only
-                    LCD_PutStr(5, line_y, MENU_GROUPS[pos].title, FONT_arial_20X23, C_WHITE_LEGACY, C_BLACK_LEGACY);
+                    LCD_PutStr(5, line_y, MENU_GROUPS[pos].title, FONT_arial_20X23, C_Text, C_Background);
                 } else {
                     // Group item list + Back
                 	if (pos < MENU_GROUPS[current_group].count) {
                 	    uint16_t abs_mi = MENU_GROUPS[current_group].idx[pos];
-                	    LCD_PutStr(5, line_y, mi_name(abs_mi), FONT_arial_20X23, C_WHITE_LEGACY, C_BLACK_LEGACY);
+                	    LCD_PutStr(5, line_y, mi_name(abs_mi), FONT_arial_20X23, C_Text, C_Background);
 
                 	    // Do not display values for the System group
                 	    if (!(current_group == (GROUPS_COUNT - 1))) {
@@ -600,13 +600,13 @@ void settings_menu()
                 	            ((float*)&flash_values)[fi],
                 	            0, 0,
                 	            190, line_y,
-								C_WHITE_LEGACY, C_BLACK_LEGACY
+								C_Text, C_Background
                 	        );
                 	    }
                 	}
                     else if (pos == MENU_GROUPS[current_group].count) {
                         // Back row
-                        LCD_PutStr(5, line_y, "Back", FONT_arial_20X23, C_LIGHT_GRAY_LEGACY, C_BLACK_LEGACY);
+                        LCD_PutStr(5, line_y, "Back", FONT_arial_20X23, C_MenuDim, C_Background);
                     }
                 }
             }
@@ -623,15 +623,15 @@ void settings_menu()
                 (prev_cursor / menu_lines_on_screen) == (cursor / menu_lines_on_screen)) {
                 uint8_t prev_line = prev_cursor % menu_lines_on_screen;
                 uint16_t prev_y = 35 + prev_line * 26;
-                UG_DrawFrame(0, prev_y - 4, 239, prev_y + 4 + MENU_VALUE_H, C_BLACK_LEGACY);
-                UG_DrawFrame(1, prev_y - 3, 238, prev_y + 3 + MENU_VALUE_H, C_BLACK_LEGACY);
+                UG_DrawFrame(0, prev_y - 4, 239, prev_y + 4 + MENU_VALUE_H, C_Background);
+                UG_DrawFrame(1, prev_y - 3, 238, prev_y + 3 + MENU_VALUE_H, C_Background);
             }
 
             // Draw the new frame
             uint8_t line = cursor % menu_lines_on_screen;
             uint16_t line_y = 35 + line * 26;
-            UG_DrawFrame(0, line_y - 4, 239, line_y + 4 + MENU_VALUE_H, C_YELLOW_LEGACY);
-            UG_DrawFrame(1, line_y - 3, 238, line_y + 3 + MENU_VALUE_H, C_YELLOW_LEGACY);
+            UG_DrawFrame(0, line_y - 4, 239, line_y + 4 + MENU_VALUE_H, C_Header);
+            UG_DrawFrame(1, line_y - 3, 238, line_y + 3 + MENU_VALUE_H, C_Header);
 
             prev_cursor = cursor;
         }
@@ -669,7 +669,7 @@ void settings_menu()
                 1, // selected
                 1, // editing
                 190, line_y,
-				C_WHITE_LEGACY, C_BLACK_LEGACY
+				C_Text, C_Background
             );
         }
 
@@ -741,7 +741,7 @@ void settings_menu()
                             abs_mi,
                             ((float*)&flash_values)[fi],
                             1, 1, 190, line_y,
-							C_WHITE_LEGACY, C_BLACK_LEGACY
+							C_Text, C_Background
                         );
                     }
                 }
@@ -769,7 +769,7 @@ void settings_menu()
                     ((float*)&flash_values)[fi],
                     0, 0,
                     190, line_y,
-					C_WHITE_LEGACY, C_BLACK_LEGACY
+					C_Text, C_Background
                 );
 
                 /* Restore cursor appearance: draw frame for the current row */
