@@ -1,5 +1,10 @@
 #include "main.h"
+#include "app_colors.h"   /* AxxSolder UI colour palette */
 #include "lcd.h"
+#include "display_app.h"   /* convert_temperature */
+#include "settings.h"      /* flash_values */
+#include "handle.h"        /* attached_handle (read by graph rendering) */
+#include "util.h"          /* clamp */
 
 #include "graph.h"
 
@@ -34,16 +39,16 @@ uint16_t GRAPH_HEIGHT;
 #define GRAPH_POINTS 100
 
 
-#define GRAPH_Color_TEMP        C_CORN_FLOWER_BLUE;          // Color of the temperature axis and graph in RUN mode
-#define GRAPH_Color_SET_TEMP    C_WHITE_SMOKE;          // Color of the temperature axis and graph in RUN mode
-#define GRAPH_Color_POWER       C_YELLOW;     // Color of the power axis and graph in RUN mode
+#define GRAPH_Color_TEMP        C_GraphTemp;          // Color of the temperature axis and graph in RUN mode
+#define GRAPH_Color_SET_TEMP    C_GraphAxis;          // Color of the temperature axis and graph in RUN mode
+#define GRAPH_Color_POWER       C_Header;     // Color of the power axis and graph in RUN mode
 
-#define Color_TEMP_SLEEP        C_GREEN         // Color of the temperature axis and graph in SLEEP mode
-#define Color_POWER_SLEEP       C_LAWN_GREEN    // Color of the power axis and graph in SLEEP mode
+#define Color_TEMP_SLEEP        C_GraphPower         // Color of the temperature axis and graph in SLEEP mode
+#define Color_POWER_SLEEP       C_GraphPowerSleep    // Color of the power axis and graph in SLEEP mode
 
-#define Color_TIME              C_WHITE_SMOKE   // Color of the time axis
+#define Color_TIME              C_GraphAxis   // Color of the time axis
 
-#define DASH_LEN_COLOR   C_DARK_GRAY   // Color of the dashed coordinate grid
+#define DASH_LEN_COLOR   C_GraphGrid   // Color of the dashed coordinate grid
 #define DASH_LEN 5                     // Dash length in pixels
 #define GAP_LEN  5                     // Gap length in pixels
 #define THICKNESS_LEN  1               // Line thickness in pixels
@@ -89,9 +94,9 @@ static Line set_temp_lines_prev[GRAPH_POINTS - 1] = {0};
 static Line power_lines_prev[GRAPH_POINTS - 1] = {0};
 
 // Universal dashed line using UG_FillFrame()
-// dash_len  – dash length in pixels
-// gap_len   – gap length in pixels
-// thickness – line thickness in pixels
+// dash_len  ??? dash length in pixels
+// gap_len   ??? gap length in pixels
+// thickness ??? line thickness in pixels
 void draw_dashed_line_fillframe(int x1, int y1, int x2, int y2, uint16_t color,
                                 uint8_t dash_len, uint8_t gap_len, uint8_t thickness) {
     int dx = abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
@@ -130,47 +135,46 @@ void draw_graph_init(void) {
 		GRAPH_WIDTH = GRAPH_WIDTH_vertical;
 		GRAPH_HEIGHT = GRAPH_HEIGHT_vertical;
 
-		LCD_PutStr(53, 8, "AxxSolder", FONT_arial_19X22, C_YELLOW, C_BLACK);
-		LCD_DrawLine(0,36,240,36,C_YELLOW);
-		LCD_DrawLine(0,37,240,37,C_YELLOW);
-		LCD_DrawLine(0,38,240,38,C_YELLOW);
+		LCD_PutStr(53, 8, "AxxSolder", FONT_arial_19X22, C_Header, C_Background);
+		LCD_DrawLine(0,36,240,36,C_Header);
+		LCD_DrawLine(0,37,240,37,C_Header);
+		LCD_DrawLine(0,38,240,38,C_Header);
 
-		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, C_WHITE, C_BLACK);
+		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, C_Text, C_Background);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 45, "°C", FONT_arial_20X23, C_WHITE, C_BLACK);
+			LCD_PutStr(180, 45, "??C", FONT_arial_20X23, C_Text, C_Background);
 		}
 		else{
-			LCD_PutStr(180, 45, "°F", FONT_arial_20X23, C_WHITE, C_BLACK);
+			LCD_PutStr(180, 45, "??F", FONT_arial_20X23, C_Text, C_Background);
 		}
-		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, C_WHITE, C_BLACK);
+		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, C_Text, C_Background);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 70, "°C", FONT_arial_20X23, C_WHITE, C_BLACK);
+			LCD_PutStr(180, 70, "??C", FONT_arial_20X23, C_Text, C_Background);
 		}
 		else{
-			LCD_PutStr(180, 70, "°F", FONT_arial_20X23, C_WHITE, C_BLACK);
+			LCD_PutStr(180, 70, "??F", FONT_arial_20X23, C_Text, C_Background);
 		}
 
-		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, C_WHITE, C_BLACK);
-		LCD_PutStr(127, 95, "Vin:", FONT_arial_17X18, C_WHITE, C_BLACK);
+		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, C_Text, C_Background);
+		LCD_PutStr(127, 95, "Vin:", FONT_arial_17X18, C_Text, C_Background);
 
-		UG_DrawLine(0, 296, 240, 296, C_DARK_SEA_GREEN);
-		UG_DrawLine(0, 297, 240, 297, C_DARK_SEA_GREEN);
+		UG_DrawLine(0, 296, 240, 296, C_Footer);
+		UG_DrawLine(0, 297, 240, 297, C_Footer);
 
 		if(flash_values.three_button_mode == 1){
-			LCD_PutStr(11, 301, "TEMP          UP   DOWN", FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
+			LCD_PutStr(11, 301, "TEMP          UP   DOWN", FONT_arial_20X23, C_Footer, C_Background);
 		}
 		else{
-			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
-			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_1));
-			LCD_PutStr(130, 301, DISPLAY_buffer, FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
-			memset(DISPLAY_buffer, '\0', sizeof(DISPLAY_buffer));
-			sprintf(DISPLAY_buffer, "%d", (int)convert_temperature(flash_values.preset_temp_2));
-			LCD_PutStr(190, 301, DISPLAY_buffer, FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
+			char buf[16];
+			LCD_PutStr(11, 301, "PRESETS", FONT_arial_20X23, C_Footer, C_Background);
+			sprintf(buf, "%d", (int)convert_temperature(flash_values.preset_temp_1));
+			LCD_PutStr(130, 301, buf, FONT_arial_20X23, C_Footer, C_Background);
+			sprintf(buf, "%d", (int)convert_temperature(flash_values.preset_temp_2));
+			LCD_PutStr(190, 301, buf, FONT_arial_20X23, C_Footer, C_Background);
 		}
 
 		// Time axis labels (X axis, in seconds)
-	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)interval_display / 500.0f);
+	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)DISPLAY_TICK_INTERVAL_MS / 500.0f);
 
 	    for (int i = 0; i <= 5; i++) {
 	        int x_pos = GRAPH_X0 + i * (GRAPH_WIDTH / 5);
@@ -197,33 +201,33 @@ void draw_graph_init(void) {
 		GRAPH_WIDTH = GRAPH_WIDTH_horizontal;
 		GRAPH_HEIGHT = GRAPH_HEIGHT_horizontal;
 
-		LCD_PutStr(90, 8, "AxxSolder", FONT_arial_19X22, C_YELLOW, C_BLACK);
-		LCD_DrawLine(0,36,310,36,C_YELLOW);
-		LCD_DrawLine(0,37,310,37,C_YELLOW);
-		LCD_DrawLine(0,38,310,38,C_YELLOW);
+		LCD_PutStr(90, 8, "AxxSolder", FONT_arial_19X22, C_Header, C_Background);
+		LCD_DrawLine(0,36,310,36,C_Header);
+		LCD_DrawLine(0,37,310,37,C_Header);
+		LCD_DrawLine(0,38,310,38,C_Header);
 
-		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, C_WHITE, C_BLACK);
+		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, C_Text, C_Background);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 45, "°C", FONT_arial_20X23, C_WHITE, C_BLACK);
+			LCD_PutStr(180, 45, "??C", FONT_arial_20X23, C_Text, C_Background);
 		}
 		else{
-			LCD_PutStr(180, 45, "°F", FONT_arial_20X23, C_WHITE, C_BLACK);
+			LCD_PutStr(180, 45, "??F", FONT_arial_20X23, C_Text, C_Background);
 		}
-		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, C_WHITE, C_BLACK);
+		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, C_Text, C_Background);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 70, "°C", FONT_arial_20X23, C_WHITE, C_BLACK);
+			LCD_PutStr(180, 70, "??C", FONT_arial_20X23, C_Text, C_Background);
 		}
 		else{
-			LCD_PutStr(180, 70, "°F", FONT_arial_20X23, C_WHITE, C_BLACK);
+			LCD_PutStr(180, 70, "??F", FONT_arial_20X23, C_Text, C_Background);
 		}
 
-		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, C_WHITE, C_BLACK);
-		LCD_PutStr(126, 95, "Vin:", FONT_arial_17X18, C_WHITE, C_BLACK);
+		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, C_Text, C_Background);
+		LCD_PutStr(126, 95, "Vin:", FONT_arial_17X18, C_Text, C_Background);
 
-		//LCD_PutStr(205, 95, "AxxSolder", FONT_arial_17X18, C_YELLOW, C_BLACK);
+		//LCD_PutStr(205, 95, "AxxSolder", FONT_arial_17X18, C_Header, C_Background);
 
 		// Time axis labels (X axis, in seconds)
-	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)interval_display / 750.0f);
+	    float step_time_sec = ((float)GRAPH_WIDTH / 5.0f) * ((float)DISPLAY_TICK_INTERVAL_MS / 750.0f);
 
 	    for (int i = 0; i <= 5; i++) {
 	        int x_pos = GRAPH_X0 + i * (GRAPH_WIDTH / 5);
@@ -386,7 +390,7 @@ bool lines_overlap(Line *l1, Line *l2, int thickness) {
 // count        - number of labels in the array
 // x            - horizontal position for rendering labels
 // is_left_axis - true if the axis is on the left (labels on the left), false for right
-// unit_start   - suffix for the first label (e.g. "°C" or "%"), may be NULL
+// unit_start   - suffix for the first label (e.g. "??C" or "%"), may be NULL
 // unit_end     - suffix for the last label, may be NULL
 void draw_axis(const int *values, int count, int x, bool is_left_axis,
                uint16_t color, const char *unit_start, const char *unit_end) {
@@ -441,12 +445,12 @@ void draw_axis_labels(void) {
     int temp_values_F[] = {0, 170, 340, 510, 680, 850};
     int power_values[] = {0, 20, 40, 60, 80, 100};
 
-    // Draw the left temperature axis (with °C symbol on the minimum value)
+    // Draw the left temperature axis (with ??C symbol on the minimum value)
     if(flash_values.deg_celsius == 1){
-    	draw_axis(temp_values_C, sizeof(temp_values_C)/sizeof(temp_values_C[0]), 2, true, color_temp_label, "°C", NULL);
+    	draw_axis(temp_values_C, sizeof(temp_values_C)/sizeof(temp_values_C[0]), 2, true, color_temp_label, "??C", NULL);
     }
     else{
-    	draw_axis(temp_values_F, sizeof(temp_values_F)/sizeof(temp_values_F[0]), 2, true, color_temp_label, "°F", NULL);
+    	draw_axis(temp_values_F, sizeof(temp_values_F)/sizeof(temp_values_F[0]), 2, true, color_temp_label, "??F", NULL);
     }
 
     // Draw the right power axis (with % on the minimum value)

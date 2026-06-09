@@ -2,6 +2,7 @@
 #define MENU_PROFILES_H
 
 #include "main.h"
+#include "handle.h"   /* enum handles */
 
 /* Full profiles editor — called from settings_menu when "Profiles" group selected */
 void profiles_menu(void);

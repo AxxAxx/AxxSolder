@@ -3,7 +3,11 @@
 #include "string.h"
 
 extern UART_HandleTypeDef huart1;
-extern DEBUG_VERBOSITY_t debugLevel;
+
+/* Module-owned verbosity gate. Set at boot (could be made user-configurable
+ * via flash_values later). All debug_print_* functions check this before
+ * doing the synchronous UART transmit. */
+DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
 static char buffer[40];
 
 static const char *debug_level_str[] = {

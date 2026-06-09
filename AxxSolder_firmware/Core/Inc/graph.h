@@ -1,5 +1,6 @@
 #ifndef INC_DISPLAY_H_
 #define INC_DISPLAY_H_
+#include "app_colors.h"   /* AxxSolder UI colour palette */
 
 /* Includes ------------------------------------------------------------------*/
 
@@ -14,27 +15,19 @@ extern uint16_t FIELD_W_ACT;
 
 extern uint8_t initialized;
 
-#define background C_BLACK
-#define color_text C_WHITE
+#define background C_Background
+#define color_text C_Text
 #define color_setup B_SILVER
 
 #define color_actual B_MANGO
                //#define color_FrameActual B_LEMON
 #define color_FrameActual B_WHITE_SMOKE
 
-#define color_text_info      C_WHITE
-#define color_text_percent   C_BLUE
-#define color_text_power     C_GREEN
+#define color_text_info      C_Text
+#define color_text_percent   C_GraphPercent
+#define color_text_power     C_GraphPower
 
 /* Function prototypes -------------------------------------------------------*/
-void update_display();
-void LCD_draw_main_screen();
-
-void LCD_draw_earth_fault_popup();
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 void add_data_point(uint16_t temp, uint16_t power, uint16_t set_temp);
 
 void draw_graph_update(void);
@@ -45,9 +38,9 @@ void draw_graph_init(void);
 void draw_line_with_thickness(int x1, int y1, int x2, int y2, uint16_t color, uint8_t thickness);
 
 // Universal dashed line using UG_FillFrame()
-// dash_len  – dash length in pixels
-// gap_len   – gap length in pixels
-// thickness – line thickness in pixels
+// dash_len  ??? dash length in pixels
+// gap_len   ??? gap length in pixels
+// thickness ??? line thickness in pixels
 void draw_dashed_line_fillframe(int x1, int y1, int x2, int y2, uint16_t color,
                                 uint8_t dash_len, uint8_t gap_len, uint8_t thickness);
 
