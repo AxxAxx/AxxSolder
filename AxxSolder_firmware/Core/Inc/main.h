@@ -32,78 +32,11 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
-
-/* states for runtime switch */
-typedef enum {
-    RUN,
-	PRESTANDBY,
-	STANDBY,
-	SLEEP,
-	EMERGENCY_SLEEP,
-	HALTED
-} mainstates;
-
-/* Handles */
-enum handles {
-	NT115,
-	T210,
-	T245,
-	No_name
-};
-// extern declaration (only a declaration)
-extern enum handles attached_handle;
-// Definition of enum for power sources
-typedef enum {
-	POWER_DC,
-	POWER_USB,
-	POWER_BAT // Future feature
-} power_source_t;
-// Declaration of external variable
-extern power_source_t power_source;
-
-/* Struct to hold flash_data values */
-typedef struct{
-	float startup_temperature;
-	float temperature_offset;
-	float standby_temp;
-	float standby_time;
-	float emergency_time;
-	float buzzer_enabled;
-	float preset_temp_1;
-	float preset_temp_2;
-	float GPIO4_ON_at_run;
-	float screen_rotation;
-	float momentary_stand;
-	float current_measurement;
-	float startup_beep;
-	float deg_celsius;
-	float temp_cal_100;
-	float temp_cal_200;
-	float temp_cal_300;
-	float temp_cal_350;
-	float temp_cal_400;
-	float temp_cal_450;
-	float serial_debug_print;
-	float displayed_temp_filter;
-	float startup_temp_is_previous_temp;
-	float three_button_mode;
-	float beep_at_set_temp;
-	float beep_tone;
-	float power_unit;
-	float detect_nt115;
-    float power_limit_T245;
-    float power_limit_T210;
-    float power_limit_NT115;
-    float power_limit_No_name;
-    float display_graph;
-    float delta_t_detection;
-    float standby_delay;
-    float show_profile_on_tip_change;
-    float change_enc_dir;
-}Flash_values;
-/* Global variables defined in main.c */
-extern Flash_values flash_values;
-extern Flash_values default_flash_values;
+#include "state_machine.h"
+#include "settings.h"
+#include "power_source.h"
+/* controller.h is NOT included here to avoid an include cycle through
+ * pid.h. Files that need TPID/PID_setpoint must include controller.h. */
 
 // Sensor values structure
 typedef struct {
@@ -128,25 +61,6 @@ typedef struct {
 /* Global variable, defined in main.c */
 extern volatile sensor_values_struct sensor_values;
 
-// Enum definition
-typedef enum {
-	ATTACHED,
-	DETACHED
-} cartridge_state_t;
-// Declaration of external variables
-extern cartridge_state_t cartridge_state;
-extern cartridge_state_t previous_cartridge_state;
-
-extern uint8_t sleep_state_written_to_LCD;
-extern uint8_t standby_state_written_to_LCD;
-
-extern uint8_t fw_version_major;
-extern uint8_t fw_version_minor;
-extern uint8_t fw_version_patch;
-
-/* Flag to indicate that settings menu is active */
-extern uint8_t settings_menu_active;
-
 #define MAX_POWER 		150
 
 /* Min and Max selectable values */
@@ -155,32 +69,8 @@ extern uint8_t settings_menu_active;
 
 /* General PID parameters */
 #define PID_MAX_OUTPUT 500.0f
-#define FIXED_MEASURE_DUTY (PID_MAX_OUTPUT / 2)  // i.e. 250 / 2 = 250
 #define PID_UPDATE_INTERVAL 25
 #define PID_ADD_I_MIN_ERROR 75
-extern float PID_NEG_ERROR_I_MULT;
-extern float PID_NEG_ERROR_I_BIAS;
-
-extern char DISPLAY_buffer[40];
-
-/* Flag to indicate if a popup is shown */
-extern uint8_t popup_shown;
-
-extern  bool flag_show_popup;
-
-/* Timing constants */
-extern uint32_t previous_millis_display;
-extern uint32_t interval_display;
-
-extern uint32_t previous_millis_debug;
-extern uint32_t interval_debug;
-
-extern uint32_t previous_millis_heating_halted_update;
-extern uint32_t interval_heating_halted_update;
-
-extern uint32_t previous_millis_left_stand;
-
-extern uint32_t previous_millis_standby;
 
 extern uint32_t previous_measure_current_update;
 extern uint32_t interval_measure_current;
@@ -190,17 +80,6 @@ extern uint32_t interval_sensor_update_high_update;
 
 extern uint32_t previous_sensor_update_low_update;
 extern uint32_t interval_sensor_update_low_update;
-
-extern uint32_t previous_millis_popup;
-extern uint32_t interval_popup;
-
-/* Thermocouple temperature */
-extern float TC_temp;
-
-/* RAW ADC from current measurement */
-extern uint16_t current_raw;
-
-extern uint16_t current_leak;
 
 /* USER CODE END Includes */
 
@@ -225,36 +104,6 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
-/* Return the temperature in the correct unit */
-float convert_temperature(float temperature);
-
-void handle_button_status(void);
-/* Disable the duty cycle of timer controlling the heater PWM */
-void heater_off();
-
-/* Function to change the main device state */
-void change_state(mainstates new_state);
-
-
-/**
- * @brief Gets the hardware version of the device from the state of 3 input pins.
- * The states of VERSION_BIT_1..3 form a 3-bit number:
- *     VERSION_BIT_3 - most significant bit (MSB)
- *     VERSION_BIT_2 - middle bit
- *     VERSION_BIT_1 - least significant bit (LSB)
- *
- * Version numbering starts from 3, i.e. version = 3 + [bit state]
- *
- * @return uint8_t Hardware version number (3..10)
- */
-uint8_t get_hw_version(void);
-
-/* Function to clamp d between the limits min and max */
-float clamp(float d, float min, float max);
-
-/* Function to convert RGB to BRG */
-uint16_t RGB_to_BRG(uint16_t color);
 
 /* USER CODE END EFP */
 

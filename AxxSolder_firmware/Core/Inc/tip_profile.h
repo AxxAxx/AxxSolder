@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "main.h"
+#include "handle.h"   /* enum handles */
 #include "storage.h"
 
 #define PROFILE_NAME_LEN   24
@@ -37,7 +37,7 @@ typedef struct {
 	TipProfile profiles[MAX_PROFILES];
 } ProfileStore;                       /* 16 + 24*72 = 1744 bytes */
 
-/* PID_TypeDef is defined in pid.h — include it for apply_pid prototype */
+/* PID_TypeDef is defined in pid.h - include it for apply_pid prototype */
 #include "pid.h"
 
 /* Lifecycle */
