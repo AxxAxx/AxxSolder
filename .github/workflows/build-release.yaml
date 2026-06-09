@@ -3,39 +3,41 @@ name: Build and Release Firmware
 on:
   pull_request:
     branches:
-      - main  # Trigger on PRs to the main branch
+      - main # Trigger on PRs to the main branch
+  push:
+    tags:
+      - "v*"
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-    - name: Build Docker image
-      run: cd AxxSolder_firmware && docker build -t firmware-builder -f Containerfile .
+      - name: Build Docker image
+        run: cd AxxSolder_firmware && docker build -t firmware-builder -f Containerfile .
 
-    - name: Set firmware path
-      run: echo "FIRMWARE_PATH=AxxSolder-${GITHUB_REF#refs/tags/}.bin" >> $GITHUB_ENV
+      - name: Set firmware path
+        run: echo "FIRMWARE_PATH=AxxSolder-${GITHUB_REF#refs/tags/}.bin" >> $GITHUB_ENV
 
-    - name: Run firmware build and copy artifact
-      if: startsWith(github.ref, 'refs/tags/')
-      run: |
-        cd AxxSolder_firmware
-        docker run --rm \
-          -v ${{ github.workspace }}:/workspace \
-          -w /workspace \
-          firmware-builder \
-          cp /app/build/AxxSolder.bin /workspace/${FIRMWARE_PATH}
-    
-    - name: Upload firmware artifact
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-artifact@v7
-      with:
-        name: firmware
-        path: ${{ env.FIRMWARE_PATH }}
+      - name: Run firmware build and copy artifact
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          cd AxxSolder_firmware
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            firmware-builder \
+            cp /app/build/AxxSolder.bin /workspace/${FIRMWARE_PATH}
 
+      - name: Upload firmware artifact
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@v7
+        with:
+          name: firmware
+          path: ${{ env.FIRMWARE_PATH }}
 
   release:
     needs: build
@@ -43,14 +45,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Download firmware artifact
-      uses: actions/download-artifact@v8
-      with:
-         name: firmware
+      - name: Download firmware artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: firmware
 
-    - name: Create GitHub release
-      uses: softprops/action-gh-release@v3
-      with:
-        files: ${{ github.workspace }}/*.bin
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ${{ github.workspace }}/*.bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
