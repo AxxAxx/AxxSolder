@@ -376,6 +376,14 @@ int main(void)
 	startup_done = 1;
 	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
 
+	/* Optionally preheat to the standby temperature on power-on. The main
+	   loop's stand logic then governs: handle out of stand -> RUN, resting
+	   in stand -> holds standby temp, then SLEEP after the standby timeout. */
+	if(flash_values.heat_at_startup == 1){
+		change_state(STANDBY);
+		previous_millis_standby = HAL_GetTick();
+	}
+
 	/* Initiate the PID controller to zero*/
 	//PID_Init_Zero();
 

@@ -49,6 +49,7 @@ typedef struct {
     float show_profile_on_tip_change;
     float change_enc_dir;
     float encoder_step_idx;   /* index into encoder step table {1,2,5,10} */
+    float heat_at_startup;    /* 1 = preheat to standby temp on power-on */
 } Flash_values;
 
 /* The single live copy of user settings. Read directly from anywhere

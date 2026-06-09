@@ -45,7 +45,8 @@ Flash_values default_flash_values = {
     .standby_delay                 = 0,
     .show_profile_on_tip_change    = 0,
     .change_enc_dir                = 0,
-    .encoder_step_idx              = 1   /* index 1 -> step 2 */
+    .encoder_step_idx              = 1,  /* index 1 -> step 2 */
+    .heat_at_startup               = 0
 };
 
 /* ------------------------------------------------------------------ */
