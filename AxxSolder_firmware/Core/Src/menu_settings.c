@@ -38,6 +38,7 @@ enum {
     MI_DELTA_T_DETECT     = 12,
     MI_STANDBY_DELAY      = 13,
     MI_CHANGE_ENC_DIR     = 14,
+    MI_ENCODER_STEP       = 15,
 
     /* ?????? Presets (100???199) ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
     MI_PRESET_TEMP_1      = 100,
@@ -113,6 +114,7 @@ static const MI_Entry mi_table[] = {
     { MI_STANDBY_DELAY,      34,         "Standby delay [s]"    },
     { MI_PROFILE_ON_TIP_CHG, 35,         "Profile on tip chg."   },
     { MI_CHANGE_ENC_DIR,     36,         "Change Enc. dir."     },
+    { MI_ENCODER_STEP,       37,         "Enc. step"            },
     /* Presets */
     { MI_PRESET_TEMP_1,      6,          "Preset Temp 1 ??C"     },
     { MI_PRESET_TEMP_2,      7,          "Preset Temp 2 ??C"     },
@@ -189,7 +191,7 @@ static const uint16_t GRP_MODE[] = {
     MI_STANDBY_TIME, MI_SLEEP_TIME, MI_GPIO4_ON_AT_RUN, MI_MOMENTARY_STAND,
     MI_I_MEASUREMENT, MI_SERIAL_DEBUG, MI_START_PREV_TEMP, MI_THREE_BUTTON_MODE,
     MI_DETECT_NT115, MI_DELTA_T_DETECT, MI_PROFILE_ON_TIP_CHG,
-    MI_CHANGE_ENC_DIR
+    MI_CHANGE_ENC_DIR, MI_ENCODER_STEP
 };
 
 /* Presets */
@@ -296,6 +298,7 @@ const char* bool_str[] = { "No ", "Yes " };
 const char* screen_rotation_str[] = { "0??", "90??", "180??", "270??" };
 const char* show_power_str[] = { "W", "%"};
 const char* temp_unit_str[] = { "??F", "??C"};
+const char* encoder_step_str[] = { "1", "2", "5", "10" };
 
 // ==== Table of enumerated parameters ====
 typedef struct {
@@ -322,6 +325,7 @@ EnumParam enum_params[] = {
     { MI_DELTA_T_DETECT,     bool_str, 2 },
     { MI_PROFILE_ON_TIP_CHG, bool_str, 2 },
     { MI_CHANGE_ENC_DIR,     bool_str, 2 },
+    { MI_ENCODER_STEP,       encoder_step_str, 4 },
 };
 
 #define ENUM_PARAM_COUNT (sizeof(enum_params) / sizeof(enum_params[0]))
@@ -445,6 +449,11 @@ void normalize_param(uint16_t index) {
 
         // --- Screen rotation: 0..3
         case MI_SCREEN_ROTATION:
+            *p = normalize_enum(*p, 4);
+            break;
+
+        // --- Encoder step: index 0..3 -> {1,2,5,10}
+        case MI_ENCODER_STEP:
             *p = normalize_enum(*p, 4);
             break;
 

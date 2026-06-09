@@ -44,7 +44,8 @@ Flash_values default_flash_values = {
     .delta_t_detection             = 1,
     .standby_delay                 = 0,
     .show_profile_on_tip_change    = 0,
-    .change_enc_dir                = 0
+    .change_enc_dir                = 0,
+    .encoder_step_idx              = 1   /* index 1 -> step 2 */
 };
 
 /* ------------------------------------------------------------------ */

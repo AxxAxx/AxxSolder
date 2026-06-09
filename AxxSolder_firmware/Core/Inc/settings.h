@@ -48,6 +48,7 @@ typedef struct {
     float standby_delay;
     float show_profile_on_tip_change;
     float change_enc_dir;
+    float encoder_step_idx;   /* index into encoder step table {1,2,5,10} */
 } Flash_values;
 
 /* The single live copy of user settings. Read directly from anywhere

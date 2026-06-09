@@ -17,7 +17,11 @@ void encoder_read_set_temperature(void){
 			sensor_values.set_temperature = (uint16_t)(TIM2->CNT);
 		}
 		else{
-			sensor_values.set_temperature = (uint16_t)((TIM2->CNT) & ~1);
+			static const uint8_t enc_steps[4] = {1, 2, 5, 10};
+			uint8_t idx = (uint8_t)flash_values.encoder_step_idx;
+			if(idx > 3){ idx = 1; }   /* fall back to default (step 2) */
+			uint8_t step = enc_steps[idx];
+			sensor_values.set_temperature = (uint16_t)((TIM2->CNT / step) * step);
 		}
 		// Reset the flag if the set temperature has changed, so it beeps when reached
 		if(sensor_values.set_temperature != prev_temp){
