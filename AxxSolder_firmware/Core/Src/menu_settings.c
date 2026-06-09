@@ -1,6 +1,7 @@
 /* menu_settings.c*/
 
 #include "menu_settings.h"
+#include "colors_legacy.h"   /* legacy palette: restore original on-screen colours */
 #include "menu_profiles.h"
 #include "buttons.h"
 #include "version.h"   /* fw_version_*, get_hw_version */
@@ -10,18 +11,18 @@
  * Step-100 layout: each logical group owns a 100-wide range.
  * Items within a group can be inserted without renumbering other groups.
  *
- * Range → group
- *   0–  99  Mode / Behaviour
- * 100– 199  Presets
- * 200– 299  Profiles
- * 300– 399  Display
- * 400– 499  Sound
- * 500– 599  Calibration  (managed by profiles menu)
- * 600– 699  Power limits (managed by profiles menu)
- * 700– 799  System actions
+ * Range ??? group
+ *   0???  99  Mode / Behaviour
+ * 100??? 199  Presets
+ * 200??? 299  Profiles
+ * 300??? 399  Display
+ * 400??? 499  Sound
+ * 500??? 599  Calibration  (managed by profiles menu)
+ * 600??? 699  Power limits (managed by profiles menu)
+ * 700??? 799  System actions
  * ==== */
 enum {
-    /* ── Mode / Behaviour (0–99) ───────────────────────────────────── */
+    /* ?????? Mode / Behaviour (0???99) ??????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
     MI_STARTUP_TEMP       = 0,
     MI_TEMP_OFFSET        = 1,
     MI_STANDBY_TEMP       = 2,
@@ -38,27 +39,27 @@ enum {
     MI_STANDBY_DELAY      = 13,
     MI_CHANGE_ENC_DIR     = 14,
 
-    /* ── Presets (100–199) ─────────────────────────────────────────── */
+    /* ?????? Presets (100???199) ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
     MI_PRESET_TEMP_1      = 100,
     MI_PRESET_TEMP_2      = 101,
 
-    /* ── Profiles (200–299) ────────────────────────────────────────── */
+    /* ?????? Profiles (200???299) ?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
     MI_PROFILE_ON_TIP_CHG = 200,
 
-    /* ── Display (300–399) ─────────────────────────────────────────── */
+    /* ?????? Display (300???399) ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
     MI_SCREEN_ROTATION    = 300,
     MI_TEMP_UNIT          = 301,
     MI_DISP_TEMP_FILTER   = 302,
     MI_SHOW_POWER         = 303,
     MI_DISPLAY_GRAPH      = 304,
 
-    /* ── Sound (400–499) ───────────────────────────────────────────── */
+    /* ?????? Sound (400???499) ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
     MI_BUZZER_ENABLED     = 400,
     MI_STARTUP_BEEP       = 401,
     MI_BEEP_AT_SET_TEMP   = 402,
     MI_BEEP_TONE          = 403,
 
-    /* ── Calibration (500–599) — deprecated: now managed per-profile in tip_profile.c
+    /* ?????? Calibration (500???599) ??? deprecated: now managed per-profile in tip_profile.c
      * Kept for Flash_values backward compatibility (fi indices still valid). */
     MI_TEMP_CAL_100       = 500,
     MI_TEMP_CAL_200       = 501,
@@ -67,14 +68,14 @@ enum {
     MI_TEMP_CAL_400       = 504,
     MI_TEMP_CAL_450       = 505,
 
-    /* ── Power limits (600–699) — deprecated: now managed per-profile in tip_profile.c
+    /* ?????? Power limits (600???699) ??? deprecated: now managed per-profile in tip_profile.c
      * Kept for Flash_values backward compatibility (fi indices still valid). */
     MI_POWER_LIM_T245     = 600,
     MI_POWER_LIM_T210     = 601,
     MI_POWER_LIM_NT115    = 602,
     MI_POWER_LIM_NO_NAME  = 603,
 
-    /* ── System actions (700–799) ──────────────────────────────────── */
+    /* ?????? System actions (700???799) ???????????????????????????????????????????????????????????????????????????????????????????????????????????? */
     MI_LOAD_DEFAULT       = 700,
     MI_SAVE_REBOOT        = 701,
     MI_EXIT_NO_SAVE       = 702,
@@ -84,9 +85,9 @@ enum {
 #define MI_NO_FLASH 0xFF
 
 /* Maps an MI_ identifier to:
- *   fi   – sequential field index in Flash_values cast to float*
+ *   fi   ??? sequential field index in Flash_values cast to float*
  *          (MI_NO_FLASH when the item is a system action, not stored in flash)
- *   name – display string shown in the menu
+ *   name ??? display string shown in the menu
  */
 typedef struct {
     uint16_t    mi;
@@ -96,9 +97,9 @@ typedef struct {
 
 static const MI_Entry mi_table[] = {
     /* Mode */
-    { MI_STARTUP_TEMP,       0,          "Startup Temp °C"      },
-    { MI_TEMP_OFFSET,        1,          "Temp Offset °C"       },
-    { MI_STANDBY_TEMP,       2,          "Standby Temp °C"      },
+    { MI_STARTUP_TEMP,       0,          "Startup Temp ??C"      },
+    { MI_TEMP_OFFSET,        1,          "Temp Offset ??C"       },
+    { MI_STANDBY_TEMP,       2,          "Standby Temp ??C"      },
     { MI_STANDBY_TIME,       3,          "Standby Time [min]"   },
     { MI_SLEEP_TIME,         4,          "Sleep Time [min]"     },
     { MI_GPIO4_ON_AT_RUN,    8,          "GPIO4 ON at run"      },
@@ -113,8 +114,8 @@ static const MI_Entry mi_table[] = {
     { MI_PROFILE_ON_TIP_CHG, 35,         "Profile on tip chg."   },
     { MI_CHANGE_ENC_DIR,     36,         "Change Enc. dir."     },
     /* Presets */
-    { MI_PRESET_TEMP_1,      6,          "Preset Temp 1 °C"     },
-    { MI_PRESET_TEMP_2,      7,          "Preset Temp 2 °C"     },
+    { MI_PRESET_TEMP_1,      6,          "Preset Temp 1 ??C"     },
+    { MI_PRESET_TEMP_2,      7,          "Preset Temp 2 ??C"     },
     /* Display */
     { MI_SCREEN_ROTATION,    9,          "Screen Rotation"      },
     { MI_TEMP_UNIT,          13,         "Temperature unit"     },
@@ -126,19 +127,19 @@ static const MI_Entry mi_table[] = {
     { MI_STARTUP_BEEP,       12,         "Startup Beep"         },
     { MI_BEEP_AT_SET_TEMP,   24,         "Beep at set temp"     },
     { MI_BEEP_TONE,          25,         "Beep tone"            },
-    /* Calibration — deprecated: not in any menu group, kept for fi mapping compatibility */
+    /* Calibration ??? deprecated: not in any menu group, kept for fi mapping compatibility */
     { MI_TEMP_CAL_100,       14,         "Temp cal 100"         },
     { MI_TEMP_CAL_200,       15,         "Temp cal 200"         },
     { MI_TEMP_CAL_300,       16,         "Temp cal 300"         },
     { MI_TEMP_CAL_350,       17,         "Temp cal 350"         },
     { MI_TEMP_CAL_400,       18,         "Temp cal 400"         },
     { MI_TEMP_CAL_450,       19,         "Temp cal 450"         },
-    /* Power limits — deprecated: not in any menu group, kept for fi mapping compatibility */
+    /* Power limits ??? deprecated: not in any menu group, kept for fi mapping compatibility */
     { MI_POWER_LIM_T245,     28,         "Power lim T245"       },
     { MI_POWER_LIM_T210,     29,         "Power lim T210"       },
     { MI_POWER_LIM_NT115,    30,         "Power lim NT115"      },
     { MI_POWER_LIM_NO_NAME,  31,         "Power lim Nn"         },
-    /* System actions — no flash backing */
+    /* System actions ??? no flash backing */
     { MI_LOAD_DEFAULT,  MI_NO_FLASH,     "-Load Default-"       },
     { MI_SAVE_REBOOT,   MI_NO_FLASH,     "-Save and Reboot-"    },
     { MI_EXIT_NO_SAVE,  MI_NO_FLASH,     "-Exit no Save-"       },
@@ -147,7 +148,7 @@ static const MI_Entry mi_table[] = {
 
 /**
  * @brief Returns the Flash_values field index (fi) for an MI_ identifier.
- * @return 0–36 for data items, MI_NO_FLASH for system actions / unknown IDs.
+ * @return 0???36 for data items, MI_NO_FLASH for system actions / unknown IDs.
  */
 static uint8_t mi_to_fi(uint16_t mi) {
     for (uint8_t i = 0; i < MI_TABLE_COUNT; i++) {
@@ -210,7 +211,7 @@ static const uint16_t GRP_SYSTEM[] = {
     MI_LOAD_DEFAULT, MI_SAVE_REBOOT, MI_EXIT_NO_SAVE
 };
 
-/* Profiles — handled by separate profiles_menu().
+/* Profiles ??? handled by separate profiles_menu().
  * count == 0 is a sentinel: settings_menu() delegates to profiles_menu() instead of
  * rendering items inline. The dummy array is unused but required by the struct. */
 static const uint16_t GRP_PROFILES_DUMMY[] = { MI_PROFILE_ON_TIP_CHG };
@@ -292,9 +293,9 @@ void left_align_float(char* str, float number, int8_t len)
 
 // ==== Enumeration strings ====
 const char* bool_str[] = { "No ", "Yes " };
-const char* screen_rotation_str[] = { "0°", "90°", "180°", "270°" };
+const char* screen_rotation_str[] = { "0??", "90??", "180??", "270??" };
 const char* show_power_str[] = { "W", "%"};
-const char* temp_unit_str[] = { "°F", "°C"};
+const char* temp_unit_str[] = { "??F", "??C"};
 
 // ==== Table of enumerated parameters ====
 typedef struct {
@@ -384,11 +385,11 @@ static void display_menu_value_line(uint8_t line_pos, uint16_t index,
 
     if (editing && !prev_editing) {
         // Entering edit mode: fill with white
-        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, C_WHITE);
+        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, C_WHITE_LEGACY);
     }
     else if (!editing && prev_editing && selected) {
         // Exiting edit mode while still selected: fill with black
-        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, C_BLACK);
+        UG_FillFrame(x, y-2, x + MENU_VALUE_W, y + MENU_VALUE_H+2, C_BLACK_LEGACY);
     }
 
     // === Redraw text if the value or flags have changed ===
@@ -398,16 +399,16 @@ static void display_menu_value_line(uint8_t line_pos, uint16_t index,
 
         // Determine text color based on whether value differs from default
         uint16_t fg;
-        fg = (selected && editing) ? C_BLACK : fg_def;
+        fg = (selected && editing) ? C_BLACK_LEGACY : fg_def;
         if (selected && editing) {
-                fg = C_BLACK;
+                fg = C_BLACK_LEGACY;
         } else if (is_value_different_from_default(index, value)) {
-                fg = C_ORANGE;  // Red for non-default values
+                fg = C_ORANGE_LEGACY;  // Red for non-default values
         } else {
                 fg = fg_def;  // Default color for default values
         }
 
-        uint16_t bg = (selected && editing) ? C_WHITE : bg_def;
+        uint16_t bg = (selected && editing) ? C_WHITE_LEGACY : bg_def;
 
         UG_FillFrame(x, y-2, 190 + MENU_VALUE_W, y + MENU_VALUE_H+2, bg);
         LCD_PutStr(x+3, y, buf, FONT_arial_20X23, fg, bg);
@@ -484,7 +485,7 @@ void settings_menu()
     settings_menu_active = 1;
 
     LCD_SetRotation(flash_values.screen_rotation);
-    UG_FillScreen(C_BLACK);
+    UG_FillScreen(C_BLACK_LEGACY);
     UG_FontSetTransparency(1);
 
     // --- Firmware version string ---
@@ -492,11 +493,11 @@ void settings_menu()
     if ((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)) {
         menu_lines_on_screen = 10;
         sprintf(str, "fw mod: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
-        LCD_PutStr(6, 296, str, FONT_arial_20X23, C_RED, C_BLACK);
+        LCD_PutStr(6, 296, str, FONT_arial_20X23, C_RED_LEGACY, C_BLACK_LEGACY);
     } else {
         menu_lines_on_screen = 7;
         sprintf(str, "fw mod: %d.%d.%d   hw: %d", fw_version_major, fw_version_minor, fw_version_patch, get_hw_version());
-        LCD_PutStr(6, 215, str, FONT_arial_20X23, C_RED, C_BLACK);
+        LCD_PutStr(6, 215, str, FONT_arial_20X23, C_RED_LEGACY, C_BLACK_LEGACY);
     }
 
     // Value rendering cache
@@ -553,18 +554,18 @@ void settings_menu()
 
         // ---- Full page redraw ----
         if (redraw_page || (new_page_start != page_start)) {
-            UG_FillFrame(0, 0, 239, 31 + menu_lines_on_screen * 26, C_BLACK);
+            UG_FillFrame(0, 0, 239, 31 + menu_lines_on_screen * 26, C_BLACK_LEGACY);
             page_start = new_page_start;
 
             // Redraw header
             if (level == 0) {
-                LCD_PutStr(5, 5, "SETTINGS", FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
+                LCD_PutStr(5, 5, "SETTINGS", FONT_arial_20X23, C_DARK_SEA_GREEN_LEGACY, C_BLACK_LEGACY);
             } else {
-                LCD_PutStr(5, 5, MENU_GROUPS[current_group].title, FONT_arial_20X23, C_DARK_SEA_GREEN, C_BLACK);
+                LCD_PutStr(5, 5, MENU_GROUPS[current_group].title, FONT_arial_20X23, C_DARK_SEA_GREEN_LEGACY, C_BLACK_LEGACY);
             }
-            LCD_DrawLine(0, 25, 240, 25, C_DARK_SEA_GREEN);
-            LCD_DrawLine(0, 26, 240, 26, C_DARK_SEA_GREEN);
-            LCD_DrawLine(0, 27, 240, 27, C_DARK_SEA_GREEN);
+            LCD_DrawLine(0, 25, 240, 25, C_DARK_SEA_GREEN_LEGACY);
+            LCD_DrawLine(0, 26, 240, 26, C_DARK_SEA_GREEN_LEGACY);
+            LCD_DrawLine(0, 27, 240, 27, C_DARK_SEA_GREEN_LEGACY);
 
             // Reset value row cache - important so display_menu_value_line() redraws
             for (int i = 0; i < menu_lines_on_screen; i++) {
@@ -579,16 +580,16 @@ void settings_menu()
 
                 if (pos >= list_len) break;
 
-                UG_FillFrame(5, line_y, 187, line_y + MENU_VALUE_H, C_BLACK);
+                UG_FillFrame(5, line_y, 187, line_y + MENU_VALUE_H, C_BLACK_LEGACY);
 
                 if (level == 0) {
                     // Group list - names only
-                    LCD_PutStr(5, line_y, MENU_GROUPS[pos].title, FONT_arial_20X23, C_WHITE, C_BLACK);
+                    LCD_PutStr(5, line_y, MENU_GROUPS[pos].title, FONT_arial_20X23, C_WHITE_LEGACY, C_BLACK_LEGACY);
                 } else {
                     // Group item list + Back
                 	if (pos < MENU_GROUPS[current_group].count) {
                 	    uint16_t abs_mi = MENU_GROUPS[current_group].idx[pos];
-                	    LCD_PutStr(5, line_y, mi_name(abs_mi), FONT_arial_20X23, C_WHITE, C_BLACK);
+                	    LCD_PutStr(5, line_y, mi_name(abs_mi), FONT_arial_20X23, C_WHITE_LEGACY, C_BLACK_LEGACY);
 
                 	    // Do not display values for the System group
                 	    if (!(current_group == (GROUPS_COUNT - 1))) {
@@ -599,13 +600,13 @@ void settings_menu()
                 	            ((float*)&flash_values)[fi],
                 	            0, 0,
                 	            190, line_y,
-								C_WHITE, C_BLACK
+								C_WHITE_LEGACY, C_BLACK_LEGACY
                 	        );
                 	    }
                 	}
                     else if (pos == MENU_GROUPS[current_group].count) {
                         // Back row
-                        LCD_PutStr(5, line_y, "Back", FONT_arial_20X23, C_LIGHT_GRAY, C_BLACK);
+                        LCD_PutStr(5, line_y, "Back", FONT_arial_20X23, C_LIGHT_GRAY_LEGACY, C_BLACK_LEGACY);
                     }
                 }
             }
@@ -622,15 +623,15 @@ void settings_menu()
                 (prev_cursor / menu_lines_on_screen) == (cursor / menu_lines_on_screen)) {
                 uint8_t prev_line = prev_cursor % menu_lines_on_screen;
                 uint16_t prev_y = 35 + prev_line * 26;
-                UG_DrawFrame(0, prev_y - 4, 239, prev_y + 4 + MENU_VALUE_H, C_BLACK);
-                UG_DrawFrame(1, prev_y - 3, 238, prev_y + 3 + MENU_VALUE_H, C_BLACK);
+                UG_DrawFrame(0, prev_y - 4, 239, prev_y + 4 + MENU_VALUE_H, C_BLACK_LEGACY);
+                UG_DrawFrame(1, prev_y - 3, 238, prev_y + 3 + MENU_VALUE_H, C_BLACK_LEGACY);
             }
 
             // Draw the new frame
             uint8_t line = cursor % menu_lines_on_screen;
             uint16_t line_y = 35 + line * 26;
-            UG_DrawFrame(0, line_y - 4, 239, line_y + 4 + MENU_VALUE_H, C_YELLOW);
-            UG_DrawFrame(1, line_y - 3, 238, line_y + 3 + MENU_VALUE_H, C_YELLOW);
+            UG_DrawFrame(0, line_y - 4, 239, line_y + 4 + MENU_VALUE_H, C_YELLOW_LEGACY);
+            UG_DrawFrame(1, line_y - 3, 238, line_y + 3 + MENU_VALUE_H, C_YELLOW_LEGACY);
 
             prev_cursor = cursor;
         }
@@ -668,7 +669,7 @@ void settings_menu()
                 1, // selected
                 1, // editing
                 190, line_y,
-				C_WHITE, C_BLACK
+				C_WHITE_LEGACY, C_BLACK_LEGACY
             );
         }
 
@@ -679,7 +680,7 @@ void settings_menu()
                 // Select group
                 current_group = cursor;
 
-                // Profiles group — delegate to separate menu
+                // Profiles group ??? delegate to separate menu
                 if (MENU_GROUPS[current_group].count == 0) {
                     wait_button_release();
                     profiles_menu();
@@ -740,7 +741,7 @@ void settings_menu()
                             abs_mi,
                             ((float*)&flash_values)[fi],
                             1, 1, 190, line_y,
-							C_WHITE, C_BLACK
+							C_WHITE_LEGACY, C_BLACK_LEGACY
                         );
                     }
                 }
@@ -768,7 +769,7 @@ void settings_menu()
                     ((float*)&flash_values)[fi],
                     0, 0,
                     190, line_y,
-					C_WHITE, C_BLACK
+					C_WHITE_LEGACY, C_BLACK_LEGACY
                 );
 
                 /* Restore cursor appearance: draw frame for the current row */
