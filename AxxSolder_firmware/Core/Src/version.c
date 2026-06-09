@@ -2,7 +2,7 @@
 #include "main.h"   /* VERSION_BIT_1/2/3_Pin, GPIOC, HAL_GPIO_ReadPin */
 
 uint8_t fw_version_major =  3;
-uint8_t fw_version_minor =  7;
+uint8_t fw_version_minor =  8;
 uint8_t fw_version_patch =  0;
 
 /**
