@@ -303,8 +303,11 @@ int main(void)
 
 	/* Set startup state */
 
-	/* Set initial encoder timer value */
+	/* Set initial encoder timer value (used directly as temperature in
+	   3-button mode) and seed the set temperature (normal rotary mode reads
+	   the encoder as a relative delta, so it needs an explicit start value). */
 	TIM2->CNT = flash_values.startup_temperature;
+	sensor_values.set_temperature = flash_values.startup_temperature;
 
 	/* initialize moving average functions */
 	Moving_Average_Init(&thermocouple_temperature_filter_struct,(uint32_t)2);
@@ -376,13 +379,12 @@ int main(void)
 	startup_done = 1;
 	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
 
-	/* Optionally preheat to the standby temperature on power-on. The main
-	   loop's stand logic then governs: handle out of stand -> RUN, resting
-	   in stand -> holds standby temp, then SLEEP after the standby timeout. */
-	if(flash_values.heat_at_startup == 1){
-		change_state(STANDBY);
-		previous_millis_standby = HAL_GetTick();
-	}
+	/* "Heat at startup": preheat to the standby temperature on power-on.
+	   Deferred until a tip is detected (see the one-shot in the main loop) -
+	   doing it here would be immediately overridden by handle_check_cartridge,
+	   which forces EMERGENCY_SLEEP until the first current measurement proves a
+	   tip is present (heater_current starts at 0). */
+	uint8_t heat_at_startup_pending = (flash_values.heat_at_startup == 1);
 
 	/* Initiate the PID controller to zero*/
 	//PID_Init_Zero();
@@ -397,6 +399,15 @@ int main(void)
 			buttons_handle();
 			handle_emergency_shutdown();
 			handle_check_cartridge();
+			/* One-shot preheat: once a tip is confirmed present, enter STANDBY
+			   if "heat at startup" is enabled. Deferred to here so the cartridge
+			   check above (which forces EMERGENCY_SLEEP while heater_current < 1)
+			   doesn't immediately clobber it. */
+			if(heat_at_startup_pending && (cartridge_state == ATTACHED)){
+				change_state(STANDBY);
+				previous_millis_standby = HAL_GetTick();
+				heat_at_startup_pending = 0;
+			}
 			previous_sensor_update_high_update = HAL_GetTick();
 		}
 
