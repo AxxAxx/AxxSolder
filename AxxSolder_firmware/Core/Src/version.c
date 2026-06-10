@@ -22,5 +22,5 @@ uint8_t get_hw_version(void){
         (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_2_Pin) << 1) |
         (HAL_GPIO_ReadPin(GPIOC, VERSION_BIT_1_Pin) << 0);
 
-    return 3 + version_bits;
+    return 31 + version_bits;
 }
