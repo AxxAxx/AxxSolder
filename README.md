@@ -198,6 +198,8 @@ To access the user settings the user holds down the encoder button at start-up o
 |MODE|Delta T detect|Detect too large delta temperatures and stop heating|YES/NO|YES|
 |MODE|Profile on tip chg.|Show popup when changing tip asking for tip preset|YES/NO|NO|
 |MODE|Change Enc. dir.|Changes the direction of the encoder|YES/NO|NO|
+|MODE|Enc. step|Changes amount of steps per encoder tick|1,2,5,10|2|
+|MODE|Heat at startup|If enabled AxxSolder starts to heat at startup|YES/NO|NO|
 |SYSTEM|-Load Default-|Load default parameters|N/A|N/A|
 |SYSTEM|-Save and Reboot-|Exit and Save|N/A|N/A|
 |SYSTEM|-Exit no Save-|Exit without Save|N/A|N/A|
