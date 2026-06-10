@@ -420,9 +420,9 @@ void LCD_draw_main_screen(void) {
         LCD_PutStr(11, 235, "Handle type:", FONT_arial_17X18, C_Text, C_Background);
         LCD_PutStr(11, 255, "Input voltage:         V", FONT_arial_17X18, C_Text, C_Background);
         if (flash_values.deg_celsius == 1) {
-            LCD_PutStr(11, 275, "MCU:     ??C", FONT_arial_17X18, C_Text, C_Background);
+            LCD_PutStr(11, 275, "MCU:     °C", FONT_arial_17X18, C_Text, C_Background);
         } else {
-            LCD_PutStr(11, 275, "MCU:      ??F", FONT_arial_17X18, C_Text, C_Background);
+            LCD_PutStr(11, 275, "MCU:      °F", FONT_arial_17X18, C_Text, C_Background);
         }
         LCD_PutStr(105, 275, "SRC:", FONT_arial_17X18, C_Text, C_Background);
         switch (power_source) {
@@ -484,9 +484,9 @@ void LCD_draw_main_screen(void) {
         LCD_PutStr(56, 175, "Handle type:", FONT_arial_17X18, C_Text, C_Background);
         LCD_PutStr(56, 195, "Input voltage:          V", FONT_arial_17X18, C_Text, C_Background);
         if (flash_values.deg_celsius == 1) {
-            LCD_PutStr(56, 215, "MCU:      ??C", FONT_arial_17X18, C_Text, C_Background);
+            LCD_PutStr(56, 215, "MCU:      °C", FONT_arial_17X18, C_Text, C_Background);
         } else {
-            LCD_PutStr(56, 215, "MCU:       ??F", FONT_arial_17X18, C_Text, C_Background);
+            LCD_PutStr(56, 215, "MCU:       °F", FONT_arial_17X18, C_Text, C_Background);
         }
         LCD_PutStr(160, 215, "SRC:", FONT_arial_17X18, C_Text, C_Background);
         switch (power_source) {

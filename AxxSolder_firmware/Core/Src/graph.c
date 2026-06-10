@@ -94,9 +94,9 @@ static Line set_temp_lines_prev[GRAPH_POINTS - 1] = {0};
 static Line power_lines_prev[GRAPH_POINTS - 1] = {0};
 
 // Universal dashed line using UG_FillFrame()
-// dash_len  ??? dash length in pixels
-// gap_len   ??? gap length in pixels
-// thickness ??? line thickness in pixels
+// dash_len  – dash length in pixels
+// gap_len   – gap length in pixels
+// thickness – line thickness in pixels
 void draw_dashed_line_fillframe(int x1, int y1, int x2, int y2, uint16_t color,
                                 uint8_t dash_len, uint8_t gap_len, uint8_t thickness) {
     int dx = abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
@@ -142,17 +142,17 @@ void draw_graph_init(void) {
 
 		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, C_Text, C_Background);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 45, "??C", FONT_arial_20X23, C_Text, C_Background);
+			LCD_PutStr(180, 45, "°C", FONT_arial_20X23, C_Text, C_Background);
 		}
 		else{
-			LCD_PutStr(180, 45, "??F", FONT_arial_20X23, C_Text, C_Background);
+			LCD_PutStr(180, 45, "°F", FONT_arial_20X23, C_Text, C_Background);
 		}
 		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, C_Text, C_Background);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 70, "??C", FONT_arial_20X23, C_Text, C_Background);
+			LCD_PutStr(180, 70, "°C", FONT_arial_20X23, C_Text, C_Background);
 		}
 		else{
-			LCD_PutStr(180, 70, "??F", FONT_arial_20X23, C_Text, C_Background);
+			LCD_PutStr(180, 70, "°F", FONT_arial_20X23, C_Text, C_Background);
 		}
 
 		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, C_Text, C_Background);
@@ -208,17 +208,17 @@ void draw_graph_init(void) {
 
 		LCD_PutStr(10, 45, "Set temp:", FONT_arial_20X23, C_Text, C_Background);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 45, "??C", FONT_arial_20X23, C_Text, C_Background);
+			LCD_PutStr(180, 45, "°C", FONT_arial_20X23, C_Text, C_Background);
 		}
 		else{
-			LCD_PutStr(180, 45, "??F", FONT_arial_20X23, C_Text, C_Background);
+			LCD_PutStr(180, 45, "°F", FONT_arial_20X23, C_Text, C_Background);
 		}
 		LCD_PutStr(10, 70, "Actual temp:", FONT_arial_20X23, C_Text, C_Background);
 		if(flash_values.deg_celsius == 1){
-			LCD_PutStr(180, 70, "??C", FONT_arial_20X23, C_Text, C_Background);
+			LCD_PutStr(180, 70, "°C", FONT_arial_20X23, C_Text, C_Background);
 		}
 		else{
-			LCD_PutStr(180, 70, "??F", FONT_arial_20X23, C_Text, C_Background);
+			LCD_PutStr(180, 70, "°F", FONT_arial_20X23, C_Text, C_Background);
 		}
 
 		LCD_PutStr(10, 95, "Handle:", FONT_arial_17X18, C_Text, C_Background);
@@ -390,7 +390,7 @@ bool lines_overlap(Line *l1, Line *l2, int thickness) {
 // count        - number of labels in the array
 // x            - horizontal position for rendering labels
 // is_left_axis - true if the axis is on the left (labels on the left), false for right
-// unit_start   - suffix for the first label (e.g. "??C" or "%"), may be NULL
+// unit_start   - suffix for the first label (e.g. "°C" or "%"), may be NULL
 // unit_end     - suffix for the last label, may be NULL
 void draw_axis(const int *values, int count, int x, bool is_left_axis,
                uint16_t color, const char *unit_start, const char *unit_end) {
@@ -445,12 +445,12 @@ void draw_axis_labels(void) {
     int temp_values_F[] = {0, 170, 340, 510, 680, 850};
     int power_values[] = {0, 20, 40, 60, 80, 100};
 
-    // Draw the left temperature axis (with ??C symbol on the minimum value)
+    // Draw the left temperature axis (with °C symbol on the minimum value)
     if(flash_values.deg_celsius == 1){
-    	draw_axis(temp_values_C, sizeof(temp_values_C)/sizeof(temp_values_C[0]), 2, true, color_temp_label, "??C", NULL);
+    	draw_axis(temp_values_C, sizeof(temp_values_C)/sizeof(temp_values_C[0]), 2, true, color_temp_label, "°C", NULL);
     }
     else{
-    	draw_axis(temp_values_F, sizeof(temp_values_F)/sizeof(temp_values_F[0]), 2, true, color_temp_label, "??F", NULL);
+    	draw_axis(temp_values_F, sizeof(temp_values_F)/sizeof(temp_values_F[0]), 2, true, color_temp_label, "°F", NULL);
     }
 
     // Draw the right power axis (with % on the minimum value)

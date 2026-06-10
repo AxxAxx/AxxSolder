@@ -11,18 +11,18 @@
  * Step-100 layout: each logical group owns a 100-wide range.
  * Items within a group can be inserted without renumbering other groups.
  *
- * Range ??? group
- *   0???  99  Mode / Behaviour
- * 100??? 199  Presets
- * 200??? 299  Profiles
- * 300??? 399  Display
- * 400??? 499  Sound
- * 500??? 599  Calibration  (managed by profiles menu)
- * 600??? 699  Power limits (managed by profiles menu)
- * 700??? 799  System actions
+ * Range → group
+ *   0–  99  Mode / Behaviour
+ * 100– 199  Presets
+ * 200– 299  Profiles
+ * 300– 399  Display
+ * 400– 499  Sound
+ * 500– 599  Calibration  (managed by profiles menu)
+ * 600– 699  Power limits (managed by profiles menu)
+ * 700– 799  System actions
  * ==== */
 enum {
-    /* ?????? Mode / Behaviour (0???99) ??????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
+    /* ── Mode / Behaviour (0–99) ───────────────────────────────────── */
     MI_STARTUP_TEMP       = 0,
     MI_TEMP_OFFSET        = 1,
     MI_STANDBY_TEMP       = 2,
@@ -41,27 +41,27 @@ enum {
     MI_ENCODER_STEP       = 15,
     MI_HEAT_AT_STARTUP    = 16,
 
-    /* ?????? Presets (100???199) ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
+    /* ── Presets (100–199) ─────────────────────────────────────────── */
     MI_PRESET_TEMP_1      = 100,
     MI_PRESET_TEMP_2      = 101,
 
-    /* ?????? Profiles (200???299) ?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
+    /* ── Profiles (200–299) ────────────────────────────────────────── */
     MI_PROFILE_ON_TIP_CHG = 200,
 
-    /* ?????? Display (300???399) ????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
+    /* ── Display (300–399) ─────────────────────────────────────────── */
     MI_SCREEN_ROTATION    = 300,
     MI_TEMP_UNIT          = 301,
     MI_DISP_TEMP_FILTER   = 302,
     MI_SHOW_POWER         = 303,
     MI_DISPLAY_GRAPH      = 304,
 
-    /* ?????? Sound (400???499) ??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????? */
+    /* ── Sound (400–499) ───────────────────────────────────────────── */
     MI_BUZZER_ENABLED     = 400,
     MI_STARTUP_BEEP       = 401,
     MI_BEEP_AT_SET_TEMP   = 402,
     MI_BEEP_TONE          = 403,
 
-    /* ?????? Calibration (500???599) ??? deprecated: now managed per-profile in tip_profile.c
+    /* ── Calibration (500–599) — deprecated: now managed per-profile in tip_profile.c
      * Kept for Flash_values backward compatibility (fi indices still valid). */
     MI_TEMP_CAL_100       = 500,
     MI_TEMP_CAL_200       = 501,
@@ -70,14 +70,14 @@ enum {
     MI_TEMP_CAL_400       = 504,
     MI_TEMP_CAL_450       = 505,
 
-    /* ?????? Power limits (600???699) ??? deprecated: now managed per-profile in tip_profile.c
+    /* ── Power limits (600–699) — deprecated: now managed per-profile in tip_profile.c
      * Kept for Flash_values backward compatibility (fi indices still valid). */
     MI_POWER_LIM_T245     = 600,
     MI_POWER_LIM_T210     = 601,
     MI_POWER_LIM_NT115    = 602,
     MI_POWER_LIM_NO_NAME  = 603,
 
-    /* ?????? System actions (700???799) ???????????????????????????????????????????????????????????????????????????????????????????????????????????? */
+    /* ── System actions (700–799) ──────────────────────────────────── */
     MI_LOAD_DEFAULT       = 700,
     MI_SAVE_REBOOT        = 701,
     MI_EXIT_NO_SAVE       = 702,
@@ -87,9 +87,9 @@ enum {
 #define MI_NO_FLASH 0xFF
 
 /* Maps an MI_ identifier to:
- *   fi   ??? sequential field index in Flash_values cast to float*
+ *   fi   – sequential field index in Flash_values cast to float*
  *          (MI_NO_FLASH when the item is a system action, not stored in flash)
- *   name ??? display string shown in the menu
+ *   name – display string shown in the menu
  */
 typedef struct {
     uint16_t    mi;
@@ -99,9 +99,9 @@ typedef struct {
 
 static const MI_Entry mi_table[] = {
     /* Mode */
-    { MI_STARTUP_TEMP,       0,          "Startup Temp ??C"      },
-    { MI_TEMP_OFFSET,        1,          "Temp Offset ??C"       },
-    { MI_STANDBY_TEMP,       2,          "Standby Temp ??C"      },
+    { MI_STARTUP_TEMP,       0,          "Startup Temp °C"      },
+    { MI_TEMP_OFFSET,        1,          "Temp Offset °C"       },
+    { MI_STANDBY_TEMP,       2,          "Standby Temp °C"      },
     { MI_STANDBY_TIME,       3,          "Standby Time [min]"   },
     { MI_SLEEP_TIME,         4,          "Sleep Time [min]"     },
     { MI_GPIO4_ON_AT_RUN,    8,          "GPIO4 ON at run"      },
@@ -118,8 +118,8 @@ static const MI_Entry mi_table[] = {
     { MI_ENCODER_STEP,       37,         "Enc. step"            },
     { MI_HEAT_AT_STARTUP,    38,         "Heat at startup"      },
     /* Presets */
-    { MI_PRESET_TEMP_1,      6,          "Preset Temp 1 ??C"     },
-    { MI_PRESET_TEMP_2,      7,          "Preset Temp 2 ??C"     },
+    { MI_PRESET_TEMP_1,      6,          "Preset Temp 1 °C"     },
+    { MI_PRESET_TEMP_2,      7,          "Preset Temp 2 °C"     },
     /* Display */
     { MI_SCREEN_ROTATION,    9,          "Screen Rotation"      },
     { MI_TEMP_UNIT,          13,         "Temperature unit"     },
@@ -131,19 +131,19 @@ static const MI_Entry mi_table[] = {
     { MI_STARTUP_BEEP,       12,         "Startup Beep"         },
     { MI_BEEP_AT_SET_TEMP,   24,         "Beep at set temp"     },
     { MI_BEEP_TONE,          25,         "Beep tone"            },
-    /* Calibration ??? deprecated: not in any menu group, kept for fi mapping compatibility */
+    /* Calibration — deprecated: not in any menu group, kept for fi mapping compatibility */
     { MI_TEMP_CAL_100,       14,         "Temp cal 100"         },
     { MI_TEMP_CAL_200,       15,         "Temp cal 200"         },
     { MI_TEMP_CAL_300,       16,         "Temp cal 300"         },
     { MI_TEMP_CAL_350,       17,         "Temp cal 350"         },
     { MI_TEMP_CAL_400,       18,         "Temp cal 400"         },
     { MI_TEMP_CAL_450,       19,         "Temp cal 450"         },
-    /* Power limits ??? deprecated: not in any menu group, kept for fi mapping compatibility */
+    /* Power limits — deprecated: not in any menu group, kept for fi mapping compatibility */
     { MI_POWER_LIM_T245,     28,         "Power lim T245"       },
     { MI_POWER_LIM_T210,     29,         "Power lim T210"       },
     { MI_POWER_LIM_NT115,    30,         "Power lim NT115"      },
     { MI_POWER_LIM_NO_NAME,  31,         "Power lim Nn"         },
-    /* System actions ??? no flash backing */
+    /* System actions — no flash backing */
     { MI_LOAD_DEFAULT,  MI_NO_FLASH,     "-Load Default-"       },
     { MI_SAVE_REBOOT,   MI_NO_FLASH,     "-Save and Reboot-"    },
     { MI_EXIT_NO_SAVE,  MI_NO_FLASH,     "-Exit no Save-"       },
@@ -152,7 +152,7 @@ static const MI_Entry mi_table[] = {
 
 /**
  * @brief Returns the Flash_values field index (fi) for an MI_ identifier.
- * @return 0???36 for data items, MI_NO_FLASH for system actions / unknown IDs.
+ * @return 0–36 for data items, MI_NO_FLASH for system actions / unknown IDs.
  */
 static uint8_t mi_to_fi(uint16_t mi) {
     for (uint8_t i = 0; i < MI_TABLE_COUNT; i++) {
@@ -215,7 +215,7 @@ static const uint16_t GRP_SYSTEM[] = {
     MI_LOAD_DEFAULT, MI_SAVE_REBOOT, MI_EXIT_NO_SAVE
 };
 
-/* Profiles ??? handled by separate profiles_menu().
+/* Profiles — handled by separate profiles_menu().
  * count == 0 is a sentinel: settings_menu() delegates to profiles_menu() instead of
  * rendering items inline. The dummy array is unused but required by the struct. */
 static const uint16_t GRP_PROFILES_DUMMY[] = { MI_PROFILE_ON_TIP_CHG };
@@ -297,9 +297,9 @@ void left_align_float(char* str, float number, int8_t len)
 
 // ==== Enumeration strings ====
 const char* bool_str[] = { "No ", "Yes " };
-const char* screen_rotation_str[] = { "0??", "90??", "180??", "270??" };
+const char* screen_rotation_str[] = { "0°", "90°", "180°", "270°" };
 const char* show_power_str[] = { "W", "%"};
-const char* temp_unit_str[] = { "??F", "??C"};
+const char* temp_unit_str[] = { "°F", "°C"};
 const char* encoder_step_str[] = { "1", "2", "5", "10" };
 
 // ==== Table of enumerated parameters ====
@@ -692,7 +692,7 @@ void settings_menu()
                 // Select group
                 current_group = cursor;
 
-                // Profiles group ??? delegate to separate menu
+                // Profiles group — delegate to separate menu
                 if (MENU_GROUPS[current_group].count == 0) {
                     wait_button_release();
                     profiles_menu();
