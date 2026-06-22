@@ -170,6 +170,19 @@ void sensors_get_bus_voltage(void){
 	sensor_values.bus_voltage = Moving_Average_Compute(get_mean_ADC_reading_indexed(0), &input_voltage_filterStruct)*VOLTAGE_COMPENSATION; //Index 0 is bus voltage
 }
 
+/* Preload the bus-voltage moving-average filter with the current ADC reading so
+ * the displayed input voltage reflects a freshly negotiated USB-PD voltage
+ * immediately, instead of ramping up across the filter window. */
+void sensors_prime_bus_voltage(void){
+	Moving_Average_Set_Value(get_mean_ADC_reading_indexed(0), &input_voltage_filterStruct);
+}
+
+/* Unfiltered (instantaneous) bus voltage in volts. Used to detect when VBUS has
+ * settled after a USB-PD renegotiation, before priming the filtered value. */
+float sensors_read_bus_voltage_instant(void){
+	return get_mean_ADC_reading_indexed(0) * VOLTAGE_COMPENSATION;
+}
+
 /* Function to get the filtered heater current */
 void sensors_get_heater_current(void){
 	sensor_values.heater_current = Moving_Average_Compute(current_raw, &current_filterStruct)*CURRENT_COMPENSATION;

@@ -22,6 +22,8 @@ uint32_t   sensors_adc1_buf_len(void);
 /* Per-tick sensor readers. Each updates the matching field in sensor_values. */
 void sensors_get_thermocouple_temperature(void);
 void sensors_get_bus_voltage(void);
+void sensors_prime_bus_voltage(void);          /* preload the bus-voltage moving average with the current reading */
+float sensors_read_bus_voltage_instant(void);  /* unfiltered bus voltage (V), for settle detection */
 void sensors_get_heater_current(void);
 void sensors_get_mcu_temp(void);
 
