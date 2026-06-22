@@ -3,7 +3,7 @@
 
 uint8_t fw_version_major =  3;
 uint8_t fw_version_minor =  8;
-uint8_t fw_version_patch =  0;
+uint8_t fw_version_patch =  1;
 
 /**
  * @brief Retrieves the hardware version of the device based on the state of 3 input pins.
