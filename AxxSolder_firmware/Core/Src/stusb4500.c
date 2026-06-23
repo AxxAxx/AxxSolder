@@ -79,28 +79,6 @@ bool poll_source() {
   return ret;
 }
 
-bool stusb_set_highest_pdo(uint8_t *maxPower, uint8_t currentPdoIndex){
-	uint8_t highPowerPdoIdx = 0;
-	uint8_t maxWattage = 0;
-	for(uint8_t i = 0; i < pdos.numPDOs; i++){
-		uint8_t w = pdos.pdos[i].current*0.05f * pdos.pdos[i].voltage*0.01f;
-		if(w>maxWattage){
-			highPowerPdoIdx = (w>maxWattage) ? i : highPowerPdoIdx;
-			maxWattage = w;
-		}
-	}
-	*maxPower = maxWattage;
-	//already higest power PDO selected ?
-	if(currentPdoIndex-1 != highPowerPdoIdx){
-		stusb_update_pdo(2,pdos.pdos[highPowerPdoIdx].voltage*50, pdos.pdos[highPowerPdoIdx].current*10);
-		// give the STUSB some time to apply the PDOs
-		HAL_Delay(500);
-		stusb_soft_reset();
-		debug_print_str(DEBUG_INFO,"Re-negotiating highest power PDO");
-	}
-	return true;
-}
-
 bool stusb_is_vbus_ready() {
   uint8_t data = 0;
   stusb_read_register(REG_TYPEC_MONITORING_STATUS_1, &data, 1);
@@ -172,9 +150,10 @@ HAL_StatusTypeDef stusb_set_valid_pdo(uint8_t valid_count) {
 //re-negotiate with source via soft-reset
 HAL_StatusTypeDef stusb_soft_reset(){
 	uint8_t cmd[]={CMD_SOFT_RESET,0x00};
-	stusb_write_register(REG_TX_HEADER_LOW, cmd, 2);
+	HAL_StatusTypeDef ret = stusb_write_register(REG_TX_HEADER_LOW, cmd, 2);
+	if(ret != HAL_OK){ return ret; }
 	cmd[0] = CMD_SEND_COMMAND;
-	stusb_write_register(REG_PD_COMMAND_CTRL, cmd, 1);
+	return stusb_write_register(REG_PD_COMMAND_CTRL, cmd, 1);
 }
 
 //read USB-C connection status
