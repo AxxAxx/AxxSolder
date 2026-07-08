@@ -76,6 +76,8 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 The schematic for AxxSolder is shown below. Both station and portable versions use the same PCB and software. The MCU is a [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html). 
 ![AxxSolder_station](./photos/AxxSolder_Schematic.png)
 
+The KiCad project can also be opened directly in [ECAD Forge](https://ecadforge.app/?url=https%3A%2F%2Fgithub.com%2FAxxAxx%2FAxxSolder%2Ftree%2Fmain%2FAxxSolder_hardware), an open source online ECAD viewer ([source](https://github.com/SunboX/ecadforge_app)) that lets you inspect the schematic, PCB, 3D view, BOM and project files in the browser.
+
 # PCB
 The PCBs are designed in KiCad and manufactured by [PCBWay](https://www.pcbway.com/). PCBWay has sponsored this project with PCBs and stencils. The support and quality from PCBWay is great and therefore PCBWay is the recommended PCB supplier for this project. As some components have a rather fine pitch (0,5 mm as of the LQFP-48 package of the STM32) and some packages are "no lead" with a bottom thermal pad e.g. the WSON-8 package of the OPA2387 it is recommended to use a stencil to apply solder paste and then reflow the board using either a reflow oven or hot-plate. The boards on the image below were reflowed on a hot-plate (a homemade AxxPlate). A microscope is also recommended and helpful during assembly.
 Printed Circuit Boards with assembled components are shown in the image below.
@@ -280,4 +282,3 @@ The current is sampled four times per second by a 30 us current pulse through th
 AxxSolder is an open source project and has absolutely no warranty, or guarantees on functionality or reliability! The authors of this project accept absolutely no liability for any harm or loss resulting from its use. That said, have fun. :)
 ## Stargazers over time
 [![Stargazers over time](https://starchart.cc/AxxAxx/AxxSolder.svg?variant=adaptive)](https://starchart.cc/AxxAxx/AxxSolder)
-
