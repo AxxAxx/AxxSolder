@@ -107,7 +107,7 @@ The connections from the handle to the PCB through the Hirose RPC1-12RB-6P(71) c
 In order to be able to ground the tip of the soldering iron the user MUST use a power supply with a floating output (SELV) and connect protective earth to the ground terminal on AxxSolder. No other devices should share this DC power other than AxxSolder itself. A well-suited power supply with floating output (SELV) is the Meanwell LRS-150-24. It is rated for 156 W at 24 V. By using this kind of power supply, AxxSolder can be connected directly its DC output and to mains earth thus keeping the tip of the soldering iron at earth ground potential. There is a 1A fuse after the earth terminal in parallel with a 1M resistor on the AxxSolder.  
 A printable cover protecting the terminals of the for LRS-150-24 can be found under [/CAD](https://github.com/AxxAxx/AxxSolder/tree/main/CAD).  
 ![LRS-150-24](./photos/LRS-150-24.jpg)
-Another suitable power supply is the Meanwell XLG-150-24 which has a slightly different form factor and is fully enclosed.
+Another suitable power supply is the Meanwell XLG-150-24 or the GSM160A24-R7B which has a slightly different form factor, does not have the switching noise as the LRS-150-24 and is fully enclosed.
 
 ## USB-C power
 Most USB-C chargers have floating outputs and work fine. However, some chargers connect the USB-C shell to mains earth — these must not be used as they create the same problem as a PELV DC supply.
