@@ -25,6 +25,7 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 - [DEMO](#demo)
 - [GRAPHING](#graphing)
 - [Schematic](#schematic)
+- [How AxxSolder works](#how-axxsolder-works)
 - [PCB](#pcb)
 - [AxxSolder Station](#axxsolder-station)
 - [AxxSolder Portable](#axxsolder-portable)
@@ -46,10 +47,10 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 - AxxSolder is capable of driving C115, C210 and C245 style cartridges from JBC. With two handle sense inputs AxxSolder can determine if the connected handle is either a NT115, T210 or T245 and adjust max output power accordingly. The max output power is software limited to 130 W for T245, 65 W for T210 and 22 W for NT115 handles.
 - When the handle is put into the stand (connected to Stand_sense) AxxSolder goes into "Standby mode". On the portable version an aluminium plate is mounted in the case and allows the AxxSolder to go into Standby mode when the cartridge or handle rests against it. After 10 min in Standby mode AxxSolder goes into "Sleep mode" and heating is completely turned off. This is similar to what JBC calls [Sleep and Hibernation](https://www.jbctools.com/intelligent-heat-management.html).  
 - If AxxSolder is left in normal running mode for longer than 30 min, the station automatically goes into sleep mode after 30 min as a safety feature.  
-- Should the temperature ever go higher than 480 deg C overheating is detected and the station goes into sleep mode in order to protect the tip.
+- Should the temperature ever go higher than 490 °C overheating is detected and the station goes into sleep mode in order to protect the tip.
 - At start-up any USB-PD source is detected and the highest possible power is negotiated. AxxSolder limits the soldering iron output power to the max output power of the USB-PD source automatically. The maximum power output is displayed at the top of the power bar graph on the display.
 - User settings are stored in non-volatile flash and can be configured via a settings menu described in [SETTINGS](#settings).
-- The two buttons are used to store temperature presets, e.g. 330 deg C and 430 deg C. Both preset temperatures are configurable in the settings menu. The stored preset temperature can be updated to the current set temperature by long-pressing the preset button.
+- The two buttons are used to store temperature presets, e.g. 330 °C and 430 °C. Both preset temperatures are configurable in the settings menu. The stored preset temperature can be updated to the current set temperature by long-pressing the preset button.
 - There is a 3.3 V logic level output (GPIO4) that can be configured to go high when the iron is in Run mode, controlling e.g. fume extractor via a MosFET or relay.
 - The TFT display used in this project is a 2 inch 320x240 Color TFT display [2.0" 320x240 Color IPS TFT Display](https://www.adafruit.com/product/4311) and shows information about:
   - Set temperature
@@ -75,6 +76,25 @@ Please use [Discord](https://discord.gg/AwpHEmsyKj) for build related and genera
 # Schematic
 The schematic for AxxSolder is shown below. Both station and portable versions use the same PCB and software. The MCU is a [STM32G431CBT6](https://www.st.com/en/microcontrollers-microprocessors/stm32g431cb.html). 
 ![AxxSolder_station](./photos/AxxSolder_Schematic.png)
+
+# How AxxSolder works
+All JBC cartridges contain a resistive heater element and a thermocouple. To determine how they are arranged internally, cross sections were made of a C210 and a C245 (see [Cartridge differences](#cartridge-differences)). These show that the heater and the thermocouple are connected in series and share the same wires out to the handle, so there is no separate sense pair. This means the station cannot heat and measure at the same time - the thermocouple output is only a few millivolts and is completely covered by the switching noise from the heater.
+
+AxxSolder handles this by alternating between heating and measuring. Forty times a second a timer interrupt turns the heater off, waits 0.5 ms for the signal to settle, and triggers the ADC. The heater is switched back on as soon as the conversion is finished. The measurement window is short compared to the 25 ms between measurements, so very little heating power is lost and the control loop still gets a clean reading every cycle. On a scope you can see the PWM stop, a flat section appear, the ADC sample taken in the middle of it, and the switching resume. This is shown in detail under [Temperature measurement](#temperature-measurement).
+
+## The amplifier
+The thermocouple signal is amplified by one half of an **OPA2387** in a difference amplifier configuration, with 1.5 kΩ input resistors and 360 kΩ feedback resistors giving a gain of 240. Low-leakage BAV199 diodes clamp the input between ground and 3.3 V and protect the op-amp against transients from the heater switching. The OPA2387 is a zero-drift type, which matters at this gain: with an ordinary op-amp, the offset drift alone would add tens of degrees of error as the board heats up from the DC/DC converter next to it. The OPA2387 drifts around 0.01 µV/°C. The amplified value is converted to degrees by a second order polynomial fitted for each cartridge family against a Hakko FG-100 tip thermometer, and corrected further by up to six user calibration points, see [Temperature calibration](#temperature-calibration). Two sense pins in the handle connector tell the firmware which handle is connected and therefore which polynomial to use.
+
+## The power stage
+The heater is switched by a single **BSC014N04LS**, a 40 V, 1.4 mΩ N-channel MOSFET, on the high side: the drain sits on the supply rail and the source feeds the cartridge, which returns through a 5 mΩ shunt to ground. This is what makes the measurement possible. With the MOSFET off, no current flows and the whole cartridge is pulled to within a few millivolts of ground through the heater element, so the thermocouple sits at a common mode voltage the difference amplifier can work with. A low-side switch would leave the cartridge floating up to the supply rail whenever the MOSFET was off, which is exactly the moment the measurement has to be taken.
+
+A high-side N-channel MOSFET needs a gate voltage above the supply rail, and this is provided by an **LTC4440A-5** bootstrap gate driver. It charges a capacitor from the 7.5 V rail through a Schottky diode while the MOSFET is off, and uses that charge to hold the gate about 7 V above the source when it turns on, with 1.1 A of peak pull-up current so the MOSFET crosses its linear region quickly. Conduction losses are low enough that no heatsink is needed anywhere on the board. The PWM frequency is 20 kHz, chosen to be just above the audible range so the bulk capacitors and the handle cable stay quiet.
+
+## The microcontroller
+The MCU is an **STM32G431CBT6**, a 170 MHz Cortex-M4F running from its internal RC oscillator. It is intended for motor control, which suits this application well: fast advanced-timer PWM, two independent 12-bit ADCs and enough DMA to keep sampling away from the CPU. ADC1 runs a circular DMA buffer with three interleaved channels - thermocouple, bus voltage and MCU temperature - which are averaged in software. ADC2 is used for the heater current shunt, so a current measurement can be started from the PWM timer's own interrupt without disturbing the temperature sampling, see [Current measurement](#current-measurement).
+
+## Temperature regulation
+Temperature is regulated by a PID controller computing a new output every 25 ms, with parameters stored per cartridge profile. The output sets the heater duty cycle and is bounded between zero and full power, and that bound is what makes a plain PID unsuitable here. A heat-up from room temperature is a 300 °C error, and the duty cycle stays at its maximum for the whole ramp regardless of what the controller asks for - the actuator is saturated. An unmodified integral term keeps accumulating error throughout, even though the additional output has no effect on the plant. This is integral windup. By the time the tip reaches the setpoint, the integral term holds a large value that can only be removed by accumulating error of the opposite sign, so the controller continues driving the heater past the setpoint until it has unwound. A soldering iron is also an asymmetric plant: heating is active, but cooling is only passive loss to the surroundings, so an overshoot takes considerably longer to recover from than an undershoot. Several anti-windup measures are therefore used. Conditional integration blocks the integral term entirely while the error is above 75 °C, so the ramp is driven by P and D alone. Clamping holds integration for a cycle if the update would push the output past its limits while the error is still driving in the same direction, and the accumulated term has its own limit separate from the output limit. The integral gain is raised for negative errors so that an overshoot is unwound faster than it was built up, and the derivative term acts on the measured temperature rather than the error to avoid a derivative kick when the setpoint is changed. A heat-up to 330 °C takes about 1.5 seconds on a C210-002 with very little overshoot, tuned using the firmware's serial stream of setpoint, temperature and the individual P, I and D contributions. The tuning parameters are listed under [PID control](#pid-control).
 
 # PCB
 The PCBs are designed in KiCad and manufactured by [PCBWay](https://www.pcbway.com/). PCBWay has sponsored this project with PCBs and stencils. The support and quality from PCBWay is great and therefore PCBWay is the recommended PCB supplier for this project. As some components have a rather fine pitch (0,5 mm as of the LQFP-48 package of the STM32) and some packages are "no lead" with a bottom thermal pad e.g. the WSON-8 package of the OPA2387 it is recommended to use a stencil to apply solder paste and then reflow the board using either a reflow oven or hot-plate. The boards on the image below were reflowed on a hot-plate (a homemade AxxPlate). A microscope is also recommended and helpful during assembly.
@@ -238,7 +258,7 @@ double PID_NEG_ERROR_I_BIAS =   1;
 #define T210_MAX_POWER 	        65
 #define T245_MAX_POWER 	        130
 ```
-The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 deg C to 330 deg C. This heat-up sequence takes ~1.5 seconds for a C210-002 cartridge.  
+The PID parameters are adjusted to achieve a fast response with minimum overshoot and oscillation. The below image is showing the set temperature, actual temperature response as well as the P, I and D contributions during a heat-up cycle from 25 °C to 330 °C. This heat-up sequence takes ~1.5 seconds for a C210-002 cartridge.  
 
 The below screenshot if from the serial terminal software [AxxTerm](https://github.com/AxxAxx/AxxTerm)  
 
@@ -260,18 +280,18 @@ These are then used in the software to retrieve correct tip temperatures.
 The user can adjust the temperature calibration at 6 points in order to compensate for variations in the cartridge thermocouple.  
 To calibrate temperature(s):
 - Make sure that the temperature calibration values are at their default nominal values in the settings.
-- Set AxxSolder to the temperature that you want to calibrate. for example 300 deg C.
+- Set AxxSolder to the temperature that you want to calibrate. for example 300 °C.
 - When AxxSolder stabilizes around the setpoint, measure the actual tip temperature by using a soldering tip thermocouple, for example the HAKKO FG-100B.
-- Input the actual measured temperature, let's say 302 deg C into the 300 deg C calibration setting ("Temp cal 300" = 302).
+- Input the actual measured temperature, let's say 302 °C into the 300 °C calibration setting ("Temp cal 300" = 302).
   
 AxxSolder will then use this calibration point and correct the temperature accordingly. It will do so linearly between all calibration points.
 
 # Temperature measurement
 As the thermocouple and heater element is connected in series inside the JBC cartridges and the thermocouple voltage measures over the same pins as the heating element we have to be careful when to do the temperature measurement. In order to not disturb the thermocouple measurement with heater element switching, the switching is turned off for 0.5 ms just before the temperature measurement is taken. The 0.5 ms delay ensures that the switching is turned off and the thermocouple signal is stabilized around a stable voltage.  
-The measured signal over the thermocouple is clamped to 3.3V with a BAV199 Schottky diode in order to protect the op-amp OPA2387. The voltage measurement is taken by the internal ADC in DMA mode with a circular buffer. The buffer holds several measurements which are averaged and filtered in software.  
+The measured signal over the thermocouple is clamped to 3.3V with a BAV199 low-leakage switching diode in order to protect the op-amp OPA2387. The voltage measurement is taken by the internal ADC in DMA mode with a circular buffer. The buffer holds several measurements which are averaged and filtered in software.  
 The yellow curve in the image below (Channel 1) shows the PWM signal driving the gate of the MOSFET.  
-The green curve shows the amplified voltage between GREEN and RED wire in the JBC handle for at 330 degree C and 5% power and the purple 25 degree C and at 80% power (the tip held under water trying to heat up).  
-The blue pulse indicates the wait time of 0.5 ms and the purple pulse is where the ADC is sampled.
+The green curve shows the amplified voltage between GREEN and RED wire in the JBC handle at 330 °C and 10% power, and the cyan curve at 100 °C and 100% power (the tip cooled down trying to heat up).  
+The blue pulse indicates the wait time of 0.5 ms and the magenta pulse is where the ADC is sampled.
 ![Oscilloscope_image_PWM](./photos/temperature_measurement.png)
 # Current measurement
 The current is sampled four times per second by a 30 us current pulse through the heater. This is done both to check if there is a functioning tip in the handle (otherwise the display shows "---" at current temp) and to be able to calculate the power drawn by the heater. By knowing how much the heater draws in ampere the actual power can be calculated by knowing the bus voltage and pulse duty cycle. to measure the current the gate to the MOSFET is turned on, 10 us later the voltage over the current shunt is sampled by the ADC and the result is converted. This is shown the image below.
