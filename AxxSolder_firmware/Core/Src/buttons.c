@@ -187,9 +187,13 @@ void buttons_isr_exti(uint16_t gpio_pin)
 {
     if(((gpio_pin == SW_1_Pin) || (gpio_pin == SW_2_Pin) || (gpio_pin == SW_3_Pin)) && (SW_ready == 1)){ //A button is pressed
     	btnPressed = gpio_pin;
-		HAL_TIM_Base_Start_IT(&htim16);
-		SW_ready = 0;
 		debounceDone = 0;
+		/* Only lock out further presses if the debounce timer really runs:
+		 * a press before htim16 is initialised (e.g. button still held across
+		 * a reboot) used to leave SW_ready at 0 with no timer to clear it. */
+		if (HAL_TIM_Base_Start_IT(&htim16) == HAL_OK){
+			SW_ready = 0;
+		}
     }
 }
 

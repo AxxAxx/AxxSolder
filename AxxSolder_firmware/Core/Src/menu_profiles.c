@@ -332,6 +332,10 @@ static void edit_name(char *name, uint8_t maxlen)
 
         /* ---- BTN_1 long: confirm ---- */
         if (buttons_take_long_press(BTN_1)) {
+            /* The long press fires while SW_1 is still held: wait for the
+             * release so edit_profile's GPIO poll doesn't re-enter us. */
+            wait_btn_release();
+            buttons_clear_all();
             break;
         }
 

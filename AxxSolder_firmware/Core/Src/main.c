@@ -376,6 +376,7 @@ int main(void)
 	beep_double(flash_values.startup_beep);
 
 	//Flag to indicate that the startup sequence is done
+	buttons_clear_all();   // drop presses latched during boot
 	startup_done = 1;
 	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
 

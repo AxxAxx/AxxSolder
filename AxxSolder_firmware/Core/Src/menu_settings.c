@@ -731,11 +731,13 @@ void settings_menu()
 
                     if (abs_mi == MI_EXIT_NO_SAVE) {
                         settings_menu_active = 0;
+                        wait_button_release();   // don't reboot with SW_1 held
                         HAL_NVIC_SystemReset();
                     } else if (abs_mi == MI_SAVE_REBOOT) {
                         settings_save();
                         profiles_save();
                         settings_menu_active = 0;
+                        wait_button_release();   // don't reboot with SW_1 held
                         HAL_NVIC_SystemReset();
                     } else if (abs_mi == MI_LOAD_DEFAULT) {
                         flash_values = default_flash_values;
