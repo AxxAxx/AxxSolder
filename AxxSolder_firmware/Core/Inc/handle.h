@@ -42,6 +42,12 @@ extern cartridge_state_t cartridge_state;
 extern FilterTypeDef handle1_sense_filterStruct;
 extern FilterTypeDef handle2_sense_filterStruct;
 
+/* Raw TC reading (12-bit ADC, post moving-average) above this value =
+ * open thermocouple = no cartridge. Shared by the cartridge-presence check
+ * and the delta-T fault detector (an open reading is inherently safe: the
+ * temperature clamps to 500 C and the PID output goes to zero). */
+#define TC_OPEN_THRESHOLD (4096.0f - 10.0f)
+
 /* Read HANDLE_INP_1/2 GPIOs, filter, and update attached_handle.
  * Call every main-loop tick. */
 void handle_detect(void);

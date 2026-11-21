@@ -241,7 +241,7 @@ void sensors_isr_thermocouple_complete(void) {
     heater_update_pwm();
     thermocouple_measurement_done = 1;
 
-    if (flash_values.delta_t_detection == 1) {
-        handle_delta_temperature();
-    }
+    /* Always called so the previous sample stays tracked; the fault action
+     * itself is gated on delta_t_detection inside. */
+    handle_delta_temperature();
 }

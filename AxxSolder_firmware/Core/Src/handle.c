@@ -82,7 +82,7 @@ void handle_apply_settings(void){
 
 /* Function to handle the cartridge presence */
 void handle_check_cartridge(void){
-	if((sensor_values.heater_current < 1) || (sensors_get_raw_tc() > 4096-10)) { //NT115 at 9V draws 2.3
+	if((sensor_values.heater_current < 1) || (sensors_get_raw_tc() > TC_OPEN_THRESHOLD)) { //NT115 at 9V draws 2.3
 		cartridge_state = DETACHED;
 		change_state(EMERGENCY_SLEEP);
 	}

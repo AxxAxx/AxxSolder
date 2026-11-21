@@ -38,10 +38,10 @@ void change_state(mainstates new_state);
 void handle_emergency_shutdown(void);
 
 /* Detects an unphysical jump in TC reading (more than
- * MAX_TC_DELTA_FAULTDETECTION degC between samples), cuts heater power
- * and latches a fault that handle_emergency_shutdown() turns into
- * EMERGENCY_SLEEP from main context. Called from the ADC ISR when
- * delta_t_detection is on. */
+ * MAX_TC_DELTA_FAULTDETECTION degC, still displaced two samples later), cuts
+ * heater power and latches a fault that handle_emergency_shutdown() turns
+ * into EMERGENCY_SLEEP from main context. Called from the ADC ISR on every
+ * sample; the fault action only fires when delta_t_detection is on. */
 void handle_delta_temperature(void);
 
 /* True while a delta-T fault is latched but not yet consumed by
