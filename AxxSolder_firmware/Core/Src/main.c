@@ -45,6 +45,7 @@
 #include "telemetry.h"
 #include "power_source.h"
 #include "watchdog.h"     /* iwdg_*, reset_flags_capture */
+#include "fault_record.h" /* fault_record_boot */
 #include "display_app.h"
 #include "controller.h"
 #include <math.h>
@@ -230,6 +231,7 @@ int main(void)
 	/* Reset cause first, before anything can clear it (watchdog popup,
 	 * fault recorder). */
 	reset_flags_capture();
+	fault_record_boot();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -319,6 +321,9 @@ int main(void)
 	LCD_init();
 
 	LCD_SetRotation(flash_values.screen_rotation);
+
+	/* A HardFault before the last reset left a record: show it once */
+	show_fault_record_screen();
 
 	/* Apply encoder direction setting */
 	if(flash_values.change_enc_dir == 1){

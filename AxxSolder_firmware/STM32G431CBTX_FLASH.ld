@@ -37,6 +37,7 @@ ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
 _estack = ORIGIN(RAM) + LENGTH(RAM); /* end of "RAM" Ram type memory */
+_sram = ORIGIN(RAM);                 /* start of RAM (fault recorder frame check) */
 
 _Min_Heap_Size = 0x200; /* required amount of heap */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -162,6 +163,16 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
+  } >RAM
+
+  /* Post-mortem data surviving IWDG/soft resets: NOLOAD, never zeroed by
+   * startup (see fault_record.c). */
+  .noinit (NOLOAD) :
+  {
+    . = ALIGN(4);
+    KEEP(*(.noinit))
+    KEEP(*(.noinit*))
+    . = ALIGN(4);
   } >RAM
 
   /* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */

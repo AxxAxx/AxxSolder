@@ -11,6 +11,7 @@
 #include "version.h"      /* fw version + hw revision (debug screen) */
 #include "buttons.h"      /* buttons_take_press (PD info page) */
 #include "watchdog.h"     /* iwdg_refresh */
+#include "fault_record.h" /* boot fault readout */
 #include "lcd.h"
 #include "gui.h"
 #include "graph.h"
@@ -811,6 +812,58 @@ void LCD_draw_earth_fault_popup(void) {
     LCD_PutStr(20, 160, "AND REBOOT",  FONT_arial_20X23, C_Highlight, C_Text);
 
     Error_Handler();
+}
+
+/* ------------------------------------------------------------------ */
+/* Fault record readout (boot)                                        */
+/* ------------------------------------------------------------------ */
+
+#define FAULT_SCREEN_MS 5000u
+
+static uint8_t any_button_down(void) {
+    return (HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) ||
+           (HAL_GPIO_ReadPin(SW_2_GPIO_Port, SW_2_Pin) == GPIO_PIN_SET) ||
+           (HAL_GPIO_ReadPin(SW_3_GPIO_Port, SW_3_Pin) == GPIO_PIN_SET);
+}
+
+void show_fault_record_screen(void) {
+    const volatile fault_record_t *r = fault_record_get();
+    if (r == NULL) return;
+
+    char line[32];
+    UG_FillScreen(C_Background);
+    LCD_PutStr(10, 10, "FAULT", FONT_arial_20X23, C_Highlight, C_Background);
+
+    if (r->flags & FAULT_F_FRAME_OK) {
+        snprintf(line, sizeof(line), "PC  0x%08lX", (unsigned long)r->pc);
+        LCD_PutStr(10, 45, line, FONT_arial_17X18, C_Text, C_Background);
+        snprintf(line, sizeof(line), "LR  0x%08lX", (unsigned long)r->lr);
+        LCD_PutStr(10, 67, line, FONT_arial_17X18, C_Text, C_Background);
+    } else {
+        LCD_PutStr(10, 45, "PC  ? (bad SP)", FONT_arial_17X18, C_Text, C_Background);
+        snprintf(line, sizeof(line), "SP  0x%08lX", (unsigned long)r->sp);
+        LCD_PutStr(10, 67, line, FONT_arial_17X18, C_Text, C_Background);
+    }
+    snprintf(line, sizeof(line), "CFSR 0x%08lX", (unsigned long)r->cfsr);
+    LCD_PutStr(10, 89, line, FONT_arial_17X18, C_Text, C_Background);
+    snprintf(line, sizeof(line), "HFSR 0x%08lX", (unsigned long)r->hfsr);
+    LCD_PutStr(10, 111, line, FONT_arial_17X18, C_Text, C_Background);
+    snprintf(line, sizeof(line), "BFAR 0x%08lX", (unsigned long)r->bfar);
+    LCD_PutStr(10, 133, line, FONT_arial_17X18, C_Text, C_Background);
+    snprintf(line, sizeof(line), "Count %lu", (unsigned long)r->faults);
+    LCD_PutStr(10, 155, line, FONT_arial_17X18, C_Text, C_Background);
+    LCD_PutStr(10, 195, "Press a button", FONT_arial_17X18, C_Footer, C_Background);
+
+    /* Boot only, before the watchdog runs; the heater is off (sleep). Hold
+     * until a button or the timeout, and let go before the boot continues. */
+    uint32_t t0 = HAL_GetTick();
+    while (!any_button_down() && (HAL_GetTick() - t0) < FAULT_SCREEN_MS) { HAL_Delay(10); }
+    while (any_button_down() && (HAL_GetTick() - t0) < 2u * FAULT_SCREEN_MS) { HAL_Delay(10); }
+    HAL_Delay(50);
+
+    fault_record_clear();
+    buttons_clear_all();
+    UG_FillScreen(C_Background);
 }
 
 /* ------------------------------------------------------------------ */

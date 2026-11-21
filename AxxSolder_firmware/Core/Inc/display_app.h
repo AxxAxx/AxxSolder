@@ -54,4 +54,8 @@ float convert_temperature(float temperature);
  * Invoked from the settings menu (heater already off). Blocking. */
 void show_pd_info_screen(void);
 
+/* Boot: if a HardFault record is pending, show it (PC, LR, CFSR, ...) until
+ * a button press or ~5 s, then clear it. No-op otherwise. Blocking. */
+void show_fault_record_screen(void);
+
 #endif /* DISPLAY_APP_H */

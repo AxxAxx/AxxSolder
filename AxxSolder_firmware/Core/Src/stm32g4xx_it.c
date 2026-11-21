@@ -22,6 +22,7 @@
 #include "stm32g4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stddef.h>   /* offsetof */
 #include "heater.h"   /* heater_fault_kill */
 /* USER CODE END Includes */
 
@@ -52,6 +53,17 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+/* HardFault_Handler is naked: no prologue may touch the stack before the
+ * shim below has sampled LR and the stack pointers. The attribute sits on
+ * this declaration, inside a USER CODE block, so a CubeMX regeneration (which
+ * rewrites the definition) keeps it. */
+void HardFault_Handler(void) __attribute__((naked));
+
+/* Naked code can't take asm operands, so the shim clears MOE through this
+ * literal address. */
+_Static_assert(TIM1_BASE + offsetof(TIM_TypeDef, BDTR) == 0x40012C44UL, "TIM1->BDTR moved");
+_Static_assert(TIM_BDTR_MOE == 0x8000UL, "TIM_BDTR_MOE moved");
 
 /* USER CODE END 0 */
 
@@ -96,7 +108,37 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-  heater_fault_kill();
+  /* 1. Heater off FIRST: clear TIM1 MOE with registers only, no stack (the
+   *    stack may be what broke). r0-r3/r12 are already stacked and we never
+   *    return, so they are free.
+   * 2. Frame = MSP or PSP per EXC_RETURN bit 2; r1 = EXC_RETURN.
+   * 3. If MSP is outside [_end + 256, _estack] restart it at _estack so the
+   *    C handler has a stack, then branch to fault_handler_c (fault_record.c),
+   *    which kills the heater again, stores the record and spins until the
+   *    IWDG resets. */
+  __asm volatile(
+      "movw  r2, #0x2C44             \n"
+      "movt  r2, #0x4001             \n"   /* r2 = &TIM1->BDTR */
+      "ldr   r3, [r2]                \n"
+      "bic   r3, r3, #0x8000         \n"   /* MOE */
+      "str   r3, [r2]                \n"
+      "tst   lr, #4                  \n"
+      "ite   eq                      \n"
+      "mrseq r0, msp                 \n"
+      "mrsne r0, psp                 \n"
+      "mov   r1, lr                  \n"
+      "mrs   r2, msp                 \n"
+      "movw  r3, #:lower16:_estack   \n"
+      "movt  r3, #:upper16:_estack   \n"
+      "cmp   r2, r3                  \n"
+      "bhi   1f                      \n"
+      "movw  r12, #:lower16:_end     \n"
+      "movt  r12, #:upper16:_end     \n"
+      "add   r12, r12, #256          \n"
+      "cmp   r2, r12                 \n"
+      "bhs   2f                      \n"
+      "1: msr msp, r3                \n"
+      "2: b    fault_handler_c       \n");
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
