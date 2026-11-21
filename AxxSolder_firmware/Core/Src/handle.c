@@ -57,7 +57,12 @@ void handle_detect(void){
 
 /* Function to set heating values depending on detected handle */
 void handle_apply_settings(void){
-	uint16_t usb_limit = sensor_values.USB_PD_power_limit;
+	/* USB_PD_power_limit is a float that defaults to FLT_MAX ("no limit");
+	 * converting an out-of-range float to uint16_t is undefined behaviour,
+	 * so clamp both ends first (also catches negative and NaN). */
+	float usb_limit_f = sensor_values.USB_PD_power_limit;
+	uint16_t usb_limit = (usb_limit_f >= 65535.0f) ? 65535
+	                   : ((usb_limit_f > 0.0f) ? (uint16_t)usb_limit_f : 0);
     uint16_t WATT;
 
 	uint16_t profile_limit = (uint16_t)tip_profiles_get_power_limit(attached_handle);
