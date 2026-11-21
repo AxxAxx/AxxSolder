@@ -1366,8 +1366,10 @@ void Error_Handler(void)
 	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 	HAL_GPIO_WritePin(GPIOF, HEATER_Pin, GPIO_PIN_RESET);
 
-  /* Latched until a power cycle: the heater is off, so keep the watchdog
-   * fed and the error message on screen. */
+  /* Latched until a power cycle with the heater off, watchdog fed. For the
+   * earth fault this keeps its message on screen; any other Error_Handler
+   * entry after boot (HAL init/runtime error) latches the same way, with
+   * nothing new drawn. */
   while (1)
   {
 	iwdg_refresh_latched();

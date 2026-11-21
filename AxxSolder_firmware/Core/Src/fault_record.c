@@ -99,7 +99,10 @@ __attribute__((used)) void fault_handler_c(uint32_t *frame, uint32_t exc_return)
 	}
 	fault_record.check = record_sum();
 
-	/* No IWDG feed: the watchdog reset recovers (if it was started); the
-	 * heater is off either way. */
+	/* No IWDG feed: the watchdog reset recovers and the record survives it.
+	 * 0xCCCC starts the IWDG with its reset defaults (~0.5 s) if the fault
+	 * hit before it was started at boot; if it is running already this is a
+	 * no-op. The heater is off either way. */
+	IWDG->KR = 0xCCCCu;
 	for (;;){ }
 }
