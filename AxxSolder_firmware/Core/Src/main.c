@@ -264,12 +264,36 @@ int main(void)
   MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
 
+	__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, 50); //Set BUZZER duty to 50% (settings_init beeps on a fresh flash)
+
+	/* Check if user data in flash is valid, if not - write default parameters */
+	settings_init();
+
+	/* Initialise the moving-average + hysteresis filters BEFORE TIM6 starts:
+	 * the TIM6 -> TIM7 -> ADC1-complete ISR runs sensors_get_thermocouple_temperature(),
+	 * which feeds these filters, and computing on an un-initialised filter
+	 * divides by WindowLength = 0. The fill loop (needs live ADC data) stays
+	 * after the ADC start. */
+	Moving_Average_Init(&thermocouple_temperature_filter_struct,(uint32_t)2);
+	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,(uint32_t)flash_values.displayed_temp_filter*10);
+	Moving_Average_Init(&requested_power_filtered_filter_struct,(uint32_t)20);
+	Moving_Average_Init(&mcu_temperature_filter_struct,(uint32_t)100);
+	Moving_Average_Init(&input_voltage_filterStruct,(uint32_t)25);
+	Moving_Average_Init(&current_filterStruct,(uint32_t)2);
+	Moving_Average_Init(&stand_sense_filterStruct,(uint32_t)20);
+	Moving_Average_Init(&handle1_sense_filterStruct,(uint32_t)20);
+	Moving_Average_Init(&handle2_sense_filterStruct,(uint32_t)20);
+
+	/* initialize hysteresis functions */
+	Hysteresis_Init(&thermocouple_temperature_filtered_hysteresis, 0.5f);
+
+	/* Keep TIM1 start -> TIM6 start tight: their relative start time fixes the
+	 * phase between heater switching and the TC sample window. */
 	heater_set_duty(0);		//Set heater duty to zero to ensure zero startup current
 	HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_3);
 
 	HAL_TIM_Encoder_Start_IT(&htim2, TIM_CHANNEL_ALL);
 	HAL_TIM_PWM_Start_IT(&htim1, TIM_CHANNEL_1);
-	__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, 50); //Set BUZZER duty to 50%
 	HAL_TIM_Base_Start_IT(&htim6);
 
 	__HAL_TIM_ENABLE_IT(&htim7, TIM_IT_UPDATE);
@@ -284,9 +308,6 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	HAL_Delay(200);
-
-	/* Check if user data in flash is valid, if not - write default parameters */
-	settings_init();
 
 	/* Load tip profiles from storage */
 	tip_profiles_init(STORAGE_PROFILES_DRIVER);
@@ -309,21 +330,7 @@ int main(void)
 	TIM2->CNT = flash_values.startup_temperature;
 	sensor_values.set_temperature = flash_values.startup_temperature;
 
-	/* initialize moving average functions */
-	Moving_Average_Init(&thermocouple_temperature_filter_struct,(uint32_t)2);
-	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,(uint32_t)flash_values.displayed_temp_filter*10);
-	Moving_Average_Init(&requested_power_filtered_filter_struct,(uint32_t)20);
-	Moving_Average_Init(&mcu_temperature_filter_struct,(uint32_t)100);
-	Moving_Average_Init(&input_voltage_filterStruct,(uint32_t)25);
-	Moving_Average_Init(&current_filterStruct,(uint32_t)2);
-	Moving_Average_Init(&stand_sense_filterStruct,(uint32_t)20);
-	Moving_Average_Init(&handle1_sense_filterStruct,(uint32_t)20);
-	Moving_Average_Init(&handle2_sense_filterStruct,(uint32_t)20);
-
-	/* initialize hysteresis functions */
-	Hysteresis_Init(&thermocouple_temperature_filtered_hysteresis, 0.5f);
-
-	/* Init and fill filter structures with initial values */
+	/* Fill filter structures with initial values (initialised before TIM6) */
 	for (int i = 0; i<200;i++){
 		sensors_get_bus_voltage(); // Function to retrieve the filtered bus voltage
 		sensors_get_heater_current(); // Function to retrieve the filtered heater current
