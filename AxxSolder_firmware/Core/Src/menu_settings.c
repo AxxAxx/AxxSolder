@@ -465,10 +465,20 @@ void normalize_param(uint16_t index) {
             *p = normalize_enum(*p, 4);
             break;
 
-        // --- Display temp filter: 1..10
-        case MI_DISP_TEMP_FILTER:
-            *p = 1.0f + fmodf(roundf(fmodf(fabsf(*p), 10.0f)), 10.0f);
+        // --- Display temp filter: 1..10 (wrap-around)
+        case MI_DISP_TEMP_FILTER: {
+            /* MUST be idempotent: the edit loop re-applies normalize on the
+             * unchanged value every tick, and the old '1.0f + fmodf(...)'
+             * form mapped 5->6, 6->7, ..., 10->1 - i.e. merely entering edit
+             * mode incremented the stored setting by 1 each time.
+             * No fabsf: -1 must wrap to 9, not 1. NaN/huge values -> 5. */
+            float f = roundf(*p);
+            if (!(f > -1000.0f && f < 1000.0f)) f = 5.0f;
+            int32_t n = (int32_t)f;
+            n = ((n - 1) % 10 + 10) % 10 + 1;   /* wraps 0->10, 11->1; fixpoint on 1..10 */
+            *p = (float)n;
             break;
+        }
 
         // --- Temp offset: integer
         case MI_TEMP_OFFSET:
@@ -764,8 +774,9 @@ void settings_menu()
                         buttons_clear_all();
                         redraw_page = 1;
                         page_start = 0xFFFF;
-                    } else {
-                        // Enter value editing
+                    } else if (mi_to_fi(abs_mi) != MI_NO_FLASH) {
+                        // Enter value editing (action items without flash
+                        // backing must never index flash_values)
                         uint8_t fi = mi_to_fi(abs_mi);
                         old_value = ((float*)&flash_values)[fi];
                         editing_index = cursor;
