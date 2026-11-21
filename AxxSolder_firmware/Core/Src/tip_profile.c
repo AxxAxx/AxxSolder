@@ -224,7 +224,9 @@ void tip_profiles_apply_pid(enum handles h, PID_TypeDef *pid)
 	}
 
 	PID_SetTunings(pid, p->kp, p->ki, p->kd);
-	PID_SetILimits(pid, -p->max_i, p->max_i);
+	/* max_i <= 0 (or a corrupt NaN) means no integrator, not "keep the old limits" */
+	float max_i = (p->max_i > 0.0f) ? p->max_i : 0.0f;
+	PID_SetILimits(pid, -max_i, max_i);
 }
 
 float tip_profiles_get_power_limit(enum handles h)

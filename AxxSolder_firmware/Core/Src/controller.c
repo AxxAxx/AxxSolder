@@ -30,7 +30,7 @@ void controller_init(void) {
 	PID_SetMode(&TPID, _PID_MODE_AUTOMATIC);
 	PID_SetSampleTime(&TPID, PID_UPDATE_INTERVAL, 0); 		// Set PID update time to "PID_UPDATE_INTERVAL"
 	PID_SetOutputLimits(&TPID, 0, PID_MAX_OUTPUT); 			// Set max and min output limit
-	PID_SetILimits(&TPID, 0, 0);         					// Set max and min I limit
+	PID_SetILimits(&TPID, -PID_MAX_OUTPUT, PID_MAX_OUTPUT);	// Set max and min I limit (tip profile overrides)
 	PID_SetIminError(&TPID,PID_ADD_I_MIN_ERROR);			// Set I min Error
 	PID_SetNegativeErrorIgainMult(&TPID, PID_NEG_ERROR_I_MULT, PID_NEG_ERROR_I_BIAS); // Set un-symmetric I gain parameters
 }
