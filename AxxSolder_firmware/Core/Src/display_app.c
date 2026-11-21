@@ -1036,6 +1036,9 @@ void show_pd_info_screen(void) {
     while (HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) { iwdg_refresh(); }
     HAL_Delay(50);
 
+    /* The menu repaint only clears its own list area, which in landscape
+     * ends above the lower rows of this page: clear the whole panel. */
+    UG_FillScreen(C_Background);
     UG_FontSetTransparency(old_transparency);
 }
 
