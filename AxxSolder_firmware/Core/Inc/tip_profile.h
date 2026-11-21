@@ -8,7 +8,7 @@
 
 #define PROFILE_NAME_LEN   24
 #define MAX_PROFILES       24  /* 16 + 24*72 = 1744 bytes, fits in 2 KB PROFILES page */
-#define PROFILES_MAGIC      0x54495032  /* "TIP1" */
+#define PROFILES_MAGIC      0x54495032  /* "TIP2" */
 #define PROFILES_VERSION    1
 #define NUM_CAL_POINTS      6
 
@@ -43,6 +43,7 @@ typedef struct {
 /* Lifecycle */
 void        tip_profiles_init(const StorageDriver *drv);
 StoreResult tip_profiles_reset(void);
+void        tip_profiles_load_defaults(void);   /* RAM only, no flash write */
 StoreResult tip_profiles_save(void);
 
 /* CRUD */

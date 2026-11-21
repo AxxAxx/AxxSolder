@@ -12,9 +12,10 @@ Tip profiles let you save per-tip PID tuning, power limits, and temperature cali
 |---|---|---|
 | `name` | `char[24]` | Display name |
 | `handle_type` | `uint8_t` | `NT115 / T210 / T245 / No_name` |
+| `def` | `uint8_t` | `1` = built-in default profile (cannot be deleted) |
 | `kp / ki / kd` | `float` | PID coefficients |
 | `max_i` | `float` | Integrator clamp (±) |
-| `power_limit` | `float` | Watts cap; `0` = use the global setting |
+| `power_limit` | `float` | Watts cap; `0` = no user limit (handle default max power applies) |
 | `temp_cal[6]` | `float[6]` | Calibration offsets at 100 / 200 / 300 / 350 / 400 / 450 °C |
 
 ### `ProfileStore` (1744 bytes)
@@ -25,7 +26,7 @@ Stored in flash as a single block:
 magic (4) | version (1) | count (1) | active_idx[4] (4) | reserved (6) | TipProfile[24] (1728)
 ```
 
-- `magic` = `0x54495031` ("TIP1") — used to detect an uninitialised page.
+- `magic` = `0x54495032` ("TIP2") — used to detect an uninitialised page.
 - `count` — number of valid profiles (0–24).
 - `active_idx[4]` — one active profile index per handle slot (`0xFF` = none).
   - slot 0 → NT115, slot 1 → T210, slot 2 → T245, slot 3 → No_name.
@@ -45,7 +46,7 @@ cmake -DSTORAGE_PROFILES=EEPROM ..
 cmake -DSTORAGE_PROFILES=SDCARD ..
 ```
 
-On first boot (magic mismatch or version change), four built-in default profiles are written — one per handle type.
+On first boot (magic mismatch or version change), three built-in default profiles are written — one each for T245, T210 and NT115 (there is no No_name default).
 
 The flash write driver appends an 8-byte CRC after the payload. The internal write buffer is 2048 bytes, which covers the full `ProfileStore` (1744 bytes data + 8 bytes CRC = 1752 bytes).
 
@@ -93,6 +94,8 @@ StoreResult tip_profiles_save(void);
 All writes operate on the in-RAM cache. Call `tip_profiles_save()` to persist to flash.
 
 ### Delete behaviour
+
+Built-in default profiles (`def == 1`) cannot be deleted — `tip_profiles_delete` returns `STORE_ERR_INVALID` for them.
 
 When the deleted profile is the active one for a handle slot, `tip_profiles_delete` automatically reassigns that slot to the first remaining profile with the same handle type. If no such profile exists the slot is cleared (`0xFF`). Remaining `active_idx` references with higher indices are decremented to stay valid after the array compaction.
 

@@ -50,7 +50,13 @@ typedef struct {
     float change_enc_dir;
     float encoder_step_idx;   /* index into encoder step table {1,2,5,10} */
     float heat_at_startup;    /* 1 = preheat to standby temp on power-on */
+    float debug_screen;       /* 1 = full-screen debug view instead of the main screen */
 } Flash_values;
+
+/* settings_init() migrates the 39-float page from before debug_screen; it
+ * relies on both sizes sharing one CRC offset, so revisit it whenever this
+ * layout changes (append only). */
+_Static_assert(sizeof(Flash_values) == 40 * sizeof(float), "Flash_values layout changed");
 
 /* The single live copy of user settings. Read directly from anywhere
  * that needs a value; mutate from settings menu / preset buttons / etc.
@@ -68,8 +74,10 @@ extern Flash_values default_flash_values;
  * is interacting with the menu. */
 extern uint8_t settings_menu_active;
 
-/* Init: load values from flash, writing defaults (and chirping the
- * buzzer + HAL_Delay) if the flash region fails its validity check.
+/* Init: load values from flash. A page saved before the last field was
+ * added is migrated (old values kept, new field at its default); anything
+ * else that fails the validity check is replaced by defaults (and chirps the
+ * buzzer + HAL_Delay).
  *
  * Call once on boot, AFTER the flash storage driver is ready and the
  * buzzer peripheral is initialized. */

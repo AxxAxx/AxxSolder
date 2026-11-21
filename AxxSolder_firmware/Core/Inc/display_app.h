@@ -37,6 +37,11 @@ void display_app_tick(void);
  * Called on boot, after a popup dismisses, and after a settings save. */
 void LCD_draw_main_screen(void);
 
+/* Redraw the active view from scratch: the graph view when it is enabled
+ * (and the debug screen is not), otherwise the main screen. Used after a
+ * popup or the profile selector has covered the screen. */
+void display_redraw_view(void);
+
 /* Show a transient orange popup with the given text. Auto-dismisses
  * after the popup interval. */
 void show_popup(char *text);
@@ -48,5 +53,14 @@ void LCD_draw_earth_fault_popup(void);
 /* Convert a Celsius temperature to the user's preferred unit
  * (deg C or deg F per flash_values.deg_celsius). */
 float convert_temperature(float temperature);
+
+/* Draw the "PD information" page (STUSB4500 boot snapshot + live VBUS)
+ * full-screen and block until the encoder is clicked, then return.
+ * Invoked from the settings menu (heater already off). Blocking. */
+void show_pd_info_screen(void);
+
+/* Boot: if a HardFault record is pending, show it (PC, LR, CFSR, ...) until
+ * a button press or ~5 s, then clear it. No-op otherwise. Blocking. */
+void show_fault_record_screen(void);
 
 #endif /* DISPLAY_APP_H */

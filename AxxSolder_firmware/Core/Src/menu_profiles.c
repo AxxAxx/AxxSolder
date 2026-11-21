@@ -6,6 +6,9 @@
 #include "buttons.h"   /* buttons_take_press / _long_press / _clear_all */
 #include "lcd.h"
 #include "gui.h"
+#include "controller.h"   /* controller_force_off */
+#include "heater.h"       /* heater_off */
+#include "watchdog.h"     /* iwdg_refresh */
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -18,7 +21,7 @@ extern uint8_t menu_lines_on_screen;
 
 static inline void wait_btn_release(void)
 {
-	while (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) {}
+	while (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) { iwdg_refresh(); }
 	HAL_Delay(50);
 }
 
@@ -277,6 +280,7 @@ static void edit_name(char *name, uint8_t maxlen)
     uint8_t prev_chr_idx = char_to_charset_idx(name[cursor]);
 
     while (1) {
+        iwdg_refresh();
         /* ---- Encoder: update char under cursor ---- */
         uint8_t chr_idx = (uint8_t)enc_sel(1000, &TIM2->CNT, NAME_CHARSET_LEN);
         if (chr_idx != prev_chr_idx) {
@@ -332,6 +336,10 @@ static void edit_name(char *name, uint8_t maxlen)
 
         /* ---- BTN_1 long: confirm ---- */
         if (buttons_take_long_press(BTN_1)) {
+            /* The long press fires while SW_1 is still held: wait for the
+             * release so edit_profile's GPIO poll doesn't re-enter us. */
+            wait_btn_release();
+            buttons_clear_all();
             break;
         }
 
@@ -370,6 +378,7 @@ static void edit_profile(uint8_t prof_idx)
 	TIM2->CNT = 1000;
 
 	while (running) {
+		iwdg_refresh();
 		buttons_handle();
 
 		/* Encoder controls cursor in browse mode, value in edit mode */
@@ -555,6 +564,7 @@ void profiles_menu(void)
 	TIM2->CNT = 1000;
 
 	while (running) {
+		iwdg_refresh();
 		buttons_handle();
 
 		uint8_t count = tip_profiles_count();
@@ -672,8 +682,12 @@ void profiles_popup(enum handles h)
 
 	if (match_count == 0) return;
 
+	/* Drop presses queued before the popup appeared */
+	buttons_clear_all();
+
 	/* Disable heater while popup blocks the main loop */
-	sensor_values.requested_power = 0;
+	controller_force_off();
+	heater_off();
 
 	/* Draw popup */
 	uint16_t popup_x = 10;
@@ -709,7 +723,11 @@ void profiles_popup(enum handles h)
 	uint16_t timeout_ticks = 300;
 
 	while (1) {
-		buttons_handle();
+		iwdg_refresh();
+		/* No buttons_handle() here: the popup runs with settings_menu_active
+		 * == 0, so it would act on queued flags (a SW_1 release toggled
+		 * RUN/HALTED, BTN_2 was eaten by the preset path before the cancel
+		 * check). The popup reads its own inputs and drops the rest on exit. */
 		cursor = enc_sel(1000, &TIM2->CNT, match_count);
 
 		if (cursor != prev_cursor) {
@@ -726,18 +744,29 @@ void profiles_popup(enum handles h)
 		}
 
 		if (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) {
-			while (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) {}
+			while (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) { iwdg_refresh(); }
 			HAL_Delay(50);
 
 			tip_profiles_set_active(h, match_idx[cursor]);
 			tip_profiles_save();
 			TIM2->CNT = saved_cnt;
+			buttons_clear_all();   /* drop flags queued during the popup */
 			return;
 		}
 
-		/* SW_2: cancel ??? keep current active profile */
-		if (buttons_take_press(BTN_2)) {
+		if (flash_values.three_button_mode == 1) {
+			/* 3-button mode: SW_2/SW_3 step the cursor like in the menus */
+			if (buttons_take_press(BTN_2)) {
+				TIM2->CNT += 2;
+			}
+			if (buttons_take_press(BTN_3) && TIM2->CNT >= 1002) {
+				TIM2->CNT -= 2;
+			}
+		}
+		/* SW_2: cancel - keep current active profile */
+		else if (buttons_take_press(BTN_2)) {
 			TIM2->CNT = saved_cnt;
+			buttons_clear_all();   /* drop flags queued during the popup */
 			return;
 		}
 
@@ -746,6 +775,7 @@ void profiles_popup(enum handles h)
 			tip_profiles_set_active(h, match_idx[cursor]);
 			tip_profiles_save();
 			TIM2->CNT = saved_cnt;
+			buttons_clear_all();   /* drop flags queued during the popup */
 			return;
 		}
 

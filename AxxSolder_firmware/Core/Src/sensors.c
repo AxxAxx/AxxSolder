@@ -7,6 +7,7 @@
 #include "tip_profile.h"      // tip_profiles_get_cal
 #include "main.h"             // sensor_values, flash_values, GPIO macros
 #include "util.h"             // clamp
+#include "watchdog.h"         // watchdog_isr_sample
 #include <math.h>             // fabsf
 
 extern TIM_HandleTypeDef htim6;
@@ -195,7 +196,17 @@ float sensors_get_raw_tc(void){
 }
 
 void sensors_reset_filtered_tc(float value){
+    /* The ADC1-complete ISR updates this filter; rewriting Sum/History
+     * non-atomically from main context would corrupt the running sum.
+     * Publish the reseeded value and the hysteresis state in the same masked
+     * section, so readers never see the new filter with the old output (the
+     * hysteresis would otherwise hold the stale value until it moved 0.5 C). */
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq();
     Moving_Average_Set_Value(value, &thermocouple_temperature_filtered_filter_struct);
+    thermocouple_temperature_filtered_hysteresis.previous_value = value;
+    sensor_values.thermocouple_temperature_filtered = value;
+    __set_PRIMASK(primask);
 }
 
 void sensors_start_adc_sample(void){
@@ -228,10 +239,18 @@ void sensors_isr_thermocouple_complete(void) {
 
     HAL_ADC_Stop_DMA(&hadc1);
     sensors_get_thermocouple_temperature();
-    heater_update_pwm();
+    /* Main loop silent too long (hung outside any refreshing loop): stop
+     * driving the heater from a stale requested_power. The heater stays off
+     * from the window start; the IWDG resets the MCU shortly after. Menus and
+     * popups already hold power at zero, so this is a no-op for them. */
+    if (watchdog_isr_sample()) {
+        heater_update_pwm();
+    } else {
+        sensor_values.requested_power = 0.0f;
+    }
     thermocouple_measurement_done = 1;
 
-    if (flash_values.delta_t_detection == 1) {
-        handle_delta_temperature();
-    }
+    /* Always called so the previous sample stays tracked; the fault action
+     * itself is gated on delta_t_detection inside. */
+    handle_delta_temperature();
 }

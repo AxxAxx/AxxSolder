@@ -1,5 +1,6 @@
 #include "tip_profile.h"
 #include "storage.h"
+#include "main.h"      /* cmsis_gcc.h via HAL: __get_PRIMASK / __disable_irq */
 #include <string.h>
 
 /* RAM cache */
@@ -117,8 +118,22 @@ void tip_profiles_init(const StorageDriver *drv)
 
 StoreResult tip_profiles_reset(void)
 {
+	/* Mask the cache rebuild (the ADC ISR reads it), not the flash write. */
+	uint32_t primask = __get_PRIMASK();
+	__disable_irq();
 	create_defaults();
+	__set_PRIMASK(primask);
 	return driver->write(PROFILES_PAGE, &cache, sizeof(ProfileStore));
+}
+
+/* Restore the default profiles in RAM only; flash is written by the next
+ * tip_profiles_save(). Masked because the ADC ISR reads the cache. */
+void tip_profiles_load_defaults(void)
+{
+	uint32_t primask = __get_PRIMASK();
+	__disable_irq();
+	create_defaults();
+	__set_PRIMASK(primask);
 }
 
 StoreResult tip_profiles_save(void)
@@ -166,6 +181,13 @@ StoreResult tip_profiles_delete(uint8_t index)
 		if (cache.active_idx[s] == index) was_active[s] = 1;
 	}
 
+	/* The cache is read from the ADC ISR (tip_profiles_get_cal). Mask IRQs
+	 * across the whole mutation (array shift + count update + active_idx
+	 * reindex) so the ISR cannot observe a half-shifted cache and produce
+	 * one bogus calibrated sample. */
+	uint32_t primask = __get_PRIMASK();
+	__disable_irq();
+
 	/* Shift remaining profiles down */
 	for (uint8_t i = index; i < cache.count - 1; i++) {
 		cache.profiles[i] = cache.profiles[i + 1];
@@ -189,6 +211,8 @@ StoreResult tip_profiles_delete(uint8_t index)
 		}
 	}
 
+	__set_PRIMASK(primask);
+
 	return STORE_OK;
 }
 
@@ -198,7 +222,13 @@ StoreResult tip_profiles_update(uint8_t index, const TipProfile *p)
 		return STORE_ERR_INVALID;
 	}
 
+	/* The ADC ISR may be mid-read of this profile (tip_profiles_get_cal). A plain
+	 * struct copy is multi-word and would tear; mask IRQs so the ISR sees either
+	 * the whole old or the whole new profile, never a mix. */
+	uint32_t primask = __get_PRIMASK();
+	__disable_irq();
 	cache.profiles[index] = *p;
+	__set_PRIMASK(primask);
 	return STORE_OK;
 }
 
@@ -224,7 +254,9 @@ void tip_profiles_apply_pid(enum handles h, PID_TypeDef *pid)
 	}
 
 	PID_SetTunings(pid, p->kp, p->ki, p->kd);
-	PID_SetILimits(pid, -p->max_i, p->max_i);
+	/* max_i <= 0 (or a corrupt NaN) means no integrator, not "keep the old limits" */
+	float max_i = (p->max_i > 0.0f) ? p->max_i : 0.0f;
+	PID_SetILimits(pid, -max_i, max_i);
 }
 
 float tip_profiles_get_power_limit(enum handles h)

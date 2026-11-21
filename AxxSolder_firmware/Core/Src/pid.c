@@ -162,8 +162,8 @@ void PID_SetOutputLimits(PID_TypeDef *uPID, float Min, float Max){
 
 /* PID I-windup Limits */
 void PID_SetILimits(PID_TypeDef *uPID, float Min, float Max){
-	/* Check value */
-	if (Min >= Max){
+	/* Check value. Min == Max is allowed: (0, 0) disables the integrator. */
+	if (!(Min <= Max)){
 		return;
 	}
 

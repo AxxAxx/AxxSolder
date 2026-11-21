@@ -3,9 +3,14 @@
 #include "menu_settings.h"
 #include "app_colors.h"   /* AxxSolder UI colour palette */
 #include "menu_profiles.h"
+#include "tip_profile.h"  /* tip_profiles_load_defaults */
 #include "buttons.h"
 #include "version.h"   /* fw_version_*, get_hw_version */
 #include "gui.h"
+#include "display_app.h"  /* show_pd_info_screen */
+#include "controller.h"   /* controller_force_off */
+#include "heater.h"       /* heater_off */
+#include "watchdog.h"     /* iwdg_refresh */
 
 /* ==== Menu item identifiers
  * Step-100 layout: each logical group owns a 100-wide range.
@@ -54,6 +59,8 @@ enum {
     MI_DISP_TEMP_FILTER   = 302,
     MI_SHOW_POWER         = 303,
     MI_DISPLAY_GRAPH      = 304,
+    MI_DEBUG_SCREEN       = 305,
+    MI_PD_INFO            = 306,   /* action: opens the PD information page */
 
     /* ── Sound (400–499) ───────────────────────────────────────────── */
     MI_BUZZER_ENABLED     = 400,
@@ -125,7 +132,9 @@ static const MI_Entry mi_table[] = {
     { MI_TEMP_UNIT,          13,         "Temperature unit"     },
     { MI_DISP_TEMP_FILTER,   21,         "Disp Temp. filter"    },
     { MI_SHOW_POWER,         26,         "Show power"           },
-    { MI_DISPLAY_GRAPH,      32,         "Display graph"        },
+    { MI_DISPLAY_GRAPH,      32,         "Graph screen"         },
+    { MI_DEBUG_SCREEN,       39,         "Debug screen"         },
+    { MI_PD_INFO,       MI_NO_FLASH,     "PD information"       },
     /* Sound */
     { MI_BUZZER_ENABLED,     5,          "Buzzer Enabled"       },
     { MI_STARTUP_BEEP,       12,         "Startup Beep"         },
@@ -202,7 +211,7 @@ static const uint16_t GRP_PRESETS[] = { MI_PRESET_TEMP_1, MI_PRESET_TEMP_2 };
 /* Display */
 static const uint16_t GRP_DISPLAY[] = {
     MI_SCREEN_ROTATION, MI_TEMP_UNIT, MI_DISP_TEMP_FILTER, MI_SHOW_POWER,
-    MI_DISPLAY_GRAPH
+    MI_DISPLAY_GRAPH, MI_DEBUG_SCREEN, MI_PD_INFO
 };
 
 /* Sound */
@@ -242,7 +251,7 @@ static const MenuGroup MENU_GROUPS[] = {
  */
 static inline void wait_button_release(void) {
     while (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) {
-        // Wait until the button is released
+        iwdg_refresh();   // button may be held: keep the watchdog fed
     }
     HAL_Delay(50); // short delay for debouncing
 }
@@ -329,6 +338,7 @@ EnumParam enum_params[] = {
     { MI_CHANGE_ENC_DIR,     bool_str, 2 },
     { MI_ENCODER_STEP,       encoder_step_str, 4 },
     { MI_HEAT_AT_STARTUP,    bool_str, 2 },
+    { MI_DEBUG_SCREEN,       bool_str, 2 },
 };
 
 #define ENUM_PARAM_COUNT (sizeof(enum_params) / sizeof(enum_params[0]))
@@ -447,7 +457,7 @@ void normalize_param(uint16_t index) {
         case MI_SHOW_POWER: case MI_DETECT_NT115:
         case MI_DISPLAY_GRAPH: case MI_DELTA_T_DETECT:
         case MI_PROFILE_ON_TIP_CHG: case MI_CHANGE_ENC_DIR:
-        case MI_HEAT_AT_STARTUP:
+        case MI_HEAT_AT_STARTUP: case MI_DEBUG_SCREEN:
             *p = normalize_enum(*p, 2);
             break;
 
@@ -461,10 +471,20 @@ void normalize_param(uint16_t index) {
             *p = normalize_enum(*p, 4);
             break;
 
-        // --- Display temp filter: 1..10
-        case MI_DISP_TEMP_FILTER:
-            *p = 1.0f + fmodf(roundf(fmodf(fabsf(*p), 10.0f)), 10.0f);
+        // --- Display temp filter: 1..10 (wrap-around)
+        case MI_DISP_TEMP_FILTER: {
+            /* MUST be idempotent: the edit loop re-applies normalize on the
+             * unchanged value every tick, and the old '1.0f + fmodf(...)'
+             * form mapped 5->6, 6->7, ..., 10->1 - i.e. merely entering edit
+             * mode incremented the stored setting by 1 each time.
+             * No fabsf: -1 must wrap to 9, not 1. NaN/huge values -> 5. */
+            float f = roundf(*p);
+            if (!(f > -1000.0f && f < 1000.0f)) f = 5.0f;
+            int32_t n = (int32_t)f;
+            n = ((n - 1) % 10 + 10) % 10 + 1;   /* wraps 0->10, 11->1; fixpoint on 1..10 */
+            *p = (float)n;
             break;
+        }
 
         // --- Temp offset: integer
         case MI_TEMP_OFFSET:
@@ -494,7 +514,8 @@ void settings_menu()
 {
     // Transition system to safe state (disable heating)
     change_state(EMERGENCY_SLEEP);
-    sensor_values.requested_power = 0;
+    controller_force_off();   // zero setpoint, integrator and requested power
+    heater_off();
     settings_menu_active = 1;
 
     LCD_SetRotation(flash_values.screen_rotation);
@@ -503,7 +524,7 @@ void settings_menu()
 
     // --- Firmware version string ---
     char str[64] = {0};
-    sprintf(str, "fw mod: %d.%d.%d   hw: %d.%d", fw_version_major, fw_version_minor, fw_version_patch, (uint8_t)get_hw_version() / 10, (uint8_t)get_hw_version() % 10);
+    sprintf(str, "fw: %d.%d.%d   hw: %d.%d", fw_version_major, fw_version_minor, fw_version_patch, (uint8_t)get_hw_version() / 10, (uint8_t)get_hw_version() % 10);
     if ((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)) {
         menu_lines_on_screen = 10;
         LCD_PutStr(6, 296, str, FONT_arial_20X23, C_Warning, C_Background);
@@ -534,6 +555,7 @@ void settings_menu()
     // Edit mode helpers
     float old_value = 0;
     uint32_t edit_cnt0 = 0;   // encoder "zero" at the start of editing
+    float excl_other = 0;     // graph/debug partner flag at edit entry
     uint8_t editing_index = 0xFF;  // position within the group (not an absolute index)
     uint8_t redraw_page = 1;
 
@@ -545,6 +567,7 @@ void settings_menu()
 
     while (settings_menu_active)
     {
+        iwdg_refresh();         // menu blocks the main loop - feed the watchdog
     	buttons_handle();       // process SW_2/SW_3 button presses (up/down navigation)
         // ---- Current list length ----
         uint16_t list_len = 0;
@@ -603,9 +626,11 @@ void settings_menu()
                 	    uint16_t abs_mi = MENU_GROUPS[current_group].idx[pos];
                 	    LCD_PutStr(5, line_y, mi_name(abs_mi), FONT_arial_20X23, C_Text, C_Background);
 
-                	    // Do not display values for the System group
-                	    if (!(current_group == (GROUPS_COUNT - 1))) {
-                	        uint8_t fi = mi_to_fi(abs_mi);
+                	    // Do not display values for the System group or for
+                	    // action items with no flash backing (fi == MI_NO_FLASH),
+                	    // which would otherwise index flash_values out of bounds.
+                	    uint8_t fi = mi_to_fi(abs_mi);
+                	    if (!(current_group == (GROUPS_COUNT - 1)) && fi != MI_NO_FLASH) {
                 	        display_menu_value_line(
                 	            line,
                 	            abs_mi,
@@ -671,6 +696,33 @@ void settings_menu()
 
             ((float*)&flash_values)[fi] = new_val;
             normalize_param(abs_mi);  // original normalization/cycling function
+
+            /* "Graph screen" and "Debug screen" both replace the main-screen
+             * area, so only one can be shown. Turning one ON clears the
+             * other; turning it back OFF in the same edit restores the
+             * other's value from edit entry. Only the partner's value is
+             * repainted (if its row is on this page); a page redraw here
+             * would flicker and drop the cursor frame while editing. */
+            if (abs_mi == MI_DISPLAY_GRAPH || abs_mi == MI_DEBUG_SCREEN) {
+                uint16_t other_mi = (abs_mi == MI_DISPLAY_GRAPH) ? MI_DEBUG_SCREEN : MI_DISPLAY_GRAPH;
+                float *other = (abs_mi == MI_DISPLAY_GRAPH) ? &flash_values.debug_screen : &flash_values.display_graph;
+                float want = (((float*)&flash_values)[fi] == 1) ? 0.0f : excl_other;
+                if (*other != want) {
+                    *other = want;
+                    for (uint16_t pos = page_start;
+                         pos < page_start + menu_lines_on_screen && pos < MENU_GROUPS[current_group].count;
+                         pos++) {
+                        if (MENU_GROUPS[current_group].idx[pos] == other_mi) {
+                            uint8_t other_line = pos % menu_lines_on_screen;
+                            display_menu_value_line(other_line, other_mi, *other,
+                                                    0, 0, 190, 35 + other_line * 26,
+                                                    C_Text, C_Background);
+                            break;
+                        }
+                    }
+                }
+            }
+
             float norm_val = ((float*)&flash_values)[fi];
 
             // Redraw ONLY the value zone, inverting colors
@@ -726,20 +778,44 @@ void settings_menu()
 
                     if (abs_mi == MI_EXIT_NO_SAVE) {
                         settings_menu_active = 0;
+                        wait_button_release();   // don't reboot with SW_1 held
                         HAL_NVIC_SystemReset();
                     } else if (abs_mi == MI_SAVE_REBOOT) {
                         settings_save();
                         profiles_save();
                         settings_menu_active = 0;
+                        wait_button_release();   // don't reboot with SW_1 held
                         HAL_NVIC_SystemReset();
                     } else if (abs_mi == MI_LOAD_DEFAULT) {
+                        /* RAM only, like every other edit in this menu:
+                         * -Save and Reboot- writes settings and profiles,
+                         * -Exit no Save- discards both. Profile edits made
+                         * after this are kept. */
                         flash_values = default_flash_values;
-                        profiles_reset();
+                        tip_profiles_load_defaults();
                         redraw_page = 1; // values changed - redraw
-                    } else {
-                        // Enter value editing
+                    } else if (abs_mi == MI_PD_INFO) {
+                        /* Full-screen PD info page; returns on click. */
+                        show_pd_info_screen();
+                        /* It cleared the whole panel: restore the fw/hw
+                         * footer and force a full menu repaint. */
+                        if ((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)) {
+                            LCD_PutStr(6, 296, str, FONT_arial_20X23, C_Warning, C_Background);
+                        } else {
+                            LCD_PutStr(6, 215, str, FONT_arial_20X23, C_Warning, C_Background);
+                        }
+                        /* Turns and SW2/SW3 presses on the page must not
+                         * move the cursor. */
+                        TIM2->CNT = 1000 + cursor * 2;
+                        buttons_clear_all();
+                        redraw_page = 1;
+                        page_start = 0xFFFF;
+                    } else if (mi_to_fi(abs_mi) != MI_NO_FLASH) {
+                        // Enter value editing (action items without flash
+                        // backing must never index flash_values)
                         uint8_t fi = mi_to_fi(abs_mi);
                         old_value = ((float*)&flash_values)[fi];
+                        excl_other = (abs_mi == MI_DISPLAY_GRAPH) ? flash_values.debug_screen : flash_values.display_graph;
                         editing_index = cursor;
                         edit_cnt0 = TIM2->CNT;      // "zero" for delta
                         level = 2;

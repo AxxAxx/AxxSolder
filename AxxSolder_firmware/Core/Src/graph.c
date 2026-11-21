@@ -125,6 +125,8 @@ void draw_dashed_line_fillframe(int x1, int y1, int x2, int y2, uint16_t color,
     }
 }
 
+void draw_axis_labels(void);
+
 void draw_graph_init(void) {
 	// Background, grid, and labels are drawn once
 	UG_FillFrame(GRAPH_X0, GRAPH_Y0 - GRAPH_HEIGHT , GRAPH_X0 + GRAPH_WIDTH, GRAPH_Y0, background);
@@ -262,6 +264,11 @@ void draw_graph_init(void) {
     }
 
 
+
+    /* Draw the axis labels too: callers re-init the graph after a full screen
+     * clear (e.g. popup dismissal), and check_and_update_labels only redraws
+     * them on a state change. */
+    draw_axis_labels();
 
     initialized = 1;
 }
@@ -459,7 +466,7 @@ void draw_axis_labels(void) {
 
 
 void check_and_update_labels(void) {
-	uint8_t last_sensor_state = 0xFF;
+	static uint8_t last_sensor_state = 0xFF;
 	if (last_sensor_state != sensor_values.current_state) {
         draw_axis_labels();
         last_sensor_state = sensor_values.current_state;

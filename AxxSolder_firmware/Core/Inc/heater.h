@@ -6,11 +6,15 @@
 
 /* Raw heater-current ADC reading. Set from the ADC2 ISR; sensors.c
  * reads it to compute the filtered heater_current. */
-extern uint16_t current_raw;
+extern volatile uint16_t current_raw;
 
 /* Direct PWM control */
 void heater_set_duty(uint16_t duty_cycle);
 void heater_off(void);
+
+/* Register-level kill of the heater and the USR_4 load output, for fault
+ * handlers and Error_Handler (no HAL; safe before MX_TIM1_Init). */
+void heater_fault_kill(void);
 
 /* Recomputes the heater duty from sensor_values (bus voltage, max
  * power, requested power). Called from the ADC2 ISR. */
@@ -21,9 +25,10 @@ void heater_update_pwm(void);
  * - force the timer update event
  * - arm the ADC2 capture (completes in the ADC ISR)
  *
- * Caller is responsible for rate-limiting and for ensuring the sensors
- * module is not in the middle of a thermocouple sample. */
-void heater_start_current_measurement(void);
+ * Arms atomically (IRQs masked) and only if no thermocouple sample is
+ * in flight and no delta-T fault is pending. Returns true if armed.
+ * Caller is responsible for rate-limiting. */
+bool heater_start_current_measurement(void);
 
 /* True while a current measurement is armed-or-in-flight. */
 bool heater_current_measurement_in_progress(void);

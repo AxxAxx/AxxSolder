@@ -8,3 +8,10 @@
 .clangd
 .cache/
 .history/
+
+# Firmware build output
+AxxSolder_firmware/build_verify/
+AxxSolder_firmware/build_debug/
+AxxSolder_firmware/build_*/
+[Rr]elease/
+[Dd]ebug/

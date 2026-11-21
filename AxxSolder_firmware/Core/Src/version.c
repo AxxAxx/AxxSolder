@@ -2,8 +2,8 @@
 #include "main.h"   /* VERSION_BIT_1/2/3_Pin, GPIOC, HAL_GPIO_ReadPin */
 
 uint8_t fw_version_major =  3;
-uint8_t fw_version_minor =  8;
-uint8_t fw_version_patch =  1;
+uint8_t fw_version_minor =  9;
+uint8_t fw_version_patch =  0;
 
 /**
  * @brief Retrieves the hardware version of the device based on the state of 3 input pins.

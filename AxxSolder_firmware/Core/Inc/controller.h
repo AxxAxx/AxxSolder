@@ -27,9 +27,16 @@ extern float PID_NEG_ERROR_I_BIAS;
  * time, output/I-term limits, asymmetric I-gain. */
 void controller_init(void);
 
-/* Per-main-loop tick. Runs PID_Compute(), then updates PID_setpoint
- * based on the current state machine state (RUN/PRESTANDBY -> set_temp,
- * STANDBY -> standby_temp clamp, SLEEP/HALTED/EMERGENCY_SLEEP -> 0). */
+/* Per-main-loop tick. Updates PID_setpoint from the current state machine
+ * state (RUN/PRESTANDBY -> set_temp, STANDBY -> standby_temp clamp,
+ * SLEEP/HALTED/EMERGENCY_SLEEP -> 0), then runs PID_Compute(). Holds
+ * everything at zero while a delta-T fault is pending. */
 void controller_tick(void);
+
+/* Immediately cut heater power: zero the setpoint, requested_power and the
+ * PID integrator. Call before entering any blocking UI loop (settings menu,
+ * profile popup): the TIM6/ADC ISR chain keeps applying requested_power
+ * while the main loop is blocked. */
+void controller_force_off(void);
 
 #endif /* CONTROLLER_H */

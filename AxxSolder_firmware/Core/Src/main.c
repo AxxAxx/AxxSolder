@@ -44,6 +44,8 @@
 #include "settings.h"
 #include "telemetry.h"
 #include "power_source.h"
+#include "watchdog.h"     /* iwdg_*, reset_flags_capture */
+#include "fault_record.h" /* fault_record_boot */
 #include "display_app.h"
 #include "controller.h"
 #include <math.h>
@@ -226,7 +228,20 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+	/* Started by the ROM bootloader's Go command (e.g. right after a DFU
+	 * download): system memory is still mapped at 0x0, so every interrupt
+	 * would vector into the bootloader and the firmware hangs (buzzer stuck
+	 * on). Reset so the MCU boots cleanly from flash. */
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+	(void)RCC->APB2ENR;
+	if ((SYSCFG->MEMRMP & SYSCFG_MEMRMP_MEM_MODE) != 0U){
+		NVIC_SystemReset();
+	}
 
+	/* Reset cause first, before anything can clear it (watchdog popup,
+	 * fault recorder). */
+	reset_flags_capture();
+	fault_record_boot();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -264,12 +279,36 @@ int main(void)
   MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
 
+	__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, 50); //Set BUZZER duty to 50% (settings_init beeps on a fresh flash)
+
+	/* Check if user data in flash is valid, if not - write default parameters */
+	settings_init();
+
+	/* Initialise the moving-average + hysteresis filters BEFORE TIM6 starts:
+	 * the TIM6 -> TIM7 -> ADC1-complete ISR runs sensors_get_thermocouple_temperature(),
+	 * which feeds these filters, and computing on an un-initialised filter
+	 * divides by WindowLength = 0. The fill loop (needs live ADC data) stays
+	 * after the ADC start. */
+	Moving_Average_Init(&thermocouple_temperature_filter_struct,(uint32_t)2);
+	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,(uint32_t)flash_values.displayed_temp_filter*10);
+	Moving_Average_Init(&requested_power_filtered_filter_struct,(uint32_t)20);
+	Moving_Average_Init(&mcu_temperature_filter_struct,(uint32_t)100);
+	Moving_Average_Init(&input_voltage_filterStruct,(uint32_t)25);
+	Moving_Average_Init(&current_filterStruct,(uint32_t)2);
+	Moving_Average_Init(&stand_sense_filterStruct,(uint32_t)20);
+	Moving_Average_Init(&handle1_sense_filterStruct,(uint32_t)20);
+	Moving_Average_Init(&handle2_sense_filterStruct,(uint32_t)20);
+
+	/* initialize hysteresis functions */
+	Hysteresis_Init(&thermocouple_temperature_filtered_hysteresis, 0.5f);
+
+	/* Keep TIM1 start -> TIM6 start tight: their relative start time fixes the
+	 * phase between heater switching and the TC sample window. */
 	heater_set_duty(0);		//Set heater duty to zero to ensure zero startup current
 	HAL_TIMEx_PWMN_Start_IT(&htim1, TIM_CHANNEL_3);
 
 	HAL_TIM_Encoder_Start_IT(&htim2, TIM_CHANNEL_ALL);
 	HAL_TIM_PWM_Start_IT(&htim1, TIM_CHANNEL_1);
-	__HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, 50); //Set BUZZER duty to 50%
 	HAL_TIM_Base_Start_IT(&htim6);
 
 	__HAL_TIM_ENABLE_IT(&htim7, TIM_IT_UPDATE);
@@ -285,9 +324,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	HAL_Delay(200);
 
-	/* Check if user data in flash is valid, if not - write default parameters */
-	settings_init();
-
 	/* Load tip profiles from storage */
 	tip_profiles_init(STORAGE_PROFILES_DRIVER);
 
@@ -295,6 +331,9 @@ int main(void)
 	LCD_init();
 
 	LCD_SetRotation(flash_values.screen_rotation);
+
+	/* A HardFault before the last reset left a record: show it once */
+	show_fault_record_screen();
 
 	/* Apply encoder direction setting */
 	if(flash_values.change_enc_dir == 1){
@@ -309,26 +348,21 @@ int main(void)
 	TIM2->CNT = flash_values.startup_temperature;
 	sensor_values.set_temperature = flash_values.startup_temperature;
 
-	/* initialize moving average functions */
-	Moving_Average_Init(&thermocouple_temperature_filter_struct,(uint32_t)2);
-	Moving_Average_Init(&thermocouple_temperature_filtered_filter_struct,(uint32_t)flash_values.displayed_temp_filter*10);
-	Moving_Average_Init(&requested_power_filtered_filter_struct,(uint32_t)20);
-	Moving_Average_Init(&mcu_temperature_filter_struct,(uint32_t)100);
-	Moving_Average_Init(&input_voltage_filterStruct,(uint32_t)25);
-	Moving_Average_Init(&current_filterStruct,(uint32_t)2);
-	Moving_Average_Init(&stand_sense_filterStruct,(uint32_t)20);
-	Moving_Average_Init(&handle1_sense_filterStruct,(uint32_t)20);
-	Moving_Average_Init(&handle2_sense_filterStruct,(uint32_t)20);
-
-	/* initialize hysteresis functions */
-	Hysteresis_Init(&thermocouple_temperature_filtered_hysteresis, 0.5f);
-
-	/* Init and fill filter structures with initial values */
+	/* Fill filter structures with initial values (initialised before TIM6) */
 	for (int i = 0; i<200;i++){
 		sensors_get_bus_voltage(); // Function to retrieve the filtered bus voltage
 		sensors_get_heater_current(); // Function to retrieve the filtered heater current
 		sensors_get_mcu_temp(); // Function to retrieve the MCU temperature
-		sensors_get_thermocouple_temperature(); // Get thermocouple temperature
+		/* The live TIM6->TIM7->ADC1 ISR chain runs this SAME function: its
+		 * moving-average Sum/History update is a non-atomic RMW, and a
+		 * collision here permanently skews the incrementally-maintained Sum.
+		 * Mask IRQs for the call - same pattern as sensors_reset_filtered_tc(). */
+		{
+			uint32_t primask = __get_PRIMASK();
+			__disable_irq();
+			sensors_get_thermocouple_temperature(); // Get thermocouple temperature
+			__set_PRIMASK(primask);
+		}
 		handle_detect(); // Get the handle type attached
 		handle_apply_settings(); // Function to set heating values depending on the detected handle
 		stand_update(); // Get handle stand status to activate SLEEP
@@ -342,13 +376,19 @@ int main(void)
 	/* check STUSB4500 */
 	power_source_init();
 
-	/* Draw the main screen decoration */
-	if (flash_values.display_graph == 0){
+	/* Draw the main screen decoration (debug screen takes priority over graph) */
+	if (flash_values.display_graph == 0 || flash_values.debug_screen == 1){
 		LCD_draw_main_screen();
 	}
 	else{
 		//UG_FillScreen(background);
 		draw_graph_init();
+	}
+
+	/* Tell the user why the iron restarted (it comes up in sleep, and heat at
+	 * startup is skipped below). */
+	if (reset_was_watchdog()){
+		show_popup("Watchdog reset");
 	}
 	HAL_Delay(250);
 
@@ -376,6 +416,7 @@ int main(void)
 	beep_double(flash_values.startup_beep);
 
 	//Flag to indicate that the startup sequence is done
+	buttons_clear_all();   // drop presses latched during boot
 	startup_done = 1;
 	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
 
@@ -384,12 +425,17 @@ int main(void)
 	   doing it here would be immediately overridden by handle_check_cartridge,
 	   which forces EMERGENCY_SLEEP until the first current measurement proves a
 	   tip is present (heater_current starts at 0). */
-	uint8_t heat_at_startup_pending = (flash_values.heat_at_startup == 1);
+	uint8_t heat_at_startup_pending = (flash_values.heat_at_startup == 1) && !reset_was_watchdog();
 
 	/* Initiate the PID controller to zero*/
 	//PID_Init_Zero();
 
+	/* Arm the watchdog now that the multi-second blocking boot (power_source_init)
+	 * is done. From here every blocking loop must call iwdg_refresh(). */
+	iwdg_start();
+
 	while (1){
+		iwdg_refresh();   /* main loop is alive */
 
 		if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
 			stand_update();
@@ -429,9 +475,8 @@ int main(void)
 		if (flash_values.current_measurement == 1){
 
 			if (HAL_GetTick() - previous_measure_current_update >= interval_measure_current) {
-				// Perform current measurement only if thermocouple measurement is not in progress.
-				if (sensors_thermocouple_sampling_idle()) {
-					heater_start_current_measurement();
+				// Arms only outside the thermocouple sample; retry next loop otherwise.
+				if (heater_start_current_measurement()) {
 					previous_measure_current_update = HAL_GetTick();
 				}
 			}
@@ -1308,9 +1353,18 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
 
+	/* Heater off at register level first: Error_Handler can run from an ISR
+	 * (earth fault) or before the timers are initialised. */
+	__disable_irq();
+	heater_fault_kill();
+
 	// Stop the heater PWM and reconfigure as a GPIO and set to RESET
-	heater_off();
-	HAL_TIMEx_PWMN_Stop_IT(&htim1, TIM_CHANNEL_3);
+	// (guarded: before MX_TIM1_Init htim1.Instance is NULL and the HAL
+	// calls would fault inside the error path)
+	if (htim1.Instance != NULL){
+		heater_off();
+		HAL_TIMEx_PWMN_Stop_IT(&htim1, TIM_CHANNEL_3);
+	}
 
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -1322,9 +1376,13 @@ void Error_Handler(void)
 	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 	HAL_GPIO_WritePin(GPIOF, HEATER_Pin, GPIO_PIN_RESET);
 
-	__disable_irq();
+  /* Latched until a power cycle with the heater off, watchdog fed. For the
+   * earth fault this keeps its message on screen; any other Error_Handler
+   * entry after boot (HAL init/runtime error) latches the same way, with
+   * nothing new drawn. */
   while (1)
   {
+	iwdg_refresh_latched();
   }
   /* USER CODE END Error_Handler_Debug */
 }
