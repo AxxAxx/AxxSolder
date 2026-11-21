@@ -24,8 +24,12 @@ void change_state(mainstates new_state){
 	// Set the new current state
 	sensor_values.current_state = new_state;
 
-	// If transitioning TO RUN STATE and the current temperature should be saved as the startup temperature
-	if((sensor_values.previous_state != RUN) && (sensor_values.current_state == RUN) && (flash_values.startup_temp_is_previous_temp == 1)){
+	// If transitioning TO RUN STATE and the current temperature should be saved as the startup temperature.
+	// Only touch flash when the value actually changed: settings_save() erases and
+	// reprograms a whole page (~10k cycle endurance, ~30 ms with IRQs off), and RUN
+	// is entered on every pickup from the stand.
+	if((sensor_values.previous_state != RUN) && (sensor_values.current_state == RUN) && (flash_values.startup_temp_is_previous_temp == 1)
+			&& (flash_values.startup_temperature != sensor_values.set_temperature)){
 		flash_values.startup_temperature = sensor_values.set_temperature;
 		settings_save();
 	}
