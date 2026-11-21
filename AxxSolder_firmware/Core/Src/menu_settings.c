@@ -58,6 +58,7 @@ enum {
     MI_DISP_TEMP_FILTER   = 302,
     MI_SHOW_POWER         = 303,
     MI_DISPLAY_GRAPH      = 304,
+    MI_DEBUG_SCREEN       = 305,
     MI_PD_INFO            = 306,   /* action: opens the PD information page */
 
     /* ── Sound (400–499) ───────────────────────────────────────────── */
@@ -130,7 +131,8 @@ static const MI_Entry mi_table[] = {
     { MI_TEMP_UNIT,          13,         "Temperature unit"     },
     { MI_DISP_TEMP_FILTER,   21,         "Disp Temp. filter"    },
     { MI_SHOW_POWER,         26,         "Show power"           },
-    { MI_DISPLAY_GRAPH,      32,         "Display graph"        },
+    { MI_DISPLAY_GRAPH,      32,         "Graph screen"         },
+    { MI_DEBUG_SCREEN,       39,         "Debug screen"         },
     { MI_PD_INFO,       MI_NO_FLASH,     "PD information"       },
     /* Sound */
     { MI_BUZZER_ENABLED,     5,          "Buzzer Enabled"       },
@@ -208,7 +210,7 @@ static const uint16_t GRP_PRESETS[] = { MI_PRESET_TEMP_1, MI_PRESET_TEMP_2 };
 /* Display */
 static const uint16_t GRP_DISPLAY[] = {
     MI_SCREEN_ROTATION, MI_TEMP_UNIT, MI_DISP_TEMP_FILTER, MI_SHOW_POWER,
-    MI_DISPLAY_GRAPH, MI_PD_INFO
+    MI_DISPLAY_GRAPH, MI_DEBUG_SCREEN, MI_PD_INFO
 };
 
 /* Sound */
@@ -335,6 +337,7 @@ EnumParam enum_params[] = {
     { MI_CHANGE_ENC_DIR,     bool_str, 2 },
     { MI_ENCODER_STEP,       encoder_step_str, 4 },
     { MI_HEAT_AT_STARTUP,    bool_str, 2 },
+    { MI_DEBUG_SCREEN,       bool_str, 2 },
 };
 
 #define ENUM_PARAM_COUNT (sizeof(enum_params) / sizeof(enum_params[0]))
@@ -453,7 +456,7 @@ void normalize_param(uint16_t index) {
         case MI_SHOW_POWER: case MI_DETECT_NT115:
         case MI_DISPLAY_GRAPH: case MI_DELTA_T_DETECT:
         case MI_PROFILE_ON_TIP_CHG: case MI_CHANGE_ENC_DIR:
-        case MI_HEAT_AT_STARTUP:
+        case MI_HEAT_AT_STARTUP: case MI_DEBUG_SCREEN:
             *p = normalize_enum(*p, 2);
             break;
 
@@ -551,6 +554,7 @@ void settings_menu()
     // Edit mode helpers
     float old_value = 0;
     uint32_t edit_cnt0 = 0;   // encoder "zero" at the start of editing
+    float excl_other = 0;     // graph/debug partner flag at edit entry
     uint8_t editing_index = 0xFF;  // position within the group (not an absolute index)
     uint8_t redraw_page = 1;
 
@@ -690,6 +694,21 @@ void settings_menu()
 
             ((float*)&flash_values)[fi] = new_val;
             normalize_param(abs_mi);  // original normalization/cycling function
+
+            /* "Graph screen" and "Debug screen" both replace the main-screen
+             * area, so only one can be shown. Turning one ON clears the
+             * other; turning it back OFF in the same edit restores the
+             * other's value from edit entry (redraw the page so the partner
+             * row visibly updates too). */
+            if (abs_mi == MI_DISPLAY_GRAPH || abs_mi == MI_DEBUG_SCREEN) {
+                float *other = (abs_mi == MI_DISPLAY_GRAPH) ? &flash_values.debug_screen : &flash_values.display_graph;
+                float want = (((float*)&flash_values)[fi] == 1) ? 0.0f : excl_other;
+                if (*other != want) {
+                    *other = want;
+                    redraw_page = 1;
+                }
+            }
+
             float norm_val = ((float*)&flash_values)[fi];
 
             // Redraw ONLY the value zone, inverting colors
@@ -782,6 +801,7 @@ void settings_menu()
                         // backing must never index flash_values)
                         uint8_t fi = mi_to_fi(abs_mi);
                         old_value = ((float*)&flash_values)[fi];
+                        excl_other = (abs_mi == MI_DISPLAY_GRAPH) ? flash_values.debug_screen : flash_values.display_graph;
                         editing_index = cursor;
                         edit_cnt0 = TIM2->CNT;      // "zero" for delta
                         level = 2;

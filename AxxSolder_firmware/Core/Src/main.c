@@ -358,8 +358,8 @@ int main(void)
 	/* check STUSB4500 */
 	power_source_init();
 
-	/* Draw the main screen decoration */
-	if (flash_values.display_graph == 0){
+	/* Draw the main screen decoration (debug screen takes priority over graph) */
+	if (flash_values.display_graph == 0 || flash_values.debug_screen == 1){
 		LCD_draw_main_screen();
 	}
 	else{

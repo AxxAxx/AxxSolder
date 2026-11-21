@@ -136,8 +136,8 @@ void buttons_handle(void){
 			if(flash_values.three_button_mode == 0){
 				flash_values.preset_temp_1 = encoder_get_count();
 				settings_save();
-				/* Draw the main screen decoration */
-				if (flash_values.display_graph == 0){
+				/* Draw the main screen decoration (debug screen takes priority over graph) */
+				if (flash_values.display_graph == 0 || flash_values.debug_screen == 1){
 					LCD_draw_main_screen();
 				}
 				else{
@@ -165,8 +165,8 @@ void buttons_handle(void){
 			if(flash_values.three_button_mode == 0){
 				flash_values.preset_temp_2 = encoder_get_count();
 				settings_save();
-				/* Draw the main screen decoration */
-				if (flash_values.display_graph == 0){
+				/* Draw the main screen decoration (debug screen takes priority over graph) */
+				if (flash_values.display_graph == 0 || flash_values.debug_screen == 1){
 					LCD_draw_main_screen();
 				}
 				else{

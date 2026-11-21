@@ -7,6 +7,8 @@
 #include "heater.h"
 #include "controller.h"   /* controller_force_off */
 #include "power_source.h"
+#include "sensors.h"      /* sensors_get_raw_tc (debug screen) */
+#include "version.h"      /* fw version + hw revision (debug screen) */
 #include "buttons.h"      /* buttons_take_press (PD info page) */
 #include "lcd.h"
 #include "gui.h"
@@ -221,10 +223,246 @@ static void update_graph_display(void) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Debug screen                                                       */
+/* ------------------------------------------------------------------ */
+
+/* When flash_values.debug_screen is enabled the main screen (and graph
+ * view) is replaced by a full-screen debug view: FONT_7X12 text, one
+ * "label: value" row per line. It shows everything the main screen shows
+ * (temperatures, handle, voltage, MCU temp, power source and power, presets,
+ * standby/sleep countdown) plus the raw runtime state: the real state incl.
+ * previous (so SLEEP and EMERGENCY_SLEEP can be told apart), the stand and
+ * handle sense inputs, filtered + instant tip temperature, heater current
+ * (filtered + raw ADC), leak current, raw thermocouple ADC, USB-PD power
+ * limit and uptime. The title line carries the firmware version and
+ * hardware revision.
+ *
+ * The row grid (12 px pitch, title at the top) fits all rows in both
+ * orientations (last row ends at y = 240). Static labels are drawn once by
+ * LCD_draw_debug_screen(); update_debug_screen() rewrites only the value
+ * fields that changed since the last tick, so the screen costs the main
+ * loop next to nothing while it idles. */
+
+/* Text origin inset so the display bezel does not cover the top-left. */
+#define DEBUG_LABEL_X    14                 /* label column X */
+#define DEBUG_TITLE_Y    11                 /* title row Y */
+#define DEBUG_ROW_Y(i)   (24 + 12 * (i))    /* first row Y 24 */
+#define DEBUG_VALUE_X    98                 /* value column: label X + 12 chars * 7 px */
+#define DEBUG_VALUE_LEN  16                 /* value field width: ends at x = 210 < 240 */
+
+enum {
+    DBG_ROW_STATE = 0,     /* current (previous) */
+    DBG_ROW_SET_TEMP,
+    DBG_ROW_TIP_TEMP,      /* filtered/instant */
+    DBG_ROW_RAW_ADC,
+    DBG_ROW_HANDLE,
+    DBG_ROW_VOLTAGE,
+    DBG_ROW_MCU_TEMP,
+    DBG_ROW_PWR_SRC,
+    DBG_ROW_PD_LIMIT,
+    DBG_ROW_MAX_POWER,
+    DBG_ROW_REQ_POWER,
+    DBG_ROW_CURRENT,       /* filtered A + raw ADC */
+    DBG_ROW_LEAK,
+    DBG_ROW_IN_STAND,
+    DBG_ROW_H1_H2,
+    DBG_ROW_PRESETS,
+    DBG_ROW_COUNTDOWN,
+    DBG_ROW_UPTIME,
+    DBG_ROW_COUNT
+};
+
+_Static_assert(DEBUG_ROW_Y(DBG_ROW_COUNT - 1) + 12 <= 240, "debug rows overflow the panel");
+
+static const char *debug_labels[DBG_ROW_COUNT] = {
+    "STATE:",
+    "SET TEMP:",
+    "TIP TEMP:",
+    "RAW ADC:",
+    "HANDLE:",
+    "VOLTAGE:",
+    "MCU TEMP:",
+    "PWR SRC:",
+    "PD LIMIT:",
+    "MAX POWER:",
+    "REQ POWER:",
+    "CURRENT:",
+    "LEAK ADC:",
+    "IN STAND:",
+    "H1/H2:",
+    "PRESETS:",
+    "COUNTDOWN:",
+    "UPTIME:",
+};
+
+/* Last value drawn per row; a row is only repainted when its text changes. */
+static char debug_last[DBG_ROW_COUNT][DEBUG_VALUE_LEN + 1];
+
+static const char *debug_state_str(mainstates state) {
+    switch (state) {
+        case RUN:             return "RUN";
+        case PRESTANDBY:      return "PSTBY";
+        case STANDBY:         return "STBY";
+        case SLEEP:           return "SLEEP";
+        case EMERGENCY_SLEEP: return "EMSLP";
+        case HALTED:          return "HALT";
+        default:              return "?";
+    }
+}
+
+static const char *debug_handle_str(void) {
+    switch (attached_handle) {
+        case T210:  return "T210";
+        case T245:  return "T245";
+        case NT115: return "NT115";
+        default:    return "---";
+    }
+}
+
+static void LCD_draw_debug_screen(void) {
+    char title[32];
+    uint8_t hw = get_hw_version();
+    UG_FillScreen(C_Background);
+    memset(debug_last, 0, sizeof(debug_last));   /* panel cleared: repaint all values */
+    snprintf(title, sizeof(title), "AxxSolder %u.%u.%u HW%u.%u",
+             fw_version_major, fw_version_minor, fw_version_patch, hw / 10u, hw % 10u);
+    LCD_PutStr(DEBUG_LABEL_X, DEBUG_TITLE_Y, title, FONT_7X12, C_Text, C_Background);
+    for (uint8_t i = 0; i < DBG_ROW_COUNT; i++) {
+        LCD_PutStr(DEBUG_LABEL_X, DEBUG_ROW_Y(i), (char *)debug_labels[i], FONT_7X12, C_Text, C_Background);
+    }
+}
+
+/* Pad to a fixed width so shorter values erase stale characters; skip the
+ * (slow) LCD write when the row is unchanged. */
+static void put_debug_value(uint8_t row, const char *value) {
+    char field[DEBUG_VALUE_LEN + 1];
+    snprintf(field, sizeof(field), "%-*.*s", DEBUG_VALUE_LEN, DEBUG_VALUE_LEN, value);
+    if (strcmp(field, debug_last[row]) == 0) return;
+    memcpy(debug_last[row], field, sizeof(field));
+    LCD_PutStr(DEBUG_VALUE_X, DEBUG_ROW_Y(row), field, FONT_7X12, C_Text, C_Background);
+}
+
+static void update_debug_screen(void) {
+    char val[20];
+    char unit = (flash_values.deg_celsius == 1) ? 'C' : 'F';
+
+    snprintf(val, sizeof(val), "%s (%s)",
+             debug_state_str(sensor_values.current_state),
+             debug_state_str(sensor_values.previous_state));
+    put_debug_value(DBG_ROW_STATE, val);
+
+    snprintf(val, sizeof(val), "%d %c",
+             (int)convert_temperature(sensor_values.set_temperature), unit);
+    put_debug_value(DBG_ROW_SET_TEMP, val);
+
+    /* filtered/instant - a large spread indicates filter lag or noise */
+    if (cartridge_state == DETACHED) {
+        snprintf(val, sizeof(val), "---/%d %c",
+                 (int)convert_temperature(sensor_values.thermocouple_temperature), unit);
+    } else {
+        snprintf(val, sizeof(val), "%d/%d %c",
+                 (int)convert_temperature(sensor_values.thermocouple_temperature_filtered),
+                 (int)convert_temperature(sensor_values.thermocouple_temperature), unit);
+    }
+    put_debug_value(DBG_ROW_TIP_TEMP, val);
+
+    snprintf(val, sizeof(val), "%d", (int)sensors_get_raw_tc());
+    put_debug_value(DBG_ROW_RAW_ADC, val);
+
+    put_debug_value(DBG_ROW_HANDLE, debug_handle_str());
+
+    snprintf(val, sizeof(val), "%d.%d V",
+             (int)sensor_values.bus_voltage, (int)(sensor_values.bus_voltage * 10) % 10);
+    put_debug_value(DBG_ROW_VOLTAGE, val);
+
+    snprintf(val, sizeof(val), "%d %c",
+             (int)convert_temperature(sensor_values.mcu_temperature), unit);
+    put_debug_value(DBG_ROW_MCU_TEMP, val);
+
+    switch (power_source) {
+        case POWER_DC:  put_debug_value(DBG_ROW_PWR_SRC, "DC");  break;
+        case POWER_USB: put_debug_value(DBG_ROW_PWR_SRC, "USB"); break;
+        case POWER_BAT: put_debug_value(DBG_ROW_PWR_SRC, "BAT"); break;
+        default:        put_debug_value(DBG_ROW_PWR_SRC, "?");   break;
+    }
+
+    /* PD limit defaults to FLT_MAX ("no limit"); casting that to int is UB.
+     * The range check also rejects NaN. */
+    float pd_limit = sensor_values.USB_PD_power_limit;
+    if (pd_limit >= 0.0f && pd_limit < 9999.0f) {
+        snprintf(val, sizeof(val), "%d W", (int)pd_limit);
+    } else {
+        snprintf(val, sizeof(val), "-");
+    }
+    put_debug_value(DBG_ROW_PD_LIMIT, val);
+
+    snprintf(val, sizeof(val), "%d W", (int)sensor_values.max_power_watt);
+    put_debug_value(DBG_ROW_MAX_POWER, val);
+
+    float power_fraction = sensor_values.requested_power / PID_MAX_OUTPUT;
+    snprintf(val, sizeof(val), "%d W %d%%",
+             (int)(sensor_values.max_power_watt * power_fraction),
+             (int)(power_fraction * 100.0f));
+    put_debug_value(DBG_ROW_REQ_POWER, val);
+
+    snprintf(val, sizeof(val), "%d.%dA r%u",
+             (int)sensor_values.heater_current, (int)(sensor_values.heater_current * 10) % 10,
+             current_raw);
+    put_debug_value(DBG_ROW_CURRENT, val);
+
+    snprintf(val, sizeof(val), "%u", sensor_values.leak_current);
+    put_debug_value(DBG_ROW_LEAK, val);
+
+    snprintf(val, sizeof(val), "%d.%d",
+             (int)sensor_values.in_stand, (int)(sensor_values.in_stand * 10) % 10);
+    put_debug_value(DBG_ROW_IN_STAND, val);
+
+    snprintf(val, sizeof(val), "%d.%d %d.%d",
+             (int)sensor_values.handle1_sense, (int)(sensor_values.handle1_sense * 10) % 10,
+             (int)sensor_values.handle2_sense, (int)(sensor_values.handle2_sense * 10) % 10);
+    put_debug_value(DBG_ROW_H1_H2, val);
+
+    snprintf(val, sizeof(val), "%d %d",
+             (int)convert_temperature(flash_values.preset_temp_1),
+             (int)convert_temperature(flash_values.preset_temp_2));
+    put_debug_value(DBG_ROW_PRESETS, val);
+
+    /* All in uint32: the float settings times are converted once, so an
+     * expired timer gives 0 instead of a negative float cast to unsigned. */
+    uint32_t now = HAL_GetTick();
+    uint32_t countdown_ms = 0;
+    if (sensor_values.current_state == PRESTANDBY) {
+        uint32_t total = (flash_values.standby_delay > 0.0f) ? (uint32_t)flash_values.standby_delay * 1000UL : 0;
+        uint32_t elapsed = now - previous_millis_prestandby;
+        countdown_ms = (elapsed < total) ? (total - elapsed) : 0;
+        snprintf(val, sizeof(val), "STBY %02lu:%02lu",
+                 countdown_ms / 60000UL, (countdown_ms % 60000UL) / 1000UL);
+    } else if (sensor_values.current_state == STANDBY) {
+        uint32_t total = (flash_values.standby_time > 0.0f) ? (uint32_t)flash_values.standby_time * 60000UL : 0;
+        uint32_t elapsed = now - previous_millis_standby;
+        countdown_ms = (elapsed < total) ? (total - elapsed) : 0;
+        snprintf(val, sizeof(val), "SLEEP %02lu:%02lu",
+                 countdown_ms / 60000UL, (countdown_ms % 60000UL) / 1000UL);
+    } else {
+        snprintf(val, sizeof(val), "-");
+    }
+    put_debug_value(DBG_ROW_COUNTDOWN, val);
+
+    uint32_t up_s = now / 1000UL;
+    snprintf(val, sizeof(val), "%lu:%02lu:%02lu",
+             up_s / 3600UL, (up_s / 60UL) % 60UL, up_s % 60UL);
+    put_debug_value(DBG_ROW_UPTIME, val);
+}
+
+/* ------------------------------------------------------------------ */
 /* Main-screen update                                                 */
 /* ------------------------------------------------------------------ */
 
 static void update_display(void) {
+    if (flash_values.debug_screen == 1) {
+        update_debug_screen();
+        return;
+    }
     if (flash_values.screen_rotation == 0) {
         update_standby_sleep_display();
     }
@@ -390,6 +628,10 @@ static void update_display(void) {
 /* ------------------------------------------------------------------ */
 
 void LCD_draw_main_screen(void) {
+    if (flash_values.debug_screen == 1) {
+        LCD_draw_debug_screen();
+        return;
+    }
     if ((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)) {
         UG_FillScreen(C_Background);
 
@@ -750,7 +992,8 @@ void display_app_tick(void){
 		if(HAL_GetTick() - previous_millis_popup >= POPUP_DWELL_MS){
 			popup_shown = 0;
 
-			if (flash_values.display_graph == 0){
+			/* Debug screen takes priority over the graph view */
+			if (flash_values.display_graph == 0 || flash_values.debug_screen == 1){
 				LCD_draw_main_screen(); // Clear the area where the emergency message is displayed
 			}
 			else{
@@ -764,7 +1007,7 @@ void display_app_tick(void){
 		if(HAL_GetTick() - previous_millis_display >= DISPLAY_TICK_INTERVAL_MS){
 			sensor_values.requested_power_filtered = clamp(Moving_Average_Compute(sensor_values.requested_power, &requested_power_filtered_filter_struct), 0.0f, PID_MAX_OUTPUT);
 
-			if (flash_values.display_graph == 0){
+			if (flash_values.display_graph == 0 || flash_values.debug_screen == 1){
 				update_display();
 			}
 			else{

@@ -46,7 +46,8 @@ Flash_values default_flash_values = {
     .show_profile_on_tip_change    = 0,
     .change_enc_dir                = 0,
     .encoder_step_idx              = 1,  /* index 1 -> step 2 */
-    .heat_at_startup               = 0
+    .heat_at_startup               = 0,
+    .debug_screen                  = 0
 };
 
 /* ------------------------------------------------------------------ */
@@ -56,13 +57,32 @@ Flash_values default_flash_values = {
 void settings_init(void){
 	// Check if user data in flash is valid, if not - write default parameters
 	if(!STORAGE_SETTINGS_DRIVER->verify(SETTINGS_PAGE, sizeof(Flash_values))){
-		STORAGE_SETTINGS_DRIVER->write(SETTINGS_PAGE, &default_flash_values, sizeof(Flash_values));
-		beep(1); //Beep once to indicate default parameters written to flash
-		HAL_Delay(100);
+		/* A page from before debug_screen was appended: 39 floats (156 B)
+		 * with the CRC at the same 8-byte aligned offset (160) as the new
+		 * 160 B layout, so it verifies at the old size. Keep those values
+		 * and default the new field instead of wiping the user's settings. */
+		const uint16_t old_size = sizeof(Flash_values) - sizeof(float);
+		if(STORAGE_SETTINGS_DRIVER->verify(SETTINGS_PAGE, old_size)){
+			flash_values = default_flash_values;
+			STORAGE_SETTINGS_DRIVER->read(SETTINGS_PAGE, &flash_values, old_size);
+			flash_values.debug_screen = 0;
+			settings_save();
+		}
+		else{
+			STORAGE_SETTINGS_DRIVER->write(SETTINGS_PAGE, &default_flash_values, sizeof(Flash_values));
+			beep(1); //Beep once to indicate default parameters written to flash
+			HAL_Delay(100);
+		}
 	}
 
 	/* Read flash data */
 	STORAGE_SETTINGS_DRIVER->read(SETTINGS_PAGE, &flash_values, sizeof(Flash_values));
+
+	/* "Graph screen" and "Debug screen" both replace the main screen; if both
+	 * are set the debug screen wins, so clear the graph to match. */
+	if(flash_values.display_graph == 1 && flash_values.debug_screen == 1){
+		flash_values.display_graph = 0;
+	}
 }
 
 void settings_save(void) {
