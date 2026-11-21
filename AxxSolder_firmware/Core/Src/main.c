@@ -228,6 +228,16 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+	/* Started by the ROM bootloader's Go command (e.g. right after a DFU
+	 * download): system memory is still mapped at 0x0, so every interrupt
+	 * would vector into the bootloader and the firmware hangs (buzzer stuck
+	 * on). Reset so the MCU boots cleanly from flash. */
+	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+	(void)RCC->APB2ENR;
+	if ((SYSCFG->MEMRMP & SYSCFG_MEMRMP_MEM_MODE) != 0U){
+		NVIC_SystemReset();
+	}
+
 	/* Reset cause first, before anything can clear it (watchdog popup,
 	 * fault recorder). */
 	reset_flags_capture();
