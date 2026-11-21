@@ -672,6 +672,9 @@ void profiles_popup(enum handles h)
 
 	if (match_count == 0) return;
 
+	/* Drop presses queued before the popup appeared */
+	buttons_clear_all();
+
 	/* Disable heater while popup blocks the main loop */
 	sensor_values.requested_power = 0;
 
@@ -709,7 +712,10 @@ void profiles_popup(enum handles h)
 	uint16_t timeout_ticks = 300;
 
 	while (1) {
-		buttons_handle();
+		/* No buttons_handle() here: the popup runs with settings_menu_active
+		 * == 0, so it would act on queued flags (a SW_1 release toggled
+		 * RUN/HALTED, BTN_2 was eaten by the preset path before the cancel
+		 * check). The popup reads its own inputs and drops the rest on exit. */
 		cursor = enc_sel(1000, &TIM2->CNT, match_count);
 
 		if (cursor != prev_cursor) {
@@ -732,12 +738,23 @@ void profiles_popup(enum handles h)
 			tip_profiles_set_active(h, match_idx[cursor]);
 			tip_profiles_save();
 			TIM2->CNT = saved_cnt;
+			buttons_clear_all();   /* drop flags queued during the popup */
 			return;
 		}
 
-		/* SW_2: cancel ??? keep current active profile */
-		if (buttons_take_press(BTN_2)) {
+		if (flash_values.three_button_mode == 1) {
+			/* 3-button mode: SW_2/SW_3 step the cursor like in the menus */
+			if (buttons_take_press(BTN_2)) {
+				TIM2->CNT += 2;
+			}
+			if (buttons_take_press(BTN_3) && TIM2->CNT >= 1002) {
+				TIM2->CNT -= 2;
+			}
+		}
+		/* SW_2: cancel - keep current active profile */
+		else if (buttons_take_press(BTN_2)) {
 			TIM2->CNT = saved_cnt;
+			buttons_clear_all();   /* drop flags queued during the popup */
 			return;
 		}
 
@@ -746,6 +763,7 @@ void profiles_popup(enum handles h)
 			tip_profiles_set_active(h, match_idx[cursor]);
 			tip_profiles_save();
 			TIM2->CNT = saved_cnt;
+			buttons_clear_all();   /* drop flags queued during the popup */
 			return;
 		}
 

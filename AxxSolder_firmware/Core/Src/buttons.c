@@ -77,36 +77,46 @@ void buttons_clear_all(void) {
 /* Function to toggle between RUN and HALTED at each press of the encoder button */
 void buttons_handle(void){
 	if(buttons_take_press(BTN_1)){
-		if (sensor_values.in_stand >= 0.2f){
-			/* Handle is in the stand: encoder press toggles sleep <-> heating.
-			   Any sleeping/stopped state -> RUN (wake); any heating state ->
-			   SLEEP (heater off) so the user can send it to sleep immediately
-			   instead of waiting out the standby timeout. */
-			if ((sensor_values.current_state == SLEEP) ||
-			    (sensor_values.current_state == EMERGENCY_SLEEP) ||
-			    (sensor_values.current_state == HALTED)){
-				change_state(RUN);
-			}
-			else{   /* RUN, PRESTANDBY, STANDBY */
-				change_state(SLEEP);
-			}
-		}
-		else{
-			/* Handle is out of the stand: RUN -> HALTED (stop); any other
-			   state -> RUN (wake / start heating). */
-			if (sensor_values.current_state == RUN){
-				change_state(HALTED);
+		/* Inside the settings/profiles menus SW_1 clicks are handled by the
+		 * menu's own GPIO polling, but the debounce ISR still queues the
+		 * release here. Acting on it would change state (and flash-write via
+		 * the RUN transition) after every menu click, so take the flag but
+		 * only act on it outside the menus. */
+		if (settings_menu_active == 0){
+			if (sensor_values.in_stand >= 0.2f){
+				/* Handle is in the stand: encoder press toggles sleep <-> heating.
+				   Any sleeping/stopped state -> RUN (wake); any heating state ->
+				   SLEEP (heater off) so the user can send it to sleep immediately
+				   instead of waiting out the standby timeout. */
+				if ((sensor_values.current_state == SLEEP) ||
+				    (sensor_values.current_state == EMERGENCY_SLEEP) ||
+				    (sensor_values.current_state == HALTED)){
+					change_state(RUN);
+				}
+				else{   /* RUN, PRESTANDBY, STANDBY */
+					change_state(SLEEP);
+				}
 			}
 			else{
-				change_state(RUN);
+				/* Handle is out of the stand: RUN -> HALTED (stop); any other
+				   state -> RUN (wake / start heating). */
+				if (sensor_values.current_state == RUN){
+					change_state(HALTED);
+				}
+				else{
+					change_state(RUN);
+				}
 			}
+			previous_millis_heating_halted_update = HAL_GetTick();
 		}
-		previous_millis_heating_halted_update = HAL_GetTick();
 	}
 
 	if(buttons_take_long_press(BTN_1)){
-		/* start settings menu */
-		settings_menu();
+		/* start settings menu - never recursively, the menu loops call
+		 * buttons_handle() themselves */
+		if (settings_menu_active == 0){
+			settings_menu();
+		}
 	}
 
 	/* Set "set temp" to preset temp 1 */
