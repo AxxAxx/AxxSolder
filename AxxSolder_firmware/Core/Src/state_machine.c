@@ -156,8 +156,13 @@ void handle_emergency_shutdown(void){
 		change_state(EMERGENCY_SLEEP);
 		show_popup("Standby timeout");
 	}
-	/* Set state to EMERGENCY_SLEEP if input voltage is too low */
-	if((sensor_values.bus_voltage <= MIN_BUSVOLTAGE) && (sensor_values.current_state == RUN)){
+	/* Set state to EMERGENCY_SLEEP if input voltage is too low. Also in the
+	 * standby states, which still heat: a sagging or 5 V-only supply must not
+	 * hold a tip at standby temperature either. */
+	if((sensor_values.bus_voltage <= MIN_BUSVOLTAGE) &&
+	   ((sensor_values.current_state == RUN) ||
+	    (sensor_values.current_state == PRESTANDBY) ||
+	    (sensor_values.current_state == STANDBY))){
 		change_state(EMERGENCY_SLEEP);
 		show_popup("Inp. Voltage too low");
 	}

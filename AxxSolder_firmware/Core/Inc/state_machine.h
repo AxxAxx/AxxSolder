@@ -31,7 +31,7 @@ void change_state(mainstates new_state);
 /* Safety check called from the main loop. Transitions to EMERGENCY_SLEEP
  * if any of these conditions are met:
  * - iron has been outside the stand longer than flash_values.emergency_time
- * - bus voltage drops below MIN_BUSVOLTAGE
+ * - bus voltage drops below MIN_BUSVOLTAGE (also in PRESTANDBY/STANDBY)
  * - tip temperature exceeds EMERGENCY_SHUTDOWN_TEMPERATURE
  * - max available power drops below MIN_BUSPOWER
  * - no current draw (no tip detected) */

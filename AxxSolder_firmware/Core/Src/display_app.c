@@ -597,6 +597,25 @@ static void pd_fmt_a(char *buf, size_t len, uint16_t ma) {
     snprintf(buf, len, "%u.%02u", c / 100u, c % 100u);
 }
 
+/* Compact current for the OFFER row ("3", "1.5", "2.25") so three
+ * offered PDOs fit in 31 columns. */
+static void pd_fmt_a_short(char *buf, size_t len, uint16_t ma) {
+    unsigned c = (ma + 5u) / 10u;
+    if (c % 100u == 0)     snprintf(buf, len, "%u", c / 100u);
+    else if (c % 10u == 0) snprintf(buf, len, "%u.%u", c / 100u, (c % 100u) / 10u);
+    else                   snprintf(buf, len, "%u.%02u", c / 100u, c % 100u);
+}
+
+/* Negotiation mode, <= 23 chars after "MODE:   ". */
+static const char *pd_mode_str(pd_mode_t mode) {
+    switch (mode) {
+        case PD_MODE_AUTO:        return "auto (full current)";
+        case PD_MODE_NVM_PENDING: return "ladder, NVM pending";
+        case PD_MODE_LADDER:      return "ladder (NVM off)";
+        case PD_MODE_NVM_ERROR:   return "ladder, NVM error";
+        default:                  return "no PD";
+    }
+}
 
 void show_pd_info_screen(void) {
     const pd_status_t *pd = power_source_get_pd_status();
@@ -645,29 +664,37 @@ void show_pd_info_screen(void) {
             }
 
             if (pd->contract) {
-                pd_fmt_v(v, sizeof(v), pd->contract_mv);
                 pd_fmt_a(a, sizeof(a), pd->neg_current_ma);
-                snprintf(line, sizeof(line), "CONTRACT:%sV %sA %uW", v, a, pd->neg_watts);
+                if (pd->contract_mv) {
+                    pd_fmt_v(v, sizeof(v), pd->contract_mv);
+                    snprintf(line, sizeof(line), "CONTRACT:%sV %sA %uW", v, a, pd->neg_watts);
+                } else {
+                    snprintf(line, sizeof(line), "CONTRACT:%sA %uW", a, pd->neg_watts);
+                }
             } else {
                 snprintf(line, sizeof(line), "CONTRACT: %s", pd->sink_connected ? "none" : "no PD");
             }
             pd_put_line(row++, line);
 
-            /* USB_PD_power_limit is FLT_MAX ("no limit") when not on USB-PD. */
-            if (power_source == POWER_USB) {
-                snprintf(line, sizeof(line), "PWR LIM: %u W", (unsigned)sensor_values.USB_PD_power_limit);
+            /* USB_PD_power_limit is FLT_MAX ("no limit") when not on USB-PD;
+             * range-check before the cast (also rejects NaN). */
+            float pd_lim = sensor_values.USB_PD_power_limit;
+            if ((power_source == POWER_USB) && (pd_lim >= 0.0f) && (pd_lim < 1000.0f)) {
+                snprintf(line, sizeof(line), "PWR LIM: %u W", (unsigned)pd_lim);
             } else {
                 snprintf(line, sizeof(line), "PWR LIM: none");
             }
             pd_put_line(row++, line);
 
-            if (pd->controller == PD_CTRL_STUSB4500 && pd->sink_connected) {
-                snprintf(line, sizeof(line), "PROBE: %u/%u %s",
-                         pd->probes_tried, pd->probes_total,
-                         pd->probe_accepted ? "accepted" :
-                         pd->contract       ? "none (5V)" : "no PD");
+            if (pd->controller == PD_CTRL_STUSB4500) {
+                snprintf(line, sizeof(line), "MODE:   %s", pd_mode_str(pd->mode));
                 pd_put_line(row++, line);
+                if (pd->mode == PD_MODE_NVM_PENDING) {
+                    pd_put_line(row++, "Replug USB for full power");
+                }
+            }
 
+            if (pd->controller == PD_CTRL_STUSB4500 && pd->sink_connected) {
                 snprintf(line, sizeof(line), "SRC PDO#:%u MISMATCH:%s",
                          pd->object_pos, pd->capa_mismatch ? "YES" : "no");
                 pd_put_line(row++, line);
@@ -681,7 +708,7 @@ void show_pd_info_screen(void) {
                     char req[40];
                     int n = snprintf(req, sizeof(req), "OFFER:");
                     for (uint8_t i = 0; i < pd->req_pdo_count && n > 0 && n < (int)sizeof(req); i++) {
-                        pd_fmt_a(a, sizeof(a), pd->req_pdo_ma[i]);
+                        pd_fmt_a_short(a, sizeof(a), pd->req_pdo_ma[i]);
                         n += snprintf(req + n, sizeof(req) - n, " %uV/%sA",
                                       pd->req_pdo_mv[i] / 1000, a);
                     }
