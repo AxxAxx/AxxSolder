@@ -446,9 +446,8 @@ int main(void)
 		if (flash_values.current_measurement == 1){
 
 			if (HAL_GetTick() - previous_measure_current_update >= interval_measure_current) {
-				// Perform current measurement only if thermocouple measurement is not in progress.
-				if (sensors_thermocouple_sampling_idle()) {
-					heater_start_current_measurement();
+				// Arms only outside the thermocouple sample; retry next loop otherwise.
+				if (heater_start_current_measurement()) {
 					previous_measure_current_update = HAL_GetTick();
 				}
 			}
