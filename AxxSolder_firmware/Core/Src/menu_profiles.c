@@ -8,6 +8,7 @@
 #include "gui.h"
 #include "controller.h"   /* controller_force_off */
 #include "heater.h"       /* heater_off */
+#include "watchdog.h"     /* iwdg_refresh */
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -20,7 +21,7 @@ extern uint8_t menu_lines_on_screen;
 
 static inline void wait_btn_release(void)
 {
-	while (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) {}
+	while (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) { iwdg_refresh(); }
 	HAL_Delay(50);
 }
 
@@ -279,6 +280,7 @@ static void edit_name(char *name, uint8_t maxlen)
     uint8_t prev_chr_idx = char_to_charset_idx(name[cursor]);
 
     while (1) {
+        iwdg_refresh();
         /* ---- Encoder: update char under cursor ---- */
         uint8_t chr_idx = (uint8_t)enc_sel(1000, &TIM2->CNT, NAME_CHARSET_LEN);
         if (chr_idx != prev_chr_idx) {
@@ -376,6 +378,7 @@ static void edit_profile(uint8_t prof_idx)
 	TIM2->CNT = 1000;
 
 	while (running) {
+		iwdg_refresh();
 		buttons_handle();
 
 		/* Encoder controls cursor in browse mode, value in edit mode */
@@ -561,6 +564,7 @@ void profiles_menu(void)
 	TIM2->CNT = 1000;
 
 	while (running) {
+		iwdg_refresh();
 		buttons_handle();
 
 		uint8_t count = tip_profiles_count();
@@ -719,6 +723,7 @@ void profiles_popup(enum handles h)
 	uint16_t timeout_ticks = 300;
 
 	while (1) {
+		iwdg_refresh();
 		/* No buttons_handle() here: the popup runs with settings_menu_active
 		 * == 0, so it would act on queued flags (a SW_1 release toggled
 		 * RUN/HALTED, BTN_2 was eaten by the preset path before the cancel
@@ -739,7 +744,7 @@ void profiles_popup(enum handles h)
 		}
 
 		if (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) {
-			while (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) {}
+			while (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) { iwdg_refresh(); }
 			HAL_Delay(50);
 
 			tip_profiles_set_active(h, match_idx[cursor]);

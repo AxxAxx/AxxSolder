@@ -2,6 +2,7 @@
 #include "main.h"            /* sensor_values, PID_MAX_OUTPUT, PID_UPDATE_INTERVAL, PID_ADD_I_MIN_ERROR */
 #include "settings.h"        /* flash_values.standby_temp */
 #include "state_machine.h"   /* mainstates: RUN, PRESTANDBY, STANDBY, SLEEP, EMERGENCY_SLEEP, HALTED */
+#include "watchdog.h"        /* watchdog_main_alive */
 
 /* PID instance */
 PID_TypeDef TPID;
@@ -40,6 +41,8 @@ void controller_init(void) {
 /* ------------------------------------------------------------------ */
 
 void controller_tick(void) {
+	watchdog_main_alive();   /* lets the TC ISR see the main loop is running */
+
 	/* A latched-but-unconsumed delta-T fault (set in the ADC ISR) must
 	 * hold everything at zero until handle_emergency_shutdown() consumes
 	 * the latch and changes state. Checked FIRST: a PID_Compute already in

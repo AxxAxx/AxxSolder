@@ -10,6 +10,7 @@
 #include "display_app.h"  /* show_pd_info_screen */
 #include "controller.h"   /* controller_force_off */
 #include "heater.h"       /* heater_off */
+#include "watchdog.h"     /* iwdg_refresh */
 
 /* ==== Menu item identifiers
  * Step-100 layout: each logical group owns a 100-wide range.
@@ -250,7 +251,7 @@ static const MenuGroup MENU_GROUPS[] = {
  */
 static inline void wait_button_release(void) {
     while (HAL_GPIO_ReadPin(GPIOB, SW_1_Pin) == 1) {
-        // Wait until the button is released
+        iwdg_refresh();   // button may be held: keep the watchdog fed
     }
     HAL_Delay(50); // short delay for debouncing
 }
@@ -566,6 +567,7 @@ void settings_menu()
 
     while (settings_menu_active)
     {
+        iwdg_refresh();         // menu blocks the main loop - feed the watchdog
     	buttons_handle();       // process SW_2/SW_3 button presses (up/down navigation)
         // ---- Current list length ----
         uint16_t list_len = 0;

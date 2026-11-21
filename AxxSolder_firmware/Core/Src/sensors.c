@@ -7,6 +7,7 @@
 #include "tip_profile.h"      // tip_profiles_get_cal
 #include "main.h"             // sensor_values, flash_values, GPIO macros
 #include "util.h"             // clamp
+#include "watchdog.h"         // watchdog_isr_sample
 #include <math.h>             // fabsf
 
 extern TIM_HandleTypeDef htim6;
@@ -238,7 +239,15 @@ void sensors_isr_thermocouple_complete(void) {
 
     HAL_ADC_Stop_DMA(&hadc1);
     sensors_get_thermocouple_temperature();
-    heater_update_pwm();
+    /* Main loop silent too long (hung outside any refreshing loop): stop
+     * driving the heater from a stale requested_power. The heater stays off
+     * from the window start; the IWDG resets the MCU shortly after. Menus and
+     * popups already hold power at zero, so this is a no-op for them. */
+    if (watchdog_isr_sample()) {
+        heater_update_pwm();
+    } else {
+        sensor_values.requested_power = 0.0f;
+    }
     thermocouple_measurement_done = 1;
 
     /* Always called so the previous sample stays tracked; the fault action

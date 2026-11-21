@@ -44,6 +44,7 @@
 #include "settings.h"
 #include "telemetry.h"
 #include "power_source.h"
+#include "watchdog.h"     /* iwdg_*, reset_flags_capture */
 #include "display_app.h"
 #include "controller.h"
 #include <math.h>
@@ -226,7 +227,9 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	/* Reset cause first, before anything can clear it (watchdog popup,
+	 * fault recorder). */
+	reset_flags_capture();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -366,6 +369,12 @@ int main(void)
 		//UG_FillScreen(background);
 		draw_graph_init();
 	}
+
+	/* Tell the user why the iron restarted (it comes up in sleep, and heat at
+	 * startup is skipped below). */
+	if (reset_was_watchdog()){
+		show_popup("Watchdog reset");
+	}
 	HAL_Delay(250);
 
 	/* Set beep tone */
@@ -401,12 +410,17 @@ int main(void)
 	   doing it here would be immediately overridden by handle_check_cartridge,
 	   which forces EMERGENCY_SLEEP until the first current measurement proves a
 	   tip is present (heater_current starts at 0). */
-	uint8_t heat_at_startup_pending = (flash_values.heat_at_startup == 1);
+	uint8_t heat_at_startup_pending = (flash_values.heat_at_startup == 1) && !reset_was_watchdog();
 
 	/* Initiate the PID controller to zero*/
 	//PID_Init_Zero();
 
+	/* Arm the watchdog now that the multi-second blocking boot (power_source_init)
+	 * is done. From here every blocking loop must call iwdg_refresh(). */
+	iwdg_start();
+
 	while (1){
+		iwdg_refresh();   /* main loop is alive */
 
 		if(HAL_GetTick() - previous_sensor_update_high_update >= interval_sensor_update_high_update){
 			stand_update();
@@ -1347,8 +1361,11 @@ void Error_Handler(void)
 	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 	HAL_GPIO_WritePin(GPIOF, HEATER_Pin, GPIO_PIN_RESET);
 
+  /* Latched until a power cycle: the heater is off, so keep the watchdog
+   * fed and the error message on screen. */
   while (1)
   {
+	iwdg_refresh_latched();
   }
   /* USER CODE END Error_Handler_Debug */
 }

@@ -1,5 +1,6 @@
 #include "storage.h"
 #include "stm32g4xx_hal.h"
+#include "watchdog.h"   /* iwdg_refresh */
 #include <string.h>
 
 extern CRC_HandleTypeDef hcrc;
@@ -17,6 +18,7 @@ static uint32_t flash_write_dwords(uint32_t addr, const uint32_t *data, uint16_t
 	uint32_t page_err;
 	int sofar = 0;
 
+	iwdg_refresh();   /* erase + program run with IRQs off */
 	__disable_irq();
 	HAL_FLASH_Unlock();
 

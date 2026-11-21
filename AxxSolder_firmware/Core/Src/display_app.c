@@ -10,6 +10,7 @@
 #include "sensors.h"      /* sensors_get_raw_tc (debug screen) */
 #include "version.h"      /* fw version + hw revision (debug screen) */
 #include "buttons.h"      /* buttons_take_press (PD info page) */
+#include "watchdog.h"     /* iwdg_refresh */
 #include "lcd.h"
 #include "gui.h"
 #include "graph.h"
@@ -867,7 +868,7 @@ void show_pd_info_screen(void) {
 
     /* Consume the encoder click that opened this page (wait for release),
      * then drop the press it latched so it can't count as an exit click. */
-    while (HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) { }
+    while (HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) { iwdg_refresh(); }
     HAL_Delay(50);
     buttons_clear_all();
 
@@ -882,6 +883,7 @@ void show_pd_info_screen(void) {
      * over themselves (no flicker); the LIVE block updates each pass. The
      * heater is already off in menu context, so blocking here is safe. */
     for (;;) {
+        iwdg_refresh();   /* PD info page blocks the main loop */
         pd_live_t live;
         power_source_read_live(&live);
 
@@ -978,7 +980,7 @@ void show_pd_info_screen(void) {
     }
 
     /* Wait for release so the click doesn't re-trigger the menu. */
-    while (HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) { }
+    while (HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) { iwdg_refresh(); }
     HAL_Delay(50);
 
     UG_FontSetTransparency(old_transparency);
