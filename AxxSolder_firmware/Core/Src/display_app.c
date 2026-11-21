@@ -5,6 +5,7 @@
 #include "settings.h"
 #include "handle.h"
 #include "heater.h"
+#include "controller.h"   /* controller_force_off */
 #include "power_source.h"
 #include "buttons.h"      /* buttons_take_press (PD info page) */
 #include "lcd.h"
@@ -549,8 +550,12 @@ void show_popup(char *text) {
 }
 
 void LCD_draw_earth_fault_popup(void) {
+    /* Order matters: this runs in the ADC watchdog ISR (priority 10),
+     * which the TIM6/ADC1 heater chain (priority 0) CAN preempt. Zero
+     * the requested power first so a TC-complete ISR firing in between
+     * cannot re-apply PWM from stale PID output. */
+    controller_force_off();
     heater_off();
-    sensor_values.requested_power = 0.0f;
 
     UG_FillFrame(10, 50, 205, 205, C_Highlight);
     UG_FillFrame(15, 55, 200, 200, C_Text);
