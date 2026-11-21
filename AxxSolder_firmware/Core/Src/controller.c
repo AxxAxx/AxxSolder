@@ -40,10 +40,19 @@ void controller_init(void) {
 /* ------------------------------------------------------------------ */
 
 void controller_tick(void) {
-	/* Compute PID */
-	PID_Compute(&TPID);
+	/* A latched-but-unconsumed delta-T fault (set in the ADC ISR) must
+	 * hold everything at zero until handle_emergency_shutdown() consumes
+	 * the latch and changes state. Checked FIRST: a PID_Compute already in
+	 * flight when the ISR forced off can write a stale non-zero
+	 * requested_power afterwards (this re-zeroes it), and the state switch
+	 * below would restore the setpoint while the state is still RUN. */
+	if (delta_t_fault_is_pending()){
+		controller_force_off();
+		return;
+	}
 
-	/* switch */
+	/* Derive the setpoint from the state BEFORE computing, so the PID never
+	 * runs one tick on a stale setpoint after a state change. */
 	switch(sensor_values.current_state) {
 		case RUN:
 		case PRESTANDBY: {
@@ -67,6 +76,9 @@ void controller_tick(void) {
 		}
 	}
 
+	/* Compute PID */
+	PID_Compute(&TPID);
+
 	/* PID Tuning manual control */
 	#ifdef PID_TUNING
 	custom_temperature_on = 1;
@@ -74,4 +86,18 @@ void controller_tick(void) {
 	PID_SetILimits(&TPID, -PID_MAX_I_LIMIT_tuning, PID_MAX_I_LIMIT_tuning); 	// Set max and min I limit
 	sensor_values.set_temperature = temperature_tuning;
 	#endif
+}
+
+/* ------------------------------------------------------------------ */
+/* Immediate power cut                                                */
+/* ------------------------------------------------------------------ */
+
+/* The heater ISR chain (TIM6 -> ADC1 -> heater_update_pwm) reads
+ * sensor_values.requested_power directly and keeps running while the main
+ * loop is blocked in a menu/popup. Zeroing the integrator too keeps the
+ * next PID_Compute from restoring the old output. Safe to call from ISRs. */
+void controller_force_off(void) {
+	PID_setpoint = 0.0f;
+	TPID.OutputSum = 0.0f;
+	sensor_values.requested_power = 0.0f;
 }

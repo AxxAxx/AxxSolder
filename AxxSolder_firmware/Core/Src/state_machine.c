@@ -3,6 +3,8 @@
 #include "settings.h"
 #include "buzzer.h"
 #include "display_app.h"
+#include "controller.h"   /* controller_force_off */
+#include "heater.h"       /* heater_off (immediate cut on delta-T fault) */
 
 extern uint8_t startup_done;
 
@@ -16,6 +18,16 @@ extern uint8_t startup_done;
 uint32_t previous_millis_left_stand = 0;
 uint32_t previous_millis_standby    = 0;
 uint32_t previous_millis_prestandby = 0;
+
+/* Delta-T fault latch. Set from the ADC ISR, consumed in the main loop.
+ * change_state() must only be called from main context: calling it from the
+ * ISR races main-loop callers (e.g. stand_update reads current_state and then
+ * writes RUN), which could silently overwrite the EMERGENCY_SLEEP transition. */
+static volatile uint8_t delta_t_fault_pending = 0;
+
+uint8_t delta_t_fault_is_pending(void){
+	return delta_t_fault_pending;
+}
 
 /* Function to change the main state */
 void change_state(mainstates new_state){
@@ -53,17 +65,26 @@ void handle_delta_temperature(void){
 	if ((startup_done == 1) &&
 			( (sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous > MAX_TC_DELTA_FAULTDETECTION) ||
 			  (sensor_values.thermocouple_temperature - sensor_values.thermocouple_temperature_previous < -MAX_TC_DELTA_FAULTDETECTION) )){
-		//heater_off();
-		sensor_values.requested_power = 0.0f;
-		//sensor_values.heater_current = 0;
-		change_state(EMERGENCY_SLEEP);
-		//show_popup("No or Faulty tip!");
+		/* Cut power NOW (this runs in the ADC ISR; the main loop only consumes
+		 * the latch later). heater_off() also clears the duty heater_update_pwm
+		 * programmed earlier in this same ISR. */
+		controller_force_off();
+		heater_off();
+		delta_t_fault_pending = 1;
 	}
 	sensor_values.thermocouple_temperature_previous = sensor_values.thermocouple_temperature;
 }
 
 /* Function to set state to EMERGENCY_SLEEP */
 void handle_emergency_shutdown(void){
+	/* Consume a delta-T fault latched by the ADC ISR */
+	if(delta_t_fault_pending == 1){
+		/* Zero the PID state before releasing the latch, so the heater ISRs
+		 * see zero power from the moment the gate opens. */
+		controller_force_off();
+		delta_t_fault_pending = 0;
+		change_state(EMERGENCY_SLEEP);
+	}
 	/* Get time when iron turns on */
 	if(sensor_values.previous_state != RUN && sensor_values.current_state == RUN){
 		previous_millis_left_stand = HAL_GetTick();

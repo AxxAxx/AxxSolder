@@ -1,6 +1,7 @@
 #include "heater.h"
 #include "main.h"
 #include "util.h"
+#include "state_machine.h"   /* delta_t_fault_is_pending */
 
 extern TIM_HandleTypeDef htim1;
 extern ADC_HandleTypeDef hadc2;
@@ -29,6 +30,13 @@ void heater_off(void){
 
 /* Update the duty cycle of timer controlling the heater PWM */
 void heater_update_pwm(void){
+	/* A latched delta-T fault keeps the heater off until the main loop
+	 * consumes it, independent of any requested_power a PID_Compute that was
+	 * in flight may have written after the ISR forced it to zero. */
+	if (delta_t_fault_is_pending()){
+		heater_set_duty(0);
+		return;
+	}
 	if (sensor_values.bus_voltage <= 0.0f) return;
 	float current = (sensor_values.max_power_watt*POWER_CONVERSION_FACTOR) / sensor_values.bus_voltage;
 	float duty_cycle = sensor_values.requested_power * current;
@@ -42,6 +50,9 @@ void heater_update_pwm(void){
  * arm the measurement flags. Caller is responsible for rate-limiting
  * and for ensuring the thermocouple sample is idle. */
 void heater_start_current_measurement(void) {
+	/* No measurement pulse while a delta-T fault is pending: the heater
+	 * must stay off until the main loop has consumed it. */
+	if (delta_t_fault_is_pending()) return;
 	heater_set_duty(FIXED_MEASURE_DUTY);
 	// Force the timer to update immediately so that the new value takes effect immediately
 	htim1.Instance->EGR |= TIM_EGR_UG;  // Apply duty cycle immediately

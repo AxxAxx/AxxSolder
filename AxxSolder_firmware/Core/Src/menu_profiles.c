@@ -6,6 +6,8 @@
 #include "buttons.h"   /* buttons_take_press / _long_press / _clear_all */
 #include "lcd.h"
 #include "gui.h"
+#include "controller.h"   /* controller_force_off */
+#include "heater.h"       /* heater_off */
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -680,7 +682,8 @@ void profiles_popup(enum handles h)
 	buttons_clear_all();
 
 	/* Disable heater while popup blocks the main loop */
-	sensor_values.requested_power = 0;
+	controller_force_off();
+	heater_off();
 
 	/* Draw popup */
 	uint16_t popup_x = 10;

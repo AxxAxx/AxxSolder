@@ -8,6 +8,8 @@
 #include "version.h"   /* fw_version_*, get_hw_version */
 #include "gui.h"
 #include "display_app.h"  /* show_pd_info_screen */
+#include "controller.h"   /* controller_force_off */
+#include "heater.h"       /* heater_off */
 
 /* ==== Menu item identifiers
  * Step-100 layout: each logical group owns a 100-wide range.
@@ -508,7 +510,8 @@ void settings_menu()
 {
     // Transition system to safe state (disable heating)
     change_state(EMERGENCY_SLEEP);
-    sensor_values.requested_power = 0;
+    controller_force_off();   // zero setpoint, integrator and requested power
+    heater_off();
     settings_menu_active = 1;
 
     LCD_SetRotation(flash_values.screen_rotation);
