@@ -328,7 +328,16 @@ int main(void)
 		sensors_get_bus_voltage(); // Function to retrieve the filtered bus voltage
 		sensors_get_heater_current(); // Function to retrieve the filtered heater current
 		sensors_get_mcu_temp(); // Function to retrieve the MCU temperature
-		sensors_get_thermocouple_temperature(); // Get thermocouple temperature
+		/* The live TIM6->TIM7->ADC1 ISR chain runs this SAME function: its
+		 * moving-average Sum/History update is a non-atomic RMW, and a
+		 * collision here permanently skews the incrementally-maintained Sum.
+		 * Mask IRQs for the call - same pattern as sensors_reset_filtered_tc(). */
+		{
+			uint32_t primask = __get_PRIMASK();
+			__disable_irq();
+			sensors_get_thermocouple_temperature(); // Get thermocouple temperature
+			__set_PRIMASK(primask);
+		}
 		handle_detect(); // Get the handle type attached
 		handle_apply_settings(); // Function to set heating values depending on the detected handle
 		stand_update(); // Get handle stand status to activate SLEEP

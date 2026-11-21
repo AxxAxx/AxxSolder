@@ -195,7 +195,17 @@ float sensors_get_raw_tc(void){
 }
 
 void sensors_reset_filtered_tc(float value){
+    /* The ADC1-complete ISR updates this filter; rewriting Sum/History
+     * non-atomically from main context would corrupt the running sum.
+     * Publish the reseeded value and the hysteresis state in the same masked
+     * section, so readers never see the new filter with the old output (the
+     * hysteresis would otherwise hold the stale value until it moved 0.5 C). */
+    uint32_t primask = __get_PRIMASK();
+    __disable_irq();
     Moving_Average_Set_Value(value, &thermocouple_temperature_filtered_filter_struct);
+    thermocouple_temperature_filtered_hysteresis.previous_value = value;
+    sensor_values.thermocouple_temperature_filtered = value;
+    __set_PRIMASK(primask);
 }
 
 void sensors_start_adc_sample(void){
