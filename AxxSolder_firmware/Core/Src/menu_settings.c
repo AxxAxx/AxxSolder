@@ -3,6 +3,7 @@
 #include "menu_settings.h"
 #include "app_colors.h"   /* AxxSolder UI colour palette */
 #include "menu_profiles.h"
+#include "tip_profile.h"  /* tip_profiles_load_defaults */
 #include "buttons.h"
 #include "version.h"   /* fw_version_*, get_hw_version */
 #include "gui.h"
@@ -740,8 +741,12 @@ void settings_menu()
                         wait_button_release();   // don't reboot with SW_1 held
                         HAL_NVIC_SystemReset();
                     } else if (abs_mi == MI_LOAD_DEFAULT) {
+                        /* RAM only, like every other edit in this menu:
+                         * -Save and Reboot- writes settings and profiles,
+                         * -Exit no Save- discards both. Profile edits made
+                         * after this are kept. */
                         flash_values = default_flash_values;
-                        profiles_reset();
+                        tip_profiles_load_defaults();
                         redraw_page = 1; // values changed - redraw
                     } else if (abs_mi == MI_PD_INFO) {
                         /* Full-screen PD info page; returns on click. */

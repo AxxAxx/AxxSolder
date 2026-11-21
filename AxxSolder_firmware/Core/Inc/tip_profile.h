@@ -43,6 +43,7 @@ typedef struct {
 /* Lifecycle */
 void        tip_profiles_init(const StorageDriver *drv);
 StoreResult tip_profiles_reset(void);
+void        tip_profiles_load_defaults(void);   /* RAM only, no flash write */
 StoreResult tip_profiles_save(void);
 
 /* CRUD */

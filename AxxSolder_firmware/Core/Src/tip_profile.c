@@ -1,5 +1,6 @@
 #include "tip_profile.h"
 #include "storage.h"
+#include "main.h"      /* cmsis_gcc.h via HAL: __get_PRIMASK / __disable_irq */
 #include <string.h>
 
 /* RAM cache */
@@ -119,6 +120,16 @@ StoreResult tip_profiles_reset(void)
 {
 	create_defaults();
 	return driver->write(PROFILES_PAGE, &cache, sizeof(ProfileStore));
+}
+
+/* Restore the default profiles in RAM only; flash is written by the next
+ * tip_profiles_save(). Masked because the ADC ISR reads the cache. */
+void tip_profiles_load_defaults(void)
+{
+	uint32_t primask = __get_PRIMASK();
+	__disable_irq();
+	create_defaults();
+	__set_PRIMASK(primask);
 }
 
 StoreResult tip_profiles_save(void)
