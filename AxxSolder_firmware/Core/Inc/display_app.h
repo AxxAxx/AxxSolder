@@ -37,6 +37,11 @@ void display_app_tick(void);
  * Called on boot, after a popup dismisses, and after a settings save. */
 void LCD_draw_main_screen(void);
 
+/* Redraw the active view from scratch: the graph view when it is enabled
+ * (and the debug screen is not), otherwise the main screen. Used after a
+ * popup or the profile selector has covered the screen. */
+void display_redraw_view(void);
+
 /* Show a transient orange popup with the given text. Auto-dismisses
  * after the popup interval. */
 void show_popup(char *text);

@@ -123,6 +123,6 @@ void handle_check_cartridge(void){
 		cartridge_first_detect = 0;
 	} else if (startup_done && flash_values.show_profile_on_tip_change && !settings_menu_active) {
 		profiles_popup(attached_handle);
-		LCD_draw_main_screen();
+		display_redraw_view();
 	}
 }

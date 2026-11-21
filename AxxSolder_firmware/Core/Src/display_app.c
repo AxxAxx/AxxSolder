@@ -1043,19 +1043,22 @@ void show_pd_info_screen(void) {
 /* Tick                                                               */
 /* ------------------------------------------------------------------ */
 
+void display_redraw_view(void){
+	/* Debug screen takes priority over the graph view */
+	if (flash_values.display_graph == 1 && flash_values.debug_screen == 0){
+		UG_FillScreen(background);
+		draw_graph_init();
+	}
+	else{
+		LCD_draw_main_screen();
+	}
+}
+
 void display_app_tick(void){
 	if(popup_shown == 1){
 		if(HAL_GetTick() - previous_millis_popup >= POPUP_DWELL_MS){
 			popup_shown = 0;
-
-			/* Debug screen takes priority over the graph view */
-			if (flash_values.display_graph == 0 || flash_values.debug_screen == 1){
-				LCD_draw_main_screen(); // Clear the area where the emergency message is displayed
-			}
-			else{
-				UG_FillScreen(background);
-				draw_graph_init();
-			}
+			display_redraw_view(); // Clear the area where the popup was displayed
 		}
 	}
 	else{
