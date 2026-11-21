@@ -700,14 +700,26 @@ void settings_menu()
             /* "Graph screen" and "Debug screen" both replace the main-screen
              * area, so only one can be shown. Turning one ON clears the
              * other; turning it back OFF in the same edit restores the
-             * other's value from edit entry (redraw the page so the partner
-             * row visibly updates too). */
+             * other's value from edit entry. Only the partner's value is
+             * repainted (if its row is on this page); a page redraw here
+             * would flicker and drop the cursor frame while editing. */
             if (abs_mi == MI_DISPLAY_GRAPH || abs_mi == MI_DEBUG_SCREEN) {
+                uint16_t other_mi = (abs_mi == MI_DISPLAY_GRAPH) ? MI_DEBUG_SCREEN : MI_DISPLAY_GRAPH;
                 float *other = (abs_mi == MI_DISPLAY_GRAPH) ? &flash_values.debug_screen : &flash_values.display_graph;
                 float want = (((float*)&flash_values)[fi] == 1) ? 0.0f : excl_other;
                 if (*other != want) {
                     *other = want;
-                    redraw_page = 1;
+                    for (uint16_t pos = page_start;
+                         pos < page_start + menu_lines_on_screen && pos < MENU_GROUPS[current_group].count;
+                         pos++) {
+                        if (MENU_GROUPS[current_group].idx[pos] == other_mi) {
+                            uint8_t other_line = pos % menu_lines_on_screen;
+                            display_menu_value_line(other_line, other_mi, *other,
+                                                    0, 0, 190, 35 + other_line * 26,
+                                                    C_Text, C_Background);
+                            break;
+                        }
+                    }
                 }
             }
 
