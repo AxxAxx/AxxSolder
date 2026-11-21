@@ -282,17 +282,23 @@ static void negotiate_stusb4500(pd_result_t *r, stusb_nvm_state_t nvm){
 
 	/* The RDO carries no voltage. A 5 V settle is 5 V; otherwise the contract
 	 * matched one of our offered voltages - take the one within 1 V of the
-	 * measured VBUS (unknown if none is). */
+	 * measured VBUS. If none is, take the highest offered voltage at or below
+	 * the measured VBUS, so a VBUS reading high is still clamped by
+	 * min(measured, nominal). Left unknown only if VBUS is below every
+	 * offered voltage, where the measured value is the lower one anyway. */
 	if(stusb_is_5v_contract(&r->rdo, r->vbus_v)){
 		r->contract_mv = 5000;
 	}
 	else{
 		uint16_t vbus_mv = (uint16_t)(r->vbus_v * 1000.0f);
+		uint16_t below_mv = 0;
 		for(uint8_t i = 1; i < r->offer_count; i++){
 			uint16_t mv = r->offer_mv[i];
 			uint16_t diff = (vbus_mv > mv) ? (vbus_mv - mv) : (mv - vbus_mv);
 			if(diff <= 1000){ r->contract_mv = mv; }
+			if((mv <= vbus_mv) && (mv > below_mv)){ below_mv = mv; }
 		}
+		if(r->contract_mv == 0){ r->contract_mv = below_mv; }
 	}
 }
 
@@ -353,6 +359,12 @@ static void power_source_probe(void){
 
 	stusb_init();
 
+	/* With a source attached, let the chip finish its own power-up
+	 * negotiation first (bounded) so the NVM access doesn't overlap it. */
+	if(stusb_sink_attached() > 0){
+		(void)stusb_wait_sink_ready();
+	}
+
 	/* 1. NVM REQ_SRC_CURRENT check/provision, before the attach gate so a
 	 * DC-powered board is provisioned or healed as well. */
 	stusb_nvm_state_t nvm = stusb_nvm_provision();
@@ -375,9 +387,12 @@ static void power_source_probe(void){
 		negotiate_stusb4500(&r, nvm);
 	}
 	/* 4. Heater limit from the contract, or fail closed - unless the DC jack
-	 * feeds the bus (non-PD cable plugged in as well): then stay on DC. */
+	 * feeds the bus (bus above the 5 V threshold with no PD contract, or only
+	 * a 5 V one): then stay on DC with no limit. A 5 V contract is still
+	 * published. */
 	float watts = stusb_power_limit(&r);
-	if(r.contract || (r.vbus_v < PD_5V_FALLBACK_THRESHOLD_V)){
+	if((r.vbus_v < PD_5V_FALLBACK_THRESHOLD_V) ||
+	   (r.contract && !stusb_is_5v_contract(&r.rdo, r.vbus_v))){
 		if(!r.contract){
 			debug_print_str(DEBUG_WARNING,"No USB-PD contract - limiting power");
 		}
@@ -385,9 +400,12 @@ static void power_source_probe(void){
 		sensor_values.USB_PD_power_limit = watts;
 		debug_print_int(DEBUG_INFO,"USB-PD power limit (W)", (int)watts);
 	}
-	else{
+	else if(!r.contract){
 		debug_print_str(DEBUG_INFO,"No USB-PD contract - DC jack feeds the bus");
 		watts = 0.0f;
+	}
+	else{
+		debug_print_str(DEBUG_INFO,"5 V USB-PD contract - DC jack feeds the bus");
 	}
 
 	pd_status_publish(&r, watts);

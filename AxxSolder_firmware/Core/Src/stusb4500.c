@@ -174,7 +174,8 @@ static bool nvm_read_sectors(uint8_t out[STUSB_NVM_SECTORS][STUSB_NVM_SECTOR_SIZ
 		  && ftp_write1(FTP_CTRL_1, FTP_OPCODE_READ)
 		  && ftp_write1(FTP_CTRL_0, (uint8_t)((s & FTP_CUST_SECT_MASK) | FTP_CUST_PWR | FTP_CUST_RST_N | FTP_CUST_REQ))
 		  && ftp_wait_req_clear()
-		  && (stusb_read_register(FTP_RW_BUFFER, out[s], STUSB_NVM_SECTOR_SIZE) == HAL_OK);
+		  && (stusb_read_register(FTP_RW_BUFFER, out[s], STUSB_NVM_SECTOR_SIZE) == HAL_OK)
+		  && ftp_write1(FTP_CTRL_0, 0x00);                         /* controller reset (ST CUST_ReadSector) */
 	}
 	ftp_exit();
 	return ok;
