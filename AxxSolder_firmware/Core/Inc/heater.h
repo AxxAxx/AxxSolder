@@ -12,6 +12,10 @@ extern volatile uint16_t current_raw;
 void heater_set_duty(uint16_t duty_cycle);
 void heater_off(void);
 
+/* Register-level kill of the heater and the USR_4 load output, for fault
+ * handlers and Error_Handler (no HAL; safe before MX_TIM1_Init). */
+void heater_fault_kill(void);
+
 /* Recomputes the heater duty from sensor_values (bus voltage, max
  * power, requested power). Called from the ADC2 ISR. */
 void heater_update_pwm(void);

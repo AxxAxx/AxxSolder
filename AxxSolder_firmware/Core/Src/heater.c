@@ -29,6 +29,35 @@ void heater_off(void){
 	heater_set_duty(0);
 }
 
+/* GPIO ports sit 0x400 apart from GPIOA and their AHB2ENR clock bits start at
+ * bit 0, so the clock bit can be derived from the port address. */
+_Static_assert((GPIOB_BASE - GPIOA_BASE) == 0x400UL && RCC_AHB2ENR_GPIOAEN == 1UL,
+               "GPIO port/clock layout assumed by heater_fault_kill");
+
+static inline void fault_port_clock_on(GPIO_TypeDef *port){
+	RCC->AHB2ENR |= 1UL << (((uint32_t)port - GPIOA_BASE) / 0x400UL);
+	(void)RCC->AHB2ENR;
+}
+
+/* Hard heater kill for fault and error paths. Registers only: no HAL, no
+ * handle state, so it is safe in exception context and before MX_TIM1_Init.
+ * Clearing MOE forces every TIM1 output off at once; PF0 is then re-muxed to
+ * GPIO driven low so the LTC4440A input is held down actively (not just by
+ * the pulldown), and the USR_4 load output (on at RUN) is dropped. */
+void heater_fault_kill(void){
+	TIM1->BDTR &= ~TIM_BDTR_MOE;
+	TIM1->CCR3 = 0U;   /* heater (CH3N) */
+	TIM1->CCR1 = 0U;   /* current-sense timing channel */
+
+	uint32_t pos = (uint32_t)__builtin_ctz(HEATER_Pin);
+	fault_port_clock_on(HEATER_GPIO_Port);
+	HEATER_GPIO_Port->BSRR  = (uint32_t)HEATER_Pin << 16;
+	HEATER_GPIO_Port->MODER = (HEATER_GPIO_Port->MODER & ~(3UL << (2U * pos))) | (1UL << (2U * pos));
+
+	fault_port_clock_on(USR_4_GPIO_Port);
+	USR_4_GPIO_Port->BSRR = (uint32_t)USR_4_Pin << 16;
+}
+
 /* Update the duty cycle of timer controlling the heater PWM */
 void heater_update_pwm(void){
 	/* A latched delta-T fault keeps the heater off until the main loop

@@ -795,9 +795,10 @@ void LCD_draw_earth_fault_popup(void) {
     /* Order matters: this runs in the ADC watchdog ISR (priority 10),
      * which the TIM6/ADC1 heater chain (priority 0) CAN preempt. Zero
      * the requested power first so a TC-complete ISR firing in between
-     * cannot re-apply PWM from stale PID output. */
+     * cannot re-apply PWM from stale PID output. Then kill the heater at
+     * register level (MOE off, pin forced low) before the slow popup draw. */
     controller_force_off();
-    heater_off();
+    heater_fault_kill();
 
     UG_FillFrame(10, 50, 205, 205, C_Highlight);
     UG_FillFrame(15, 55, 200, 200, C_Text);

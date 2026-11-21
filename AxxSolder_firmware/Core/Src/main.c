@@ -1324,9 +1324,18 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
 
+	/* Heater off at register level first: Error_Handler can run from an ISR
+	 * (earth fault) or before the timers are initialised. */
+	__disable_irq();
+	heater_fault_kill();
+
 	// Stop the heater PWM and reconfigure as a GPIO and set to RESET
-	heater_off();
-	HAL_TIMEx_PWMN_Stop_IT(&htim1, TIM_CHANNEL_3);
+	// (guarded: before MX_TIM1_Init htim1.Instance is NULL and the HAL
+	// calls would fault inside the error path)
+	if (htim1.Instance != NULL){
+		heater_off();
+		HAL_TIMEx_PWMN_Stop_IT(&htim1, TIM_CHANNEL_3);
+	}
 
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -1338,7 +1347,6 @@ void Error_Handler(void)
 	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 	HAL_GPIO_WritePin(GPIOF, HEATER_Pin, GPIO_PIN_RESET);
 
-	__disable_irq();
   while (1)
   {
   }
