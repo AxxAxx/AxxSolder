@@ -21,8 +21,14 @@ FilterTypeDef handle1_sense_filterStruct;
 FilterTypeDef handle2_sense_filterStruct;
 
 /* --- Cartridge tracking (private) --- */
-static cartridge_state_t previous_cartridge_state = ATTACHED;
 static uint8_t           cartridge_first_detect = 1;
+
+/* Non-blocking TC settle after a cartridge insertion (replaces a HAL_Delay
+ * that stalled the main loop): the filter is reseeded once the TC has read
+ * valid for CARTRIDGE_TC_SETTLE_MS. */
+#define CARTRIDGE_TC_SETTLE_MS 100
+static uint8_t           settle_pending = 0;
+static uint32_t          settle_start = 0;
 
 /* --- Public state --- */
 enum handles      attached_handle;
@@ -87,25 +93,36 @@ void handle_apply_settings(void){
 
 /* Function to handle the cartridge presence */
 void handle_check_cartridge(void){
-	if((sensor_values.heater_current < 1) || (sensors_get_raw_tc() > TC_OPEN_THRESHOLD)) { //NT115 at 9V draws 2.3
+	uint8_t present = (sensor_values.heater_current >= 1) && (sensors_get_raw_tc() <= TC_OPEN_THRESHOLD); //NT115 at 9V draws 2.3
+	if (!present){
+		settle_pending = 0;
 		cartridge_state = DETACHED;
 		change_state(EMERGENCY_SLEEP);
+		return;
 	}
-	else{
-		cartridge_state = ATTACHED;
-	}
-	/* When a inserted cartridge is detected - fill the moving average filter with TC measurements */
-	if ((previous_cartridge_state == DETACHED) && (cartridge_state == ATTACHED)){
-		HAL_Delay(100);
-		sensors_reset_filtered_tc(sensor_values.thermocouple_temperature);
+	if (cartridge_state == ATTACHED) return;
 
-		  /* Show profile selector popup on tip change (skip first detection after boot) */
-		  if (cartridge_first_detect) {
-			  cartridge_first_detect = 0;
-		  } else if (startup_done && flash_values.show_profile_on_tip_change && !settings_menu_active) {
-			profiles_popup(attached_handle);
-			LCD_draw_main_screen();
-		}
+	/* Inserted cartridge: stay DETACHED (heater held off) until the TC has read
+	 * valid for CARTRIDGE_TC_SETTLE_MS, without blocking the main loop. */
+	if (!settle_pending){
+		settle_pending = 1;
+		settle_start = HAL_GetTick();
 	}
-	previous_cartridge_state = cartridge_state;
+	if ((HAL_GetTick() - settle_start) < CARTRIDGE_TC_SETTLE_MS){
+		change_state(EMERGENCY_SLEEP);
+		return;
+	}
+	settle_pending = 0;
+
+	/* Fill the moving average filter with the settled TC measurement */
+	sensors_reset_filtered_tc(sensor_values.thermocouple_temperature);
+	cartridge_state = ATTACHED;
+
+	/* Show profile selector popup on tip change (skip first detection after boot) */
+	if (cartridge_first_detect) {
+		cartridge_first_detect = 0;
+	} else if (startup_done && flash_values.show_profile_on_tip_change && !settings_menu_active) {
+		profiles_popup(attached_handle);
+		LCD_draw_main_screen();
+	}
 }
