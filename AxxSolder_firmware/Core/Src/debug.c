@@ -8,7 +8,7 @@ extern UART_HandleTypeDef huart1;
  * via flash_values later). All debug_print_* functions check this before
  * doing the synchronous UART transmit. */
 DEBUG_VERBOSITY_t debugLevel = DEBUG_INFO;
-static char buffer[40];
+static char buffer[64];
 
 static const char *debug_level_str[] = {
 	"",
@@ -23,7 +23,7 @@ HAL_StatusTypeDef debug_print_str(DEBUG_VERBOSITY_t verbosity, char * str){
 #ifdef DEBUG
 	if(debugLevel > 0 && verbosity >= debugLevel){
 		memset(buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%s %s\n", debug_level_str[verbosity], str);
+		snprintf(buffer, sizeof(buffer), "%s %s\n", debug_level_str[verbosity], str);
 		ret = HAL_UART_Transmit(&huart1, (uint8_t *) buffer, (uint16_t)strlen(buffer),100);
 	}
 #endif
@@ -35,7 +35,7 @@ HAL_StatusTypeDef debug_print_int(DEBUG_VERBOSITY_t verbosity, char * str, int i
 #ifdef DEBUG
 	if(debugLevel > 0 && verbosity >= debugLevel){
 		memset(&buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%s %s %i\n", debug_level_str[verbosity], str, i);
+		snprintf(buffer, sizeof(buffer), "%s %s %i\n", debug_level_str[verbosity], str, i);
 		ret = HAL_UART_Transmit(&huart1, (uint8_t *) buffer, (uint16_t)strlen(buffer),100);
 	}
 #endif
@@ -47,7 +47,7 @@ HAL_StatusTypeDef debug_print_int_int(DEBUG_VERBOSITY_t verbosity, char * str, i
 #ifdef DEBUG
 	if(debugLevel > 0 && verbosity >= debugLevel){
 		memset(buffer, '\0', sizeof(buffer));
-		sprintf(buffer, "%s %s %i %i\n", debug_level_str[verbosity], str, i, j);
+		snprintf(buffer, sizeof(buffer), "%s %s %i %i\n", debug_level_str[verbosity], str, i, j);
 		ret = HAL_UART_Transmit(&huart1, (uint8_t *) buffer, (uint16_t)strlen(buffer),100);
 	}
 #endif
@@ -64,8 +64,8 @@ HAL_StatusTypeDef debug_print_pdos(DEBUG_VERBOSITY_t verbosity, PDO_container_t 
 			memset(buffer, '\0', sizeof(buffer));
 			int current_int = pdos->pdos[i].current;
 			int voltage_int = pdos->pdos[i].voltage * 5;
-			sprintf(buffer, "%s PDO %i %d.%02dA %d.%02dV\n", debug_level_str[verbosity], i, current_int / 100, current_int % 100, voltage_int / 100, voltage_int % 100);
-			strcat(tx, buffer);
+			snprintf(buffer, sizeof(buffer), "%s PDO %i %d.%02dA %d.%02dV\n", debug_level_str[verbosity], i, current_int / 100, current_int % 100, voltage_int / 100, voltage_int % 100);
+			strncat(tx, buffer, sizeof(tx) - strlen(tx) - 1);
 		}
 		ret = HAL_UART_Transmit(&huart1, (uint8_t *) tx, (uint16_t)strlen(tx),100);
 	}
