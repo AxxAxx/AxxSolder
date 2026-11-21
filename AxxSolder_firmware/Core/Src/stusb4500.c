@@ -1,9 +1,7 @@
 #include "stusb4500.h"
-#include "debug.h"
 
 USB_PD_SNK_PDO_TypeDef pdo_profile[3];
 extern I2C_HandleTypeDef hi2c1;
-PDO_container_t pdos;
 
 static HAL_StatusTypeDef stusb_read_register(uint8_t reg, uint8_t *data, uint8_t len)
 {
@@ -13,27 +11,6 @@ static HAL_StatusTypeDef stusb_read_register(uint8_t reg, uint8_t *data, uint8_t
 static HAL_StatusTypeDef stusb_write_register(uint8_t reg, uint8_t *data, uint8_t len)
 {
   return HAL_I2C_Mem_Write(&hi2c1, (STUSB4500_ADDR << 1), reg, I2C_MEMADD_SIZE_8BIT, data, len, 1000);
-}
-
-static HAL_StatusTypeDef read_header(PDHeader_t* header){
-	HAL_StatusTypeDef ret = HAL_ERROR;
-	uint8_t buf[2];
-	ret = stusb_read_register(REG_RX_HEADER, buf, 2);
-	header->d16 = (uint16_t)buf[0] + ((uint16_t) buf[1] << 8);
-	return ret;
-}
-
-static HAL_StatusTypeDef read_pdo_objects(PDHeader_t* header){
-	HAL_StatusTypeDef ret = HAL_ERROR;
-	pdos.numPDOs = header->objects;
-	uint8_t buf[pdos.numPDOs*4];
-	ret = stusb_read_register(REG_RX_DATA_OBJS, buf, pdos.numPDOs*4);
-	uint8_t bufIdx = 0;
-	for (int obj=0; obj<header->objects; obj++) {
-		for (int i=0; i<4; i++) pdos.pdos[obj].bytes[i] = buf[bufIdx++];
-	}
-	debug_print_pdos(DEBUG_INFO, &pdos);
-	return ret;
 }
 
 HAL_StatusTypeDef stusb_check_connection(){
@@ -52,31 +29,6 @@ HAL_StatusTypeDef stusb_init(){
 	uint8_t writeVal = ~VAL_PRT_STATUS_AL;
 	ret = stusb_write_register(REG_ALERT_STATUS_1_MASK, &writeVal, 1);
 	return ret;
-}
-
-bool poll_source() {
-  HAL_StatusTypeDef halStatus = HAL_ERROR;
-  bool ret = false;
-  uint8_t alertStatus = 0;
-  halStatus = stusb_read_register(REG_ALERT_STATUS_1, &alertStatus, 1);
-  if((alertStatus & VAL_PRT_STATUS_AL) != 0){
-	  uint8_t prtStatus = 0;
-	  halStatus = stusb_read_register(REG_PRT_STATUS, &prtStatus, 1);
-	  if ((prtStatus & VAL_MSG_RECEIVED) != 0) {
-		  //HAL_Delay(1);
-		  PDHeader_t header;
-		  read_header(&header);
-		  halStatus = read_pdo_objects(&header);
-		  //objects == 0 is control message
-		  //debug_print_int_int(DEBUG_INFO,"msg,nO", header.messageType, header.objects);
-		  if (header.objects > 0 && (header.messageType == VAL_SOURCE_CAPABILITIES)) {
-			  ret = true;
-		  }else{
-			  pdos.numPDOs = 0;
-		  }
-	  }
-  }
-  return ret;
 }
 
 bool stusb_is_vbus_ready() {

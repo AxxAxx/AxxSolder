@@ -82,46 +82,12 @@ typedef union {
 
 } USB_PD_SNK_PDO_TypeDef;
 
-typedef union
-{
-  uint16_t d16;
-  uint8_t bytes[2];
-  struct
-  {
-    uint8_t messageType  : 5;  // Bits 0..3 Type of message: 1 = Source Capabilities
-    uint8_t data_data_role	 : 1;
-    uint8_t spec_rev     : 2;
-    uint8_t port_power_role : 1;
-    uint8_t messageID    : 3;
-    uint8_t objects      : 3;  // Number of PD objects received
-    uint8_t extended     : 1;
-  };
-} PDHeader_t;
-
-typedef union
-{
-  uint8_t bytes[4];
-  struct
-  {
-    uint32_t current    : 10;  // In units of 10mA
-    uint32_t voltage    : 10;  // In units of 50mV
-    uint32_t other      : 12;
-  };
-} PDO_t;
-
-typedef struct
-{
-	PDO_t pdos[10];
-	uint8_t numPDOs;
-}PDO_container_t;
-
 
 HAL_StatusTypeDef stusb_init();
 HAL_StatusTypeDef stusb_soft_reset();
 HAL_StatusTypeDef stusb_check_connection();
 bool stusb_is_sink_ready();
 bool stusb_is_sink_connected();
-bool poll_source();
 HAL_StatusTypeDef stusb_read_rdo(STUSB_GEN1S_RDO_REG_STATUS_RegTypeDef *Nego_RDO);
 HAL_StatusTypeDef stusb_update_pdo(uint8_t pdo_number, uint16_t voltage_mv, uint16_t current_ma);
 HAL_StatusTypeDef stusb_set_valid_pdo(uint8_t valid_count);
