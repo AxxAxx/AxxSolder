@@ -24,7 +24,9 @@
 
 /* Heater limit: contract x margin, current clamped to the 5 A a PD fixed PDO
  * can carry, capped at the chip's 100 W. Without a confirmed contract the
- * limit fails closed at measured VBUS x STUSB_FAILSAFE_CURRENT_A. */
+ * limit fails closed at measured VBUS x STUSB_FAILSAFE_CURRENT_A, but only
+ * while USB feeds the bus (VBUS below PD_5V_FALLBACK_THRESHOLD_V): the bus is
+ * diode-ORed, so with the DC jack in it reads the DC voltage. */
 #define STUSB_LIMIT_MARGIN        0.95f
 #define STUSB_MAX_CURRENT_MA      5000u
 #define STUSB_MAX_WATTS           100.0f
@@ -297,7 +299,8 @@ static void negotiate_stusb4500(pd_result_t *r, stusb_nvm_state_t nvm){
 /* Heater limit. Confirmed contract: min(measured, nominal) voltage x granted
  * current x margin - never more than the contract even if VBUS reads high.
  * Attached without one (no PD reply, I2C failure): fail closed at measured
- * VBUS x 0.5 A instead of the unlimited DC default. */
+ * VBUS x 0.5 A instead of the unlimited DC default. The caller only applies
+ * that while the bus really runs from USB 5 V. */
 static float stusb_power_limit(pd_result_t *r){
 	if(r->contract){
 		float v = r->vbus_v;
@@ -371,15 +374,21 @@ static void power_source_probe(void){
 		(void)stusb_wait_sink_ready();
 		negotiate_stusb4500(&r, nvm);
 	}
-	if(!r.contract){
-		debug_print_str(DEBUG_WARNING,"No USB-PD contract - limiting power");
-	}
-
-	/* 4. Heater limit from the contract, or fail closed. */
+	/* 4. Heater limit from the contract, or fail closed - unless the DC jack
+	 * feeds the bus (non-PD cable plugged in as well): then stay on DC. */
 	float watts = stusb_power_limit(&r);
-	power_source = POWER_USB;
-	sensor_values.USB_PD_power_limit = watts;
-	debug_print_int(DEBUG_INFO,"USB-PD power limit (W)", (int)watts);
+	if(r.contract || (r.vbus_v < PD_5V_FALLBACK_THRESHOLD_V)){
+		if(!r.contract){
+			debug_print_str(DEBUG_WARNING,"No USB-PD contract - limiting power");
+		}
+		power_source = POWER_USB;
+		sensor_values.USB_PD_power_limit = watts;
+		debug_print_int(DEBUG_INFO,"USB-PD power limit (W)", (int)watts);
+	}
+	else{
+		debug_print_str(DEBUG_INFO,"No USB-PD contract - DC jack feeds the bus");
+		watts = 0.0f;
+	}
 
 	pd_status_publish(&r, watts);
 }
