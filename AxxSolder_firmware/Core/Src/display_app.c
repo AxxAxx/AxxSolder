@@ -6,6 +6,7 @@
 #include "handle.h"
 #include "heater.h"
 #include "power_source.h"
+#include "buttons.h"      /* buttons_take_press (PD info page) */
 #include "lcd.h"
 #include "gui.h"
 #include "graph.h"
@@ -561,6 +562,151 @@ void LCD_draw_earth_fault_popup(void) {
     LCD_PutStr(20, 160, "AND REBOOT",  FONT_arial_20X23, C_Highlight, C_Text);
 
     Error_Handler();
+}
+
+/* ------------------------------------------------------------------ */
+/* PD information page (menu-invoked)                                 */
+/* ------------------------------------------------------------------ */
+
+#define PD_LINE_X       14
+#define PD_ROW_Y(i)     (13 + 13 * (i))
+
+/* Draw one text line at row `row`, right-padded so a shorter value fully
+ * overwrites a previous longer one (needed for the live refresh). 31 chars
+ * x 7 px + 14 px margin = 231 px, fits the 240 px short side. */
+static void pd_put_line(uint8_t row, const char *text) {
+    char padded[40];
+    snprintf(padded, sizeof(padded), "%-31.31s", text);
+    LCD_PutStr(PD_LINE_X, PD_ROW_Y(row), padded, FONT_7X12, C_Text, C_Background);
+}
+
+/* "20.0" from mV, rounded to 0.1 V. */
+static void pd_fmt_v(char *buf, size_t len, uint16_t mv) {
+    unsigned d = (mv + 50u) / 100u;
+    snprintf(buf, len, "%u.%u", d / 10u, d % 10u);
+}
+
+/* "2.25" from mA, rounded to 10 mA (RDO/PDO currents are 10 mA steps). */
+static void pd_fmt_a(char *buf, size_t len, uint16_t ma) {
+    unsigned c = (ma + 5u) / 10u;
+    snprintf(buf, len, "%u.%02u", c / 100u, c % 100u);
+}
+
+
+void show_pd_info_screen(void) {
+    const pd_status_t *pd = power_source_get_pd_status();
+    char line[40];
+    char v[8], a[8];
+
+    /* Consume the encoder click that opened this page (wait for release),
+     * then drop the press it latched so it can't count as an exit click. */
+    while (HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) { }
+    HAL_Delay(50);
+    buttons_clear_all();
+
+    /* The menu draws transparent text; the padded repaint below needs an
+     * opaque background or the live rows smear. Restored on exit. */
+    UG_U8 old_transparency = UG_FontGetTransparency();
+    UG_FontSetTransparency(0);
+
+    UG_FillScreen(C_Background);
+
+    /* Repaint at ~5 Hz until the encoder is clicked. Static fields repaint
+     * over themselves (no flicker); the LIVE block updates each pass. The
+     * heater is already off in menu context, so blocking here is safe. */
+    for (;;) {
+        pd_live_t live;
+        power_source_read_live(&live);
+
+        uint8_t row = 0;
+        pd_put_line(row++, "USB-PD INFORMATION");
+
+        if (!pd->probed) {
+            /* Menu opened during boot, before negotiation ran. */
+            pd_put_line(row++, "PD: not probed");
+        } else {
+            snprintf(line, sizeof(line), "CTRL:   %s",
+                     (pd->controller == PD_CTRL_STUSB4500) ? "STUSB4500" : "none");
+            pd_put_line(row++, line);
+
+            const char *src = (power_source == POWER_USB) ? "USB-PD" :
+                              (power_source == POWER_BAT) ? "BAT"    : "DC";
+            snprintf(line, sizeof(line), "SOURCE: %s", src);
+            pd_put_line(row++, line);
+
+            if (pd->controller == PD_CTRL_STUSB4500) {
+                snprintf(line, sizeof(line), "USB-C:  %s", pd->sink_connected ? "attached" : "none");
+                pd_put_line(row++, line);
+            }
+
+            if (pd->contract) {
+                pd_fmt_v(v, sizeof(v), pd->contract_mv);
+                pd_fmt_a(a, sizeof(a), pd->neg_current_ma);
+                snprintf(line, sizeof(line), "CONTRACT:%sV %sA %uW", v, a, pd->neg_watts);
+            } else {
+                snprintf(line, sizeof(line), "CONTRACT: %s", pd->sink_connected ? "none" : "no PD");
+            }
+            pd_put_line(row++, line);
+
+            /* USB_PD_power_limit is FLT_MAX ("no limit") when not on USB-PD. */
+            if (power_source == POWER_USB) {
+                snprintf(line, sizeof(line), "PWR LIM: %u W", (unsigned)sensor_values.USB_PD_power_limit);
+            } else {
+                snprintf(line, sizeof(line), "PWR LIM: none");
+            }
+            pd_put_line(row++, line);
+
+            if (pd->controller == PD_CTRL_STUSB4500 && pd->sink_connected) {
+                snprintf(line, sizeof(line), "PROBE: %u/%u %s",
+                         pd->probes_tried, pd->probes_total,
+                         pd->probe_accepted ? "accepted" :
+                         pd->contract       ? "none (5V)" : "no PD");
+                pd_put_line(row++, line);
+
+                snprintf(line, sizeof(line), "SRC PDO#:%u MISMATCH:%s",
+                         pd->object_pos, pd->capa_mismatch ? "YES" : "no");
+                pd_put_line(row++, line);
+
+                pd_fmt_a(a, sizeof(a), pd->rdo_max_current_ma);
+                snprintf(line, sizeof(line), "MAX I:%sA COMM:%c GB:%c", a,
+                         pd->usb_comm ? 'y' : 'n', pd->giveback ? 'y' : 'n');
+                pd_put_line(row++, line);
+
+                if (pd->req_pdo_count) {
+                    char req[40];
+                    int n = snprintf(req, sizeof(req), "OFFER:");
+                    for (uint8_t i = 0; i < pd->req_pdo_count && n > 0 && n < (int)sizeof(req); i++) {
+                        pd_fmt_a(a, sizeof(a), pd->req_pdo_ma[i]);
+                        n += snprintf(req + n, sizeof(req) - n, " %uV/%sA",
+                                      pd->req_pdo_mv[i] / 1000, a);
+                    }
+                    pd_put_line(row++, req);
+                }
+            }
+        }
+
+        pd_put_line(row++, "-- LIVE --");
+        pd_fmt_v(v, sizeof(v), live.vbus_mv);
+        snprintf(line, sizeof(line), "VBUS: %s V", v);
+        pd_put_line(row++, line);
+
+        pd_put_line(row + 1, "Click to return");
+
+        /* Poll the encoder for ~200 ms; exit on a click (SW_1 == SET), or on
+         * a short click the ISR latched while the page was repainting. */
+        uint8_t clicked = buttons_take_press(BTN_1) ? 1 : 0;
+        for (uint8_t t = 0; t < 20 && !clicked; t++) {
+            if (HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) { clicked = 1; break; }
+            HAL_Delay(10);
+        }
+        if (clicked) { break; }
+    }
+
+    /* Wait for release so the click doesn't re-trigger the menu. */
+    while (HAL_GPIO_ReadPin(SW_1_GPIO_Port, SW_1_Pin) == GPIO_PIN_SET) { }
+    HAL_Delay(50);
+
+    UG_FontSetTransparency(old_transparency);
 }
 
 /* ------------------------------------------------------------------ */

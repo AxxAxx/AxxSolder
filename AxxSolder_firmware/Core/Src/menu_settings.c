@@ -6,6 +6,7 @@
 #include "buttons.h"
 #include "version.h"   /* fw_version_*, get_hw_version */
 #include "gui.h"
+#include "display_app.h"  /* show_pd_info_screen */
 
 /* ==== Menu item identifiers
  * Step-100 layout: each logical group owns a 100-wide range.
@@ -54,6 +55,7 @@ enum {
     MI_DISP_TEMP_FILTER   = 302,
     MI_SHOW_POWER         = 303,
     MI_DISPLAY_GRAPH      = 304,
+    MI_PD_INFO            = 306,   /* action: opens the PD information page */
 
     /* ── Sound (400–499) ───────────────────────────────────────────── */
     MI_BUZZER_ENABLED     = 400,
@@ -126,6 +128,7 @@ static const MI_Entry mi_table[] = {
     { MI_DISP_TEMP_FILTER,   21,         "Disp Temp. filter"    },
     { MI_SHOW_POWER,         26,         "Show power"           },
     { MI_DISPLAY_GRAPH,      32,         "Display graph"        },
+    { MI_PD_INFO,       MI_NO_FLASH,     "PD information"       },
     /* Sound */
     { MI_BUZZER_ENABLED,     5,          "Buzzer Enabled"       },
     { MI_STARTUP_BEEP,       12,         "Startup Beep"         },
@@ -202,7 +205,7 @@ static const uint16_t GRP_PRESETS[] = { MI_PRESET_TEMP_1, MI_PRESET_TEMP_2 };
 /* Display */
 static const uint16_t GRP_DISPLAY[] = {
     MI_SCREEN_ROTATION, MI_TEMP_UNIT, MI_DISP_TEMP_FILTER, MI_SHOW_POWER,
-    MI_DISPLAY_GRAPH
+    MI_DISPLAY_GRAPH, MI_PD_INFO
 };
 
 /* Sound */
@@ -603,9 +606,11 @@ void settings_menu()
                 	    uint16_t abs_mi = MENU_GROUPS[current_group].idx[pos];
                 	    LCD_PutStr(5, line_y, mi_name(abs_mi), FONT_arial_20X23, C_Text, C_Background);
 
-                	    // Do not display values for the System group
-                	    if (!(current_group == (GROUPS_COUNT - 1))) {
-                	        uint8_t fi = mi_to_fi(abs_mi);
+                	    // Do not display values for the System group or for
+                	    // action items with no flash backing (fi == MI_NO_FLASH),
+                	    // which would otherwise index flash_values out of bounds.
+                	    uint8_t fi = mi_to_fi(abs_mi);
+                	    if (!(current_group == (GROUPS_COUNT - 1)) && fi != MI_NO_FLASH) {
                 	        display_menu_value_line(
                 	            line,
                 	            abs_mi,
@@ -736,6 +741,22 @@ void settings_menu()
                         flash_values = default_flash_values;
                         profiles_reset();
                         redraw_page = 1; // values changed - redraw
+                    } else if (abs_mi == MI_PD_INFO) {
+                        /* Full-screen PD info page; returns on click. */
+                        show_pd_info_screen();
+                        /* It cleared the whole panel: restore the fw/hw
+                         * footer and force a full menu repaint. */
+                        if ((flash_values.screen_rotation == 0) || (flash_values.screen_rotation == 2)) {
+                            LCD_PutStr(6, 296, str, FONT_arial_20X23, C_Warning, C_Background);
+                        } else {
+                            LCD_PutStr(6, 215, str, FONT_arial_20X23, C_Warning, C_Background);
+                        }
+                        /* Turns and SW2/SW3 presses on the page must not
+                         * move the cursor. */
+                        TIM2->CNT = 1000 + cursor * 2;
+                        buttons_clear_all();
+                        redraw_page = 1;
+                        page_start = 0xFFFF;
                     } else {
                         // Enter value editing
                         uint8_t fi = mi_to_fi(abs_mi);

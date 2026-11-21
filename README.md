@@ -215,6 +215,7 @@ To access the user settings the user holds down the encoder button at start-up o
 |TIPS|Limit Power NT115 [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
 |TIPS|Limit Power No name [W]|Limit the output power|"0"=no user limit, "5"=5 W, "10"= 10 W, "15"= 15 W ...|0|
 |DISPLAY|Display graph|Display the Graph view|YES/NO|NO|
+|DISPLAY|PD information|Action item (not a toggle): opens a full-screen page with the boot USB-PD snapshot — STUSB4500 detected, USB-C attach status, negotiated contract (voltage, current, power limit), probe-ladder result, RDO details and the offered sink PDOs — plus live bus voltage. Click the encoder to return to the menu. The charger's source PDO list cannot be read from the STUSB4500, so it is not shown|N/A|N/A|
 |MODE|Delta T detect|Detect too large delta temperatures and stop heating|YES/NO|YES|
 |MODE|Profile on tip chg.|Show popup when changing tip asking for tip preset|YES/NO|NO|
 |MODE|Change Enc. dir.|Changes the direction of the encoder|YES/NO|NO|

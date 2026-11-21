@@ -47,6 +47,21 @@ static const pd_profile_t pd_probe_ladder[] = {
 /* --- Public state --- */
 power_source_t power_source = POWER_DC;
 
+/* Boot snapshot for the "PD information" page; written only by
+ * power_source_init(), read via power_source_get_pd_status(). */
+static pd_status_t pd_status;
+
+const pd_status_t *power_source_get_pd_status(void){
+	return &pd_status;
+}
+
+/* Live values for the info page. Cheap; safe to call repeatedly. */
+void power_source_read_live(pd_live_t *out){
+	if(out == NULL){ return; }
+	float v = sensors_read_bus_voltage_instant();
+	out->vbus_mv = (v > 0.0f) ? (uint16_t)(v * 1000.0f) : 0;
+}
+
 /* Apply PDO1=5V/3A baseline only (valid count 1) and renegotiate. This is the
  * guaranteed-safe contract: the source can always meet 5 V, so the MCU stays
  * powered no matter what. Used as the starting point and the final fallback. */
@@ -78,13 +93,17 @@ static void wait_for_vbus_settle(void){
 }
 
 /* check STUSB4500 */
-void power_source_init(void){
+static void power_source_probe(void){
+	pd_status = (pd_status_t){0};
+	pd_status.probes_total = PD_PROBE_COUNT;
+
 	if(stusb_check_connection() != HAL_OK){
 		//do error handling for STUSB
 		debug_print_str(DEBUG_ERROR,"STUSB4500 unavailable");
 		return;
 	}
 	debug_print_str(DEBUG_INFO,"STUSB4500 found");
+	pd_status.controller = PD_CTRL_STUSB4500;
 
 	stusb_init();
 
@@ -93,6 +112,7 @@ void power_source_init(void){
 		debug_print_str(DEBUG_INFO,"No USB-PD sink connected");
 		return;
 	}
+	pd_status.sink_connected = 1;
 
 	/* 2. Start from the guaranteed-safe 5 V baseline. */
 	request_5v_baseline();
@@ -101,9 +121,11 @@ void power_source_init(void){
 	/* 3. Probe the ladder, highest power first; stop at the first profile the
 	 * charger accepts. PDO1 stays 5 V/3 A throughout, so a rejected probe just
 	 * falls back to 5 V (never 0 V) - no brown-out. */
-	STUSB_GEN1S_RDO_REG_STATUS_RegTypeDef rdo;
+	STUSB_GEN1S_RDO_REG_STATUS_RegTypeDef rdo = {0};
 	bool accepted = false;
+	uint8_t accepted_rung = 0;
 	for(uint8_t i = 0; i < PD_PROBE_COUNT; i++){
+		pd_status.probes_tried = i + 1;
 		stusb_update_pdo(2, pd_probe_ladder[i].mv, pd_probe_ladder[i].ma);
 		stusb_set_valid_pdo(2);
 		stusb_soft_reset();
@@ -119,8 +141,21 @@ void power_source_init(void){
 		 * voltage => the charger supports this profile => accept it. */
 		if(rdo.b.Object_Pos >= 2){
 			accepted = true;
+			accepted_rung = i;
 			break;
 		}
+	}
+
+	/* Snapshot what was offered in the final contract. PDO1 is always the
+	 * 5 V/3 A baseline; PDO2 only counts if a ladder rung was accepted. */
+	pd_status.probe_accepted = accepted ? 1 : 0;
+	pd_status.req_pdo_mv[0] = 5000;
+	pd_status.req_pdo_ma[0] = 3000;
+	pd_status.req_pdo_count = 1;
+	if(accepted){
+		pd_status.req_pdo_mv[1] = pd_probe_ladder[accepted_rung].mv;
+		pd_status.req_pdo_ma[1] = pd_probe_ladder[accepted_rung].ma;
+		pd_status.req_pdo_count = 2;
 	}
 
 	/* 4. If nothing was accepted, return to a clean 5 V baseline contract. */
@@ -130,6 +165,14 @@ void power_source_init(void){
 		HAL_Delay(PD_RENEGOTIATE_SETTLE_MS);
 		stusb_read_rdo(&rdo);
 	}
+
+	/* RDO detail for the info page (final contract). */
+	pd_status.object_pos         = rdo.b.Object_Pos;
+	pd_status.rdo_max_current_ma = (uint16_t)(rdo.b.MaxCurrent * 10);
+	pd_status.neg_current_ma     = (uint16_t)(rdo.b.OperatingCurrent * 10);
+	pd_status.capa_mismatch      = rdo.b.CapaMismatch ? 1 : 0;
+	pd_status.usb_comm           = rdo.b.UsbComCap ? 1 : 0;
+	pd_status.giveback           = rdo.b.GiveBack ? 1 : 0;
 
 	/* 5. Confirm an explicit PD contract exists. */
 	if(rdo.b.Object_Pos == 0){
@@ -151,4 +194,15 @@ void power_source_init(void){
 	float watts = sensor_values.bus_voltage * negotiated_current_a * USB_PD_POWER_REDUCTION_FACTOR;
 	sensor_values.USB_PD_power_limit = watts;
 	debug_print_int(DEBUG_INFO,"USB-PD power limit (W)", (int)watts);
+
+	pd_status.contract       = 1;
+	pd_status.contract_mv    = accepted ? pd_probe_ladder[accepted_rung].mv : 5000;
+	pd_status.neg_voltage_mv = (sensor_values.bus_voltage > 0.0f)
+	                         ? (uint16_t)(sensor_values.bus_voltage * 1000.0f) : 0;
+	pd_status.neg_watts      = (watts > 0.0f) ? (uint16_t)watts : 0;
+}
+
+void power_source_init(void){
+	power_source_probe();
+	pd_status.probed = 1;   /* on every exit path, incl. no STUSB4500 */
 }
