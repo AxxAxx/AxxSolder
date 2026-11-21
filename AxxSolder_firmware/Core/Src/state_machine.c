@@ -98,8 +98,13 @@ void handle_delta_temperature(void){
 	else if (sensors_get_raw_tc() > TC_OPEN_THRESHOLD){
 		/* Raw TC reads open: that is a cartridge being pulled out (inherently
 		 * safe - the temperature clamps to 500 C and the PID output goes to
-		 * zero), not a TC fault. handle_check_cartridge() handles it. */
+		 * zero), not a TC fault. handle_check_cartridge() handles it.
+		 * Also restart the holdoff: if the main loop is blocked while the
+		 * tip is pulled and re-seated, cartridge_state never flips, and the
+		 * jump from the clamped open reading back to the real one would
+		 * otherwise be taken as a step. */
 		confirm = 0;
+		holdoff = DELTA_T_REARM_SAMPLES;
 	}
 	else if (holdoff > 0){
 		holdoff--;
