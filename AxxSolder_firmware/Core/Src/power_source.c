@@ -22,12 +22,11 @@
 #include <string.h>
 #include <math.h>        /* fabsf */
 
-/* Heater limit: contract x margin, current clamped to the 5 A a PD fixed PDO
- * can carry, capped at the chip's 100 W. Without a confirmed contract the
+/* Heater limit: the full contract power, current clamped to the 5 A a PD fixed
+ * PDO can carry, capped at the chip's 100 W. Without a confirmed contract the
  * limit fails closed at measured VBUS x STUSB_FAILSAFE_CURRENT_A, but only
  * while USB feeds the bus (VBUS below PD_5V_FALLBACK_THRESHOLD_V): the bus is
  * diode-ORed, so with the DC jack in it reads the DC voltage. */
-#define STUSB_LIMIT_MARGIN        0.95f
 #define STUSB_MAX_CURRENT_MA      5000u
 #define STUSB_MAX_WATTS           100.0f
 #define STUSB_FAILSAFE_CURRENT_A  0.5f
@@ -281,13 +280,17 @@ static void negotiate_stusb4500(pd_result_t *r, stusb_nvm_state_t nvm){
 	r->current_ma = (uint16_t)(r->rdo.b.OperatingCurrent * 10);
 
 	/* The RDO carries no voltage. A 5 V settle is 5 V; otherwise the contract
-	 * matched one of our offered voltages - take the one within 1 V of the
-	 * measured VBUS. If none is, take the highest offered voltage at or below
-	 * the measured VBUS, so a VBUS reading high is still clamped by
-	 * min(measured, nominal). Left unknown only if VBUS is below every
-	 * offered voltage, where the measured value is the lower one anyway. */
+	 * matched one of our offered voltages. An accepted ladder rung is the
+	 * only one offered above 5 V, so it is the contract. Otherwise take the
+	 * one within 1 V of the measured VBUS; if none is, the highest offered
+	 * voltage at or below the measured VBUS, so a VBUS reading high never
+	 * books a higher voltage. Left unknown only if VBUS is below every
+	 * offered voltage; the limit then uses the measured value. */
 	if(stusb_is_5v_contract(&r->rdo, r->vbus_v)){
 		r->contract_mv = 5000;
+	}
+	else if(r->offer_count == 2){
+		r->contract_mv = r->offer_mv[1];
 	}
 	else{
 		uint16_t vbus_mv = (uint16_t)(r->vbus_v * 1000.0f);
@@ -302,19 +305,19 @@ static void negotiate_stusb4500(pd_result_t *r, stusb_nvm_state_t nvm){
 	}
 }
 
-/* Heater limit. Confirmed contract: min(measured, nominal) voltage x granted
- * current x margin - never more than the contract even if VBUS reads high.
- * Attached without one (no PD reply, I2C failure): fail closed at measured
- * VBUS x 0.5 A instead of the unlimited DC default. The caller only applies
- * that while the bus really runs from USB 5 V. */
+/* Heater limit. Confirmed contract: the contract power, nominal voltage x
+ * granted current (measured VBUS only if the nominal voltage is unknown;
+ * integer mW on the nominal path so whole-watt contracts such as
+ * 20 V x 2.35 A don't truncate a watt low). Attached without one (no PD
+ * reply, I2C failure): fail closed at measured VBUS x 0.5 A instead of the
+ * unlimited DC default. The caller only applies that while the bus really
+ * runs from USB 5 V. */
 static float stusb_power_limit(pd_result_t *r){
 	if(r->contract){
-		float v = r->vbus_v;
-		if((r->contract_mv != 0) && (v > (r->contract_mv / 1000.0f))){
-			v = r->contract_mv / 1000.0f;
-		}
 		uint16_t ma = (r->current_ma > STUSB_MAX_CURRENT_MA) ? STUSB_MAX_CURRENT_MA : r->current_ma;
-		float watts = v * (ma / 1000.0f) * STUSB_LIMIT_MARGIN;
+		float watts = (r->contract_mv != 0)
+		            ? (float)(((uint32_t)r->contract_mv * ma) / 1000u) / 1000.0f
+		            : r->vbus_v * (ma / 1000.0f);
 		return (watts > STUSB_MAX_WATTS) ? STUSB_MAX_WATTS : watts;
 	}
 	sensors_prime_bus_voltage();
